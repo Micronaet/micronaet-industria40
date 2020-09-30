@@ -250,7 +250,7 @@ class IndustriaDatabase(orm.Model):
         for program in program_pool.browse(
                 cr, uid, program_ids, context=context):
             program_db[program.id] = program.industria_ref
-        pdb.set_trace()
+
         # Load robot:
         robot_db = {}
         robot_ids = robot_pool.search(cr, uid, [
@@ -261,8 +261,8 @@ class IndustriaDatabase(orm.Model):
 
         for record in cursor:
             industria_ref = record['id']
-            program_id = program_db.get(record['source_id'], False)
-            source_id = robot_db.get(record['program_id'], False)
+            program_id = program_db.get(record['program_id'], False)
+            source_id = robot_db.get(record['source_id'], False)
 
             data = {
                 'industria_ref': industria_ref,
