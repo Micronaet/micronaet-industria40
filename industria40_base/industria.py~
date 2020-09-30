@@ -92,7 +92,7 @@ class IndustriaProgram(orm.Model):
         'code': fields.char('Code', size=12),
         'name': fields.char('Name', size=64, required=True),
         'industria_ref': fields.integer('Industria ref key'),
-        'timeout': fields.integer('Timeout'),
+        'timeout': fields.integer(''),
         'piece': fields.integer('Total piece x job'),
         'robot_id': fields.many2one(
             'industria.robot', 'Robot'),
