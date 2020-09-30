@@ -214,10 +214,10 @@ class IndustriaDatabase(orm.Model):
 
         try:
             if from_industria_ref:
+                query = "SELECT * FROM jobs;"
+            else:
                 query = "SELECT * FROM jobs WHERE id >= %s;" % \
                         from_industria_ref
-            else:
-                query = "SELECT * FROM jobs;"
             cursor.execute(query)
         except:
             raise osv.except_osv(
