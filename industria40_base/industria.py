@@ -200,7 +200,6 @@ class IndustriaDatabase(orm.Model):
     def import_job(self, cr, uid, ids, context=None):
         """ Update job list
         """
-        pdb.set_trace()
         # TODO create context from ID (partial run)
         job_pool = self.pool.get('industria.job')
         robot_pool = self.pool.get('industria.robot')
@@ -238,7 +237,7 @@ class IndustriaDatabase(orm.Model):
         for program in program_pool.browse(
                 cr, uid, program_ids, context=context):
             program_db[program.id] = program.industria_ref
-
+        pdb.set_trace()
         # Load robot:
         robot_db = {}
         robot_ids = robot_pool.search(cr, uid, [
