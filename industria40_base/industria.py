@@ -95,7 +95,7 @@ class IndustriaDatabase(orm.Model):
 
     _defaults = {
         'mode': lambda *x: 'mysql',
-        'mssql_port': lambda *a: 3306,
+        'port': lambda *a: 3306,
     }
 
 

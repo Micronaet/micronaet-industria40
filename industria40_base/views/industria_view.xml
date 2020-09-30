@@ -111,7 +111,7 @@
                             <field name="name" />
 
                             <field name="industria_ref" />
-                            <field name="timeount" />
+                            <field name="timeout" />
 
                             <field name="piece" />
                             <field name="robot_id" />
@@ -134,7 +134,7 @@
                     <field name="name" />
 
                     <field name="industria_ref" />
-                    <field name="timeount" />
+                    <field name="timeout" />
 
                     <field name="piece" />
                     <field name="robot_id" />
@@ -216,7 +216,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[1]" position="after">
-                    <page string="Industria 4.0" attrs="{'invisible': [('robot_ids','!=',False)]}" groups="group_industria_manager,group_industria_user">
+                    <page string="Industria 4.0" attrs="{'invisible': [('robot_ids','!=',False)]}" groups="industria40_base.group_industria_manager,industria40_base.group_industria_user">
                         <separator string="Robots:" colspan="4"/>
                         <field name="robot_ids" />
                     </page>
@@ -227,7 +227,7 @@
         <menuitem
             id="menu_industria_root"
             name="Industria 4.0"
-            groups="group_industria_manager,group_industria_user"
+            groups="industria40_base.group_industria_manager,industria40_base.group_industria_user"
             sequence="50"
             />
             <menuitem
