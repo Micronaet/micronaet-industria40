@@ -403,8 +403,9 @@ class IndustriaRobot(orm.Model):
                 }
             }
         """
-        html = """
-            <style>%s</style>
+
+        html = "<style>%s</style>" % css
+        html += """
             <h1>Bar Chart HTML</h1>
             <div class="chart-wrap vertical">
                 <h2 class="title">Bar Chart HTML Example: HTML And CSS</h2>
