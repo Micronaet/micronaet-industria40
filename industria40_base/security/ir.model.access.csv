@@ -1,9 +1,13 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
 access_industria_database_user,industria.database,model_industria_database,industria40_base.group_industria_manager,1,1,1,1
 access_industria_database_user,industria.database,model_industria_database,industria40_base.group_industria_user,1,0,0,0
+access_industria_database_user,industria.database,model_industria_database,base.group_user,1,0,0,0
 access_industria_robot_user,industria.robot,model_industria_robot,industria40_base.group_industria_manager,1,1,1,1
 access_industria_robot_user,industria.robot,model_industria_robot,industria40_base.group_industria_user,1,0,0,0
+access_industria_robot_user,industria.robot,model_industria_robot,base.group_user,1,0,0,0
 access_industria_program_user,industria.program,model_industria_program,industria40_base.group_industria_manager,1,1,1,1
 access_industria_program_user,industria.program,model_industria_program,industria40_base.group_industria_user,1,0,0,0
+access_industria_program_user,industria.program,model_industria_program,base.group_user,1,0,0,0
 access_industria_job_user,industria.job,model_industria_job,industria40_base.group_industria_manager,1,1,1,1
 access_industria_job_user,industria.job,model_industria_job,industria40_base.group_industria_user,1,0,0,0
+access_industria_job_user,industria.job,model_industria_job,base.group_user,1,0,0,0
