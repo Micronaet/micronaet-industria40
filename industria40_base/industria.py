@@ -146,6 +146,54 @@ class IndustriaDatabase(orm.Model):
                     cr, uid, data, context=context)
         return True
 
+    def import_robot(self, cr, uid, ids, context=None):
+        """ Update robot list
+        """
+        robot_pool = self.pool.get('industria.robot')
+
+        database = self.browse(cr, uid, ids, context=context)[0]
+        connection = self.mssql_connect(cr, uid, ids, context=context)
+        cursor = connection.cursor()
+
+        try:
+            query = """
+                SELECT *  
+                FROM sources
+                """
+            cursor.execute(query)
+        except:
+            raise osv.except_osv(
+                _('Error SQL access'),
+                'Executing query %s: \n%s' % (
+                    query,
+                    sys.exc_info(),
+                ))
+
+        partner_id = database.partner_id.id
+        database_id = ids[0]
+        for record in cursor:
+            industria_ref = record['id']
+            data = {
+                'industria_ref': industria_ref,
+                'ip': record['ip'],
+                'name': record['description'] or record['name'],
+                'partner_id': partner_id,
+                'database_id': database_id,
+            }
+
+            robot_ids = robot_pool.search(cr, uid, [
+                ('database_id', '=', database_id),
+                ('industria_ref', '=', industria_ref),
+            ], context=context)
+
+            if robot_ids:
+                robot_pool.write(
+                    cr, uid, robot_ids, data, context=context)
+            else:
+                robot_pool.create(
+                    cr, uid, data, context=context)
+        return True
+
     def import_job(self, cr, uid, ids, context=None):
         """ Update job list
         """
