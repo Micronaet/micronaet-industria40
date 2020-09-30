@@ -259,7 +259,6 @@ class IndustriaDatabase(orm.Model):
         for robot in robot_pool.browse(cr, uid, robot_ids, context=context):
             robot_db[robot.id] = robot.industria_ref
 
-        pdb.set_trace()
         for record in cursor:
             industria_ref = record['id']
             program_id = program_db.get(record['program_id'], False)
