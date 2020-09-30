@@ -9,11 +9,12 @@
                 <form string="Database" version="7.0">
                     <header>
                         <button name="test_database_connection" type="object" string="Test" icon="gtk-refresh"/>
+                        <button name="import_program" type="object" string="Import program" icon="terp-calendar"/>
                     </header>
                     <sheet>
                         <group col="4" colspan="4">
                             <field name="name" />
-                            <field name="partner_ip" />
+                            <field name="partner_id" />
 
                             <field name="ip" />
                             <field name="username" />
