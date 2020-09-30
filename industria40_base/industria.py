@@ -124,6 +124,7 @@ class IndustriaDatabase(orm.Model):
                 ))
 
         partner_id = database.partner_id.id
+        database_id = ids[0]
         for record in cursor:
             industria_ref = record['id']
             data = {
@@ -136,6 +137,7 @@ class IndustriaDatabase(orm.Model):
             }
 
             program_ids = program_pool.search(cr, uid, [
+                ('database_id', '=', database_id),
                 ('industria_ref', '=', industria_ref),
             ], context=context)
             if program_ids:

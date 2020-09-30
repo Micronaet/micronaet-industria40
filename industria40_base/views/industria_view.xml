@@ -75,6 +75,8 @@
                             <field name="partner_id" />
                             <field name="database_id" />
 
+                            <field name="industria_ref" />
+
                             <separator string="Program" colspan="4"/>
                             <field name="program_ids" colspan="4" nolabel="1"/>
 
