@@ -206,12 +206,18 @@ class IndustriaDatabase(orm.Model):
     def import_job(self, cr, uid, ids, context=None):
         """ Update job list
         """
-        def sql_get_date(date):
+        def sql_get_date(datetime_value):
             """ Generate date for database
             """
-            if not date:
+            if not datetime_value:
                 return False
-            return date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
+            extra_gmt = datetime.now() - datetime.utcnow()
+            ts = datetime.strptime(
+                datetime_value,
+                DEFAULT_SERVER_DATETIME_FORMAT)
+            return (ts - extra_gmt).strftime(
+                DEFAULT_SERVER_DATETIME_FORMAT)
 
         # TODO create context from ID (partial run)
         job_pool = self.pool.get('industria.job')
