@@ -24,27 +24,35 @@
 import os
 import sys
 import logging
-import openerp
-import openerp.netsvc as netsvc
-import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv, expression, orm
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from openerp import SUPERUSER_ID, api
-from openerp import tools
-from openerp.tools.translate import _
-from openerp.tools.float_utils import float_round as round
-from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
-    DEFAULT_SERVER_DATETIME_FORMAT,
-    DATETIME_FORMATS_MAP,
-    float_compare)
-
 
 _logger = logging.getLogger(__name__)
 
 
+class IndustriaDatabase(orm.Model):
+    """ Model name: Industria Database
+    """
+
+    _name = 'industria.database'
+    _description = 'Database PC'
+    _rec_name = 'name'
+    _order = 'name'
+
+    _columns = {
+        'name': fields.char('Name', size=64, required=True),
+        'ip': fields.char('IP address', size=15),
+        'username': fields.char('Username', size=64, required=True),
+        'password': fields.char('Password', size=64, required=True),
+        'database': fields.char('Database', size=64, required=True),
+        'port': fields.integer('Port', required=True),
+        'note': fields.text('Note'),
+    }
+
+
 class IndustriaRobot(orm.Model):
-    """ Model name: IndustriaRobot
+    """ Model name: Industria Robot
     """
 
     _name = 'industria.robot'
@@ -57,7 +65,17 @@ class IndustriaRobot(orm.Model):
         'name': fields.char('Name', size=64, required=True),
         'partner_id': fields.many2one(
             'res.partner', 'Supplier', required=True),
+        'database_id': fields.many2one(
+            'industria.database', 'Database'),
+        'mode': fields.selection([
+            ('mysql', 'My SQL'),
+            ('mssql', 'MS SQL'),
+            ], 'Mode', required=True),
         'note': fields.text('Note'),
+    }
+
+    _defaults = {
+        'mode': lambda *x: 'mysql',
     }
 
 
@@ -128,25 +146,25 @@ class IndustriaRobotRelation(orm.Model):
     """
 
     _inherit = 'industria.robot'
-    
+
     _columns = {
         'program_ids': fields.one2many(
             'industria.program', 'robot_id', 'Program'),
         'job_ids': fields.one2many(
             'industria.job', 'source_id', 'Job'),
-            
+
     }
 
 
 class ResPartner(orm.Model):
-    """ Model name: Res Partner 
+    """ Model name: Res Partner
     """
 
     _inherit = 'res.partner'
-    
+
     _columns = {
         'program_ids': fields.one2many(
             'industria.program', 'partner_id', 'Program'),
         'robot_ids': fields.one2many(
             'industria.robot', 'partner_id', 'Robot'),
-    }    
+    }

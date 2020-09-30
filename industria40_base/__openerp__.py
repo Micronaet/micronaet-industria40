@@ -24,7 +24,7 @@
 {
     'name': 'Industria 4.0',
     'version': '0.1',
-    'category': 'Indusstria',
+    'category': 'Industria',
     'description': '''     
         Base module to manage Industria 4.0   
         ''',
