@@ -84,12 +84,12 @@
                                         <field name="program_ids" colspan="4" nolabel="1"/>
                                     </group>
                                 </page>
-                                <page name="state_page" string="Status">
+                                <!--<page name="state_page" string="Status">
                                     <group colspan="4" col="4">
                                         <separator string="Today status" colspan="4"/>
                                         <field name="today_state" colspan="4" nolabel="1" widget="html"/>
                                     </group>
-                                </page>
+                                </page>-->
                                 <page name="note_page" string="Note">
                                     <group colspan="4" col="4">
                                         <separator string="Note" colspan="4"/>
@@ -192,7 +192,7 @@
                             <field name="created_at" />
                             <field name="ended_at" />
                             <field name="updated_at" />
-                            <newline />
+                            <field name="duration" />
 
                             <field name="database_id" />
                             <field name="industria_ref" />
@@ -218,6 +218,7 @@
                     <field name="created_at" />
                     <field name="ended_at" />
                     <field name="updated_at" />
+                    <field name="duration" />
 
                     <field name="database_id" />
                     <field name="industria_ref" />

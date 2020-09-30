@@ -490,6 +490,24 @@ class IndustriaJob(orm.Model):
     _rec_name = 'created_at'
     _order = 'created_at desc'
 
+    def _get_duration(self, cr, uid, ids, fields, args, context=None):
+        """ Fields function for calculate
+        """
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            created_at = record.created_at
+            ended_at = record.ended_at
+            if created_at and ended_at:
+                duration = datetime.strptime(
+                    ended_at, DEFAULT_SERVER_DATETIME_FORMAT) - \
+                           datetime.strptime(
+                               created_at, DEFAULT_SERVER_DATE_FORMAT)
+                duration = duration.seconds / 60.0
+            else:
+                duration = False
+            res[record.id] = duration
+        return res
+
     _columns = {
         'created_at': fields.datetime('Start'),
         'ended_at': fields.datetime('End'),
@@ -514,6 +532,15 @@ class IndustriaJob(orm.Model):
             ('COMPLETED', 'Completed'),
             ], 'State', required=True),
         'notes': fields.text('Note'),
+        'duration': fields.function(
+            _get_duration, method=True,
+            type='float', string='Duration',
+            store={
+                'industria.job': (
+                    lambda self, cr, uid, ids, ctx=None: ids,
+                    ['create_at', 'ended_at'],
+                    10,
+                )}),
     }
 
     _defaults = {
