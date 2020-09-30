@@ -67,6 +67,9 @@
                             <field name="partner_id" />
                             <field name="database_id" />
 
+                            <separator string="Program" colspan="4"/>
+                            <field name="program_ids" colspan="4" nolabel="1"/>
+
                             <separator string="Note" colspan="4"/>
                             <field name="note" colspan="4" nolabel="1"/>
                         </group>
@@ -79,10 +82,10 @@
             <field name="model">industria.robot</field>
             <field name="arch" type="xml">
                 <tree string="Database">
-                        <field name="ip" />
-                        <field name="name" />
-                        <field name="partner_id" />
-                        <field name="database_id" />
+                    <field name="ip" />
+                    <field name="name" />
+                    <field name="partner_id" />
+                    <field name="database_id" />
                 </tree>
             </field>
         </record>
@@ -177,11 +180,11 @@
                 </form>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_industria_program_tree">
-            <field name="name">industria.program.tree</field>
-            <field name="model">industria.program</field>
+        <record model="ir.ui.view" id="view_industria_job_tree">
+            <field name="name">industria.job.form</field>
+            <field name="model">industria.job</field>
             <field name="arch" type="xml">
-                <tree string="Database">
+                <tree string="Job">
                     <field name="created_at" />
                     <field name="ended_at" />
                     <field name="updated_at" />
@@ -196,15 +199,74 @@
                 </tree>
             </field>
         </record>
-        <record model="ir.actions.act_window" id="action_industria_program">
-            <field name="name">Program</field>
-            <field name="res_model">industria.program</field>
+        <record model="ir.actions.act_window" id="action_industria_job">
+            <field name="name">Job</field>
+            <field name="res_model">industria.job</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_industria_program_tree"/>
+            <field name="view_id" ref="view_industria_job_tree"/>
             <field name="context">{}</field>
             <field name="domain">[]</field>
         </record>
+
+        <!--res.partner-->
+        <record model="ir.ui.view" id="view_res_partner_industria_form">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[1]" position="after">
+                    <page string="Industria 4.0" attrs="{'invisible': [('robot_ids','!=',False)]}" groups="group_industria_manager,group_industria_user">
+                        <separator string="Robots:" colspan="4"/>
+                        <field name="robot_ids" />
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_industria_root"
+            name="Industria 4.0"
+            groups="group_industria_manager,group_industria_user"
+            sequence="50"
+            />
+            <menuitem
+                parent="menu_industria_root"
+                id="menu_industria_master_data"
+                name="Master data"
+                sequence="10"
+                />
+                <menuitem
+                    parent="menu_industria_master_data"
+                    id="menu_industria_job"
+                    action="action_industria_job"
+                    sequence="10"
+                    />
+
+            <menuitem
+                parent="menu_industria_root"
+                id="menu_industria_configuration"
+                name="Configuration"
+                sequence="99"
+                />
+                <menuitem
+                    parent="menu_industria_configuration"
+                    id="menu_industria_robot"
+                    action="action_industria_robot"
+                    sequence="10"
+                    />
+                <menuitem
+                    parent="menu_industria_configuration"
+                    id="menu_industria_program"
+                    action="action_industria_program"
+                    sequence="20"
+                    />
+                <menuitem
+                    parent="menu_industria_configuration"
+                    id="menu_industria_database"
+                    action="action_industria_database"
+                    sequence="30"
+                    />
 
     </data>
 </openerp>

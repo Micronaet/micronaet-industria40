@@ -158,6 +158,7 @@ class IndustriaJob(orm.Model):
         'created_at': fields.datetime('Start'),
         'ended_at': fields.datetime('End'),
         'updated_at': fields.datetime('Modify'),
+        # TODO duration seconds?
 
         'industria_ref': fields.integer('Industria ref key'),
 
