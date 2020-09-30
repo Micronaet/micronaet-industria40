@@ -1,6 +1,210 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <!--industria.database-->
+        <record model="ir.ui.view" id="view_industria_database_form">
+            <field name="name">industria.database.form</field>
+            <field name="model">industria.database</field>
+            <field name="arch" type="xml">
+                <form string="Database" version="7.0">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="name" />
+                            <field name="ip" />
+
+                            <field name="username" />
+                            <field name="password" />
+
+                            <field name="database" />
+                            <field name="port" />
+
+                            <field name="mode" />
+
+                            <separator string="Note" colspan="4"/>
+                            <field name="note" colspan="4" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_database_tree">
+            <field name="name">industria.database.tree</field>
+            <field name="model">industria.database</field>
+            <field name="arch" type="xml">
+                <tree string="Database">
+                    <field name="name" />
+                    <field name="ip" />
+                    <field name="mode" />
+
+                    <field name="username" />
+
+                    <field name="database" />
+                    <field name="port" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_database">
+            <field name="name">Database</field>
+            <field name="res_model">industria.database</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_industria_database_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <!--industria.robot-->
+        <record model="ir.ui.view" id="view_industria_robot_form">
+            <field name="name">industria.robot.form</field>
+            <field name="model">industria.robot</field>
+            <field name="arch" type="xml">
+                <form string="Database" version="7.0">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="ip" />
+                            <field name="name" />
+
+                            <field name="partner_id" />
+                            <field name="database_id" />
+
+                            <separator string="Note" colspan="4"/>
+                            <field name="note" colspan="4" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_robot_tree">
+            <field name="name">industria.robot.tree</field>
+            <field name="model">industria.robot</field>
+            <field name="arch" type="xml">
+                <tree string="Database">
+                        <field name="ip" />
+                        <field name="name" />
+                        <field name="partner_id" />
+                        <field name="database_id" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_robot">
+            <field name="name">Robot</field>
+            <field name="res_model">industria.robot</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_industria_robot_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <!--industria.program-->
+        <record model="ir.ui.view" id="view_industria_program_form">
+            <field name="name">industria.program.form</field>
+            <field name="model">industria.program</field>
+            <field name="arch" type="xml">
+                <form string="Program" version="7.0">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="code" />
+                            <field name="name" />
+
+                            <field name="industria_ref" />
+                            <field name="timeount" />
+
+                            <field name="piece" />
+                            <field name="robot_id" />
+
+                            <field name="partner_id" />
+
+                            <separator string="Note" colspan="4"/>
+                            <field name="note" colspan="4" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_program_tree">
+            <field name="name">industria.program.tree</field>
+            <field name="model">industria.program</field>
+            <field name="arch" type="xml">
+                <tree string="Database">
+                    <field name="code" />
+                    <field name="name" />
+
+                    <field name="industria_ref" />
+                    <field name="timeount" />
+
+                    <field name="piece" />
+                    <field name="robot_id" />
+
+                    <field name="partner_id" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_program">
+            <field name="name">Program</field>
+            <field name="res_model">industria.program</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_industria_program_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <!--industria.job-->
+        <record model="ir.ui.view" id="view_industria_job_form">
+            <field name="name">industria.job.form</field>
+            <field name="model">industria.job</field>
+            <field name="arch" type="xml">
+                <form string="Job" version="7.0">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="created_at" />
+                            <field name="ended_at" />
+                            <field name="updated_at" />
+
+                            <field name="industria_ref" />
+
+                            <field name="program_id" />
+                            <field name="source_id" />
+
+                            <field name="partner_id" />
+                            <field name="state" />
+
+                            <separator string="Note" colspan="4"/>
+                            <field name="notes" colspan="4" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_program_tree">
+            <field name="name">industria.program.tree</field>
+            <field name="model">industria.program</field>
+            <field name="arch" type="xml">
+                <tree string="Database">
+                    <field name="created_at" />
+                    <field name="ended_at" />
+                    <field name="updated_at" />
+
+                    <field name="industria_ref" />
+
+                    <field name="program_id" />
+                    <field name="source_id" />
+
+                    <field name="partner_id" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_program">
+            <field name="name">Program</field>
+            <field name="res_model">industria.program</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_industria_program_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
 
     </data>
 </openerp>
