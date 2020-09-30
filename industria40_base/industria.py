@@ -259,6 +259,7 @@ class IndustriaDatabase(orm.Model):
         for robot in robot_pool.browse(cr, uid, robot_ids, context=context):
             robot_db[robot.id] = robot.industria_ref
 
+        pdb.set_trace()
         for record in cursor:
             industria_ref = record['id']
             program_id = program_db.get(record['program_id'], False)
@@ -266,6 +267,7 @@ class IndustriaDatabase(orm.Model):
 
             data = {
                 'industria_ref': industria_ref,
+
                 # TODO check correct format
                 'created_at': sql_get_date(record['created_at']),
                 'updated_at': sql_get_date(record['updated_at']),
@@ -378,6 +380,8 @@ class IndustriaJob(orm.Model):
 
         'program_id': fields.many2one(
             'industria.program', 'Program'),
+        'database_id': fields.many2one(
+            'industria.database', 'Database'),
         'source_id': fields.many2one(
             'industria.robot', 'Source Robot'),
         'partner_id': fields.related(

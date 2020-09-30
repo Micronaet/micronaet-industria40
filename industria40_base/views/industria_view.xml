@@ -177,7 +177,9 @@
                             <field name="created_at" />
                             <field name="ended_at" />
                             <field name="updated_at" />
+                            <newline />
 
+                            <field name="database_id" />
                             <field name="industria_ref" />
 
                             <field name="program_id" />
@@ -202,6 +204,7 @@
                     <field name="ended_at" />
                     <field name="updated_at" />
 
+                    <field name="database_id" />
                     <field name="industria_ref" />
 
                     <field name="program_id" />
