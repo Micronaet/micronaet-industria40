@@ -77,7 +77,7 @@
 
                             <field name="industria_ref" />
 
-                            <notebook>
+                            <notebook colspan="4">
                                 <page name="program_page" string="Program">
                                     <group colspan="4" col="4">
                                         <separator string="Program" colspan="4"/>
