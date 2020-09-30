@@ -40,52 +40,44 @@ class IndustriaDatabase(orm.Model):
     _rec_name = 'name'
     _order = 'name'
 
-    def mssql_connect(self, cr, uid, company_id=0, as_dict=True, context=None):
-        ''' Connect to the ids (only one) passed and return the connection for manage DB
-            ids = select company_id, if not present take the first company
-        '''
-        import sys
+    def mssql_connect(self, cr, uid, ids, context=None):
+        """ Connection with database return cursor
+        """
+        database = self.browse(cr, uid, ids, context=context)[0]
+        as_dict = True
 
-        try:  # Every error return no cursor
-            if not company_id:
-                company_id = self.search(cr, uid, [], context=context)[0]
-
-            company_proxy = self.browse(cr, uid, company_id, context=context)
-
-            if company_proxy.mssql_type == 'mssql':
-                try:
-                    import pymssql
-                except:
-                    _logger.error('Error no module pymssql installed!')
-                    return False
-
-                conn = pymssql.connect(host=r"%s:%s" % (
-                company_proxy.mssql_host, company_proxy.mssql_port),
-                                       user=company_proxy.mssql_username,
-                                       password=company_proxy.mssql_password,
-                                       database=company_proxy.mssql_database,
-                                       as_dict=as_dict)
-
-            elif company_proxy.mssql_type == 'mysql':
-                try:
-                    import MySQLdb, MySQLdb.cursors
-                except:
-                    _logger.error('Error no module MySQLdb installed!')
-                    return False
-
-                conn = MySQLdb.connect(host=company_proxy.mssql_host,
-                                       user=company_proxy.mssql_username,
-                                       passwd=company_proxy.mssql_password,
-                                       db=company_proxy.mssql_database,
-                                       cursorclass=MySQLdb.cursors.DictCursor,
-                                       charset='utf8',
-                                       )
-            else:
+        if database.mode == 'mssql':
+            try:
+                import pymssql
+            except:
+                _logger.error('Error no module pymssql installed!')
                 return False
 
-            return conn  # .cursor()
-        except:
+            connection = pymssql.connect(
+                host=r"%s:%s" % (database.ip, database.port),
+                user=database.username,
+                password=database.password,
+                database=database.database,
+                as_dict=as_dict)
+
+        elif database.mode == 'mysql':
+            try:
+                import MySQLdb, MySQLdb.cursors
+            except:
+                _logger.error('Error no module MySQLdb installed!')
+                return False
+
+            connection = MySQLdb.connect(
+                host=database.ip,
+                user=database.username,
+                passwd=database.password,
+                db=database.database,
+                cursorclass=MySQLdb.cursors.DictCursor,
+                charset='utf8',
+                )
+        else:
             return False
+        return connection  # .cursor()
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
@@ -105,8 +97,6 @@ class IndustriaDatabase(orm.Model):
         'mode': lambda *x: 'mysql',
         'mssql_port': lambda *a: 3306,
     }
-
-
 
 
 class IndustriaRobot(orm.Model):
