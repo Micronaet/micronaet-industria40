@@ -199,7 +199,7 @@
             <field name="name">industria.job.form</field>
             <field name="model">industria.job</field>
             <field name="arch" type="xml">
-                <tree string="Job">
+                <tree string="Job" colors="red:state=='ERROR';blue:state=='RUNNING'">
                     <field name="created_at" />
                     <field name="ended_at" />
                     <field name="updated_at" />
