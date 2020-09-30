@@ -202,16 +202,20 @@ class IndustriaDatabase(orm.Model):
         # TODO create context from ID (partial run)
         job_pool = self.pool.get('industria.job')
         robot_pool = self.pool.get('industria.robot')
+        program_pool = self.pool.get('industria.program')
+
+        from_industria_ref = False
 
         database = self.browse(cr, uid, ids, context=context)[0]
         connection = self.mssql_connect(cr, uid, ids, context=context)
         cursor = connection.cursor()
 
         try:
-            query = """
-                SELECT *  
-                FROM jobs
-                """
+            if from_industria_ref:
+                query = "SELECT * FROM jobs;"
+            else:
+                query = "SELECT * FROM jobs WHERE id >= %s;" % \
+                        from_industria_ref
             cursor.execute(query)
         except:
             raise osv.except_osv(
@@ -222,13 +226,30 @@ class IndustriaDatabase(orm.Model):
                 ))
 
         partner_id = database.partner_id.id
+        database_id = ids[0]
+
+        # Load program:
+        program_db = {}
+        program_ids = program_pool.search(cr, uid, [
+            ('database_id', '=', database_id),
+        ], context=context)
+        for program in robot_pool.browse(
+                cr, uid, program_ids, context=context):
+            program_db[program.id] = program.industria_ref
+
+        # Load robot:
+        robot_db = {}
+        robot_ids = robot_pool.search(cr, uid, [
+            ('database_id', '=', database_id),
+        ], context=context)
+        for robot in robot_pool.browse(cr, uid, robot_ids, context=context):
+            robot_db[robot.id] = robot.industria_ref
+
         for record in cursor:
             industria_ref = record['id']
-            program_id = record['source_id']
-            source_id = record['program_id']
-            # TODO search source and program
+            program_id = program_db.get(record['source_id'], False)
+            source_id = robot_db.get(record['program_id'], False)
 
-            # state | notes | created_at | updated_at | ended_at
             data = {
                 'industria_ref': industria_ref,
                 # TODO check correct format
@@ -242,6 +263,7 @@ class IndustriaDatabase(orm.Model):
             }
 
             job_ids = job_pool.search(cr, uid, [
+                ('database_id', '=', database_id),
                 ('industria_ref', '=', industria_ref),
             ], context=context)
             if job_ids:

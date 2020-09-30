@@ -151,6 +151,8 @@
                     <field name="robot_id" />
 
                     <field name="partner_id" />
+                    <field name="database_id" />
+
                 </tree>
             </field>
         </record>
