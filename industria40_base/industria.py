@@ -146,6 +146,62 @@ class IndustriaDatabase(orm.Model):
                     cr, uid, data, context=context)
         return True
 
+    def import_job(self, cr, uid, ids, context=None):
+        """ Update job list
+        """
+        # TODO create context from ID (partial run)
+        job_pool = self.pool.get('industria.job')
+        robot_pool = self.pool.get('industria.robot')
+
+        database = self.browse(cr, uid, ids, context=context)[0]
+        connection = self.mssql_connect(cr, uid, ids, context=context)
+        cursor = connection.cursor()
+
+        try:
+            query = """
+                SELECT *  
+                FROM jobs
+                """
+            cursor.execute(query)
+        except:
+            raise osv.except_osv(
+                _('Error SQL access'),
+                'Executing query %s: \n%s' % (
+                    query,
+                    sys.exc_info(),
+                ))
+
+        partner_id = database.partner_id.id
+        for record in cursor:
+            industria_ref = record['id']
+            program_id = record['source_id']
+            source_id = record['program_id']
+            # TODO search source and program
+
+            # state | notes | created_at | updated_at | ended_at
+            data = {
+                'industria_ref': industria_ref,
+                # TODO check correct format
+                'created_at': record['created_at'],
+                'updated_at': record['updated_at'],
+                'ended_at': record['ended_at'],
+
+                'source_id': source_id,
+                'program_id': program_id,
+                'state': record['state'],
+            }
+
+            job_ids = job_pool.search(cr, uid, [
+                ('industria_ref', '=', industria_ref),
+            ], context=context)
+            if job_ids:
+                job_pool.write(
+                    cr, uid, job_ids, data, context=context)
+            else:
+                job_pool.create(
+                    cr, uid, data, context=context)
+        return True
+
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'partner_id': fields.many2one(
