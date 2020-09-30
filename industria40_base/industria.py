@@ -312,6 +312,8 @@ class IndustriaProgram(orm.Model):
         'piece': fields.integer('Total piece x job'),
         'robot_id': fields.many2one(
             'industria.robot', 'Robot'),
+        'database_id': fields.many2one(
+            'industria.database', 'Database'),
         'partner_id': fields.related(
             'robot_id', 'partner_id',
             type='many2one', relation='res.partner',
