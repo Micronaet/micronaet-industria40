@@ -143,7 +143,7 @@ class IndustriaDatabase(orm.Model):
                     cr, uid, program_ids, data, context=context)
             else:
                 program_pool.create(
-                    cr, uid, program_ids, data, context=context)
+                    cr, uid, data, context=context)
         return True
 
     _columns = {
