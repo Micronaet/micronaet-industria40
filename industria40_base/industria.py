@@ -22,6 +22,7 @@
 ###############################################################################
 
 import os
+import pdb
 import sys
 import logging
 from openerp.osv import fields, osv, expression, orm
@@ -199,6 +200,7 @@ class IndustriaDatabase(orm.Model):
     def import_job(self, cr, uid, ids, context=None):
         """ Update job list
         """
+        pdb.set_trace()
         # TODO create context from ID (partial run)
         job_pool = self.pool.get('industria.job')
         robot_pool = self.pool.get('industria.robot')
