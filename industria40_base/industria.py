@@ -322,8 +322,10 @@ class IndustriaRobot(orm.Model):
     _order = 'name'
 
     def get_today_state(self, cr, uid, ids, fields, args, context=None):
-        """ Fields function for calculate
+        """ Fields function for calculate (ensure one)
         """
+        item_id = ids[0]
+        res = {}
         css = """
             @chart-height:300px;            
             @grid-color:#aaa;
@@ -428,7 +430,8 @@ class IndustriaRobot(orm.Model):
             </div>
         """ % css
 
-        return html
+        res[item_id] = html
+        return res
 
     _columns = {
         'ip': fields.char('IP address', size=15),
