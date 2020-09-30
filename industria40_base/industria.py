@@ -235,7 +235,7 @@ class IndustriaDatabase(orm.Model):
         program_ids = program_pool.search(cr, uid, [
             ('database_id', '=', database_id),
         ], context=context)
-        for program in robot_pool.browse(
+        for program in program_pool.browse(
                 cr, uid, program_ids, context=context):
             program_db[program.id] = program.industria_ref
 
