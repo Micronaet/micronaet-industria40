@@ -27,6 +27,7 @@ import logging
 from openerp.osv import fields, osv, expression, orm
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -34,7 +35,6 @@ _logger = logging.getLogger(__name__)
 class IndustriaDatabase(orm.Model):
     """ Model name: Industria Database
     """
-
     _name = 'industria.database'
     _description = 'Database PC'
     _rec_name = 'name'
@@ -46,38 +46,57 @@ class IndustriaDatabase(orm.Model):
         database = self.browse(cr, uid, ids, context=context)[0]
         as_dict = True
 
-        if database.mode == 'mssql':
-            try:
-                import pymssql
-            except:
-                _logger.error('Error no module pymssql installed!')
+        try:
+            if database.mode == 'mssql':
+                try:
+                    import pymssql
+                except:
+                    _logger.error('Error no module pymssql installed!')
+                    return False
+
+                connection = pymssql.connect(
+                    host=r'%s:%s' % (database.ip, database.port),
+                    user=database.username,
+                    password=database.password,
+                    database=database.database,
+                    as_dict=as_dict)
+
+            elif database.mode == 'mysql':
+                try:
+                    import MySQLdb, MySQLdb.cursors
+                except:
+                    _logger.error('Error no module MySQLdb installed!')
+                    return False
+
+                connection = MySQLdb.connect(
+                    host=database.ip,
+                    user=database.username,
+                    passwd=database.password,
+                    db=database.database,
+                    cursorclass=MySQLdb.cursors.DictCursor,
+                    charset='utf8',
+                    )
+            else:
                 return False
-
-            connection = pymssql.connect(
-                host=r"%s:%s" % (database.ip, database.port),
-                user=database.username,
-                password=database.password,
-                database=database.database,
-                as_dict=as_dict)
-
-        elif database.mode == 'mysql':
-            try:
-                import MySQLdb, MySQLdb.cursors
-            except:
-                _logger.error('Error no module MySQLdb installed!')
-                return False
-
-            connection = MySQLdb.connect(
-                host=database.ip,
-                user=database.username,
-                passwd=database.password,
-                db=database.database,
-                cursorclass=MySQLdb.cursors.DictCursor,
-                charset='utf8',
-                )
-        else:
+        except:
             return False
         return connection  # .cursor()
+
+    def test_database_connection(self, cr, uid, ids, context=None):
+        """ Test database connection
+        """
+        cursor = self.mssql_connect(cr, uid, ids, context=context)
+        if cursor:
+            raise osv.except_osv(
+                _('Connection test:'),
+                _('OpenERP successfully connected with SQL database using '
+                  'this parameters!'))
+        else:
+            raise osv.except_osv(
+                _('Connection error:'),
+                _('OpenERP cannot connect with SQL database using this '
+                  'parameters!'))
+        return True
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),

@@ -7,6 +7,9 @@
             <field name="model">industria.database</field>
             <field name="arch" type="xml">
                 <form string="Database" version="7.0">
+                    <header>
+                        <button name="test_database_connection" type="object" string="Test" icon="gtk-refresh"/>
+                    </header>
                     <sheet>
                         <group col="4" colspan="4">
                             <field name="name" />
@@ -40,6 +43,7 @@
 
                     <field name="database" />
                     <field name="port" />
+                    <button name="test_database_connection" type="object" string="Test" icon="gtk-refresh"/>
                 </tree>
             </field>
         </record>
