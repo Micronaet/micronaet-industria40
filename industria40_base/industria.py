@@ -321,6 +321,115 @@ class IndustriaRobot(orm.Model):
     _rec_name = 'name'
     _order = 'name'
 
+    def get_today_state(self, cr, uid, ids, fields, args, context=None):
+        """ Fields function for calculate
+        """
+        css = """
+            @chart-height:300px;            
+            @grid-color:#aaa;
+            @bar-color:#F16335;
+            @bar-thickness:50px;
+            @bar-rounded: 3px;
+            @bar-spacing:30px;            
+            .chart-wrap{
+                margin-left:50px;
+                font-family:sans-serif;
+                .title{
+                    font-weight:bold;
+                    font-size:1.62em;
+                    padding:0.5em 0 1.8em 0;
+                    text-align:center;
+                    white-space:nowrap;
+                  }
+                &.vertical .grid{
+                transform:translateY(@chart-height/2 - @chart-width/2) 
+                translateX(@chart-width/2 - @chart-height/2) rotate(-90deg);
+                                
+                .bar::after{
+                    transform: translateY(-50%) rotate(45deg);
+                    display: block;
+                    }
+                &::before,&::after{
+                    transform:translateX(-0.2em) rotate(90deg);
+                    }
+                }
+              
+            height:@chart-width;
+            width:@chart-height;
+            .grid{
+                position:relative;
+                padding:5px 0 5px 0;
+                height:100%;
+                width:100%;
+                border-left:2px solid @grid-color;
+                background:repeating-linear-gradient(
+                    90deg,transparent,transparent 19.5%,
+                    fadeout(@grid-color,30%) 20%);                
+                &::before{
+                    font-size:0.8em;
+                    font-weight:bold;
+                    content:'0%';
+                    position:absolute;
+                    left:-0.5em;
+                    top:-1.5em;
+                    }
+                &::after{
+                    font-size:0.8em;
+                    font-weight:bold;
+                    content:'100%';
+                    position:absolute;
+                    right:-1.5em;
+                    top:-1.5em;
+                    }
+                }
+              
+            .bar {
+                width: var(--bar-value);
+                height:@bar-thickness;
+                margin:@bar-spacing 0;    
+                background-color:@bar-color;
+                border-radius:0 @bar-rounded @bar-rounded 0;                
+                &:hover{opacity:0.7; }                
+                &::after{
+                    content:attr(data-name);
+                    margin-left:100%;
+                    // line-height:@bar-thickness;
+                    padding:10px;
+                    display:inline-block;
+                    white-space:nowrap;
+                    }
+                }
+            }
+        """
+        html = """
+            <style>%s</style>
+            <h1>Bar Chart HTML</h1>
+            <div class="chart-wrap vertical">
+                <h2 class="title">Bar Chart HTML Example: HTML And CSS</h2>
+              
+                <div class="grid">
+                    <div class="bar" style="--bar-value:85%;" 
+                        data-name="Your Blog" title="Your Blog 85%"></div>
+                    <div class="bar" style="--bar-value:23%;" 
+                        data-name="Medium" title="Medium 23%"></div>
+                    <div class="bar" style="--bar-value:7%;" 
+                        data-name="Tumblr" title="Tumblr 7%"></div>
+                    <div class="bar" style="--bar-value:38%;" 
+                        data-name="Facebook" title="Facebook 38%"></div>
+                    <div class="bar" style="--bar-value:35%;" 
+                        data-name="YouTube" title="YouTube 35%"></div>
+                    <div class="bar" style="--bar-value:30%;" 
+                        data-name="LinkedIn" title="LinkedIn 30%"></div>
+                    <div class="bar" style="--bar-value:5%;" 
+                        data-name="Twitter" title="Twitter 5%"></div>
+                    <div class="bar" style="--bar-value:20%;" 
+                        data-name="Other" title="Other 20%"></div>    
+              </div>
+            </div>
+        """ % css
+
+        return html
+
     _columns = {
         'ip': fields.char('IP address', size=15),
         'name': fields.char('Name', size=64, required=True),
@@ -330,6 +439,8 @@ class IndustriaRobot(orm.Model):
         'database_id': fields.many2one(
             'industria.database', 'Database'),
         'note': fields.text('Note'),
+        'today_state': fields.function(
+            'Status', type='text', method=True, compute='get_today_state'),
     }
 
 

@@ -77,11 +77,26 @@
 
                             <field name="industria_ref" />
 
-                            <separator string="Program" colspan="4"/>
-                            <field name="program_ids" colspan="4" nolabel="1"/>
-
-                            <separator string="Note" colspan="4"/>
-                            <field name="note" colspan="4" nolabel="1"/>
+                            <notebook>
+                                <page name="program_page" string="Program">
+                                    <group colspan="4" col="4">
+                                        <separator string="Program" colspan="4"/>
+                                        <field name="program_ids" colspan="4" nolabel="1"/>
+                                    </group>
+                                </page>
+                                <page name="state_page" string="Status">
+                                    <group colspan="4" col="4">
+                                        <separator string="Today status" colspan="4"/>
+                                        <field name="today_state" colspan="4" nolabel="1"/>
+                                    </group>
+                                </page>
+                                <page name="note_page" string="Note">
+                                    <group colspan="4" col="4">
+                                        <separator string="Note" colspan="4"/>
+                                        <field name="note" colspan="4" nolabel="1"/>
+                                    </group>
+                                </page>
+                            </notebook>
                         </group>
                     </sheet>
                 </form>
