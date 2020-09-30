@@ -29,6 +29,12 @@ from openerp.osv import fields, osv, expression, orm
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from openerp.tools.translate import _
+from openerp.tools import (
+    DEFAULT_SERVER_DATE_FORMAT,
+    DEFAULT_SERVER_DATETIME_FORMAT,
+    DATETIME_FORMATS_MAP,
+    float_compare,
+    )
 
 _logger = logging.getLogger(__name__)
 
@@ -200,6 +206,13 @@ class IndustriaDatabase(orm.Model):
     def import_job(self, cr, uid, ids, context=None):
         """ Update job list
         """
+        def sql_get_date(date):
+            """ Generate date for database
+            """
+            if not date:
+                return False
+            return date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
         # TODO create context from ID (partial run)
         job_pool = self.pool.get('industria.job')
         robot_pool = self.pool.get('industria.robot')
@@ -254,9 +267,9 @@ class IndustriaDatabase(orm.Model):
             data = {
                 'industria_ref': industria_ref,
                 # TODO check correct format
-                'created_at': record['created_at'],
-                'updated_at': record['updated_at'],
-                'ended_at': record['ended_at'],
+                'created_at': sql_get_date(record['created_at']),
+                'updated_at': sql_get_date(record['updated_at']),
+                'ended_at': sql_get_date(record['ended_at']),
 
                 'source_id': source_id,
                 'program_id': program_id,
