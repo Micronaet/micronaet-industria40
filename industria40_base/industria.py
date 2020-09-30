@@ -106,7 +106,8 @@ class IndustriaDatabase(orm.Model):
         program_pool = self.pool.get('industria.program')
 
         database = self.browse(cr, uid, ids, context=context)[0]
-        cursor = self.mssql_connect(cr, uid, ids, context=context)
+        connection = self.mssql_connect(cr, uid, ids, context=context)
+        cursor = connection.cursor()
 
         try:
             query = """
