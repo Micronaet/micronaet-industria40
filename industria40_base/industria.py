@@ -501,7 +501,7 @@ class IndustriaJob(orm.Model):
                 duration = datetime.strptime(
                     ended_at, DEFAULT_SERVER_DATETIME_FORMAT) - \
                            datetime.strptime(
-                               created_at, DEFAULT_SERVER_DATE_FORMAT)
+                               created_at, DEFAULT_SERVER_DATETIME_FORMAT)
                 duration = duration.seconds / 60.0
             else:
                 duration = False
