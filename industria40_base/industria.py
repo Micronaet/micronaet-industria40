@@ -385,7 +385,7 @@ class IndustriaJob(orm.Model):
         'source_id': fields.many2one(
             'industria.robot', 'Source Robot'),
         'partner_id': fields.related(
-            'robot_id', 'partner_id',
+            'source_id', 'partner_id',
             type='many2one', relation='res.partner',
             string='Supplier', store=True),
         'state': fields.selection([
