@@ -502,7 +502,7 @@ class IndustriaJob(orm.Model):
                     ended_at, DEFAULT_SERVER_DATETIME_FORMAT) - \
                            datetime.strptime(
                                created_at, DEFAULT_SERVER_DATETIME_FORMAT)
-                duration = duration.seconds / 60.0
+                duration = duration.seconds / 60.0 / 60.0
             else:
                 duration = False
             res[record.id] = duration
@@ -532,7 +532,7 @@ class IndustriaJob(orm.Model):
             ('COMPLETED', 'Completed'),
             ], 'State', required=True),
         'notes': fields.text('Note'),
-        'job_duration': fields.function(
+        'duration': fields.function(
             _get_duration, method=True,
             type='float', string='Duration',
             store={
