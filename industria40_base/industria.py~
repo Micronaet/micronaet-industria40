@@ -445,6 +445,13 @@ class IndustriaRobot(orm.Model):
         'today_state': fields.function(
             get_today_state, 'Status', type='text', method=True, ),
     }
+    _function_call, method=True, 
+    type='float', string='Label', 
+    store=True), 
+                
+    def _function_call(self, cr, uid, ids, fields, args, context=None):
+        ''' Fields function for calculate 
+        '''
 
 
 class IndustriaProgram(orm.Model):
