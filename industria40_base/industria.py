@@ -82,6 +82,9 @@ class IndustriaDatabase(orm.Model):
             return False
         return connection  # .cursor()
 
+    # -------------------------------------------------------------------------
+    # Button event:
+    # -------------------------------------------------------------------------
     def test_database_connection(self, cr, uid, ids, context=None):
         """ Test database connection
         """
@@ -96,10 +99,57 @@ class IndustriaDatabase(orm.Model):
                 _('Connection error:'),
                 _('OpenERP cannot connect with SQL database using this '
                   'parameters!'))
+
+    def import_program(self, cr, uid, ids, context=None):
+        """ Update program list
+        """
+        program_pool = self.pool.get('industria.program')
+
+        database = self.browse(cr, uid, ids, context=context)[0]
+        cursor = self.mssql_connect(cr, uid, ids, context=context)
+
+        try:
+            query = """
+                SELECT *  
+                FROM programs
+                """
+            cursor.execute(query)
+        except:
+            raise osv.except_osv(
+                _('Error SQL access'),
+                'Executing query %s: \n%s' % (
+                    query,
+                    sys.exc_info(),
+                ))
+
+        partner_id = database.partner_id.id
+        for record in cursor:
+            industria_ref = record['id']
+            data = {
+                'industria_ref': industria_ref,
+                'code': record['name'],
+                'name': record['description'],
+                'piece': record['npieces'],
+                'timeout': record['maxexecutiontime'],
+                # TODO created_at | updated_at
+            }
+
+            program_ids = program_pool.search(cr, uid, [
+                ('industria_ref', '=', industria_ref),
+            ], context=context)
+            if program_ids:
+                program_pool.write(
+                    cr, uid, program_ids, data, context=context)
+            else:
+                program_pool.create(
+                    cr, uid, program_ids, data, context=context)
+
         return True
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
+        'partner_id': fields.many2one(
+            'res.partner', 'Supplier', required=True),
         'ip': fields.char('IP address', size=15),
         'username': fields.char('Username', size=64, required=True),
         'password': fields.char('Password', size=64, required=True),

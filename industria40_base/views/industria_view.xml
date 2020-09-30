@@ -13,10 +13,11 @@
                     <sheet>
                         <group col="4" colspan="4">
                             <field name="name" />
-                            <field name="ip" />
+                            <field name="partner_ip" />
 
+                            <field name="ip" />
                             <field name="username" />
-                            <field name="password" />
+                            <field name="password" password="True"/>
 
                             <field name="database" />
                             <field name="port" />
