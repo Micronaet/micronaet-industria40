@@ -87,7 +87,7 @@
                                 <page name="state_page" string="Status">
                                     <group colspan="4" col="4">
                                         <separator string="Today status" colspan="4"/>
-                                        <field name="today_state" colspan="4" nolabel="1"/>
+                                        <field name="today_state" colspan="4" nolabel="1" widget="html"/>
                                     </group>
                                 </page>
                                 <page name="note_page" string="Note">
