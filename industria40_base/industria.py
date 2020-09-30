@@ -284,6 +284,7 @@ class IndustriaRobot(orm.Model):
     _columns = {
         'ip': fields.char('IP address', size=15),
         'name': fields.char('Name', size=64, required=True),
+        'industria_ref': fields.integer('Industria ref key'),
         'partner_id': fields.many2one(
             'res.partner', 'Supplier', required=True),
         'database_id': fields.many2one(
