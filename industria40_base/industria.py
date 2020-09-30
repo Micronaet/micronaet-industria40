@@ -326,7 +326,7 @@ class IndustriaRobot(orm.Model):
         """
         item_id = ids[0]
         res = {}
-        css = """
+        css = u"""
             @chart-height:300px;            
             @grid-color:#aaa;
             @bar-color:#F16335;
@@ -404,8 +404,8 @@ class IndustriaRobot(orm.Model):
             }
         """
 
-        html = "<style>%s</style>" % css
-        html += """
+        html = u"<style>%s</style>" % css
+        html += u"""
             <h1>Bar Chart HTML</h1>
             <div class="chart-wrap vertical">
                 <h2 class="title">Bar Chart HTML Example: HTML And CSS</h2>
@@ -429,7 +429,7 @@ class IndustriaRobot(orm.Model):
                         data-name="Other" title="Other 20%"></div>    
               </div>
             </div>
-        """ % css
+        """
 
         res[item_id] = html
         return res
