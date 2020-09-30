@@ -533,7 +533,7 @@ class IndustriaJob(orm.Model):
             ('COMPLETED', 'Completed'),
             ], 'State', required=True),
         'notes': fields.text('Note'),
-        'duration': fields.function(
+        'job_duration': fields.function(
             _get_duration, method=True,
             type='float', string='Duration',
             store={
