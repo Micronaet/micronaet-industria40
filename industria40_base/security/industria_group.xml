@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+   <data>
+        <record id="group_industria_manager" model="res.groups">
+            <field name="name">Industria 4.0 Manager</field>
+        </record>
+        <record id="group_industria_user" model="res.groups">
+            <field name="name">Industria 4.0 User</field>
+        </record>
+   </data>
+</openerp>

@@ -1,0 +1,5 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+access_industria_robot_user,industria.robot,model_industria_robot,base.group_user,1,1,1,1
+access_industria_program_user,industria.program,model_industria_program,base.group_user,1,1,1,1
+access_industria_job_user,industria.job,model_industria_job,base.group_user,1,1,1,1
+
