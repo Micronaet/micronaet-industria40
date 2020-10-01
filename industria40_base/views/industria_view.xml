@@ -208,6 +208,8 @@
                     <filter name="state_error" string="Running state" domain="[('state','=','RUNNING')]"/>
                     <filter name="state_error" string="Completed state" domain="[('state','=','COMPLETED')]"/>
 
+                    <filter name="state_anomaly" string="Anomaly state" domain="['|',('state','=','ERROR'),('job_duration', '&gt;', 10)]"/>
+
                     <group expand="0" string="Group By...">
                         <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
                         <filter string="Create" context="{'group_by': 'created_at:day'}" />
