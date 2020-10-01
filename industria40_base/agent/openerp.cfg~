@@ -1,0 +1,14 @@
+[dbaccess]
+dbname: DB
+user: admin
+pwd: password
+server: localhost
+port: 18069
+separator: ,
+
+[csv]
+header: 0
+
+[import_mode]
+verbose: False
+
