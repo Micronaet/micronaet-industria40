@@ -523,6 +523,8 @@ class IndustriaJob(orm.Model):
         return res
 
     _columns = {
+        'dismiss': fields.boolean(
+            'Dismiss', help='Job not completed or error'),
         'created_at': fields.datetime('Start'),
         'ended_at': fields.datetime('End'),
         'updated_at': fields.datetime('Modify'),

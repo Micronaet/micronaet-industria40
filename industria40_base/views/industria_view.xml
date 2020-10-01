@@ -238,10 +238,12 @@
                 <form string="Job" version="7.0">
                     <sheet>
                         <group col="4" colspan="4">
+                            <field name="dismiss" />
+                            <field name="job_duration" widget="float_time"/>
+
                             <field name="created_at" />
                             <field name="ended_at" />
                             <field name="updated_at" />
-                            <field name="job_duration" widget="float_time"/>
 
                             <field name="database_id" />
                             <field name="industria_ref" />
@@ -263,7 +265,8 @@
             <field name="name">industria.job.form</field>
             <field name="model">industria.job</field>
             <field name="arch" type="xml">
-                <tree string="Job" colors="red:state=='ERROR';blue:state=='RUNNING'">
+                <tree string="Job" colors="red:state=='ERROR' OR dismiss==True;blue:state=='RUNNING'">
+                    <field name="dismiss" />
                     <field name="created_at" />
                     <field name="ended_at" />
                     <field name="updated_at" />
@@ -287,7 +290,7 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_industria_job_tree"/>
             <field name="context">{}</field>
-            <field name="domain">[]</field>
+            <field name="domain">[('dismiss', '=', False)]</field>
         </record>
         <record model="ir.actions.act_window" id="action_industria_job_anomaly">
             <field name="name">Job anomaly</field>
@@ -297,6 +300,15 @@
             <field name="view_id" ref="view_industria_job_tree"/>
             <field name="context">{'search_default_state_anomaly': True}</field>
             <field name="domain">[]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_job_dismissed">
+            <field name="name">Job dismissed</field>
+            <field name="res_model">industria.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="view_id" ref="view_industria_job_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[('dismiss', '=', True)]</field>
         </record>
 
         <!--res.partner-->
