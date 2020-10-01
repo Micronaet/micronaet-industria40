@@ -214,8 +214,7 @@ class IndustriaDatabase(orm.Model):
 
             # Bug: if refresh old value may be theres GMT or not so error!
             extra_gmt = datetime.now() - datetime.utcnow()
-            #  - extra_gmt
-            return (ts).strftime(
+            return (ts - extra_gmt).strftime(
                 DEFAULT_SERVER_DATETIME_FORMAT)
 
         # TODO create context from ID (partial run)
@@ -267,6 +266,7 @@ class IndustriaDatabase(orm.Model):
         # Update program for robot:
         update_program = []
         counter = 0
+        pdb.set_trace()
         for record in cursor:
             counter += 1
             if not counter % 50:
