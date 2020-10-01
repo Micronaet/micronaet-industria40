@@ -262,7 +262,7 @@
                     <field name="created_at" />
                     <field name="ended_at" />
                     <field name="updated_at" />
-                    <field name="job_duration" widget="float_time" />
+                    <field name="job_duration" widget="float_time" sum="total"/>
 
                     <field name="database_id" />
                     <field name="industria_ref" />
