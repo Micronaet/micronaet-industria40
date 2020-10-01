@@ -268,7 +268,7 @@ class IndustriaDatabase(orm.Model):
         counter = 0
         for record in cursor:
             counter += 1
-            if not counter % 20:
+            if not counter % 50:
                 _logger.info('Job imported %s' % counter)
             industria_ref = record['id']
             program_id = program_db.get(record['program_id'], False)
