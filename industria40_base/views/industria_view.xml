@@ -188,7 +188,7 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Industria" type="bar">
-                    <field name="robot_id"/>
+                    <field name="source_id"/>
                     <field name="job_duration" operator="+"/>
                 </graph>
             </field>
@@ -197,18 +197,17 @@
             <field name="name">industria.job.search</field>
             <field name="model">industria.job</field>
             <field name="arch" type="xml">
-                <search string="Jobs" version="7.0">        
-                    <field name="name" />
+                <search string="Jobs" version="7.0">
                     <field name="database_id" />
                     <field name="program_id" />
                     <field name="source_id" />
-                    
+
                     <field name="partner_id" filter_domain="[('partner_id','=',self)]"/>
-                    
+
                     <filter name="state_error" string="Error state" domain="[('state','=','ERROR')]"/>
                     <filter name="state_error" string="Running state" domain="[('state','=','RUNNING')]"/>
                     <filter name="state_error" string="Completed state" domain="[('state','=','COMPLETED')]"/>
-                    
+
                     <group expand="0" string="Group By...">
                         <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
                         <filter string="Create" context="{'group_by': 'created_at:day'}" />
@@ -223,7 +222,7 @@
                         <filter string="Program" context="{'group_by': 'program_id'}" />
                         <filter string="Robot" context="{'group_by': 'source_id'}" />
                         <filter string="Status" context="{'group_by': 'state'}" />
-                    </group>                
+                    </group>
                 </search>
             </field>
         </record>
