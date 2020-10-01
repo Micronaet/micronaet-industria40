@@ -345,6 +345,13 @@
                     sequence="10"
                     />
                 <menuitem
+                    parent="menu_industria_job"
+                    id="menu_industria_job_dismissed"
+                    action="action_industria_job_dismissed"
+                    sequence="20"
+                    />
+
+                <menuitem
                     parent="menu_industria_master_data"
                     id="menu_industria_job_anomaly"
                     action="action_industria_job_anomaly"
