@@ -213,8 +213,10 @@ class IndustriaDatabase(orm.Model):
                 return False
 
             # Bug: if refresh old value may be theres GMT or not so error!
-            extra_gmt = datetime.now() - datetime.utcnow()
-            return (ts - extra_gmt).strftime(
+            dls_hours = 2  # TODO change!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            dls_dt = relativedelta(hours=dls_hours)
+            # extra_gmt = datetime.now() - datetime.utcnow()
+            return (ts - dls_dt).strftime(
                 DEFAULT_SERVER_DATETIME_FORMAT)
 
         # TODO create context from ID (partial run)
