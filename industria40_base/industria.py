@@ -265,10 +265,18 @@ class IndustriaDatabase(orm.Model):
         for robot in robot_pool.browse(cr, uid, robot_ids, context=context):
             robot_db[robot.id] = robot.industria_ref
 
+        # Update program for robot:
+        update_program = []
         for record in cursor:
             industria_ref = record['id']
             program_id = program_db.get(record['program_id'], False)
             source_id = robot_db.get(record['source_id'], False)
+            if program_id not in update_program:
+                update_program.append(program_id)
+                # Assign robot to the program (every program own to the robot)
+                program_pool.write(cr, uid, [program_id], {
+                    'robot_id': source_id,
+                }, context=context)
 
             data = {
                 'industria_ref': industria_ref,
