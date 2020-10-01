@@ -292,7 +292,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_industria_job_tree"/>
-            <field name="context">{'search_detault_state_anomaly': True}</field>
+            <field name="context">{'search_default_state_anomaly': True}</field>
             <field name="domain">[]</field>
         </record>
 
