@@ -206,16 +206,14 @@ class IndustriaDatabase(orm.Model):
     def import_job(self, cr, uid, ids, context=None):
         """ Update job list
         """
-        def sql_get_date(datetime_value):
+        def sql_get_date(ts):
             """ Generate date for database
             """
-            if not datetime_value:
+            if not ts:
                 return False
 
+            # Bug: if refresh old value may be theres GMT or not so error!
             extra_gmt = datetime.now() - datetime.utcnow()
-            ts = datetime.strptime(
-                datetime_value,
-                DEFAULT_SERVER_DATETIME_FORMAT)
             return (ts - extra_gmt).strftime(
                 DEFAULT_SERVER_DATETIME_FORMAT)
 
