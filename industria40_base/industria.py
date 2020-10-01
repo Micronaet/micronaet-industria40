@@ -290,6 +290,7 @@ class IndustriaDatabase(orm.Model):
 
                 'source_id': source_id,
                 'program_id': program_id,
+                'database_id': database_id,
                 'state': record['state'],
             }
 
