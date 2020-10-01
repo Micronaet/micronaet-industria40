@@ -55,11 +55,11 @@ database_pool = odoo.model('industria.database')
 database_ids = database_pool.search([])
 for database in database_pool.browse(database_ids):
     print('Import program')
-    database_pool.import_program(database.id)
+    database_pool.import_program([database.id])
 
     print('Import robot')
-    database_pool.import_robot(database.id)
+    database_pool.import_robot([database.id])
 
     print('Import job')
-    database_pool.import_job(database.id)
+    database_pool.import_job([database.id])
 
