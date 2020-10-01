@@ -266,11 +266,10 @@ class IndustriaDatabase(orm.Model):
         # Update program for robot:
         update_program = []
         counter = 0
-        total = len(cursor)
         for record in cursor:
             counter += 1
             if not counter % 20:
-                _logger.info('Job imported %s / %s' % (counter, total))
+                _logger.info('Job imported %s' % counter)
             industria_ref = record['id']
             program_id = program_db.get(record['program_id'], False)
             source_id = robot_db.get(record['source_id'], False)
