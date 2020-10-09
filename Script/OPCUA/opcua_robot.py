@@ -49,25 +49,9 @@ class RobotOPCUA:
 
         return 'opc.tcp://%s:%s' % (address, port)
 
-    @staticmethod
-    def print_node(self, node, level=0):
-        space = '  ' * level
-        try:  # Used for leaf values:
-            print(space, ' ---> Data:', node, node.get_value())
-            data_value = node.get_data_value()
-            for detail in data_value.ua_types:
-                detail_name = detail[0]
-                print(
-                    space,
-                    '      :::> Detail:',
-                    detail_name,
-                    data_value.__getattribute__(detail_name),
-                    )
-        except:  # Used for tree branch:
-            print(space, ' ===> Structure', node)
-            for child_node in node.get_children():
-                self.print_node(child_node, level=level+1)
-
+    # -------------------------------------------------------------------------
+    # Check information:
+    # -------------------------------------------------------------------------
     def get_data_value(self, node_description, comment='', verbose=True):
         """ Extract node data
         """
@@ -94,3 +78,33 @@ class RobotOPCUA:
         """ Check master alarm status:
         """
         return self.get_data_value(node_description, 'Is working', verbose)
+
+    # -------------------------------------------------------------------------
+    # Tree inspect
+    # -------------------------------------------------------------------------
+    @staticmethod
+    def print_node(self, node_name='', level=0):
+        """ Inspect node tree branch
+        """
+        if node_name:
+            node = self._client.get_root_node(node_name)
+        else:
+            # Use root node:
+            node = self._client.get_root_node()
+
+        space = '  ' * level
+        try:  # Used for leaf values:
+            print(space, '===> Data:', node_name, node.get_value())
+            data_value = node.get_data_value()
+            for detail in data_value.ua_types:
+                detail_name = detail[0]
+                print(
+                    space,
+                    '    ---> Detail:',
+                    detail_name,
+                    data_value.__getattribute__(detail_name),
+                    )
+        except:  # Used for tree branch:
+            print(space, '::> Structure', node)
+            for child_node in node.get_children():
+                self.print_node(child_node, level=level+1)
