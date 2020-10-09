@@ -31,7 +31,10 @@ class RobotOPCUA:
         """ Clean connection before destruct
         """
         print('Disconnect from robot')
-        self._client.disconnect()
+        try:
+            self._client.disconnect()
+        except:
+            print('Error disconnecting from Robot: %s' % self._name)
 
     @staticmethod
     def get_uri(self):
@@ -70,7 +73,7 @@ class RobotOPCUA:
         """
         return self.get_data_value(node_description, 'Is alarm', verbose)
 
-    def check_is_alarm(
+    def check_is_working(
             self,
             node_description="ns=6;s=::AsGlobalPV:PezzoPLC_InLavoro."
                              "CaricaInLavoroOK",
