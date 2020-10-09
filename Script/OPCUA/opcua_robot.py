@@ -1,8 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import os
-import sys
 import pdb
 from opcua import Client
 import ConfigParser
@@ -11,7 +9,6 @@ import ConfigParser
 class RobotOPCUA:
     """ Robot OPC UA Management
     """
-    @staticmethod
     def get_uri(self):
         """ Load parameter from config file
         """
@@ -60,7 +57,6 @@ class RobotOPCUA:
     # -------------------------------------------------------------------------
     # Tree inspect
     # -------------------------------------------------------------------------
-    @staticmethod
     def print_node(self, node_name='', level=0):
         """ Inspect node tree branch
         """
