@@ -11,32 +11,6 @@ import ConfigParser
 class RobotOPCUA:
     """ Robot OPC UA Management
     """
-    def __init__(self, name='Robot 1', config_file='./robot.cfg'):
-        """ Constructor for create object
-        """
-        pdb.set_trace()
-        self._name = name
-        self._config_file = config_file
-
-        print('Read config file %s for Robot: %s' % (
-            self._name,
-            self._config_file,
-        ))
-        self._uri = self.get_uri()
-
-        # Create and connect as client:
-        self._client = Client(self._uri)
-        self._client.connect()
-
-    def __del__(self):
-        """ Clean connection before destruct
-        """
-        print('Disconnect from robot')
-        try:
-            self._client.disconnect()
-        except:
-            print('Error disconnecting from Robot: %s' % self._name)
-
     @staticmethod
     def get_uri(self):
         """ Load parameter from config file
@@ -112,3 +86,29 @@ class RobotOPCUA:
             print(space, '::> Structure', node)
             for child_node in node.get_children():
                 self.print_node(child_node, level=level+1)
+
+    def __init__(self, name='Robot 1', config_file='./robot.cfg'):
+        """ Constructor for create object
+        """
+        pdb.set_trace()
+        self._name = name
+        self._config_file = config_file
+
+        print('Read config file %s for Robot: %s' % (
+            self._name,
+            self._config_file,
+        ))
+        self._uri = self.get_uri()
+
+        # Create and connect as client:
+        self._client = Client(self._uri)
+        self._client.connect()
+
+    def __del__(self):
+        """ Clean connection before destruct
+        """
+        print('Disconnect from robot')
+        try:
+            self._client.disconnect()
+        except:
+            print('Error disconnecting from Robot: %s' % self._name)
