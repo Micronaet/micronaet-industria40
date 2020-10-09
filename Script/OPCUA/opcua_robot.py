@@ -14,6 +14,7 @@ class RobotOPCUA:
     def __init__(self, name='Robot 1', config_file='./robot.cfg'):
         """ Constructor for create object
         """
+        pdb.set_trace()
         self._name = name
         self._config_file = config_file
 
