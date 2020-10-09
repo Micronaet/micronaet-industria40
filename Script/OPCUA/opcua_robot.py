@@ -106,7 +106,7 @@ class RobotOPCUA:
             raise self.RobotConnectionError(self)
 
     def __del__(self):
-        """ Clean connection before destruct
+        """ Destructor for clean connection when garbage object
         """
         print('Disconnect from robot')
         try:
