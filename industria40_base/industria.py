@@ -165,6 +165,10 @@ class IndustriaDatabase(orm.Model):
 
         database = self.browse(cr, uid, ids, context=context)[0]
         connection = self.mssql_connect(cr, uid, ids, context=context)
+        if not connection:
+            _logger.error('MySQL Robot not present, Mini PC not available!')
+            return False
+
         cursor = connection.cursor()
 
         try:
