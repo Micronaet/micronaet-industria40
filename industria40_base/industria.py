@@ -122,7 +122,7 @@ class IndustriaDatabase(orm.Model):
         try:
             query = """
                 SELECT *  
-                FROM programs
+                FROM programs;
                 """
             cursor.execute(query)
         except:
