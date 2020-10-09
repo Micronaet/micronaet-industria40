@@ -9,6 +9,9 @@ import ConfigParser
 class RobotOPCUA:
     """ Robot OPC UA Management
     """
+    class RobotConnectionError(Exception):
+        print('Cannot connect with robot')
+
     def get_uri(self):
         """ Load parameter from config file
         """
@@ -86,7 +89,6 @@ class RobotOPCUA:
     def __init__(self, name='Robot 1', config_file='./robot.cfg'):
         """ Constructor for create object
         """
-        pdb.set_trace()
         self._name = name
         self._config_file = config_file
 
@@ -98,7 +100,10 @@ class RobotOPCUA:
 
         # Create and connect as client:
         self._client = Client(self._uri)
-        self._client.connect()
+        try:
+            self._client.connect()
+        except:
+            raise self.RobotConnectionError(self)
 
     def __del__(self):
         """ Clean connection before destruct
