@@ -37,7 +37,7 @@ class RobotOPCUA:
         try:
             data = node.get_data_value().Value._value
         except:
-            data = 'Node access error (not readable!)'
+            data = '[ERR] Node access error (not readable!)'
         if verbose:
             comment = comment or node_description
             print(comment, data)
