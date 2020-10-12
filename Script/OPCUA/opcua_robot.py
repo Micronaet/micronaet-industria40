@@ -34,7 +34,10 @@ class RobotOPCUA:
         """ Extract node data
         """
         node = self._client.get_node(node_description)
-        data = node.get_data_value().Value._value
+        try:
+            data = node.get_data_value().Value._value
+        except:
+            data = 'Node access error (not readable!)'
         if verbose:
             comment = comment or node_description
             print(comment, data)
@@ -61,19 +64,19 @@ class RobotOPCUA:
         """ Check some parameters:
         """
         self.get_data_value(
-            "ns=6;s=::AsGlobalPV:Macchina.Stato", 
+            "ns=6;s=::AsGlobalPV:Macchina.Stato",
             '%s: Stato' % comment, verbose)
 
         self.get_data_value(
-            "ns=6;s=::AsGlobalPV:AttrezzaturaInLavoro.Nome", 
+            "ns=6;s=::AsGlobalPV:AttrezzaturaInLavoro.Nome",
             '%s: Attrezzatura in lavoro' % comment, verbose)
         self.get_data_value(
-            "ns=6;s=::AsGlobalPV:Macchina.Manuale", 
-            '%s: Manuale' % comment, verbose)       
+            "ns=6;s=::AsGlobalPV:Macchina.Manuale",
+            '%s: Manuale' % comment, verbose)
         self.get_data_value(
-            "ns=6;s=::AsGlobalPV:Macchina.Automatico", 
+            "ns=6;s=::AsGlobalPV:Macchina.Automatico",
             '%s: Automatico' % comment, verbose)
-    
+
     # -------------------------------------------------------------------------
     # Tree inspect
     # -------------------------------------------------------------------------
