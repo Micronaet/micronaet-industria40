@@ -46,10 +46,20 @@ class RobotOPCUA:
     def check_is_alarm(
             self,
             node_description="ns=6;s=::AsGlobalPV:Allarmi.Presente",
-            comment='', verbose=True):
+            comment='Is alarm', verbose=True):
         """ Check master alarm status:
         """
-        return self.get_data_value(node_description, 'Is alarm', verbose)
+        data = ''
+        data += self.get_data_value(node_description, comment, verbose)
+
+        # Check 200 alarms:
+        for alarm in range(201):
+            data += self.get_data_value(
+                'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm,
+                '%s: N: %s' % (comment, alarm), 'Is alarm', verbose)
+
+        return data
+
 
     def check_is_working(
             self,
@@ -63,22 +73,24 @@ class RobotOPCUA:
     def check_machine(self, comment='Macchina', verbose=True):
         """ Check some parameters:
         """
-        self.get_data_value(
+        data = ''
+        data += self.get_data_value(
             "ns=6;s=::AsGlobalPV:AttrezzaturaInLavoro.Nome",
             '%s: Attrezzatura in lavoro' % comment, verbose)
-        self.get_data_value(
-            "ns=6;s=::AsGlobalPV:OreLavoroUtenza.N[1]",
-            '%s: Ore lavoro' % comment, verbose)
+        # data += self.get_data_value(
+        #     "ns=6;s=::AsGlobalPV:OreLavoroUtenza.N[1]",
+        #     '%s: Ore lavoro' % comment, verbose)
 
-        self.get_data_value(
+        data += self.get_data_value(
             "ns=6;s=::AsGlobalPV:Macchina.Stato",
             '%s: Stato' % comment, verbose)
-        self.get_data_value(
+        data += self.get_data_value(
             "ns=6;s=::AsGlobalPV:Macchina.Manuale",
             '%s: Manuale' % comment, verbose)
-        self.get_data_value(
+        data += self.get_data_value(
             "ns=6;s=::AsGlobalPV:Macchina.Automatico",
             '%s: Automatico' % comment, verbose)
+        return data
 
     # -------------------------------------------------------------------------
     # Tree inspect
