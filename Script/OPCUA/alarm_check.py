@@ -9,6 +9,7 @@ robot.check_is_alarm()
 robot.check_is_working()
 robot.check_machine()
 
+del(robot)
 """
 ::AsGlobalPV:Allarmi.N[x].Dati.Attivo            (BOOL)
 ::AsGlobalPV:AttrezzaturaInLavoro.Nome           (STRING[79])
