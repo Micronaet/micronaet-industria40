@@ -56,7 +56,7 @@ class RobotOPCUA:
         for alarm in range(201):
             data += '%s' % self.get_data_value(
                 'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm,
-                '%s: N: %s' % (comment, alarm), 'Is alarm', verbose)
+                '%s: N: %s' % (comment, alarm), verbose)
 
         return data
 
