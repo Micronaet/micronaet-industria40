@@ -61,11 +61,14 @@ class RobotOPCUA:
         """ Check some parameters:
         """
         self.get_data_value(
-            "ns=6;s=::AsGlobalPV:Macchina.Stato", comment, verbose)
+            "ns=6;s=::AsGlobalPV:Macchina.Stato", 
+            '%s: Stato' % comment, verbose)
         self.get_data_value(
-            "ns=6;s=::AsGlobalPV:Macchina.Manuale", comment, verbose)       
+            "ns=6;s=::AsGlobalPV:Macchina.Manuale", 
+            '%s: Manuale' % comment, verbose)       
         self.get_data_value(
-            "ns=6;s=::AsGlobalPV:Macchina.Automatico", comment, verbose)
+            "ns=6;s=::AsGlobalPV:Macchina.Automatico", 
+            '%s: Automatico' % comment, verbose)
     
     # -------------------------------------------------------------------------
     # Tree inspect
