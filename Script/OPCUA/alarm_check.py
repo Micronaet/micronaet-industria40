@@ -5,9 +5,9 @@ from opcua_robot import RobotOPCUA
 
 robot = RobotOPCUA()
 
-print(robot.check_is_alarm())
-print(robot.check_is_working())
-print(robot.check_machine())
+robot.check_is_alarm()
+robot.check_is_working()
+robot.check_machine()
 
 """
 ::AsGlobalPV:Allarmi.N[x].Dati.Attivo            (BOOL)
