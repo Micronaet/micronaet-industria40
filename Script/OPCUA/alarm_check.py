@@ -7,6 +7,7 @@ robot = RobotOPCUA()
 
 print(robot.check_is_alarm())
 print(robot.check_is_working())
+print(robot.check_machine())
 
 """
 ::AsGlobalPV:Allarmi.N[x].Dati.Attivo            (BOOL)
