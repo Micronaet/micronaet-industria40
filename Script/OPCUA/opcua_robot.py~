@@ -63,6 +63,10 @@ class RobotOPCUA:
         self.get_data_value(
             "ns=6;s=::AsGlobalPV:Macchina.Stato", 
             '%s: Stato' % comment, verbose)
+
+        self.get_data_value(
+            "ns=6;s=::AsGlobalPV:AttrezzaturaInLavoro.Nome", 
+            '%s: Stato' % comment, verbose)
         self.get_data_value(
             "ns=6;s=::AsGlobalPV:Macchina.Manuale", 
             '%s: Manuale' % comment, verbose)       
