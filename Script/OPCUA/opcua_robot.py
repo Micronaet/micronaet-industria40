@@ -50,16 +50,15 @@ class RobotOPCUA:
         """ Check master alarm status:
         """
         data = ''
-        data += '%s' % self.get_data_value(node_description, comment, verbose)
+        data += str(self.get_data_value(node_description, comment, verbose))
 
         # Check 200 alarms:
         for alarm in range(201):
-            data += '%s' % self.get_data_value(
+            data += str(self.get_data_value(
                 'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm,
-                '%s: N: %s' % (comment, alarm), verbose)
+                '%s: N: %s' % (comment, alarm), verbose))
 
         return data
-
 
     def check_is_working(
             self,
@@ -68,28 +67,29 @@ class RobotOPCUA:
             comment='', verbose=True):
         """ Check master alarm status:
         """
-        return self.get_data_value(node_description, 'Is working', verbose)
+        return str(
+            self.get_data_value(node_description, 'Is working', verbose))
 
     def check_machine(self, comment='Macchina', verbose=True):
         """ Check some parameters:
         """
         data = ''
-        data += self.get_data_value(
+        data += str(self.get_data_value(
             "ns=6;s=::AsGlobalPV:AttrezzaturaInLavoro.Nome",
-            '%s: Attrezzatura in lavoro' % comment, verbose)
+            '%s: Attrezzatura in lavoro' % comment, verbose))
         # data += self.get_data_value(
         #     "ns=6;s=::AsGlobalPV:OreLavoroUtenza.N[1]",
         #     '%s: Ore lavoro' % comment, verbose)
 
-        data += self.get_data_value(
+        data += str(self.get_data_value(
             "ns=6;s=::AsGlobalPV:Macchina.Stato",
-            '%s: Stato' % comment, verbose)
-        data += self.get_data_value(
+            '%s: Stato' % comment, verbose))
+        data += str(self.get_data_value(
             "ns=6;s=::AsGlobalPV:Macchina.Manuale",
-            '%s: Manuale' % comment, verbose)
-        data += self.get_data_value(
+            '%s: Manuale' % comment, verbose))
+        data += str(self.get_data_value(
             "ns=6;s=::AsGlobalPV:Macchina.Automatico",
-            '%s: Automatico' % comment, verbose)
+            '%s: Automatico' % comment, verbose))
         return data
 
     # -------------------------------------------------------------------------
