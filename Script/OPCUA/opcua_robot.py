@@ -50,11 +50,11 @@ class RobotOPCUA:
         """ Check master alarm status:
         """
         data = ''
-        data += self.get_data_value(node_description, comment, verbose)
+        data += '%s' % self.get_data_value(node_description, comment, verbose)
 
         # Check 200 alarms:
         for alarm in range(201):
-            data += self.get_data_value(
+            data += '%s' % self.get_data_value(
                 'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm,
                 '%s: N: %s' % (comment, alarm), 'Is alarm', verbose)
 
