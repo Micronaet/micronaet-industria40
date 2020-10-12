@@ -64,12 +64,15 @@ class RobotOPCUA:
         """ Check some parameters:
         """
         self.get_data_value(
-            "ns=6;s=::AsGlobalPV:Macchina.Stato",
-            '%s: Stato' % comment, verbose)
-
-        self.get_data_value(
             "ns=6;s=::AsGlobalPV:AttrezzaturaInLavoro.Nome",
             '%s: Attrezzatura in lavoro' % comment, verbose)
+        self.get_data_value(
+            "ns=6;s=::AsGlobalPV:OreLavoroUtenza.N[1]",
+            '%s: Ore lavoro' % comment, verbose)
+
+        self.get_data_value(
+            "ns=6;s=::AsGlobalPV:Macchina.Stato",
+            '%s: Stato' % comment, verbose)
         self.get_data_value(
             "ns=6;s=::AsGlobalPV:Macchina.Manuale",
             '%s: Manuale' % comment, verbose)
