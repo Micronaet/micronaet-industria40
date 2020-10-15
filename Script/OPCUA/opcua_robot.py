@@ -27,17 +27,15 @@ class RobotOPCUA:
         bot.getMe()
 
         # Check all 200 alarms:
-        event_text = ''
         for alarm in range(201):
             alarm_status = str(self.get_data_value(
                 'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm,
             ))
             if alarm_status:
-                event_text += 'Robot: %s Alarm present: # %s' % (
+                event_text = 'Robot: %s Alarm present: # %s' % (
                     self._robot_name, alarm,
                 )
-        if event_text:
-            bot.sendMessage(self._telegram_group, event_text)
+                bot.sendMessage(self._telegram_group, event_text)
 
     def get_data_value(self, node_description, comment='', verbose=True):
         """ Extract node data
