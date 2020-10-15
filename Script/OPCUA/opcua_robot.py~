@@ -121,7 +121,7 @@ class RobotOPCUA:
             for child_node in node.get_children():
                 self.print_node(child_node, level=level+1)
 
-    def __init__(self, name='Robot 1', config_file='./start.cfg'):
+    def __init__(self, name='Robot 1', config_file='./robot.cfg'):
         """ Constructor for create object
         """
         self._name = name
