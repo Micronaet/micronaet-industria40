@@ -77,9 +77,9 @@ class RobotOPCUA:
         data += str(self.get_data_value(
             "ns=6;s=::AsGlobalPV:AttrezzaturaInLavoro.Nome",
             '%s: Attrezzatura in lavoro' % comment, verbose))
-        # data += self.get_data_value(
+        # data += str(self.get_data_value(
         #     "ns=6;s=::AsGlobalPV:OreLavoroUtenza.N[1]",
-        #     '%s: Ore lavoro' % comment, verbose)
+        #     '%s: Ore lavoro' % comment, verbose))
 
         data += str(self.get_data_value(
             "ns=6;s=::AsGlobalPV:Macchina.Stato",
