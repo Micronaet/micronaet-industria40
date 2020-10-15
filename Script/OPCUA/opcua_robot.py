@@ -3,8 +3,11 @@
 
 import pdb
 from opcua import Client
-import ConfigParser
 import telepot
+try:
+    import ConfigParser
+except:
+    import configparser as ConfigParser
 
 
 class RobotOPCUA:
