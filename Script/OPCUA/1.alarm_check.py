@@ -27,62 +27,15 @@ import telepot
 import ConfigParser
 from opcua_robot import RobotOPCUA
 
-# -----------------------------------------------------------------------------
-# Read configuration parameter:
-# -----------------------------------------------------------------------------
-cfg_file = os.path.expanduser('./start.cfg')
-
-config = ConfigParser.ConfigParser()
-config.read([cfg_file])
-
-# Telegram parameters:
-telegram_token = config.get('Telegram', 'token')
-telegram_group = config.get('Telegram', 'group')
-
-# Robot parameters:
-robot_name = config.get('robot', 'name')
-
 # Load Robot:
 robot = RobotOPCUA()
-alarm_found = robot.get_alarm_info()
+robot.alert_alarm_on_telegram()
 # robot.check_is_alarm()
 # robot.check_is_working()
 # robot.check_machine()
 del(robot)
 
 
-# Telegram:
-bot = telepot.Bot(telegram_token)
-bot.getMe()
-
-clean_file = []
-print('Check alarm')
-for root, folders, files in os.walk(robot_folder):
-    for filename in files:
-        if filename.startswith(start):
-            fullname = os.path.join(root, filename)
-
-            data = {
-                'counter': 0,
-                'error_code': False,
-                'date': False,
-                }
-            for line in open(fullname, 'r'):
-                if line.startswith(date):
-                    data['counter'] += 1
-                    data['date'] = line.strip().split('=')
-                if line.startswith(error_code):
-                    data['error_code'] = line.strip().split('=')
-                    data['counter'] += 1
-                    break
-            if data['counter'] == 2:
-                event_text = \
-                    'Robot: %s\nAllarme: Codice %s\nDescrizione: %s' % (
-                        robot_name,
-                        data['error'],
-                        data['data'],
-                        )
-                bot.sendMessage(telegram_group, event_text)
                 clean_file.append(fullname)
                 print(event_text.replate('\n', ' - '))
     break

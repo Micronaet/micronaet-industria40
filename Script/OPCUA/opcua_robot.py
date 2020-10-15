@@ -4,6 +4,7 @@
 import pdb
 from opcua import Client
 import ConfigParser
+import telepot
 
 
 class RobotOPCUA:
@@ -12,24 +13,29 @@ class RobotOPCUA:
     class RobotConnectionError(Exception):
         print('Cannot connect with robot')
 
-    def get_uri(self):
-        """ Load parameter from config file
-        """
-        config = ConfigParser.ConfigParser()
-        config.read([self._config_file])
-
-        # File parameters:
-        address = config.get('robot', 'address')
-        try:
-            port = config.get('robot', 'port')
-        except:
-            port = 4840
-
-        return 'opc.tcp://%s:%s' % (address, port)
-
     # -------------------------------------------------------------------------
     # Check information:
     # -------------------------------------------------------------------------
+    def alert_alarm_on_telegram(self):
+        """ Check all alarms and send in telegram
+        """
+        # Telegram:
+        bot = telepot.Bot(self._telegram_token)
+        bot.getMe()
+
+        # Check all 200 alarms:
+        event_text = ''
+        for alarm in range(201):
+            alarm_status = str(self.get_data_value(
+                'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm,
+            ))
+            if alarm_status:
+                event_text += 'Robot: %s Alarm present: # %s' % (
+                    self._robot_name, alarm,
+                )
+        if event_text:
+            bot.sendMessage(self._telegram_group, event_text)
+
     def get_data_value(self, node_description, comment='', verbose=True):
         """ Extract node data
         """
@@ -121,17 +127,35 @@ class RobotOPCUA:
             for child_node in node.get_children():
                 self.print_node(child_node, level=level+1)
 
-    def __init__(self, name='Robot 1', config_file='./start.cfg'):
+    def __init__(self, config_file='./start.cfg'):
         """ Constructor for create object
         """
-        self._name = name
+        # ---------------------------------------------------------------------
+        # File parameters:
+        # ---------------------------------------------------------------------
+        # Open config file:
         self._config_file = config_file
+        config = ConfigParser.ConfigParser()
+        config.read([self._config_file])
 
+        # A. Telegram:
+        self._telegram_token = config.get('Telegram', 'token')
+        self._telegram_group = config.get('Telegram', 'group')
+
+        # B. Robot:
+        self._robot_name = config.get('robot', 'name')
+        self._robot_address = config.get('robot', 'address')
         print('Read config file %s for Robot: %s' % (
-            self._name,
+            self._robot_name,
             self._config_file,
         ))
-        self._uri = self.get_uri()
+
+        try:
+            self._robot_port = config.get('robot', 'port')
+        except:
+            self._robot_port = 4840
+
+        self._uri = 'opc.tcp://%s:%s' % (self._robot_address, self._robot_port)
 
         # Create and connect as client:
         self._client = Client(self._uri)

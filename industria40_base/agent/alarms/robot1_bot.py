@@ -29,7 +29,7 @@ import ConfigParser
 # -----------------------------------------------------------------------------
 # Read configuration parameter:
 # -----------------------------------------------------------------------------
-cfg_file = os.path.expanduser('./start.cfg')
+cfg_file = os.path.expanduser('./robot2.cfg')
 
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
