@@ -30,11 +30,22 @@ class RobotOPCUA:
         alarm_list = []
         pdb.set_trace()
         for alarm in range(201):
-            res = self.get_data_value(
+            if self.get_data_value(
                     'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm)
-            # alarm_list.append(str(alarm))
+                alarm_list.append(str(alarm))
+
+        if alarm_list:
+            event_text = 'Robot: %s Alarm present:\n%s' % (
+                self._robot_name,
+                ','.join(alarm_list)
+            )
+            try:
+                bot.sendMessage(self._telegram_group, event_text)
+            except:
+                bot.sendMessage(self._telegram_group, 'Error sending message')
 
         # Check master alarm:
+        """
         alarm_status = str(self.get_data_value(
             'ns=6;s=::AsGlobalPV:Allarmi.Presente',
         ))
@@ -44,7 +55,7 @@ class RobotOPCUA:
                 ','.join(alarm_list)
             )
             bot.sendMessage(self._telegram_group, event_text)
-
+        """
         # Check all 200 alarms:
         """
         for alarm in range(201):
