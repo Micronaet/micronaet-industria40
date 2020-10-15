@@ -31,7 +31,7 @@ class RobotOPCUA:
         pdb.set_trace()
         for alarm in range(201):
             if self.get_data_value(
-                    'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm)
+                    'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm):
                 alarm_list.append(str(alarm))
 
         if alarm_list:
