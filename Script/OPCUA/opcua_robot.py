@@ -27,6 +27,9 @@ class RobotOPCUA:
         bot = telepot.Bot(self._telegram_token)
         bot.getMe()
 
+        bot.sendMessage(
+            self._telegram_group, '[INFO] Start check alarm robot: %s' %
+                self._robot_name)
         counter = 0
         while True:
             counter += 1
