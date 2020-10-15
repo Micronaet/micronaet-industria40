@@ -21,10 +21,6 @@
 #
 ###############################################################################
 
-import os
-import sys
-import telepot
-import ConfigParser
 from opcua_robot import RobotOPCUA
 
 # Load Robot:
