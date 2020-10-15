@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import pdb
+import time
 from opcua import Client
 import telepot
 try:
@@ -19,54 +20,59 @@ class RobotOPCUA:
     # -------------------------------------------------------------------------
     # Check information:
     # -------------------------------------------------------------------------
-    def alert_alarm_on_telegram(self):
+    def alert_alarm_on_telegram(self, seconds=30):
         """ Check all alarms and send in telegram
         """
         # Telegram:
         bot = telepot.Bot(self._telegram_token)
         bot.getMe()
 
-        # Check 200 alarms:
-        alarm_list = []
-        for alarm in range(201):
-            if self.get_data_value(
-                    'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm):
-                alarm_list.append(str(alarm))
-        pdb.set_trace()
-        if alarm_list:
-            event_text = 'Robot: %s Alarm present:\n%s' % (
-                self._robot_name,
-                ','.join(alarm_list)
-            )
-            try:
-                bot.sendMessage(self._telegram_group, event_text)
-            except:
-                bot.sendMessage(self._telegram_group, 'Error sending message')
-
-        # Check master alarm:
-        """
-        alarm_status = str(self.get_data_value(
-            'ns=6;s=::AsGlobalPV:Allarmi.Presente',
-        ))
-        if alarm_status:
-            event_text = 'Robot: %s Mater Alarm present\n%s' % (
-                self._robot_name,
-                ','.join(alarm_list)
-            )
-            bot.sendMessage(self._telegram_group, event_text)
-        """
-        # Check all 200 alarms:
-        """
-        for alarm in range(201):
+        counter = 0
+        while True:
+            counter += 1
+            # Check 200 alarms:
+            alarm_list = []
+            for alarm in range(201):
+                if self.get_data_value(
+                        'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm):
+                    alarm_list.append(str(alarm))
+            pdb.set_trace()
+            if alarm_list:
+                event_text = 'Robot: %s Alarm present:\n%s' % (
+                    self._robot_name,
+                    ','.join(alarm_list)
+                )
+                try:
+                    bot.sendMessage(self._telegram_group, event_text)
+                except:
+                    bot.sendMessage(
+                        self._telegram_group, 'Error sending message')
+            print('Check # %s' % counter)
+            time.sleep(seconds)
+            # Check master alarm:
+            """
             alarm_status = str(self.get_data_value(
-                'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm,
+                'ns=6;s=::AsGlobalPV:Allarmi.Presente',
             ))
             if alarm_status:
-                event_text = 'Robot: %s Alarm present: # %s' % (
-                    self._robot_name, alarm,
+                event_text = 'Robot: %s Mater Alarm present\n%s' % (
+                    self._robot_name,
+                    ','.join(alarm_list)
                 )
                 bot.sendMessage(self._telegram_group, event_text)
-        """
+            """
+            # Check all 200 alarms:
+            """
+            for alarm in range(201):
+                alarm_status = str(self.get_data_value(
+                    'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm,
+                ))
+                if alarm_status:
+                    event_text = 'Robot: %s Alarm present: # %s' % (
+                        self._robot_name, alarm,
+                    )
+                    bot.sendMessage(self._telegram_group, event_text)
+            """
         return True
 
     def get_data_value(self, node_description, comment='', verbose=True):
