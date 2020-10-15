@@ -26,7 +26,18 @@ class RobotOPCUA:
         bot = telepot.Bot(self._telegram_token)
         bot.getMe()
 
+        # Check master alarm:
+        alarm_status = str(self.get_data_value(
+            'ns=6;s=::AsGlobalPV:Allarmi.Presente',
+        ))
+        if alarm_status:
+            event_text = 'Robot: %s Mater Alarm present' % (
+                self._robot_name,
+            )
+            bot.sendMessage(self._telegram_group, event_text)
+
         # Check all 200 alarms:
+        """
         for alarm in range(201):
             alarm_status = str(self.get_data_value(
                 'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm,
@@ -36,6 +47,8 @@ class RobotOPCUA:
                     self._robot_name, alarm,
                 )
                 bot.sendMessage(self._telegram_group, event_text)
+        """
+        return True
 
     def get_data_value(self, node_description, comment='', verbose=True):
         """ Extract node data
