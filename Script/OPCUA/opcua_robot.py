@@ -20,7 +20,7 @@ class RobotOPCUA:
     # -------------------------------------------------------------------------
     # Check information:
     # -------------------------------------------------------------------------
-    def alert_alarm_on_telegram(self, seconds=30, verbose_every=2):
+    def alert_alarm_on_telegram(self, seconds=60, verbose_every=3600):
         """ Check all alarms and send in telegram
         """
         # Telegram:
@@ -40,7 +40,7 @@ class RobotOPCUA:
                     alarm_list.append(str(alarm))
 
             if alarm_list:
-                event_text = 'Robot: %s Alarm present:\n%s' % (
+                event_text = '[ALARM] Robot: %s Alarm present:\n%s' % (
                     self._robot_name,
                     ','.join(alarm_list)
                 )
