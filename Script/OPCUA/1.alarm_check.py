@@ -33,19 +33,7 @@ robot.alert_alarm_on_telegram()
 # robot.check_is_alarm()
 # robot.check_is_working()
 # robot.check_machine()
-del(robot)
-
-
-                clean_file.append(fullname)
-                print(event_text.replate('\n', ' - '))
-    break
-
-# Clean alarm used:
-if clean_file:
-    print('Clean file used')
-    for fullname in clean_file:
-        print('Removing: %s' % fullname)
-        os.remove(fullname)
+del robot
 
 """
 ::AsGlobalPV:Allarmi.N[x].Dati.Attivo            (BOOL)
