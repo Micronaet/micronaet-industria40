@@ -28,12 +28,11 @@ class RobotOPCUA:
 
         # Check 200 alarms:
         alarm_list = []
-        pdb.set_trace()
         for alarm in range(201):
             if self.get_data_value(
                     'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm):
                 alarm_list.append(str(alarm))
-
+        pdb.set_trace()
         if alarm_list:
             event_text = 'Robot: %s Alarm present:\n%s' % (
                 self._robot_name,
