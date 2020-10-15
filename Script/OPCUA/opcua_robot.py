@@ -26,13 +26,21 @@ class RobotOPCUA:
         bot = telepot.Bot(self._telegram_token)
         bot.getMe()
 
+        # Check 200 alarms:
+        alarm_list = []
+        for alarm in range(201):
+            if self.get_data_value(
+                    'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm):
+                alarm_list.append(str(alarm))
+
         # Check master alarm:
         alarm_status = str(self.get_data_value(
             'ns=6;s=::AsGlobalPV:Allarmi.Presente',
         ))
         if alarm_status:
-            event_text = 'Robot: %s Mater Alarm present' % (
+            event_text = 'Robot: %s Mater Alarm present\n%s' % (
                 self._robot_name,
+                ','.join(alarm_list)
             )
             bot.sendMessage(self._telegram_group, event_text)
 
