@@ -20,7 +20,7 @@ class RobotOPCUA:
     # -------------------------------------------------------------------------
     # Check information:
     # -------------------------------------------------------------------------
-    def alert_alarm_on_telegram(self, seconds=30):
+    def alert_alarm_on_telegram(self, seconds=30, verbose_every=2):
         """ Check all alarms and send in telegram
         """
         # Telegram:
@@ -51,6 +51,13 @@ class RobotOPCUA:
                         self._telegram_group, 'Error sending message')
             print('Check # %s' % counter)
             time.sleep(seconds)
+            if counter % verbose_every == 0:
+                bot.sendMessage(
+                    self._telegram_group,
+                    '[INFO] Robot %s working check # %s' % (
+                        self._robot_name, counter))
+            else:
+                print('Check # %s' % counter)
             # Check master alarm:
             """
             alarm_status = str(self.get_data_value(
