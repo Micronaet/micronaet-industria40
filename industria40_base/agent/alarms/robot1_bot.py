@@ -79,7 +79,7 @@ for root, folders, files in os.walk(robot_folder):
                         )
                 bot.sendMessage(telegram_group, event_text)
                 clean_file.append(fullname)
-                print(event_text.replate('\n', ' - '))
+                print(event_text.replace('\n', ' - '))
     break
 
 # Clean alarm used:
