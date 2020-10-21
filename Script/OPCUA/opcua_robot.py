@@ -218,7 +218,7 @@ class RobotOPCUA:
                         'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' %
                         alarm):
                     message_data = [self._robot_name]
-                    message_data.extend(self._alarm[alarm])
+                    message_data.extend(self._alarms[alarm])
                     event_text = u'[ALARM] Robot: %s\n' \
                                  u'Allarme: %s\n' \
                                  u'Problema: %s\n' \
