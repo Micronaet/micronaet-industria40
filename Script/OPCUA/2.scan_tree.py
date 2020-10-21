@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import pdb
 import time
 import telepot
 from datetime import datetime
@@ -9,6 +10,7 @@ from opcua_robot import RobotOPCUA
 # Load robot if present:
 seconds = 60 * 5  # minutes
 robot = False
+pdb.set_trace()
 while not robot:
     try:
         robot = RobotOPCUA()
