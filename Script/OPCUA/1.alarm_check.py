@@ -48,7 +48,7 @@ telegram_group = config.get(u'Telegram', u'group')
 seconds = 60 * 5  # minutes check loop
 robot = False
 pdb.set_trace()
-previous_status = 'OFF'
+previous_status = False
 bot = telepot.Bot(telegram_token)
 bot.getMe()
 while not robot:
@@ -60,9 +60,11 @@ while not robot:
             u'[INFO] Robot alarm check loop ON')
     except:
         print('%s. Robot not present' % datetime.now())
-        bot.sendMessage(
-            telegram_group,
-            u'[ERR] Robot alarm check loop OFF')
+        if previous_status != 'OFF':
+            bot.sendMessage(
+                telegram_group,
+                u'[ERR] Robot alarm check loop OFF')
+            previous_status = 'OFF'
     time.sleep(seconds)
 
 
