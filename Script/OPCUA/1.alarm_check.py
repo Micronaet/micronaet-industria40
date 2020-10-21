@@ -45,7 +45,7 @@ telegram_group = config.get(u'Telegram', u'group')
 # -----------------------------------------------------------------------------
 # Load robot if present:
 # -----------------------------------------------------------------------------
-seconds = 60 * 5  # minutes check loop
+seconds = 10  # minutes check loop
 robot = False
 pdb.set_trace()
 previous_status = False
