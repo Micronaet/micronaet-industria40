@@ -35,23 +35,24 @@ class RobotOPCUA:
 
             # Check 200 alarms:
             alarm_list = []
+            import pdb; pdb.set_trace()
             for alarm in range(201):
                 if self.get_data_value(
                         'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' %
                         alarm):
                     alarm_list.append(str(alarm))
-                message_data = [self._robot_name]
-                message_data.extend(self.get_data_value(alarm))
-                import pdb; pdb.set_trace()
-                event_text = u'[ALARM] Robot: %s\n' \
-                             u'Allarme: %s\n' \
-                             u'Problema: %s\n' \
-                             u'Soluzione: %s' % tuple(message_data)
-                try:
-                    bot.sendMessage(self._telegram_group, event_text)
-                except:
-                    bot.sendMessage(
-                        self._telegram_group, u'Error sending message')
+
+                    message_data = [self._robot_name]
+                    message_data.extend(self.get_data_value(alarm))
+                    event_text = u'[ALARM] Robot: %s\n' \
+                                 u'Allarme: %s\n' \
+                                 u'Problema: %s\n' \
+                                 u'Soluzione: %s' % tuple(message_data)
+                    try:
+                        bot.sendMessage(self._telegram_group, event_text)
+                    except:
+                        bot.sendMessage(
+                            self._telegram_group, u'Error sending message')
 
             print(u'Check # %s' % counter)
             time.sleep(seconds)
@@ -207,7 +208,8 @@ class RobotOPCUA:
         except:
             self._robot_port = 4840
 
-        self._uri = u'opc.tcp://%s:%s' % (self._robot_address, self._robot_port)
+        self._uri = u'opc.tcp://%s:%s' % (
+            self._robot_address, self._robot_port)
 
         # Create and connect as client:
         self._client = Client(self._uri)
@@ -233,7 +235,8 @@ class RobotOPCUA:
                 u'Sbloccare fungo di emergenza e premere pulsante marcia'],
             2: [u'Termico', u'Termica Motori',
                 u'Verificare la termica motori nel quadro elettrico'],
-            3: [u'Termostato', u'Temperatura Olio superiore al valore impostato',
+            3: [u'Termostato',
+                u'Temperatura Olio superiore al valore impostato',
                 u'Attendere raffreddamento o verificare il corretto '
                 u'funzionamento dello scambiatore'],
             4: [u'Pressostato', u'Pressione aria inferiore al valore settato',
@@ -242,8 +245,8 @@ class RobotOPCUA:
                 u'Errore generico durante l’esecuzione in automatico',
                 u'Verificare quote assi e/o velicità'],
             8: [u'Assi non abilitati', u'Assi non in ready',
-                u'Verificare fusibili potenza o eventuali errori su driver led '
-                u'rosso'],
+                u'Verificare fusibili potenza o eventuali errori su driver led'
+                u' rosso'],
             11: [u'Livello Olio',
                  u'Livello dell’Olio sotto il minimo consentito',
                  u'Reboccare Olio'],
@@ -254,8 +257,8 @@ class RobotOPCUA:
                  u'precedentemente trasferita',
                  u'Ripetere azzeramento macchina'],
             18: [u'Misura Quota Massima Modificata',
-                 u'Impostato un valore di lunghezza macchina diverso da quello '
-                 u'impostato precedentemente',
+                 u'Impostato un valore di lunghezza macchina diverso da quello'
+                 u' impostato precedentemente',
                  u'Trasferire Utensile e ripetere azzeramento macchina'],
             101: [u'Timeout Matrice Avanti',
                   u'Mancata verifica sul sensore di matrice avanti',
@@ -339,13 +342,13 @@ class RobotOPCUA:
                   u'piano',
                   u'Selezionare Asse X e portalo fuori dalla zona di '
                   u'interferenza'],
-            154: [u'Blocco comando Asse-X per strappo tubo. APRIRE Morsa/Carro '
-                  u'e/o la Pinza',
+            154: [u'Blocco comando Asse-X per strappo tubo. APRIRE '
+                  u'Morsa/Carro e/o la Pinza',
                   u'Non è possibile muovere Asse X per condizioni elencate',
                   u'Verificare sensore morsa/carro/pinza aperti o posizionare '
                   u'morsa/carro/pinza aperti'],
-            155: [u'Blocco comando Asse-Y per strappo tubo. APRIRE Morsa/Carro '
-                  u'e/o la Pinza',
+            155: [u'Blocco comando Asse-Y per strappo tubo. APRIRE Morsa/Carro'
+                  u' e/o la Pinza',
                   u'Non è possibile muovere Asse Y per condizioni elencate',
                   u'Verificare sensore morsa/carro/pinza aperti o posizionare '
                   u'morsa/carro/pinza aperti'],
