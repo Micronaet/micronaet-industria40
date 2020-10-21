@@ -218,10 +218,7 @@ class RobotOPCUA:
                         'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' %
                         alarm):
                     message_data = [self._robot_name]
-                    res = self.get_data_value(alarm)
-                    if not res:  # No reply = no data!
-                        continue
-                    message_data.extend(res)
+                    message_data.extend(self._alarm[alarm])
                     event_text = u'[ALARM] Robot: %s\n' \
                                  u'Allarme: %s\n' \
                                  u'Problema: %s\n' \
