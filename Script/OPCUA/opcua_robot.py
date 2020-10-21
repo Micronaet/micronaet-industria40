@@ -25,7 +25,6 @@ class RobotOPCUA:
         """
         # Telegram:
         bot = telepot.Bot(self._telegram_token)
-        import pdb; pdb.set_trace()
         bot.getMe()
         bot.sendMessage(
             self._telegram_group,
@@ -43,6 +42,7 @@ class RobotOPCUA:
                     alarm_list.append(str(alarm))
                 message_data = [self._robot_name]
                 message_data.extend(self.get_data_value(alarm))
+                import pdb; pdb.set_trace()
                 event_text = u'[ALARM] Robot: %s\n' \
                              u'Allarme: %s\n' \
                              u'Problema: %s\n' \
