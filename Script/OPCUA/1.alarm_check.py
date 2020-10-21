@@ -45,9 +45,8 @@ telegram_group = config.get(u'Telegram', u'group')
 # -----------------------------------------------------------------------------
 # Load robot if present:
 # -----------------------------------------------------------------------------
-seconds = 10  # minutes check loop
+seconds = 60 * 5  # minutes check loop
 robot = False
-pdb.set_trace()
 previous_status = False
 bot = telepot.Bot(telegram_token)
 bot.getMe()
