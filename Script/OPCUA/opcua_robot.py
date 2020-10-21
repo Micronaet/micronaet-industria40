@@ -209,6 +209,7 @@ class RobotOPCUA:
             self._telegram_group,
             u'[INFO] Start check alarm robot: %s' % self._robot_name)
         counter = 0
+        error_found = []
         while True:
             counter += 1
 
@@ -217,6 +218,10 @@ class RobotOPCUA:
                 if self.get_data_value(
                         'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' %
                         alarm):
+                    if alarm in error_found:
+                        print('[WARN] Yet raised: %s' % alarm)
+                        continue
+
                     message_data = [self._robot_name]
                     message_data.extend(self._alarms[alarm])
                     event_text = u'[ALARM] Robot: %s\n' \
@@ -225,9 +230,15 @@ class RobotOPCUA:
                                  u'Soluzione: %s' % tuple(message_data)
                     try:
                         bot.sendMessage(self._telegram_group, event_text)
+                        # Notified once:
+                        if alarm not in error_found:
+                            error_found.append(alarm)
                     except:
                         bot.sendMessage(
                             self._telegram_group, u'Error sending message')
+                else:  # No alarm remove from list:
+                    if alarm in error_found:
+                        error_found.remove(alarm)
 
             print(u'Check # %s' % counter)
             time.sleep(seconds)
