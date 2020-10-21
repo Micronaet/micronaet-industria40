@@ -217,7 +217,6 @@ class RobotOPCUA:
                 if self.get_data_value(
                         'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' %
                         alarm):
-                    import pdb; pdb.set_trace()
                     message_data = [self._robot_name]
                     res = self.get_data_value(alarm)
                     if not res:  # No reply = no data!
