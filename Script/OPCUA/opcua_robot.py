@@ -425,7 +425,11 @@ class RobotOPCUA:
         try:
             self._client.disconnect()
         except:
-            print(u'Error disconnecting from Robot: %s' % self._name)
+            try:
+                name = self._name
+            except:
+                name = '[Non present]'
+            print(u'Error disconnecting from Robot: %s' % name)
 
     def get_alarm_info(self, number):
         """ Get alarm info by code
