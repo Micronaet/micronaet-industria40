@@ -26,18 +26,43 @@ import time
 import telepot
 from datetime import datetime
 from opcua_robot import RobotOPCUA
+try:
+    import ConfigParser
+except:
+    import configparser as ConfigParser
 
-# Load Robot:
+# -----------------------------------------------------------------------------
+# Parameters:
+# -----------------------------------------------------------------------------
+# A. Telegram:
+config_file = './start.cfg'
+config = ConfigParser.ConfigParser()
+config.read([config_file])
+
+telegram_token = config.get(u'Telegram', u'token')
+telegram_group = config.get(u'Telegram', u'group')
+
+# -----------------------------------------------------------------------------
 # Load robot if present:
-seconds = 60 * 5  # minutes
+# -----------------------------------------------------------------------------
+seconds = 60 * 5  # minutes check loop
 robot = False
 pdb.set_trace()
+previous_status = 'OFF'
+bot = telepot.Bot(telegram_token)
+bot.getMe()
 while not robot:
     try:
         robot = RobotOPCUA()
+        previous_status = 'ON'
+        bot.sendMessage(
+            telegram_group,
+            u'[INFO] Robot alamr check loop ON')
     except:
         print('%s. Robot not present' % datetime.now())
-        pass
+        bot.sendMessage(
+            telegram_group,
+            u'[INFO] Robot alamr check loop OFF')
     time.sleep(seconds)
 
 
