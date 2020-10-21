@@ -1,9 +1,21 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import time
+import telepot
+from datetime import datetime
 from opcua_robot import RobotOPCUA
 
-robot = RobotOPCUA()
+# Load robot if present:
+seconds = 60 * 5  # minutes
+robot = False
+while not robot:
+    try:
+        robot = RobotOPCUA()
+    except:
+        print('%s. Robot not present' % datetime.now())
+        pass
+    time.sleep(seconds)
 
 # -----------------------------------------------------------------------------
 # Some start:
