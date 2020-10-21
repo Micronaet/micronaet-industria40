@@ -26,7 +26,7 @@ class RobotOPCUA:
         # Telegram:
         bot = telepot.Bot(self._telegram_token)
         bot.getMe()
-
+        import pdb; pdb.set_trace()
         bot.sendMessage(
             self._telegram_group,
             u'[INFO] Start check alarm robot: %s' % self._robot_name)
