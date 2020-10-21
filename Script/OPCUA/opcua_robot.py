@@ -213,11 +213,11 @@ class RobotOPCUA:
             counter += 1
 
             # Check 200 alarms:
-            import pdb; pdb.set_trace()
             for alarm in self._alarms.keys():  # range(201):
                 if self.get_data_value(
                         'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' %
                         alarm):
+                    import pdb; pdb.set_trace()
                     message_data = [self._robot_name]
                     message_data.extend(self.get_data_value(alarm))
                     event_text = u'[ALARM] Robot: %s\n' \
