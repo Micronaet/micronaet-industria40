@@ -236,9 +236,20 @@ class RobotOPCUA:
                     except:
                         bot.sendMessage(
                             self._telegram_group, u'Error sending message')
+
                 else:  # No alarm remove from list:
                     if alarm in error_found:
-                        error_found.remove(alarm)
+                        message_data = [self._robot_name]
+                        message_data.extend(self._alarms[alarm])
+                        event_text = u'[RESUME] Robot: %s\n' \
+                                     u'Allarme rientrato: %s' % tuple(
+                                         message_data[:2])
+                    try:
+                        bot.sendMessage(self._telegram_group, event_text)
+                        error_found.remove(alarm)  # Resume error
+                    except:
+                        bot.sendMessage(
+                            self._telegram_group, u'Error sending message')
 
             print(u'Check # %s' % counter)
             time.sleep(seconds)
