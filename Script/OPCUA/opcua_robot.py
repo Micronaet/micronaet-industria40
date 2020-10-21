@@ -272,7 +272,8 @@ class RobotOPCUA:
         try:
             data = node.get_data_value().Value._value
         except:
-            data = u'[ERR] Node access error (not readable!)'
+            # data = u'[ERR] Node access error (not readable!)'
+            data = ''  # Error?
         if verbose:
             comment = comment or node_description
             print(comment, data)
@@ -289,10 +290,12 @@ class RobotOPCUA:
 
         # Check 200 alarms:
         for alarm in range(201):
-            data += str(self.get_data_value(
+            res = str(self.get_data_value(
                 u'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm,
                 u'%s: N: %s' % (comment, alarm), verbose))
 
+            if res:
+                data += res
         return data
 
     def check_is_working(
