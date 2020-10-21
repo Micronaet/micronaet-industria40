@@ -219,7 +219,10 @@ class RobotOPCUA:
                         alarm):
                     import pdb; pdb.set_trace()
                     message_data = [self._robot_name]
-                    message_data.extend(self.get_data_value(alarm))
+                    res = self.get_data_value(alarm)
+                    if not res:  # No reply = no data!
+                        continue
+                    message_data.extend(res)
                     event_text = u'[ALARM] Robot: %s\n' \
                                  u'Allarme: %s\n' \
                                  u'Problema: %s\n' \
