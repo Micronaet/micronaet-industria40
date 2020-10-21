@@ -21,10 +21,26 @@
 #
 ###############################################################################
 
+import pdb
+import time
+import telepot
+from datetime import datetime
 from opcua_robot import RobotOPCUA
 
 # Load Robot:
-robot = RobotOPCUA()
+# Load robot if present:
+seconds = 60 * 5  # minutes
+robot = False
+pdb.set_trace()
+while not robot:
+    try:
+        robot = RobotOPCUA()
+    except:
+        print('%s. Robot not present' % datetime.now())
+        pass
+    time.sleep(seconds)
+
+
 robot.alert_alarm_on_telegram()
 # robot.check_is_alarm()
 # robot.check_is_working()
