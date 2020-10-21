@@ -57,12 +57,12 @@ while not robot:
         previous_status = 'ON'
         bot.sendMessage(
             telegram_group,
-            u'[INFO] Robot alamr check loop ON')
+            u'[INFO] Robot alarm check loop ON')
     except:
         print('%s. Robot not present' % datetime.now())
         bot.sendMessage(
             telegram_group,
-            u'[INFO] Robot alamr check loop OFF')
+            u'[ERR] Robot alarm check loop OFF')
     time.sleep(seconds)
 
 
