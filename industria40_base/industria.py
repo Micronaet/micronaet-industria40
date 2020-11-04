@@ -192,11 +192,11 @@ class IndustriaDatabase(orm.Model):
         for record in cursor:
             industria_ref = record['id']
             data = {
+                'database_id': database_id,
                 'industria_ref': industria_ref,
                 'ip': record['ip'],
                 'name': record['description'] or record['name'],
                 'partner_id': partner_id,
-                'database_id': database_id,
             }
 
             robot_ids = robot_pool.search(cr, uid, [
