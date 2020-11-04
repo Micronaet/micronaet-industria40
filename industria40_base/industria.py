@@ -138,7 +138,9 @@ class IndustriaDatabase(orm.Model):
         for record in cursor:
             industria_ref = record['id']
             data = {
+                'database_id': database_id,
                 'industria_ref': industria_ref,
+
                 'code': record['name'],
                 'name': record['description'],
                 'piece': record['npieces'],
