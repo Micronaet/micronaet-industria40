@@ -22,7 +22,7 @@
 import os
 import erppeek
 import ConfigParser
-
+import pdb
 
 # -----------------------------------------------------------------------------
 # Read configuration parameter:
@@ -53,6 +53,7 @@ database_pool = odoo.model('industria.database')
 
 # For all database present:
 database_ids = database_pool.search([])
+pdb.set_trace()
 for database in database_pool.browse(database_ids):
     print('Import program')
     database_pool.import_program([database.id])
