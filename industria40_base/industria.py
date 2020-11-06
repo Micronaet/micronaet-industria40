@@ -195,14 +195,14 @@ class IndustriaDatabase(orm.Model):
                 'name': record['description'] or record['name'],
             }
 
-            robot_ids = robot_pool.search(cr, uid, [
+            source_ids = robot_pool.search(cr, uid, [
                 ('database_id', '=', database_id),
                 ('industria_ref', '=', industria_ref),
             ], context=context)
 
-            if robot_ids:
+            if source_ids:
                 robot_pool.write(
-                    cr, uid, robot_ids, data, context=context)
+                    cr, uid, source_ids, data, context=context)
             else:
                 robot_pool.create(
                     cr, uid, data, context=context)
@@ -263,11 +263,11 @@ class IndustriaDatabase(orm.Model):
 
         # Load robot:
         robot_db = {}
-        robot_ids = robot_pool.search(cr, uid, [
+        source_ids = robot_pool.search(cr, uid, [
             ('database_id', '=', database_id),
         ], context=context)
-        for robot in robot_pool.browse(cr, uid, robot_ids, context=context):
-            robot_db[robot.id] = robot.industria_ref
+        for robot in robot_pool.browse(cr, uid, source_ids, context=context):
+            robot_db[robot.industria_ref] = robot.id
 
         # Update program for robot:
         update_program = []
@@ -279,12 +279,12 @@ class IndustriaDatabase(orm.Model):
             industria_ref = record['id']
             program_id = program_db.get(record['program_id'], False)
             source_id = robot_db.get(record['source_id'], False)
-            if program_id not in update_program:
+            if source_id and program_id not in update_program:
                 update_program.append(program_id)
 
                 # Assign robot to the program (every program own to the robot)
                 program_pool.write(cr, uid, [program_id], {
-                    'robot_id': source_id,
+                    'source_id': source_id,
                 }, context=context)
 
             data = {
@@ -488,12 +488,12 @@ class IndustriaProgram(orm.Model):
         'industria_ref': fields.integer('Industria ref key'),
         'timeout': fields.integer('Timeout'),
         'piece': fields.integer('Total piece x job'),
-        'robot_id': fields.many2one(
+        'source_id': fields.many2one(
             'industria.robot', 'Robot'),
         'database_id': fields.many2one(
             'industria.database', 'Database'),
         'partner_id': fields.related(
-            'robot_id', 'partner_id',
+            'source_id', 'partner_id',
             type='many2one', relation='res.partner',
             string='Supplier', store=True),
         'note': fields.text('Note'),
@@ -579,7 +579,7 @@ class IndustriaRobotRelation(orm.Model):
 
     _columns = {
         'program_ids': fields.one2many(
-            'industria.program', 'robot_id', 'Program'),
+            'industria.program', 'source_id', 'Program'),
         'job_ids': fields.one2many(
             'industria.job', 'source_id', 'Job'),
 
@@ -595,6 +595,6 @@ class ResPartner(orm.Model):
     _columns = {
         'program_ids': fields.one2many(
             'industria.program', 'partner_id', 'Program'),
-        'robot_ids': fields.one2many(
+        'source_ids': fields.one2many(
             'industria.robot', 'partner_id', 'Robot'),
     }
