@@ -231,7 +231,7 @@ class IndustriaDatabase(orm.Model):
 
         from_industria_ref = False
 
-        database = self.browse(cr, uid, ids, context=context)[0]
+        database_id = ids[0]
         connection = self.mssql_connect(cr, uid, ids, context=context)
         cursor = connection.cursor()
 
@@ -251,7 +251,6 @@ class IndustriaDatabase(orm.Model):
                 ))
 
         # partner_id = database.partner_id.id
-        database_id = ids[0]
 
         # Load program:
         program_db = {}
@@ -282,6 +281,7 @@ class IndustriaDatabase(orm.Model):
             source_id = robot_db.get(record['source_id'], False)
             if program_id not in update_program:
                 update_program.append(program_id)
+
                 # Assign robot to the program (every program own to the robot)
                 program_pool.write(cr, uid, [program_id], {
                     'robot_id': source_id,
