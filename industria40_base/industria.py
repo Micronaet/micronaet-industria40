@@ -112,7 +112,7 @@ class IndustriaDatabase(orm.Model):
         """
         program_pool = self.pool.get('industria.program')
 
-        database = self.browse(cr, uid, ids, context=context)[0]
+        database_id = ids[0]
         connection = self.mssql_connect(cr, uid, ids, context=context)
         if not connection:
             _logger.error('MySQL Robot not present, Mini PC not available!')
@@ -133,8 +133,6 @@ class IndustriaDatabase(orm.Model):
                     sys.exc_info(),
                 ))
 
-        partner_id = database.partner_id.id
-        database_id = ids[0]
         for record in cursor:
             industria_ref = record['id']
             data = {
@@ -165,7 +163,7 @@ class IndustriaDatabase(orm.Model):
         """
         robot_pool = self.pool.get('industria.robot')
 
-        database = self.browse(cr, uid, ids, context=context)[0]
+        database_id = ids[0]
         connection = self.mssql_connect(cr, uid, ids, context=context)
         if not connection:
             _logger.error('MySQL Robot not present, Mini PC not available!')
@@ -187,16 +185,14 @@ class IndustriaDatabase(orm.Model):
                     sys.exc_info(),
                 ))
 
-        partner_id = database.partner_id.id
-        database_id = ids[0]
         for record in cursor:
             industria_ref = record['id']
             data = {
                 'database_id': database_id,
                 'industria_ref': industria_ref,
+
                 'ip': record['ip'],
                 'name': record['description'] or record['name'],
-                'partner_id': partner_id,
             }
 
             robot_ids = robot_pool.search(cr, uid, [
@@ -254,7 +250,7 @@ class IndustriaDatabase(orm.Model):
                     sys.exc_info(),
                 ))
 
-        partner_id = database.partner_id.id
+        # partner_id = database.partner_id.id
         database_id = ids[0]
 
         # Load program:
@@ -465,13 +461,15 @@ class IndustriaRobot(orm.Model):
         'ip': fields.char('IP address', size=15),
         'name': fields.char('Name', size=64, required=True),
         'industria_ref': fields.integer('Industria ref key'),
-        'partner_id': fields.many2one(
-            'res.partner', 'Supplier', required=True),
         'database_id': fields.many2one(
             'industria.database', 'Database'),
+        'partner_id': fields.related(
+            'database_id', 'partner_id',
+            type='many2one', relation='res.partner',
+            string='Supplier', store=True),
         'note': fields.text('Note'),
         'today_state': fields.function(
-            get_today_state, 'Status', type='text', method=True, ),
+            get_today_state, 'Status', type='text', method=True),
     }
 
 
