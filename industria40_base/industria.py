@@ -218,7 +218,7 @@ class IndustriaDatabase(orm.Model):
                 return False
 
             # Bug: if refresh old value may be theres GMT or not so error!
-            dls_hours = 0  # 2  # TODO change!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            dls_hours = 1  # 2  # TODO change!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             dls_dt = relativedelta(hours=dls_hours)
             # extra_gmt = datetime.now() - datetime.utcnow()
             return (ts - dls_dt).strftime(
