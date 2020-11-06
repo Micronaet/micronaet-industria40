@@ -259,7 +259,7 @@ class IndustriaDatabase(orm.Model):
         ], context=context)
         for program in program_pool.browse(
                 cr, uid, program_ids, context=context):
-            program_db[program.id] = program.industria_ref
+            program_db[program.industria_ref] = program.id
 
         # Load robot:
         robot_db = {}
@@ -272,6 +272,7 @@ class IndustriaDatabase(orm.Model):
         # Update program for robot:
         update_program = []
         counter = 0
+        pdb.set_trace()
         for record in cursor:
             counter += 1
             if not counter % 50:
