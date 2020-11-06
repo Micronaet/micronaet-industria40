@@ -492,6 +492,8 @@ class IndustriaProgram(orm.Model):
             'industria.robot', 'Robot'),
         'database_id': fields.many2one(
             'industria.database', 'Database'),
+        'product_id': fields.many2one(
+            'product.product', 'Semi product'),
         'partner_id': fields.related(
             'source_id', 'partner_id',
             type='many2one', relation='res.partner',
