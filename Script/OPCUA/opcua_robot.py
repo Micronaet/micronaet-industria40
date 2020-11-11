@@ -214,6 +214,14 @@ class RobotOPCUA:
             while True:
                 counter += 1
 
+                # Check running robot:
+                plc_version = self.get_data_value(
+                    'ns=6;s=::AsGlobalPV:VersionePLC')
+                if plc_version:
+                    print('PCL version: %s' % plc_version)
+                else:
+                    print('PCL version not found, robot not work')
+                    return False
                 # Check 200 alarms:
                 for alarm in self._alarms.keys():  # range(201):
                     if self.get_data_value(
