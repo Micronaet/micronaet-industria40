@@ -57,7 +57,7 @@ robot = False
 
 bot.sendMessage(
     telegram_group,
-    u'[INFO] PC: %s Avvio script di controllo...' % check_from,
+    u'%s\n[INFO] PC: %s Avvio script di controllo...' % ('-' * 50, check_from),
 )
 while True:
     # -------------------------------------------------------------------------
