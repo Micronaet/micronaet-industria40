@@ -46,6 +46,7 @@ config.read([config_file])
 
 telegram_token = config.get(u'Telegram', u'token')
 telegram_group = config.get(u'Telegram', u'group')
+check_from = config.get('robot', 'check_from')
 
 # Load Telegram BOT:
 bot = telepot.Bot(telegram_token)
@@ -56,7 +57,7 @@ robot = False
 
 bot.sendMessage(
     telegram_group,
-    u'[INFO] Avvio script di controllo...',
+    u'[INFO] PC: %s Avvio script di controllo...' % check_from,
 )
 while True:
     # -------------------------------------------------------------------------
