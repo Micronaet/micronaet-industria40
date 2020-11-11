@@ -19,13 +19,14 @@
                             <field name="partner_id" required="1"/>
 
                             <field name="ip" />
-                            <field name="username" attrs="{'required': [('mode', '!=', 'ftp')]}"/>
-                            <field name="password" password="True" attrs="{'required': [('mode', '!=', 'ftp')]}"/>
+                            <field name="username" attrs="{'required': [('mode', '!=', 'ftp')], 'invisible': [('mode', '=', 'ftp')]}"/>
+                            <field name="password" password="True" attrs="{'required': [('mode', '!=', 'ftp')], 'invisible': [('mode', '=', 'ftp')]}"/>
 
-                            <field name="database" attrs="{'required': [('mode', '!=', 'ftp')]}"/>
-                            <field name="port" attrs="{'required': [('mode', '!=', 'ftp')]}" />
+                            <field name="database" attrs="{'required': [('mode', '!=', 'ftp')], 'invisible': [('mode', '=', 'ftp')]}"/>
+                            <field name="port" attrs="{'required': [('mode', '!=', 'ftp')], 'invisible': [('mode', '=', 'ftp')]}" />
 
                             <field name="mode" />
+                            <field name="ftp_command" colspan="4"  attrs="{'required': [('mode', '=', 'ftp')], 'invisible': [('mode', '!=', 'ftp')]}"/>
 
                             <separator string="Note" colspan="4"/>
                             <field name="note" colspan="4" nolabel="1"/>
