@@ -317,16 +317,17 @@ class IndustriaDatabase(orm.Model):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'partner_id': fields.many2one(
-            'res.partner', 'Supplier', required=True),
+            'res.partner', 'Supplier'),
         'ip': fields.char('IP address', size=15),
-        'username': fields.char('Username', size=64, required=True),
-        'password': fields.char('Password', size=64, required=True),
-        'database': fields.char('Database', size=64, required=True),
-        'port': fields.integer('Port', required=True),
+        'username': fields.char('Username', size=64),
+        'password': fields.char('Password', size=64),
+        'database': fields.char('Database', size=64),
+        'port': fields.integer('Port'),
         'note': fields.text('Note'),
         'mode': fields.selection([
             ('mysql', 'My SQL'),
             ('mssql', 'MS SQL'),
+            ('ftp', 'FTP'),
         ], 'Mode', required=True),
     }
 
