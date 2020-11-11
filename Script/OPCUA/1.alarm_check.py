@@ -85,17 +85,20 @@ while True:
     try:
         # Loop:
         robot.alert_alarm_on_telegram(seconds=wait['alarm'], verbose_every=0)
+        # if return restart with new robot
     except:
-        try:
-            del robot
-        except:
-            pass
+        pass
 
-        robot = False
-        bot.sendMessage(
-            telegram_group,
-            u'[WARNING] Disconnessione robot (fine monitoraggio)',
-        )
+    try:
+        del robot
+    except:
+        pass
+
+    robot = False
+    bot.sendMessage(
+        telegram_group,
+        u'[WARNING] Disconnessione robot (fine monitoraggio)',
+    )
 
 # robot.check_is_alarm()
 # robot.check_is_working()
