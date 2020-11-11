@@ -199,7 +199,7 @@ class RobotOPCUA:
     # -------------------------------------------------------------------------
     # Check information:
     # -------------------------------------------------------------------------
-    def alert_alarm_on_telegram(self, seconds=60, verbose_every=3600):
+    def alert_alarm_on_telegram(self, seconds=45, verbose_every=3600):
         """ Check all alarms and send in telegram
         """
         try:

@@ -32,8 +32,8 @@ except:
     import configparser as ConfigParser
 
 wait = {
-    'robot': 1 * 60,  # Test every one minute
-    'alarm': 20,   # Test every 20 seconds
+    'robot': 1 * 30,  # Test every one minute
+    'alarm': 10,   # Test every 20 seconds
 }
 
 # -----------------------------------------------------------------------------
@@ -97,7 +97,7 @@ while True:
     robot = False
     bot.sendMessage(
         telegram_group,
-        u'[WARNING] Disconnessione robot (fine monitoraggio)',
+        u'[WARNING] Disconnessione robot (fine monitoraggio)\n%s' % ('-' * 80),
     )
 
 # robot.check_is_alarm()
