@@ -94,7 +94,7 @@ while True:
         robot = False
         bot.sendMessage(
             telegram_group,
-            u'[INFO] Disconnessione robot (fine monitoraggio)',
+            u'[WARNING] Disconnessione robot (fine monitoraggio)',
         )
 
 # robot.check_is_alarm()

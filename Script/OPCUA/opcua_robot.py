@@ -220,7 +220,8 @@ class RobotOPCUA:
                 if plc_version:
                     print('PCL version: %s' % plc_version)
                 else:
-                    print('PCL version not found, robot not work')
+                    print('PCL version not found, robot not work [%s]' %
+                          plc_version)
                     return False
                 # Check 200 alarms:
                 for alarm in self._alarms.keys():  # range(201):
