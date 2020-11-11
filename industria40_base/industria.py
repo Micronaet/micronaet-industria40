@@ -324,7 +324,10 @@ class IndustriaDatabase(orm.Model):
         'database': fields.char('Database', size=64),
         'port': fields.integer('Port'),
         'note': fields.text('Note'),
-        'ftp_command': fields.text('FTP command'),
+        'ftp_command': fields.text(
+            'FTP command', help='FTP command for unload Job'),
+        'ftp_fullname': fields.char(
+            'FTP fullname', size=180, help='Fullname for file with log'),
         'mode': fields.selection([
             ('mysql', 'My SQL'),
             ('mssql', 'MS SQL'),
