@@ -300,7 +300,8 @@ class RobotOPCUA:
             data = node.get_data_value().Value._value
         except:
             # data = u'[ERR] Node access error (not readable!)'
-            data = ''  # Error?
+            # data = ''  # Error?
+            raise ValueError('Cannot read, robot unplugged?')
         if verbose:
             comment = comment or node_description
             print(comment, data)
