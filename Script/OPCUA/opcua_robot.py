@@ -208,7 +208,8 @@ class RobotOPCUA:
             bot.getMe()
             bot.sendMessage(
                 self._telegram_group,
-                u'[INFO] Start check alarm robot: %s' % self._robot_name)
+                u'[INFO] Inizio controllo allarmi su robot: %s' %
+                self._robot_name)
             counter = 0
             error_found = []
             while True:
