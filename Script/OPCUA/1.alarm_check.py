@@ -31,6 +31,11 @@ try:
 except:
     import configparser as ConfigParser
 
+wait = {
+    'robot': 1 * 60,  # Test every one minute
+    'alarm': 20,   # Test every 20 seconds
+}
+
 # -----------------------------------------------------------------------------
 # Parameters:
 # -----------------------------------------------------------------------------
@@ -42,32 +47,55 @@ config.read([config_file])
 telegram_token = config.get(u'Telegram', u'token')
 telegram_group = config.get(u'Telegram', u'group')
 
-# -----------------------------------------------------------------------------
-# Load robot if present:
-# -----------------------------------------------------------------------------
-seconds = 60 * 5  # minutes check loop
-robot = False
-previous_status = False
+# Load Telegram BOT:
 bot = telepot.Bot(telegram_token)
 bot.getMe()
-while not robot:
-    try:
-        robot = RobotOPCUA()
-        previous_status = 'ON'
-        bot.sendMessage(
-            telegram_group,
-            u'[INFO] Robot alarm check loop ON')
-    except:
-        print('%s. Robot not present' % datetime.now())
-        if previous_status != 'OFF':
+
+# Master loop:
+robot = False
+
+bot.sendMessage(
+    telegram_group,
+    u'[INFO] Avvio script di controllo...',
+)
+while True:
+    # -------------------------------------------------------------------------
+    # Phase 0: Load telegram in loop?
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # Phase 1: Get robot:
+    # -------------------------------------------------------------------------
+    while not robot:
+        try:
+            robot = RobotOPCUA()
             bot.sendMessage(
                 telegram_group,
-                u'[ERR] Robot alarm check loop OFF')
-            previous_status = 'OFF'
-    time.sleep(seconds)
+                u'[INFO] Connessione con robot (inizio monitoraggio)',
+            )
+        except:
+            # Wait and repeat
+            time.sleep(wait['robot'])
+            continue
 
+    # -------------------------------------------------------------------------
+    # Phase 2: Check alarms:
+    # -------------------------------------------------------------------------
+    try:
+        # Loop:
+        robot.alert_alarm_on_telegram(seconds=wait['alarm'], verbose_every=0)
+    except:
+        try:
+            del robot
+        except:
+            pass
 
-robot.alert_alarm_on_telegram()
+        robot = False
+        bot.sendMessage(
+            telegram_group,
+            u'[INFO] Disconnessione robot (fine monitoraggio)',
+        )
+
 # robot.check_is_alarm()
 # robot.check_is_working()
 # robot.check_machine()

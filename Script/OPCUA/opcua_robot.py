@@ -202,64 +202,70 @@ class RobotOPCUA:
     def alert_alarm_on_telegram(self, seconds=60, verbose_every=3600):
         """ Check all alarms and send in telegram
         """
-        # Telegram:
-        bot = telepot.Bot(self._telegram_token)
-        bot.getMe()
-        bot.sendMessage(
-            self._telegram_group,
-            u'[INFO] Start check alarm robot: %s' % self._robot_name)
-        counter = 0
-        error_found = []
-        while True:
-            counter += 1
+        try:
+            # Telegram:
+            bot = telepot.Bot(self._telegram_token)
+            bot.getMe()
+            bot.sendMessage(
+                self._telegram_group,
+                u'[INFO] Start check alarm robot: %s' % self._robot_name)
+            counter = 0
+            error_found = []
+            while True:
+                counter += 1
 
-            # Check 200 alarms:
-            for alarm in self._alarms.keys():  # range(201):
-                if self.get_data_value(
-                        'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' %
-                        alarm):
-                    if alarm in error_found:
-                        print('[WARN] Yet raised: %s' % alarm)
-                        continue
+                # Check 200 alarms:
+                for alarm in self._alarms.keys():  # range(201):
+                    if self.get_data_value(
+                            'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' %
+                            alarm):
+                        if alarm in error_found:
+                            print('[WARN] Yet raised: %s' % alarm)
+                            continue
 
-                    message_data = [self._robot_name]
-                    message_data.extend(self._alarms[alarm])
-                    event_text = u'[ALARM] Robot: %s\n' \
-                                 u'Allarme: %s\n' \
-                                 u'Problema: %s\n' \
-                                 u'Soluzione: %s' % tuple(message_data)
-                    try:
-                        bot.sendMessage(self._telegram_group, event_text)
-                        # Notified once:
-                        if alarm not in error_found:
-                            error_found.append(alarm)
-                    except:
-                        bot.sendMessage(
-                            self._telegram_group, u'Error sending message')
-
-                else:  # No alarm remove from list:
-                    if alarm in error_found:
                         message_data = [self._robot_name]
                         message_data.extend(self._alarms[alarm])
-                        event_text = u'[RESUME] Robot: %s\n' \
-                                     u'Allarme rientrato: %s' % tuple(
-                                         message_data[:2])
+                        event_text = u'[ALARM] Robot: %s\n' \
+                                     u'Allarme: %s\n' \
+                                     u'Problema: %s\n' \
+                                     u'Soluzione: %s' % tuple(message_data)
                         try:
                             bot.sendMessage(self._telegram_group, event_text)
-                            error_found.remove(alarm)  # Resume error
+                            # Notified once:
+                            if alarm not in error_found:
+                                error_found.append(alarm)
                         except:
                             bot.sendMessage(
                                 self._telegram_group, u'Error sending message')
 
-            print(u'Check # %s' % counter)
-            time.sleep(seconds)
-            if counter % verbose_every == 0:
-                bot.sendMessage(
-                    self._telegram_group,
-                    u'[INFO] Robot %s working check # %s' % (
-                        self._robot_name, counter))
-            else:
+                    else:  # No alarm remove from list:
+                        if alarm in error_found:
+                            message_data = [self._robot_name]
+                            message_data.extend(self._alarms[alarm])
+                            event_text = u'[RESUME] Robot: %s\n' \
+                                         u'Allarme rientrato: %s' % tuple(
+                                             message_data[:2])
+                            try:
+                                bot.sendMessage(
+                                    self._telegram_group, event_text)
+                                error_found.remove(alarm)  # Resume error
+                            except:
+                                bot.sendMessage(
+                                    self._telegram_group,
+                                    u'Error sending message')
+
                 print(u'Check # %s' % counter)
+                time.sleep(seconds)
+                if verbose_every and counter % verbose_every == 0:
+                    bot.sendMessage(
+                        self._telegram_group,
+                        u'[INFO] Robot %s working check # %s' % (
+                            self._robot_name, counter))
+                else:
+                    print(u'Check # %s' % counter)
+        except:
+            print('Master error on alarm check')
+            return False
             """
             # Check master alarm:
             alarm_status = str(self.get_data_value(
