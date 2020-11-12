@@ -447,7 +447,9 @@ class IndustriaDatabase(orm.Model):
                 job_pool.write(cr, uid, job_ids, data, context=context)
             else:
                 job_pool.create(cr, uid, data, context=context)
-            shutil.move(fullname, history_fullname)
+
+        _logger.info('Read file, moved in %s' % history_fullname)
+        shutil.move(fullname, history_fullname)
         return True
 
     _columns = {
