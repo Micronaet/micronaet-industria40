@@ -24,6 +24,7 @@
 import os
 import pdb
 import sys
+import shutil
 import logging
 from openerp.osv import fields, osv, expression, orm
 from datetime import datetime, timedelta
