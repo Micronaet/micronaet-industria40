@@ -224,6 +224,15 @@ class IndustriaDatabase(orm.Model):
             return (ts - dls_dt).strftime(
                 DEFAULT_SERVER_DATETIME_FORMAT)
 
+        # ---------------------------------------------------------------------
+        # Import mode:
+        # ---------------------------------------------------------------------
+        # 1. FTP:
+        database_proxy = self.browse(cr, uid, ids, context=context)[0]
+        if database_proxy.mode == 'ftp':
+            return self.import_job_ftp(cr, uid, ids, context=context)
+
+        # 2. MY SQL:
         # TODO create context from ID (partial run)
         job_pool = self.pool.get('industria.job')
         robot_pool = self.pool.get('industria.robot')
@@ -312,6 +321,129 @@ class IndustriaDatabase(orm.Model):
             else:
                 job_pool.create(
                     cr, uid, data, context=context)
+        return True
+
+    def import_job_ftp(self, cr, uid, ids, context=None):
+        """ Import Job from FTP folder
+        """
+        def get_date(date):
+            """ Extract FTP date
+            """
+            date = date.strip()
+            try:
+                date_part = date.split('-')
+                year_part = date_part[:3]
+                hour_part = date_part[3].split(':')
+
+                date = '%04d-%02d-%02d %02d:%02d:%02d' % (
+                    int(year_part[2]),
+                    int(year_part[1]),
+                    int(year_part[0]),
+
+                    int(hour_part[0]),
+                    int(hour_part[1]),
+                    int(hour_part[2]),
+                )
+            except:
+                _logger.error('Cannot convert in date: %s' % date)
+                date = False
+            return date
+
+        job_pool = self.pool.get('industria.job')
+        robot_pool = self.pool.get('industria.robot')
+        program_pool = self.pool.get('industria.program')
+        pdb.set_trace()
+        database_id = ids[0]
+        database = self.browse(cr, uid, database_id, context=context)
+        partner_id = database.partner_id.id
+
+        # ---------------------------------------------------------------------
+        # File operation:
+        # ---------------------------------------------------------------------
+        command = database.ftp_command
+        fullname = os.path.expanduser(database.ftp_fullname)
+        root_path = os.path.dirname(fullname)
+        history_path = os.path.join(root_path, 'history')
+        os.system('mkdir -p %s' % history_path)
+
+        if not os.path.isfile(fullname):
+            # Extract FTP file from Robot:
+            os.system(command)  # Get file and clean on server
+
+        if not os.path.isfile(fullname):
+            _logger.error('Cannot extract file form robot via FTP')
+            return False
+
+        # ---------------------------------------------------------------------
+        # Import operation:
+        # ---------------------------------------------------------------------
+        # Load robot:
+        robot_ids = robot_pool.search(cr, uid, [(
+            ('database_id', '=', database_id),
+        )], context=context)
+        if not robot_ids:
+            _logger.error('Not found robot for this database!')
+            return False
+        robot_id = robot_ids[0]
+
+        # Load program:
+        program_ids = program_pool.search(cr, uid, [
+            ('database_id', '=', database_id),
+        ], context=context)
+        program_db = {}
+        for program in program_pool.browse(
+                cr, uid, program_ids, context=context):
+            program_db[program.name] = program.id
+
+        # Load Jobs:
+        for line in open(fullname, 'r'):
+            row = line.strip().split(';')
+            if not line:
+                continue
+
+            if len(row) != 5:
+                _logger.error('Wrong number of columns: %s' % line)
+                continue
+
+            program_name = row[0]
+            # program_ref = row[1]
+            # program_code = row[2]
+            from_date = get_date(row[3])
+            to_date = get_date(row[4])
+
+            # Check mandatory parameters:
+            if not all(from_date, to_date, program_name):
+                _logger.error('Missed data: %s' % line)
+                continue
+
+            if program_name in program_db:
+                program_id = program_db[program_name]
+            else:
+                program_id = program_pool.create(cr, uid, {
+                    'name': program_name,
+                    'partner_id': partner_id,
+                    'source_id': robot_id,
+                    'database_id': database_id,
+                }, context=context)
+                program_db[program_name] = program_id
+
+            job_ids = job_pool.search(cr, uid, [
+                ('create_at', '=', from_date),
+            ], context=context)
+
+            data = {
+                'create_at': from_date,
+                'ended_at': to_date,
+                'database_id': database_id,
+                'program_id': program_id,
+                'partner_id': partner_id,
+                'state': 'COMPLETED',
+                'source_id': robot_id,
+            }
+            if job_ids:
+                job_pool.write(cr, uid, job_ids, data, context=context)
+            else:
+                job_pool.create(cr, uid, data, context=context)
         return True
 
     _columns = {
