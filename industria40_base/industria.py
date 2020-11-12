@@ -364,6 +364,10 @@ class IndustriaDatabase(orm.Model):
         root_path = os.path.dirname(fullname)
         history_path = os.path.join(root_path, 'history')
         os.system('mkdir -p %s' % history_path)
+        history_fullname = os.path.join(
+            history_path,
+            str(datetime.now()).replace(':', '_').replace('/', '-'),
+        )
 
         if not os.path.isfile(fullname):
             # Extract FTP file from Robot:
@@ -426,7 +430,6 @@ class IndustriaDatabase(orm.Model):
                 }, context=context)
                 program_db[program_name] = program_id
 
-            pdb.set_trace()
             job_ids = job_pool.search(cr, uid, [
                 ('created_at', '=', from_date),
             ], context=context)
