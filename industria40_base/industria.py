@@ -48,6 +48,12 @@ class IndustriaDatabase(orm.Model):
     _rec_name = 'name'
     _order = 'name'
 
+    def generate_picking_from_job(self, cr, uid, ids, context=None):
+        """ Generate picking from jobs
+        """
+
+        return True
+
     def mssql_connect(self, cr, uid, ids, context=None):
         """ Connection with database return cursor
         """
