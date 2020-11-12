@@ -428,11 +428,11 @@ class IndustriaDatabase(orm.Model):
 
             pdb.set_trace()
             job_ids = job_pool.search(cr, uid, [
-                ('create_at', '=', from_date),
+                ('created_at', '=', from_date),
             ], context=context)
 
             data = {
-                'create_at': from_date,
+                'created_at': from_date,
                 'ended_at': to_date,
                 'database_id': database_id,
                 'program_id': program_id,
