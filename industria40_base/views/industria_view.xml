@@ -49,9 +49,9 @@
 
                     <field name="database" />
                     <field name="port" />
-                    <button name="test_database_connection" type="object" string="Test" icon="gtk-refresh"/>
-                    <button name="import_program" type="object" string="Import program" icon="terp-calendar"/>
-                    <button name="import_robot" type="object" string="Import robot" icon="gtk-network"/>
+                    <button name="test_database_connection" type="object" string="Test" icon="gtk-refresh" attrs="{'invisible': [('mode', '=', 'ftp')]}"/>
+                    <button name="import_program" type="object" string="Import program" icon="terp-calendar" attrs="{'invisible': [('mode', '=', 'ftp')]}"/>
+                    <button name="import_robot" type="object" string="Import robot" icon="gtk-network" attrs="{'invisible': [('mode', '=', 'ftp')]}"/>
                     <button name="import_job" type="object" string="Import jobs" icon="gtk-justify-fill"/>
                 </tree>
             </field>

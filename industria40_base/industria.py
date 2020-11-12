@@ -352,7 +352,6 @@ class IndustriaDatabase(orm.Model):
         job_pool = self.pool.get('industria.job')
         robot_pool = self.pool.get('industria.robot')
         program_pool = self.pool.get('industria.program')
-        pdb.set_trace()
         database_id = ids[0]
         database = self.browse(cr, uid, database_id, context=context)
         partner_id = database.partner_id.id
@@ -378,9 +377,10 @@ class IndustriaDatabase(orm.Model):
         # Import operation:
         # ---------------------------------------------------------------------
         # Load robot:
-        robot_ids = robot_pool.search(cr, uid, [(
+        pdb.set_trace()
+        robot_ids = robot_pool.search(cr, uid, [
             ('database_id', '=', database_id),
-        )], context=context)
+        ], context=context)
         if not robot_ids:
             _logger.error('Not found robot for this database!')
             return False
