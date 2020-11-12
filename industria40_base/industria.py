@@ -377,7 +377,6 @@ class IndustriaDatabase(orm.Model):
         # Import operation:
         # ---------------------------------------------------------------------
         # Load robot:
-        pdb.set_trace()
         robot_ids = robot_pool.search(cr, uid, [
             ('database_id', '=', database_id),
         ], context=context)
@@ -412,7 +411,7 @@ class IndustriaDatabase(orm.Model):
             to_date = get_date(row[4])
 
             # Check mandatory parameters:
-            if not all(from_date, to_date, program_name):
+            if not all((from_date, to_date, program_name)):
                 _logger.error('Missed data: %s' % line)
                 continue
 
@@ -427,6 +426,7 @@ class IndustriaDatabase(orm.Model):
                 }, context=context)
                 program_db[program_name] = program_id
 
+            pdb.set_trace()
             job_ids = job_pool.search(cr, uid, [
                 ('create_at', '=', from_date),
             ], context=context)
