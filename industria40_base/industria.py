@@ -710,6 +710,10 @@ class IndustriaJob(orm.Model):
                     ['create_at', 'ended_at'],
                     10,
                 )}),
+        'picking_id': fields.many2one(
+            'stock.picking', 'Picking',
+            help='When generate a picking for stock movement will be linked '
+                 'here'),
     }
 
     _defaults = {
@@ -743,4 +747,16 @@ class ResPartner(orm.Model):
             'industria.program', 'partner_id', 'Program'),
         'source_ids': fields.one2many(
             'industria.robot', 'partner_id', 'Robot'),
+    }
+
+
+class StockPicking(orm.Model):
+    """ Update stock picking
+    """
+
+    _inherit = 'stock.picking'
+
+    _columns = {
+        'job_ids': fields.one2many(
+            'industria.job', 'picking_id', 'Jobs'),
     }
