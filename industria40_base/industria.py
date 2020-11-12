@@ -281,7 +281,6 @@ class IndustriaDatabase(orm.Model):
         # Update program for robot:
         update_program = []
         counter = 0
-        pdb.set_trace()
         for record in cursor:
             counter += 1
             if not counter % 50:
@@ -447,6 +446,7 @@ class IndustriaDatabase(orm.Model):
                 job_pool.write(cr, uid, job_ids, data, context=context)
             else:
                 job_pool.create(cr, uid, data, context=context)
+            shutil.move(fullname, history_fullname)
         return True
 
     _columns = {
