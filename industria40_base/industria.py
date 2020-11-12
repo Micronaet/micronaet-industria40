@@ -714,6 +714,10 @@ class IndustriaJob(orm.Model):
             'stock.picking', 'Picking',
             help='When generate a picking for stock movement will be linked '
                  'here'),
+        'unused': fields.boolean(
+            'Unused',
+            help='Job unused for stock movement, will not be linked '
+                 'to picking'),
     }
 
     _defaults = {
