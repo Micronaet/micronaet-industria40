@@ -271,7 +271,7 @@
             </field>
         </record>
         <record model="ir.ui.view" id="view_industria_job_tree">
-            <field name="name">industria.job.form</field>
+            <field name="name">industria.job.tree</field>
             <field name="model">industria.job</field>
             <field name="arch" type="xml">
                 <tree string="Job" colors="red:state=='ERROR' OR dismiss==True;blue:state=='RUNNING'">
@@ -288,6 +288,9 @@
                     <field name="source_id" />
 
                     <field name="partner_id" />
+                    <field name="picking_id" />
+                    <field name="unused" />
+
                     <field name="state" />
                 </tree>
             </field>
