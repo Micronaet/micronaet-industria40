@@ -51,6 +51,32 @@ class IndustriaDatabase(orm.Model):
     def generate_picking_from_job(self, cr, uid, ids, context=None):
         """ Generate picking from jobs
         """
+        picking_pool = self.pool.get('stock.picking')
+        move_pool = self.pool.get('stock.move')
+        job_pool = self.pool.get('industria.job')
+
+        job_ids = job_pool.search(cr, uid, [
+            ('picking_id', '=', False),
+            ('unused', '=', False),
+
+            ('started_at', '!=', False),
+            ('ended_at', '!=', False),
+
+            ('state', '=', 'COMPLETED'),
+        ], context=context)
+        daily_job = {}
+        for job in job_pool.browse(cr, uid, job_ids, context=context):
+            database = job.database
+            origin = '%s [%s]' % (database.name, database.ip)
+            if origin not in daily_job:
+                daily_job[origin] = {}
+            from_date = job.started_at
+            to_date = job.endend_at
+
+
+
+
+
 
         return True
 
