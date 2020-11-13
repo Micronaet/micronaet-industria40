@@ -137,7 +137,7 @@ while True:  # Master loop:
                 for fullname in clean_file:
                     print('Removing: %s' % fullname)
                     os.remove(fullname)
-            time.sleep(60)
+            time.sleep(30)
         except:
             print('Error in FTP access')
             break
