@@ -31,7 +31,6 @@ import ConfigParser
 # -----------------------------------------------------------------------------
 # Read configuration parameter:
 # -----------------------------------------------------------------------------
-pdb.set_trace()
 cfg_file = os.path.expanduser('./robot.cfg')
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
@@ -60,7 +59,6 @@ telegram_group = config.get('Telegram', 'group')
 
 # Robot parameters:
 robot_name = config.get('robot', 'name')
-robot_folder = config.get('robot', 'log_folder')
 start = config.get('robot', 'start')
 
 # Token for extract data from file:
@@ -69,6 +67,7 @@ date = config.get('robot', 'token_date')
 
 bot = telepot.Bot(telegram_token)
 bot.getMe()
+robot_folder = config.get('robot', 'log_folder')
 
 bot.sendMessage(
     telegram_group,
