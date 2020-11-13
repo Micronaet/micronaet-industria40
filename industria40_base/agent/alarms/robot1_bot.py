@@ -140,3 +140,8 @@ while True:  # Master loop:
         except:
             print('Error in FTP access')
             break
+
+    bot.sendMessage(
+        telegram_group,
+        '[WARNING]: Disconnesso dal Robot (spento?): %s' % robot_name,
+    )
