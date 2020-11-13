@@ -65,9 +65,9 @@ start = config.get('robot', 'start')
 error_code = config.get('robot', 'token_error')
 date = config.get('robot', 'token_date')
 
+pdb.set_trace()
 bot = telepot.Bot(telegram_token)
 bot.getMe()
-robot_folder = config.get('robot', 'log_folder')
 
 bot.sendMessage(
     telegram_group,
