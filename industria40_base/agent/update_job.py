@@ -55,11 +55,12 @@ database_pool = odoo.model('industria.database')
 database_ids = database_pool.search([])
 pdb.set_trace()
 for database in database_pool.browse(database_ids):
-    print('Import program')
-    database_pool.import_program([database.id])
+    if database.mode != 'ftp':
+        print('Import program')
+        database_pool.import_program([database.id])
 
-    print('Import robot')
-    database_pool.import_robot([database.id])
+        print('Import robot')
+        database_pool.import_robot([database.id])
 
     print('Import job')
     database_pool.import_job([database.id])
