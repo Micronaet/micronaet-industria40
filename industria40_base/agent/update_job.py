@@ -53,8 +53,8 @@ database_pool = odoo.model('industria.database')
 
 # For all database present:
 database_ids = database_pool.search([])
-pdb.set_trace()
 for database in database_pool.browse(database_ids):
+    print('Updating database %s ...' % database.name)
     if database.mode != 'ftp':
         print('Import program')
         database_pool.import_program([database.id])
