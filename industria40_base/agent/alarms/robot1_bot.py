@@ -67,6 +67,7 @@ date = config.get('robot', 'token_date')
 
 pdb.set_trace()
 bot = telepot.Bot(telegram_token)
+bot.polling(none_stop=True, timeout=123)
 bot.getMe()
 
 bot.sendMessage(
