@@ -31,7 +31,8 @@ import ConfigParser
 # -----------------------------------------------------------------------------
 # Read configuration parameter:
 # -----------------------------------------------------------------------------
-cfg_file = os.path.expanduser('./robot2.cfg')
+pdb.set_trace()
+cfg_file = os.path.expanduser('./robot.cfg')
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
 
@@ -74,7 +75,6 @@ bot.sendMessage(
     '[INFO]: %s: Attivazione procedure controllo allarmi' % robot_name,
 )
 print('Start alarm procedure master loop')
-pdb.set_trace()
 while True:  # Master loop:
     # A. Mount server:
     print('Try to mount robot server')
