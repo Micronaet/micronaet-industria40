@@ -90,7 +90,10 @@ while True:  # Master loop:
             time.sleep(2 * 60)
     bot.sendMessage(
         telegram_group,
-        '[INFO]: Connesso con il Robot: %s' % robot_name,
+        '%s\n[INFO]: Connesso con il Robot: %s' % (
+            '-' * 40,
+            robot_name,
+        )
     )
 
     # B. Check alarm loop:
@@ -143,5 +146,7 @@ while True:  # Master loop:
 
     bot.sendMessage(
         telegram_group,
-        '[WARNING]: Disconnesso dal Robot (spento?): %s' % robot_name,
-    )
+        '[WARNING]: Disconnesso dal Robot (spento?): %s\n%s' % (
+            '-' * 40,
+            robot_name,
+        ))
