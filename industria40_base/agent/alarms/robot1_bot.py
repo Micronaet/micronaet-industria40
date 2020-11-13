@@ -65,9 +65,7 @@ start = config.get('robot', 'start')
 error_code = config.get('robot', 'token_error')
 date = config.get('robot', 'token_date')
 
-pdb.set_trace()
 bot = telepot.Bot(telegram_token)
-# bot.polling(none_stop=True, timeout=123)
 bot.getMe()
 
 bot.sendMessage(
@@ -75,10 +73,11 @@ bot.sendMessage(
     '[INFO]: %s: Attivazione procedure controllo allarmi' % robot_name,
 )
 print('Start alarm procedure master loop')
+pdb.set_trace()
 while True:  # Master loop:
     # A. Mount server:
     print('Try to mount robot server')
-    while os.path.isfile(ftp_check):
+    while not os.path.isfile(ftp_check):
         try:
             os.system(umount_command)
         except:
