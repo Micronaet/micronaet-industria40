@@ -85,13 +85,14 @@ while True:  # Master loop:
                   ftp_folder)  # Try umount previously
         try:
             os.system(mount_command)
-            bot.sendMessage(
-                telegram_group,
-                '[INFO]: Connessione con il Robot: %s' % robot_name,
-            )
         except:
             print('Pending mounting robot in %s...' % ftp_mountpoint)
-        time.sleep(2 * 60)
+        if not os.path.isfile(ftp_check):
+            time.sleep(2 * 60)
+    bot.sendMessage(
+        telegram_group,
+        '[INFO]: Connesso con il Robot: %s' % robot_name,
+    )
 
     # B. Check alarm loop:
     while True:
