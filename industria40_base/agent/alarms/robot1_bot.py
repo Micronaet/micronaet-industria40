@@ -23,6 +23,8 @@
 
 import os
 import sys
+import pdb
+import time
 import telepot
 import ConfigParser
 
@@ -30,9 +32,26 @@ import ConfigParser
 # Read configuration parameter:
 # -----------------------------------------------------------------------------
 cfg_file = os.path.expanduser('./robot2.cfg')
-
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
+
+# FTP Access:
+ftp_user = config.get('FTP', 'user')
+ftp_password = config.get('FTP', 'password')
+ftp_host = config.get('FTP', 'host')
+ftp_mountpoint = config.get('FTP', 'mountpoint')
+ftp_folder = os.path.join(
+    ftp_mountpoint,  config.get('FTP', 'folder'))
+ftp_check = os.path.join(
+    ftp_mountpoint,  config.get('FTP', 'check'))
+
+mount_command = 'curlftpfs %s:%s@%s %s' % (
+    ftp_user,
+    ftp_password,
+    ftp_host,
+    ftp_mountpoint,
+)
+umount_command = 'umount -l %s' % ftp_mountpoint
 
 # Telegram parameters:
 telegram_token = config.get('Telegram', 'token')
@@ -50,41 +69,74 @@ date = config.get('robot', 'token_date')
 bot = telepot.Bot(telegram_token)
 bot.getMe()
 
-clean_file = []
-print('Check alarm')
-for root, folders, files in os.walk(robot_folder):
-    for filename in files:
-        if filename.startswith(start):
-            fullname = os.path.join(root, filename)
+bot.sendMessage(
+    telegram_group,
+    '[INFO]: %s: Attivazione procedure controllo allarmi' % robot_name,
+)
+print('Start alarm procedure master loop')
+pdb.set_trace()
+while True:  # Master loop:
+    # A. Mount server:
+    print('Try to mount robot server')
+    while os.path.isfile(ftp_check):
+        try:
+            os.system(umount_command)
+        except:
+            pass  # Try umount previously
+        try:
+            os.system(mount_command)
+            bot.sendMessage(
+                telegram_group,
+                '[INFO]: Connessione con il Robot: %s' % robot_name,
+            )
+        except:
+            print('Pending mounting robot in %s...' % ftp_mountpoint)
+        time.sleep(2 * 60)
 
-            data = {
-                'counter': 0,
-                'error_code': False,
-                'date': False,
-                }
-            for line in open(fullname, 'r'):
-                if line.startswith(date):
-                    data['counter'] += 1
-                    data['date'] = line.strip().split('=')
-                if line.startswith(error_code):
-                    data['error_code'] = line.strip().split('=')
-                    data['counter'] += 1
-                    break
-            if data['counter'] == 2:
-                event_text = \
-                    'Robot: %s\nAllarme: Codice %s\nDescrizione: %s' % (
-                        robot_name,
-                        data['error'],
-                        data['data'],
-                        )
-                bot.sendMessage(telegram_group, event_text)
-                clean_file.append(fullname)
-                print(event_text.replace('\n', ' - '))
-    break
+    # B. Check alarm loop:
+    while True:
+        try:
+            print('Check alarm')
+            clean_file = []
+            for root, folders, files in os.walk(ftp_folder):
+                for filename in files:
+                    if filename.startswith(start):
+                        fullname = os.path.join(root, filename)
 
-# Clean alarm used:
-if clean_file:
-    print('Clean file used')
-    for fullname in clean_file:
-        print('Removing: %s' % fullname)
-        os.remove(fullname)
+                        data = {
+                            'counter': 0,
+                            'error_code': False,
+                            'date': False,
+                            }
+                        for line in open(fullname, 'r'):
+                            if line.startswith(date):
+                                data['counter'] += 1
+                                data['date'] = line.strip().split('=')
+                            if line.startswith(error_code):
+                                data['error_code'] = line.strip().split('=')
+                                data['counter'] += 1
+                                break
+                        if data['counter'] == 2:
+                            event_text = \
+                                'Robot: %s\n' \
+                                'Allarme: Codice %s\n' \
+                                'Descrizione: %s' % (
+                                    robot_name,
+                                    data['error'],
+                                    data['data'],
+                                    )
+                            bot.sendMessage(telegram_group, event_text)
+                            clean_file.append(fullname)
+                            print(event_text.replace('\n', ' - '))
+                break  # No subfolder
+
+            # Clean alarm used:
+            if clean_file:
+                print('Clean file used')
+                for fullname in clean_file:
+                    print('Removing: %s' % fullname)
+                    os.remove(fullname)
+            time.sleep(60)
+        except:
+            print('Error in FTP access')
+            break
