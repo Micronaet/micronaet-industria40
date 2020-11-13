@@ -81,7 +81,8 @@ while True:  # Master loop:
         try:
             os.system(umount_command)
         except:
-            pass  # Try umount previously
+            print('Warning umount %s folder (no problem, not an error)' %
+                  ftp_folder)  # Try umount previously
         try:
             os.system(mount_command)
             bot.sendMessage(
