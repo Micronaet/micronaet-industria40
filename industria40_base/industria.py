@@ -87,7 +87,7 @@ class IndustriaDatabase(orm.Model):
                 daily_job[origin][date] = {}
             product = job.program_id.product_id
             if product not in daily_job[origin][date]:
-                daily_job[origin][date][product] = [0.0, []]
+                daily_job[origin][date][product] = [0, []]
             daily_job[origin][date][product][0] += 1  # piece (1 every job?)
             daily_job[origin][date][product][1].append(job.id)
 
@@ -112,22 +112,21 @@ class IndustriaDatabase(orm.Model):
                     # 'location_id': location_id,
                 }, context=context)
                 new_picking_ids.append(picking_id)
-                picking = picking_pool.browse(
-                    cr, uid, picking_id, context=context)
                 for product in daily_job[origin][date]:
                     # Create stock move:
                     qty, job_ids = daily_job[origin][date][product]
-                    move_data = {
+                    onchange = move_pool.onchange_product_id(
+                        cr, uid, False, product.id, location_src_id,
+                        location_dest_id, False)  # no partner
+                    move_data = onchange.get('value', {})
+                    move_data.update({
                         'picking_id': picking_id,
                         'product_id': product.id,
                         'product_uom_qty': qty,
                         'location_id': location_src_id,
                         'location_dest_id': location_dest_id,
-                        }
-                    onchange = move_pool.onchange_product_id(
-                        cr, uid, False, product.id, picking.location_id.id,
-                        picking.location_dest_id.id, picking.partner_id.id)
-                    move_data.update(onchange.get('value', {}))
+                        })
+
                     move_pool.create(cr, uid, move_data, context=context)
 
                     # Link job to picking:
