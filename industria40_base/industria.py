@@ -68,14 +68,14 @@ class IndustriaDatabase(orm.Model):
         ], context=context)
         daily_job = {}
         for job in job_pool.browse(cr, uid, job_ids, context=context):
-            database = job.database
+            database = job.database_id
             origin = '%s [%s]' % (database.name, database.ip)
             if origin not in daily_job:
                 daily_job[origin] = {}
 
             date = '%s 08:00:00' % job.created_at[:10]  # Always at 8 o'clock
             if date not in daily_job[origin]:
-                daily_job[origin][date] = []
+                daily_job[origin][date] = {}
             product = job.program_id.product_id
             if product not in daily_job[origin][date]:
                 daily_job[origin][date][product] = [0.0, []]
