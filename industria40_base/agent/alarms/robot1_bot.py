@@ -56,7 +56,7 @@ for line in file_err:
                   'Dettaglio: %s\n' \
                   'Correzione: %s' % tuple(row[:5])
     else:
-        print('%. Line not in correct format (take as is)')
+        print('%. Line not in correct format (take as is)' % counter)
         message = line
     error_comment[code] = message
 
@@ -157,7 +157,7 @@ while True:  # Master loop:
                                 data['counter'] += 1
                                 break
                         if data['counter'] == 2:
-                            code = abs(data['error_code'][1])
+                            code = abs(int(data['error_code'][1]))
                             message = error_comment.get(
                                 code,
                                 'Codice error non presente nella tabella')
