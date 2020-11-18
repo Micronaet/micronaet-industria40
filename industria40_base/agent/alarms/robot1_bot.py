@@ -54,7 +54,7 @@ for line in file_err:
         message = '[%s] Tipo: %s\n' \
                   'Commento: %s\n' \
                   'Dettaglio: %s\n' \
-                  'Correzione: %s' % tuple(row[:4])
+                  'Correzione: %s' % tuple(row[:5])
     else:
         print('%. Line not in correct format (take as is)')
         message = line
