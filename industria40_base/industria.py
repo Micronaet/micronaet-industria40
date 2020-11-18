@@ -90,8 +90,8 @@ class IndustriaDatabase(orm.Model):
                 daily_job[origin][date][product] = [
                     0, 0, []]  # Total, duration, job
             daily_job[origin][date][product][0] += 1  # piece (1 every job?)
-            daily_job[origin][date][product][0] += job.duration
-            daily_job[origin][date][product][1].append(job.id)
+            daily_job[origin][date][product][1] += job.job_duration
+            daily_job[origin][date][product][2].append(job.id)
 
         # Generate picking form collected data:
         new_picking_ids = []
