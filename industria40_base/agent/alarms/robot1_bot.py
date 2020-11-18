@@ -208,7 +208,8 @@ while True:  # Master loop:
     try:
         bot.sendMessage(
             telegram_group,
-            '[WARNING]: Disconnesso dal Robot (spento?): %s\n%s' % (
+            '[WARNING]: Disconnesso dal Robot (spento o bloccato il programma '
+            'di controllo?): %s\n%s' % (
                 '-' * 40,
                 robot_name,
             ))
