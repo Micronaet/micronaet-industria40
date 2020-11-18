@@ -54,6 +54,11 @@ class IndustriaDatabase(orm.Model):
         picking_pool = self.pool.get('stock.picking')
         move_pool = self.pool.get('stock.move')
         job_pool = self.pool.get('industria.job')
+
+        company_proxy = self.pool.get('res.company')._get_company_browse(
+            cr, uid, context=context)
+        cl_type_id = company_proxy.sl_mrp_lavoration_id.id or False
+
         pdb.set_trace()
         job_ids = job_pool.search(cr, uid, [
             ('picking_id', '=', False),
@@ -88,14 +93,18 @@ class IndustriaDatabase(orm.Model):
             for date in daily_job[origin]:
                 # Create picking:
                 picking_id = picking_pool.create(cr, uid, {
-                    'dep_move': 'workshop',  # Always
+                    'dep_mode': 'workshop',  # Always
                     'origin': origin,
                     # 'partner_id':
                     'date': date,
+                    'min_date': date,
                     'total_work': 0.0,
                     'total_prepare': 0.0,
                     'total_stop': 0.0,
                     'note': '',
+                    'state': 'draft',
+                    'picking_type_id': cl_type_id,
+                    'is_mrp_lavoration': True,
                 }, context=context)
                 picking = picking_pool.browse(
                     cr, uid, picking_id, context=context)
