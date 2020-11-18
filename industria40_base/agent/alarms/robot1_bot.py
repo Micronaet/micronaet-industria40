@@ -35,7 +35,34 @@ cfg_file = os.path.expanduser('./robot.cfg')
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
 
+# -----------------------------------------------------------------------------
+# Load error comment:
+# -----------------------------------------------------------------------------
+file_err = open('./error_comment.csv', 'r')
+error_comment = {}
+header = True
+counter = 0
+for line in file_err:
+    counter += 1
+    row = line.strip().split('|')
+    code = int(row[0])
+    if header:
+        total_column = len(row)
+        header = False
+        continue
+    if len(row) == total_column:
+        message = '[%s] Tipo: %s\n' \
+                  'Commento: %s\n' \
+                  'Dettaglio: %s\n' \
+                  'Correzione: %s' % tuple(row[:4])
+    else:
+        print('%. Line not in correct format (take as is)')
+        message = line
+    error_comment[code] = message
+
+# -----------------------------------------------------------------------------
 # FTP Access:
+# -----------------------------------------------------------------------------
 ftp_user = config.get('FTP', 'user')
 ftp_password = config.get('FTP', 'password')
 ftp_host = config.get('FTP', 'host')
@@ -53,11 +80,15 @@ mount_command = 'curlftpfs %s:%s@%s %s' % (
 )
 umount_command = 'umount -l %s' % ftp_mountpoint
 
+# -----------------------------------------------------------------------------
 # Telegram parameters:
+# -----------------------------------------------------------------------------
 telegram_token = config.get('Telegram', 'token')
 telegram_group = config.get('Telegram', 'group')
 
+# -----------------------------------------------------------------------------
 # Robot parameters:
+# -----------------------------------------------------------------------------
 robot_name = config.get('robot', 'name')
 start = config.get('robot', 'start')
 
@@ -65,13 +96,16 @@ start = config.get('robot', 'start')
 error_code = config.get('robot', 'token_error')
 date = config.get('robot', 'token_date')
 
+# -----------------------------------------------------------------------------
+# Connect to Telegram:
+# -----------------------------------------------------------------------------
 bot = telepot.Bot(telegram_token)
 bot.getMe()
-
 bot.sendMessage(
     telegram_group,
     '[INFO]: %s: Attivazione procedure controllo allarmi' % robot_name,
 )
+
 print('Start alarm procedure master loop')
 pdb.set_trace()
 while True:  # Master loop:
@@ -123,13 +157,15 @@ while True:  # Master loop:
                                 data['counter'] += 1
                                 break
                         if data['counter'] == 2:
+                            code = abs(data['error_code'][1])
+                            message = error_comment.get(
+                                code,
+                                'Codice error non presente nella tabella')
                             event_text = \
-                                'Robot: %s\n' \
-                                'Allarme: Codice %s\n' \
-                                'Descrizione: %s' % (
+                                'Robot: %s\nDate: %s\nMessaggio: %s' % (
                                     robot_name,
-                                    data['error'],
-                                    data['data'],
+                                    data['date'],
+                                    message,
                                     )
                             bot.sendMessage(telegram_group, event_text)
                             clean_file.append(fullname)
