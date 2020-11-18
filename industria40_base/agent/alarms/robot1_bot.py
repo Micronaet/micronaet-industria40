@@ -89,6 +89,7 @@ while True:  # Master loop:
             print('Pending mounting robot in %s...' % ftp_mountpoint)
         if not os.path.isfile(ftp_check):
             time.sleep(2 * 60)
+
     bot.sendMessage(
         telegram_group,
         '%s\n[INFO]: Connesso con il Robot: %s' % (
@@ -97,6 +98,7 @@ while True:  # Master loop:
         )
     )
 
+    pdb.set_trace()
     # B. Check alarm loop:
     while True:
         try:
