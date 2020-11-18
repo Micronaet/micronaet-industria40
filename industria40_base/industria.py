@@ -57,9 +57,12 @@ class IndustriaDatabase(orm.Model):
 
         company_proxy = self.pool.get('res.company')._get_company_browse(
             cr, uid, context=context)
-        cl_type_id = company_proxy.sl_mrp_lavoration_id.id or False
 
-        pdb.set_trace()
+        cl_type = company_proxy.cl_mrp_lavoration_id
+        cl_type_id = cl_type.id if cl_type else False
+        location_src_id = cl_type.default_location_src_id.id
+        location_dest_id = cl_type.default_location_dest_id.id
+
         job_ids = job_pool.search(cr, uid, [
             ('picking_id', '=', False),
             ('unused', '=', False),
@@ -88,7 +91,6 @@ class IndustriaDatabase(orm.Model):
             daily_job[origin][date][product][1].append(job.id)
 
         # Generate picking form collected data:
-        pdb.set_trace()
         for origin in daily_job:
             for date in daily_job[origin]:
                 # Create picking:
@@ -105,6 +107,7 @@ class IndustriaDatabase(orm.Model):
                     'state': 'draft',
                     'picking_type_id': cl_type_id,
                     'is_mrp_lavoration': True,
+                    # 'location_id': location_id,
                 }, context=context)
                 picking = picking_pool.browse(
                     cr, uid, picking_id, context=context)
@@ -115,9 +118,10 @@ class IndustriaDatabase(orm.Model):
                         'picking_id': picking_id,
                         'product_id': product.id,
                         'product_uom_qty': qty,
-                        'location_id': picking.location_id.id,
+                        'location_id': location_src_id,
+                        'location_dest_id': location_dest_id,
                         }
-
+                    pdb.set_trace()
                     onchange = move_pool.onchange_product_id(
                         cr, uid, False, product.id, picking.location_id.id,
                         picking.location_dest_id.id, picking.partner_id.id)
