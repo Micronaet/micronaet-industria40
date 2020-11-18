@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="lavoration_cl_sl.view_stock_picking_cl_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page" position="after">
-                    <page string="Industria 4.0: Job" attrs="{'invisible': [('job_ids', '!=', [])]}">
+                    <page string="Industria 4.0: Job" attrs="{'invisible': [('job_ids', '=', [])]}">
                         <group col="4" colspan="4">
                             <separator string="Job" colspan="4"/>
                             <field name="job_ids"  colspan="4" nolabel="1" readonly="1" editable="bottom">
