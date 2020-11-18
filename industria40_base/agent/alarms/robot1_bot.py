@@ -215,4 +215,3 @@ while True:  # Master loop:
             ))
     except:
         print('Telegram error: Robot shutdown?')
-
