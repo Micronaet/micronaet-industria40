@@ -56,7 +56,7 @@ for line in file_err:
                   'Dettaglio: %s\n' \
                   'Correzione: %s' % tuple(row[:5])
     else:
-        print('%. Line not in correct format (take as is)' % counter)
+        print('%s. Line not in correct format (take as is)' % counter)
         message = line
     error_comment[code] = message
 
