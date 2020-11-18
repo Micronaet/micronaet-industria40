@@ -73,6 +73,7 @@ bot.sendMessage(
     '[INFO]: %s: Attivazione procedure controllo allarmi' % robot_name,
 )
 print('Start alarm procedure master loop')
+pdb.set_trace()
 while True:  # Master loop:
     # A. Mount server:
     print('Try to mount robot server')
