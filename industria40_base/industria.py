@@ -59,10 +59,12 @@ class IndustriaDatabase(orm.Model):
             ('picking_id', '=', False),
             ('unused', '=', False),
 
-            ('started_at', '!=', False),
+            ('created_at', '!=', False),
             ('ended_at', '!=', False),
 
             ('state', '=', 'COMPLETED'),
+
+            ('program_id.product_id', '!=', False),  # With semi product
         ], context=context)
         daily_job = {}
         for job in job_pool.browse(cr, uid, job_ids, context=context):
@@ -71,7 +73,7 @@ class IndustriaDatabase(orm.Model):
             if origin not in daily_job:
                 daily_job[origin] = {}
 
-            date = '%s 08:00:00' % job.started_at[:10]  # Always at 8 o'clock
+            date = '%s 08:00:00' % job.created_at[:10]  # Always at 8 o'clock
             if date not in daily_job[origin]:
                 daily_job[origin][date] = []
             product = job.program_id.product_id
@@ -81,6 +83,7 @@ class IndustriaDatabase(orm.Model):
             daily_job[origin][date][product][1].append(job.id)
 
         # Generate picking form collected data:
+        pdb.set_trace()
         for origin in daily_job:
             for date in daily_job[origin]:
                 # Create picking:
