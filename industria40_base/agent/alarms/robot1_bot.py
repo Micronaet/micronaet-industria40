@@ -45,11 +45,11 @@ counter = 0
 for line in file_err:
     counter += 1
     row = line.strip().split('|')
-    code = int(row[0])
     if header:
         total_column = len(row)
         header = False
         continue
+    code = int(row[0])
     if len(row) == total_column:
         message = '[%s] Tipo: %s\n' \
                   'Commento: %s\n' \
