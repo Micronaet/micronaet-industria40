@@ -115,6 +115,7 @@ class IndustriaDatabase(orm.Model):
                         'picking_id': picking_id,
                         'product_id': product.id,
                         'product_uom_qty': qty,
+                        'location_id': picking.location_id.id,
                         }
 
                     onchange = move_pool.onchange_product_id(
