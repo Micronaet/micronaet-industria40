@@ -54,7 +54,7 @@ class IndustriaDatabase(orm.Model):
         picking_pool = self.pool.get('stock.picking')
         move_pool = self.pool.get('stock.move')
         job_pool = self.pool.get('industria.job')
-
+        pdb.set_trace()
         job_ids = job_pool.search(cr, uid, [
             ('picking_id', '=', False),
             ('unused', '=', False),
@@ -70,13 +70,50 @@ class IndustriaDatabase(orm.Model):
             origin = '%s [%s]' % (database.name, database.ip)
             if origin not in daily_job:
                 daily_job[origin] = {}
-            from_date = job.started_at
-            to_date = job.endend_at
 
+            date = '%s 08:00:00' % job.started_at[:10]  # Always at 8 o'clock
+            if date not in daily_job[origin]:
+                daily_job[origin][date] = []
+            product = job.program_id.product_id
+            if product not in daily_job[origin][date]:
+                daily_job[origin][date][product] = [0.0, []]
+            daily_job[origin][date][product][0] += 1  # piece (1 every job?)
+            daily_job[origin][date][product][1].append(job.id)
 
+        # Generate picking form collected data:
+        for origin in daily_job:
+            for date in daily_job[origin]:
+                # Create picking:
+                picking_id = picking_pool.create(cr, uid, {
+                    'dep_move': 'workshop',  # Always
+                    'origin': origin,
+                    # 'partner_id':
+                    'date': date,
+                    'total_work': 0.0,
+                    'total_prepare': 0.0,
+                    'total_stop': 0.0,
+                    'note': '',
+                }, context=context)
+                picking = picking_pool.browse(
+                    cr, uid, picking_id, context=context)
+                for product in daily_job[origin][date]:
+                    # Create stock move:
+                    qty, job_ids = daily_job[origin][date][product]
+                    move_data = {
+                        'picking_id': picking_id,
+                        'product_uom_qty': qty,
+                        }
 
+                    onchange = move_pool.onchange_product_id(
+                        cr, uid, False, product.id, picking.location_id.id,
+                        picking.location_dest_id.id, picking.partner_id.id)
+                    move_data.update(onchange.get('value', {}))
+                    move_pool.create(cr, uid, move_data, context=context)
 
-
+                    # Link job to picking:
+                    job_pool.write(cr, uid, job_ids, {
+                        'picking_id': picking_id,
+                    }, context=context)
 
         return True
 
