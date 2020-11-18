@@ -163,7 +163,8 @@ while True:  # Master loop:
                             code = abs(int(data['error_code'][1]))
                             message = error_comment.get(
                                 code,
-                                'Codice error non presente nella tabella')
+                                'Codice error non presente nella tabella: %s'
+                                % code)
                             event_text = \
                                 'Robot: %s\nDate: %s\nMessaggio: %s' % (
                                     robot_name,
