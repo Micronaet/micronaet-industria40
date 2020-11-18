@@ -51,6 +51,7 @@ class IndustriaDatabase(orm.Model):
     def generate_picking_from_job(self, cr, uid, ids, context=None):
         """ Generate picking from jobs
         """
+        model_pool = self.pool.get('ir.model.data')
         picking_pool = self.pool.get('stock.picking')
         move_pool = self.pool.get('stock.move')
         job_pool = self.pool.get('industria.job')
@@ -91,6 +92,7 @@ class IndustriaDatabase(orm.Model):
             daily_job[origin][date][product][1].append(job.id)
 
         # Generate picking form collected data:
+        new_picking_ids = []
         for origin in daily_job:
             for date in daily_job[origin]:
                 # Create picking:
@@ -109,6 +111,7 @@ class IndustriaDatabase(orm.Model):
                     'is_mrp_lavoration': True,
                     # 'location_id': location_id,
                 }, context=context)
+                new_picking_ids.append(picking_id)
                 picking = picking_pool.browse(
                     cr, uid, picking_id, context=context)
                 for product in daily_job[origin][date]:
@@ -121,7 +124,6 @@ class IndustriaDatabase(orm.Model):
                         'location_id': location_src_id,
                         'location_dest_id': location_dest_id,
                         }
-                    pdb.set_trace()
                     onchange = move_pool.onchange_product_id(
                         cr, uid, False, product.id, picking.location_id.id,
                         picking.location_dest_id.id, picking.partner_id.id)
@@ -133,7 +135,31 @@ class IndustriaDatabase(orm.Model):
                         'picking_id': picking_id,
                     }, context=context)
 
-        return True
+        # Return list of picking
+        form_view_id = model_pool.get_object_reference(
+            cr, uid, 'lavoration_cl_sl', 'view_stock_picking_cl_form'
+        )[1]
+        tree_view_id = model_pool.get_object_reference(
+            cr, uid, 'lavoration_cl_sl', 'view_stock_picking_cl_tree',
+        )[1]
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Lavorazioni pendenti da approvare'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            # 'res_id': 1,
+            'res_model': 'stock.picking',
+            'view_id': tree_view_id,
+            'views': [(tree_view_id, 'tree'), (form_view_id, 'form')],
+            'domain': [('id', 'in', new_picking_ids)],
+            'context': {
+                'default_dep_mode': 'workshop',
+                'open_mrp_lavoration': True,
+            },
+            'target': 'current',
+            'nodestroy': False,
+            }
 
     def mssql_connect(self, cr, uid, ids, context=None):
         """ Connection with database return cursor
