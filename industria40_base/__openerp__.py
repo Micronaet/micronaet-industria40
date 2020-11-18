@@ -35,6 +35,7 @@
         'base',
         'stock',
         'product',
+        'lavoration_cl_sl',
         ],
     'init_xml': [],
     'demo': [],
