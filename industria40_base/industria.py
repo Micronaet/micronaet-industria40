@@ -137,8 +137,8 @@ class IndustriaDatabase(orm.Model):
                     job_pool.write(cr, uid, job_ids, {
                         'picking_id': picking_id,
                     }, context=context)
-                picking_id.write(cr, uid, [picking_id], {
-                    'total_work': total_work,
+                picking_pool.write(cr, uid, [picking_id], {
+                    'total_work': total_work / 60.0,
                 }, context=context)
 
         # Return list of picking
