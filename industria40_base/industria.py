@@ -113,6 +113,7 @@ class IndustriaDatabase(orm.Model):
                     qty, job_ids = daily_job[origin][date][product]
                     move_data = {
                         'picking_id': picking_id,
+                        'product_id': product.id,
                         'product_uom_qty': qty,
                         }
 
