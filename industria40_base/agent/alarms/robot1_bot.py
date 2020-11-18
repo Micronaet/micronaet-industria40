@@ -181,15 +181,24 @@ while True:  # Master loop:
 
                             bot.sendMessage(telegram_group, event_text)
                             clean_file.append(fullname)
+
+                            # Clean file:
+                            print('Removing: %s' % fullname)
+                            try:
+                                print('Clean file used: %s' % fullname)
+                                os.remove(fullname)
+                            except:
+                                print('Problem removing file: %s' % fullname)
+
                             print(event_text.replace('\n', ' - '))
                 break  # No subfolder
 
             # Clean alarm used:
-            if clean_file:
-                print('Clean file used')
-                for fullname in clean_file:
-                    print('Removing: %s' % fullname)
-                    os.remove(fullname)
+            # if clean_file:
+            #    print('Clean file used')
+            #    for fullname in clean_file:
+            #        print('Removing: %s' % fullname)
+            #        os.remove(fullname)
             time.sleep(30)  # Master period for check error
         except:
             print('Error in FTP access')
