@@ -87,8 +87,10 @@ class IndustriaDatabase(orm.Model):
                 daily_job[origin][date] = {}
             product = job.program_id.product_id
             if product not in daily_job[origin][date]:
-                daily_job[origin][date][product] = [0, []]
+                daily_job[origin][date][product] = [
+                    0, 0, []]  # Total, duration, job
             daily_job[origin][date][product][0] += 1  # piece (1 every job?)
+            daily_job[origin][date][product][0] += job.duration
             daily_job[origin][date][product][1].append(job.id)
 
         # Generate picking form collected data:
@@ -112,9 +114,11 @@ class IndustriaDatabase(orm.Model):
                     # 'location_id': location_id,
                 }, context=context)
                 new_picking_ids.append(picking_id)
+                total_work = 0.0
                 for product in daily_job[origin][date]:
                     # Create stock move:
-                    qty, job_ids = daily_job[origin][date][product]
+                    qty, duration, job_ids = daily_job[origin][date][product]
+                    total_work += duration
                     onchange = move_pool.onchange_product_id(
                         cr, uid, False, product.id, location_src_id,
                         location_dest_id, False)  # no partner
@@ -133,6 +137,9 @@ class IndustriaDatabase(orm.Model):
                     job_pool.write(cr, uid, job_ids, {
                         'picking_id': picking_id,
                     }, context=context)
+                picking_id.write(cr, uid, [picking_id], {
+                    'total_work': total_work,
+                }, context=context)
 
         # Return list of picking
         form_view_id = model_pool.get_object_reference(
