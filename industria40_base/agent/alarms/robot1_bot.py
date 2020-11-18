@@ -85,6 +85,7 @@ umount_command = 'umount -l %s' % ftp_mountpoint
 # -----------------------------------------------------------------------------
 telegram_token = config.get('Telegram', 'token')
 telegram_group = config.get('Telegram', 'group')
+telegram_limit = 10
 
 # -----------------------------------------------------------------------------
 # Robot parameters:
@@ -107,7 +108,6 @@ bot.sendMessage(
 )
 
 print('Start alarm procedure master loop')
-pdb.set_trace()
 while True:  # Master loop:
     # A. Mount server:
     print('Try to mount robot server')
@@ -124,20 +124,23 @@ while True:  # Master loop:
         if not os.path.isfile(ftp_check):
             time.sleep(2 * 60)
 
-    bot.sendMessage(
-        telegram_group,
-        '%s\n[INFO]: Connesso con il Robot: %s' % (
-            '-' * 40,
-            robot_name,
+    try:
+        bot.sendMessage(
+            telegram_group,
+            '%s\n[INFO]: Connesso con il Robot: %s' % (
+                '-' * 40,
+                robot_name,
+            )
         )
-    )
+    except:
+        print('Error telegram message: Robot connect')
 
-    pdb.set_trace()
     # B. Check alarm loop:
     while True:
         try:
             print('Check alarm')
             clean_file = []
+            error_counter = 0
             for root, folders, files in os.walk(ftp_folder):
                 for filename in files:
                     if filename.startswith(start):
@@ -167,6 +170,15 @@ while True:  # Master loop:
                                     data['date'],
                                     message,
                                     )
+
+                            # Telegram message limit prevent:
+                            if error_counter > telegram_limit:
+                                error_counter = 0
+                                print('Telegram wait period...')
+                                time.sleep(15)  # wait 15 seconds
+                            else:
+                                error_counter += 1
+
                             bot.sendMessage(telegram_group, event_text)
                             clean_file.append(fullname)
                             print(event_text.replace('\n', ' - '))
@@ -178,14 +190,18 @@ while True:  # Master loop:
                 for fullname in clean_file:
                     print('Removing: %s' % fullname)
                     os.remove(fullname)
-            time.sleep(30)
+            time.sleep(30)  # Master period for check error
         except:
             print('Error in FTP access')
             break
 
-    bot.sendMessage(
-        telegram_group,
-        '[WARNING]: Disconnesso dal Robot (spento?): %s\n%s' % (
-            '-' * 40,
-            robot_name,
-        ))
+    try:
+        bot.sendMessage(
+            telegram_group,
+            '[WARNING]: Disconnesso dal Robot (spento?): %s\n%s' % (
+                '-' * 40,
+                robot_name,
+            ))
+    except:
+        print('Telegram error: Robot shutdown?')
+
