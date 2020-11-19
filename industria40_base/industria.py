@@ -76,10 +76,11 @@ class IndustriaDatabase(orm.Model):
             program_pool.write(cr, uid, [program.id], {
                 'medium': medium
             }, context=context)
+            program_alarm[program] = program.over_alarm
 
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             program = job.program_id
-            alarm = program_alarm[program]
+            alarm = program_alarm.get(program, 0)
             if not alarm:
                 alarm = program.medium * 1.5  # If no alarm use 1,5 x medium
             if alarm and job.job_duration > alarm:
