@@ -762,6 +762,12 @@ class IndustriaProgram(orm.Model):
             type='many2one', relation='res.partner',
             string='Supplier', store=True),
         'note': fields.text('Note'),
+        'medium': fields.float(
+            'Media',
+            help='Media calcolata giornalmente sui lavori di questo '
+                 'programma'),
+        'over_alarm': fields.float(
+            'Allarme', help='Tempo per considerare il programma fuori media'),
     }
 
 

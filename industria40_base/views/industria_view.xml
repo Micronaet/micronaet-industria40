@@ -170,6 +170,9 @@
                             <field name="partner_id" />
                             <field name="database_id" />
 
+                            <field name="medium" />
+                            <field name="over_alarm" />
+
                             <field name="product_id" required="1"/>
 
                             <separator string="Note" colspan="4"/>
