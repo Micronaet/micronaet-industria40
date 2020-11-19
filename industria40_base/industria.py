@@ -51,6 +51,7 @@ class IndustriaDatabase(orm.Model):
     def update_medium_program_job(self, cr, uid, ids, context=None):
         """ Update medium
         """
+        _logger.info('Update medium for program')
         job_pool = self.pool.get('industria.job')
         program_pool = self.pool.get('industria.program')
 
@@ -77,6 +78,7 @@ class IndustriaDatabase(orm.Model):
                 'medium': medium
             }, context=context)
             program_alarm[program] = program.over_alarm
+        _logger.info('End update medium for program')
 
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             program = job.program_id
@@ -481,6 +483,9 @@ class IndustriaDatabase(orm.Model):
             else:
                 job_pool.create(
                     cr, uid, data, context=context)
+
+        # Update medium:
+        self.update_medium_program_job(cr, uid, ids, context=context)
         return True
 
     def import_job_ftp(self, cr, uid, ids, context=None):
@@ -607,6 +612,9 @@ class IndustriaDatabase(orm.Model):
                 job_pool.write(cr, uid, job_ids, data, context=context)
             else:
                 job_pool.create(cr, uid, data, context=context)
+
+        # Update medium
+        self.update_medium_program_job(cr, uid, ids, context=context)
 
         _logger.info('Read file, moved in %s' % history_fullname)
         shutil.move(fullname, history_fullname)

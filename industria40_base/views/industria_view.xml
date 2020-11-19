@@ -410,7 +410,6 @@
                     sequence="30"
                     />
 
-
                 <menuitem
                     parent="menu_industria_master_data"
                     id="menu_industria_job_anomaly"
