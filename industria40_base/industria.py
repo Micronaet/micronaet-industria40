@@ -78,7 +78,6 @@ class IndustriaDatabase(orm.Model):
                 'medium': medium
             }, context=context)
             program_alarm[program] = program.over_alarm
-        _logger.info('End update medium for program')
 
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             program = job.program_id
@@ -90,6 +89,7 @@ class IndustriaDatabase(orm.Model):
             else:
                 data = {'out_statistic': False}
             job_pool.write(cr, uid, [job.id], data, context=context)
+        _logger.info('End update medium for program # job: %s' % len(job_ids))
 
     def generate_picking_from_job(self, cr, uid, ids, context=None):
         """ Generate picking from jobs
