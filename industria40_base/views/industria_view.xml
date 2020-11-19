@@ -354,6 +354,15 @@
             <field name="context">{}</field>
             <field name="domain">[('unused', '=', True)]</field>
         </record>
+        <record model="ir.actions.act_window" id="action_industria_job_out_statistic">
+            <field name="name">Job fuori statistica</field>
+            <field name="res_model">industria.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="view_id" ref="view_industria_job_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[('out_statistic', '=', True)]</field>
+        </record>
 
         <!--res.partner-->
         <record model="ir.ui.view" id="view_res_partner_industria_form">
@@ -394,6 +403,13 @@
                     action="action_industria_job_unused"
                     sequence="20"
                     />
+                <menuitem
+                    parent="menu_industria_job"
+                    id="menu_industria_job_out_statistic"
+                    action="action_industria_job_out_statistic"
+                    sequence="30"
+                    />
+
 
                 <menuitem
                     parent="menu_industria_master_data"
