@@ -48,6 +48,14 @@ class IndustriaDatabase(orm.Model):
     _rec_name = 'name'
     _order = 'name'
 
+    def update_medium_program_job(self, cr, uid ,ids, context=None):
+        """ Update medium
+        """
+        job_pool = self.pool.get('industria.job')
+        job_ids = job_pool.search(cr, uid, [
+            (''),
+        ], context=context)
+        for job in
     def generate_picking_from_job(self, cr, uid, ids, context=None):
         """ Generate picking from jobs
         """
@@ -801,8 +809,13 @@ class IndustriaJob(orm.Model):
         return res
 
     _columns = {
+        # TODO remove?
         'dismiss': fields.boolean(
-            'Dismiss', help='Job not completed or error'),
+            'Job non completo', help='Job not completed or error'),
+        'unused': fields.boolean(
+            'Non usato per il magazzino',
+            help='Job unused for stock movement, will not be linked '
+                 'to picking'),
         'created_at': fields.datetime('Start'),
         'ended_at': fields.datetime('End'),
         'updated_at': fields.datetime('Modify'),
@@ -839,10 +852,6 @@ class IndustriaJob(orm.Model):
             'stock.picking', 'Picking',
             help='When generate a picking for stock movement will be linked '
                  'here'),
-        'unused': fields.boolean(
-            'Unused',
-            help='Job unused for stock movement, will not be linked '
-                 'to picking'),
     }
 
     _defaults = {
