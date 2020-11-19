@@ -240,11 +240,13 @@
 
                     <field name="partner_id" filter_domain="[('partner_id','=',self)]"/>
 
-                    <filter name="state_error" string="Error state" domain="[('state','=','ERROR')]"/>
-                    <filter name="state_error" string="Running state" domain="[('state','=','RUNNING')]"/>
-                    <filter name="state_error" string="Completed state" domain="[('state','=','COMPLETED')]"/>
+                    <filter name="state_error" string="Stato Errore" domain="[('state','=','ERROR')]"/>
+                    <filter name="state_running" string="Stato esecuzione" domain="[('state','=','RUNNING')]"/>
+                    <filter name="state_completed" string="State completato" domain="[('state','=','COMPLETED')]"/>
 
-                    <filter name="state_anomaly" string="Anomaly state" domain="['|',('state','=','ERROR'),('job_duration', '&gt;', 10)]"/>
+                    <filter name="state_anomaly" string="Anomalia" domain="['|',('state','=','ERROR'),('job_duration', '&gt;', 10)]"/>
+
+                    <filter name="out_of_statistic" string="Fuori statistica" domain="[('out_statistic', '=', True)]"/>
 
                     <group expand="0" string="Group By...">
                         <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
@@ -273,6 +275,7 @@
                         <group col="4" colspan="4">
                             <!--<field name="dismiss" />-->
                             <field name="job_duration" widget="float_time"/>
+                            <field name="out_statistic" />
 
                             <field name="created_at" />
                             <field name="ended_at" />
@@ -308,6 +311,7 @@
                     <field name="ended_at" />
                     <field name="updated_at" />
                     <field name="job_duration" widget="float_time" sum="total"/>
+                    <field name="out_statistic" />
 
                     <field name="database_id" />
                     <field name="industria_ref" />
