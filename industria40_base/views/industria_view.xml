@@ -31,6 +31,7 @@
                         <button name="import_program" type="object" string="Import program" icon="terp-calendar" attrs="{'invisible': [('mode', '=', 'ftp')]}"/>
                         <button name="import_robot" type="object" string="Import robot" icon="gtk-network" attrs="{'invisible': [('mode', '=', 'ftp')]}"/>
                         <button name="import_job" type="object" string="Import jobs" icon="gtk-justify-fill"/>
+                        <button name="update_medium_program_job" type="object" string="Generate picking" icon="terp-graph"/>
                         <button name="generate_picking_from_job" type="object" string="Generate picking" icon="STOCK_EXECUTE"/>
                     </header>
                     <sheet>
@@ -73,6 +74,7 @@
                     <button name="import_program" type="object" string="Import program" icon="terp-calendar" attrs="{'invisible': [('mode', '=', 'ftp')]}"/>
                     <button name="import_robot" type="object" string="Import robot" icon="gtk-network" attrs="{'invisible': [('mode', '=', 'ftp')]}"/>
                     <button name="import_job" type="object" string="Import jobs" icon="gtk-justify-fill"/>
+                    <button name="update_medium_program_job" type="object" string="Generate picking" icon="terp-graph"/>
                     <button name="generate_picking_from_job" type="object" string="Generate picking" icon="STOCK_EXECUTE"/>
                 </tree>
             </field>

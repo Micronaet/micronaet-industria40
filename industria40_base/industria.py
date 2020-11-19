@@ -52,10 +52,28 @@ class IndustriaDatabase(orm.Model):
         """ Update medium
         """
         job_pool = self.pool.get('industria.job')
+        program_pool = self.pool.get('industria.program')
+
         job_ids = job_pool.search(cr, uid, [
-            (''),
+            ('unused', '=', False),
         ], context=context)
-        for job in
+        program_medium = {}
+        for job in job_pool(cr, uid, job_ids, context=context):
+            program = job.program_id
+            if program not in program_medium:
+                program_medium[program] = [0.0, 0.0]
+            program_medium[program][0] += 1.0
+            program_medium[program][1] += job.job_duration
+
+        for program in program_medium:
+            if program_pool[program][0]:
+                medium = program_pool[program][1] / program_pool[program][0]
+            else:
+                medium = 0.0
+            program_pool.write(cr, uid, [program.id], {
+                'medium': medium
+            }, context=context)
+
     def generate_picking_from_job(self, cr, uid, ids, context=None):
         """ Generate picking from jobs
         """
