@@ -48,7 +48,7 @@ class IndustriaDatabase(orm.Model):
     _rec_name = 'name'
     _order = 'name'
 
-    def update_medium_program_job(self, cr, uid ,ids, context=None):
+    def update_medium_program_job(self, cr, uid, ids, context=None):
         """ Update medium
         """
         job_pool = self.pool.get('industria.job')
@@ -56,23 +56,37 @@ class IndustriaDatabase(orm.Model):
 
         job_ids = job_pool.search(cr, uid, [
             ('unused', '=', False),
+            ('state', '=', 'COMPLETED'),
         ], context=context)
         program_medium = {}
-        for job in job_pool(cr, uid, job_ids, context=context):
+        for job in job_pool.browse(cr, uid, job_ids, context=context):
             program = job.program_id
             if program not in program_medium:
                 program_medium[program] = [0.0, 0.0]
             program_medium[program][0] += 1.0
             program_medium[program][1] += job.job_duration
 
+        program_alarm = {}
         for program in program_medium:
-            if program_pool[program][0]:
-                medium = program_pool[program][1] / program_pool[program][0]
+            if program_medium[program][0]:
+                medium = \
+                    program_medium[program][1] / program_medium[program][0]
             else:
                 medium = 0.0
             program_pool.write(cr, uid, [program.id], {
                 'medium': medium
             }, context=context)
+
+        for job in job_pool.browse(cr, uid, job_ids, context=context):
+            program = job.program_id
+            alarm = program_alarm[program]
+            if not alarm:
+                alarm = program.medium * 1.5  # If no alarm use 1,5 x medium
+            if alarm and job.job_duration > alarm:
+                data = {'out_statistic': True}
+            else:
+                data = {'out_statistic': False}
+            job_pool.write(cr, uid, [job.id], data, context=context)
 
     def generate_picking_from_job(self, cr, uid, ids, context=None):
         """ Generate picking from jobs
@@ -828,38 +842,40 @@ class IndustriaJob(orm.Model):
 
     _columns = {
         # TODO remove?
+        'out_statistic': fields.boolean(
+            'Fuori statistica', help='Job durato oltre il tempo di allarme'),
         'dismiss': fields.boolean(
-            'Job non completo', help='Job not completed or error'),
+            'Job non completo', help='Job non completo, errore'),
         'unused': fields.boolean(
             'Non usato per il magazzino',
-            help='Job unused for stock movement, will not be linked '
-                 'to picking'),
-        'created_at': fields.datetime('Start'),
-        'ended_at': fields.datetime('End'),
-        'updated_at': fields.datetime('Modify'),
+            help='Job nun utilizzato per il magazzino, non verrà collegato al '
+                 'picking'),
+        'created_at': fields.datetime('Inizio'),
+        'ended_at': fields.datetime('Fine'),
+        'updated_at': fields.datetime('Modifica'),
         # TODO duration seconds?
 
-        'industria_ref': fields.integer('Industria ref key'),
+        'industria_ref': fields.integer('ID rif.'),
 
         'program_id': fields.many2one(
-            'industria.program', 'Program'),
+            'industria.program', 'Programma'),
         'database_id': fields.many2one(
             'industria.database', 'Database'),
         'source_id': fields.many2one(
-            'industria.robot', 'Source Robot'),
+            'industria.robot', 'Robot'),
         'partner_id': fields.related(
             'source_id', 'partner_id',
             type='many2one', relation='res.partner',
             string='Supplier', store=True),
         'state': fields.selection([
-            ('ERROR', 'Error'),
-            ('RUNNING', 'Running'),
-            ('COMPLETED', 'Completed'),
+            ('ERROR', 'Errore'),
+            ('RUNNING', 'In esecuzione'),
+            ('COMPLETED', 'Completato'),
             ], 'State', required=True),
         'notes': fields.text('Note'),
         'job_duration': fields.function(
             _get_duration, method=True,
-            type='float', string='Duration',
+            type='float', string='Durata',
             store={
                 'industria.job': (
                     lambda self, cr, uid, ids, ctx=None: ids,

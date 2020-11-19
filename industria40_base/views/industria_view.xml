@@ -172,8 +172,8 @@
                             <field name="partner_id" />
                             <field name="database_id" />
 
-                            <field name="medium" />
-                            <field name="over_alarm" />
+                            <field name="medium" widget="float_time"/>
+                            <field name="over_alarm" widget="float_time"/>
 
                             <field name="product_id" required="1"/>
 
@@ -202,6 +202,8 @@
                     <field name="partner_id" />
                     <field name="database_id" />
 
+                    <field name="medium" widget="float_time"/>
+                    <field name="over_alarm" widget="float_time"/>
                 </tree>
             </field>
         </record>
