@@ -396,6 +396,7 @@ class IndustriaDatabase(orm.Model):
             return self.import_job_ftp(cr, uid, ids, context=context)
 
         # 2. MY SQL:
+        _logger.info('Import Job via M*SQL')
         # TODO create context from ID (partial run)
         job_pool = self.pool.get('industria.job')
         robot_pool = self.pool.get('industria.robot')
@@ -514,6 +515,7 @@ class IndustriaDatabase(orm.Model):
                 date = False
             return date
 
+        _logger.info('Import Job via FTP')
         job_pool = self.pool.get('industria.job')
         robot_pool = self.pool.get('industria.robot')
         program_pool = self.pool.get('industria.program')
