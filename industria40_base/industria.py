@@ -577,7 +577,7 @@ class IndustriaDatabase(orm.Model):
                 _logger.error('Wrong number of columns: %s' % line)
                 continue
 
-            program_name = row[0]
+            program_name = row[0].replace('\x00', '')
             # program_ref = row[1]
             # program_code = row[2]
             from_date = get_date(row[3])
