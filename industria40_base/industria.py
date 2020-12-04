@@ -567,7 +567,6 @@ class IndustriaDatabase(orm.Model):
             program_db[program.name] = program.id
 
         # Load Jobs:
-        pdb.set_trace()
         for line in open(fullname, 'r'):
             row = line.strip().split(';')
             if not line:
