@@ -495,6 +495,7 @@ class IndustriaDatabase(orm.Model):
         def get_date(date):
             """ Extract FTP date
             """
+            daylight = -1  # Manage better
             date = date.strip()
             try:
                 date_part = date.split('-')
@@ -506,7 +507,7 @@ class IndustriaDatabase(orm.Model):
                     int(year_part[1]),
                     int(year_part[0]),
 
-                    int(hour_part[0]),
+                    int(hour_part[0] - daylight),
                     int(hour_part[1]),
                     int(hour_part[2]),
                 )
@@ -566,6 +567,7 @@ class IndustriaDatabase(orm.Model):
             program_db[program.name] = program.id
 
         # Load Jobs:
+        pdb.set_trace()
         for line in open(fullname, 'r'):
             row = line.strip().split(';')
             if not line:
