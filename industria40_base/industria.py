@@ -507,7 +507,7 @@ class IndustriaDatabase(orm.Model):
                     int(year_part[1]),
                     int(year_part[0]),
 
-                    int(hour_part[0] - daylight),
+                    int(hour_part[0]) + daylight,
                     int(hour_part[1]),
                     int(hour_part[2]),
                 )
