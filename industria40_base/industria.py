@@ -536,7 +536,6 @@ class IndustriaDatabase(orm.Model):
             str(datetime.now()).replace(':', '_').replace('/', '-'),
         )
 
-        pdb.set_trace()
         if not os.path.isfile(fullname):
             # Extract FTP file from Robot:
             os.system(command)  # Get file and clean on server
