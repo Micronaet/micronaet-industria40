@@ -516,7 +516,6 @@ class IndustriaDatabase(orm.Model):
             return date
 
         _logger.info('Import Job via FTP')
-        pdb.set_trace()
         job_pool = self.pool.get('industria.job')
         robot_pool = self.pool.get('industria.robot')
         program_pool = self.pool.get('industria.program')
@@ -537,6 +536,7 @@ class IndustriaDatabase(orm.Model):
             str(datetime.now()).replace(':', '_').replace('/', '-'),
         )
 
+        pdb.set_trace()
         if not os.path.isfile(fullname):
             # Extract FTP file from Robot:
             os.system(command)  # Get file and clean on server
