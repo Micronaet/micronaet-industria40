@@ -567,13 +567,16 @@ class IndustriaDatabase(orm.Model):
             program_db[program.name] = program.id
 
         # Load Jobs:
+        counter = 0
         for line in open(fullname, 'r'):
+            counter += 1
             row = line.strip().split(';')
             if not line:
                 continue
 
             if len(row) != 5:
-                _logger.error('Wrong number of columns: %s' % line)
+                _logger.error('%s Wrong number of columns: %s' % (
+                    counter, line))
                 continue
 
             program_name = row[0].replace('\x00', '')
