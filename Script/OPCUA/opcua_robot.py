@@ -191,6 +191,9 @@ class RobotOPCUA:
         173: [u'ALLARME - Blocco Battuta per Asse Z > 0',
               u'Non è possibile muovere Battuta per Asse Z non a 0',
               u'Selezionare Asse Z e portarlo a 0'],
+        178: [u'WARNING - Fine lotto impostato',
+              u'Lavorazione interrotta per limite raggiunti',
+              u'Reimpostare il nuovo lotto'],
     }
 
     class RobotConnectionError(Exception):
