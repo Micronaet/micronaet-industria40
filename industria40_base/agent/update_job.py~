@@ -62,17 +62,17 @@ database_ids = database_pool.search([])
 for database in database_pool.browse(database_ids):
     ip = database.ip
     if not host_up(ip):
-        print('\nHost %s is down' % ip)
+        print('\n[ERR] Host %s is down <<<<' % ip)
         continue
         
-    print('\nUpdating database %s ...' % database.name)
+    print('\n[INFO] Updating database %s ...' % database.name)
     if database.mode != 'ftp':
-        print('Import program')
+        print('[INFO] Import program')
         database_pool.import_program([database.id])
 
-        print('Import robot')
+        print('[INFO] Import robot')
         database_pool.import_robot([database.id])
 
-    print('Import job')
+    print('[INFO] Import job')
     database_pool.import_job([database.id])
 
