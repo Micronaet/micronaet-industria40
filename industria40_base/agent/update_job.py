@@ -65,7 +65,7 @@ for database in database_pool.browse(database_ids):
         print('\n[ERR] Host %s is down <<<<' % ip)
         continue
         
-    print('\n[INFO] Host %s is up, updating database %s ...' % 
+    print('\n[INFO] Host %s is up, updating database %s ...' % (
         ip, database.name))
     if database.mode != 'ftp':
         print('[INFO] Import program')
