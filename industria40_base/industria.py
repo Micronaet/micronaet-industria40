@@ -901,10 +901,12 @@ class IndustriaJob(orm.Model):
             'stock.picking', 'Picking',
             help='When generate a picking for stock movement will be linked '
                  'here'),
+        'piece': fields.integer('Total piece x job'),
     }
 
     _defaults = {
         'state': lambda *x: 'RUNNING',
+        'piece': lambda *x: 1,
     }
 
 
