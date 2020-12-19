@@ -62,8 +62,9 @@ class RobotOPCUA:
                     print('PCL version not found, robot not work [%s]' %
                           plc_version)
                     return False
-                # Check 200 alarms:
-                for alarm in self._alarms.keys():  # range(201):
+
+                # Check N alarms in file:
+                for alarm in self._alarms.keys():
                     if self.get_data_value(
                             self._node_command['alarm_mask'] %
                             alarm):
@@ -114,30 +115,6 @@ class RobotOPCUA:
         except:
             print('Master error on alarm check')
             return False
-            """
-            # Check master alarm:
-            alarm_status = str(self.get_data_value(
-                u'ns=6;s=::AsGlobalPV:Allarmi.Presente',
-            ))
-            if alarm_status:
-                event_text = u'Robot: %s Mater Alarm present\n%s' % (
-                    self._robot_name,
-                    u','.join(alarm_list)
-                )
-                bot.sendMessage(self._telegram_group, event_text)
-            """
-            # Check all 200 alarms:
-            """
-            for alarm in range(201):
-                alarm_status = str(self.get_data_value(
-                    u'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' % alarm,
-                ))
-                if alarm_status:
-                    event_text = u'Robot: %s Alarm present: # %s' % (
-                        self._robot_name, alarm,
-                    )
-                    bot.sendMessage(self._telegram_group, event_text)
-            """
         return True
 
     def get_data_value(self, node_description, comment='', verbose=True):
@@ -147,8 +124,6 @@ class RobotOPCUA:
         try:
             data = node.get_data_value().Value._value
         except:
-            # data = u'[ERR] Node access error (not readable!)'
-            # data = ''  # Error?
             raise ValueError('Cannot read, robot unplugged?')
         if verbose:
             comment = comment or node_description
