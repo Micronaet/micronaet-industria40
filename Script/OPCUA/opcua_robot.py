@@ -18,7 +18,6 @@ class RobotOPCUA:
     def _load_alarms(self):
         """ Load alarms from file parameters
         """
-        pdb.set_trace()
         self._alarms = {}
         with io.open(
                 self._alarms_file, encoding='utf-8', errors='ignore') as f:
@@ -235,7 +234,6 @@ class RobotOPCUA:
         # C. Alarms
         self._alarms_file = config.get(u'alarm', u'file')
         self._load_alarms()
-        pdb.set_trace()
 
         # D. Robot:
         self._robot_name = config.get(u'robot', u'name')
