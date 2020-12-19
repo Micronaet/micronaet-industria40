@@ -30,6 +30,7 @@ class RobotOPCUA:
                     print('%s. Load alarm error for this line' % i)
                 self._alarms[row[0]] = row[1:]
                 # alarm name, alarm description, alarm solution
+        print('Loaded alarm files: %s' % self._alarms_file)
 
     class RobotConnectionError(Exception):
         print(u'Cannot connect with robot')
@@ -213,7 +214,6 @@ class RobotOPCUA:
     def __init__(self, config_file='./start.cfg'):
         """ Constructor for create object
         """
-        pdb.set_trace()
         # ---------------------------------------------------------------------
         # File parameters:
         # ---------------------------------------------------------------------
@@ -226,22 +226,23 @@ class RobotOPCUA:
         self._telegram_token = config.get(u'Telegram', u'token')
         self._telegram_group = config.get(u'Telegram', u'group')
 
-        # B. Robot:
-        self._robot_name = config.get(u'robot', u'name')
-        self._robot_address = config.get(u'robot', u'address')
-        print(u'Read config file %s for Robot: %s' % (
-            self._robot_name,
-            self._config_file,
-        ))
-
-        # C. Command
+        # B. Command
         self._node_command = {
             'alarm_mask':  config.get(u'command', u'alarm_mask'),
             'version_check': config.get(u'command', u'version_check'),
         }
 
-        # D. Alarms
+        # C. Alarms
         self._alarms_file = config.get(u'alarm', u'file')
+        self._load_alarms()
+        pdb.set_trace()
+
+        # D. Robot:
+        self._robot_name = config.get(u'robot', u'name')
+        self._robot_address = config.get(u'robot', u'address')
+        print(u'Read config file %s for Robot: %s' % (
+            self._robot_name, self._config_file))
+
         try:
             self._robot_port = config.get(u'robot', u'port')
         except:
