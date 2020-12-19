@@ -3,6 +3,7 @@
 
 import pdb
 import time
+import io
 from opcua import Client
 import telepot
 try:
@@ -14,190 +15,21 @@ except:
 class RobotOPCUA:
     """ Robot OPC UA Management
     """
-    _alarms = {
-        1: [u'Emergenza Fungo', u'Fungo di Emergenza premuto',
-            u'Sbloccare fungo di emergenza e premere pulsante marcia'],
-        2: [u'Termico', u'Termica Motori',
-            u'Verificare la termica motori nel quadro elettrico'],
-        3: [u'Termostato',
-            u'Temperatura Olio superiore al valore impostato',
-            u'Attendere raffreddamento o verificare il corretto '
-            u'funzionamento dello scambiatore'],
-        4: [u'Pressostato', u'Pressione aria inferiore al valore settato',
-            u'Verificare pressione dell’aria'],
-        7: [u'Errore CNC',
-            u'Errore generico durante l’esecuzione in automatico',
-            u'Verificare quote assi e/o velicità'],
-        8: [u'Assi non abilitati', u'Assi non in ready',
-            u'Verificare fusibili potenza o eventuali errori su driver led'
-            u' rosso'],
-        11: [u'Livello Olio',
-             u'Livello dell’Olio sotto il minimo consentito',
-             u'Reboccare Olio'],
-        12: [u'Filtro Olio', u'Filtro dell’Olio intasato',
-             u'Togliere il Filtro e pulirlo con aria compressa'],
-        17: [u'Misura Canotto Modificata',
-             u'Impostato un valore di misura canotto diversa dalla '
-             u'precedentemente trasferita',
-             u'Ripetere azzeramento macchina'],
-        18: [u'Misura Quota Massima Modificata',
-             u'Impostato un valore di lunghezza macchina diverso da quello'
-             u' impostato precedentemente',
-             u'Trasferire Utensile e ripetere azzeramento macchina'],
-        101: [u'Timeout Matrice Avanti',
-              u'Mancata verifica sul sensore di matrice avanti',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        102: [u'Timeout Morsa Chiusa',
-              u'Mancata verifica sul sensore di morsa chiusa',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        103: [u'Timeout Carro Chiuso',
-              u'Mancata verifica sul sensore di carro chiuso',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        104: [u'Timeout Pinza Chiusa',
-              u'Mancata verifica sul sensore di pinza chiusa',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        105: [u'Timeout Anima Avanti',
-              u'Mancata verifica sul sensore di anima avanti',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        106: [u'Timeout Slitta Avanti',
-              u'Mancata verifica sul sensore di slitta avanti',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        107: [u'Timeout Cambio Piano ',
-              u'Mancata verifica sul sensore di piano 2',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        114: [u'Timeout Battuta Avanti',
-              u'Mancata verifica sul sensore di battuta avanti',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        121: [u'Timeout Matrice Indietro',
-              u'Mancata verifica sul sensore di matrice indietro',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        122: [u'Timeout Morsa Aperta',
-              u'Mancata verifica sul sensore di morsa aperta',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        123: [u'Timeout Carro Aperto',
-              u'Mancata verifica sul sensore di carro aperto',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        124: [u'Timeout Pinza Aperta',
-              u'Mancata verifica sul sensore di pinza aperta',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        125: [u'Timeout Anima Indietro',
-              u'Mancata verifica sul sensore di anima indietro',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        126: [u'Timeout Slitta Indietro',
-              u'Mancata verifica sul sensore di slitta indietro',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        127: [u'Timeout Cambio Piano ',
-              u'Mancata verifica sul sensore di piano 1',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        134: [u'Timeout Battuta Indietro',
-              u'Mancata verifica sul sensore di battuta avanti',
-              u'Verificare la corretta segnalazione del sensore e/o del '
-              u'movimento del cilindro'],
-        150: [u'Blocco comando Asse-X per INTERFERENZA con Matrice',
-              u'Asse R non in posizione corretta',
-              u'Selezionare Asse R e portarlo a raggio matrice'],
-        151: [u'Blocco inserimento Carro per INTERFERENZA con Asse X',
-              u'Asse X in zona di interferenza, non è possibile chiudere '
-              u'il carro',
-              u'Selezionare Asse X e portalo fuori dalla zona di '
-              u'interferenza '],
-        152: [u'Blocco discesa piano per INTERFERENZA',
-              u'Asse X in zona di interferenza, non è possibile cambiare '
-              u'piano',
-              u'Selezionare Asse X e portalo fuori dalla zona di '
-              u'interferenza'],
-        153: [u'Blocco salita piano per INTERFERENZA',
-              u'Asse X in zona di interferenza, non è possibile cambiare '
-              u'piano',
-              u'Selezionare Asse X e portalo fuori dalla zona di '
-              u'interferenza'],
-        154: [u'Blocco comando Asse-X per strappo tubo. APRIRE '
-              u'Morsa/Carro e/o la Pinza',
-              u'Non è possibile muovere Asse X per condizioni elencate',
-              u'Verificare sensore morsa/carro/pinza aperti o posizionare '
-              u'morsa/carro/pinza aperti'],
-        155: [u'Blocco comando Asse-Y per strappo tubo. APRIRE Morsa/Carro'
-              u' e/o la Pinza',
-              u'Non è possibile muovere Asse Y per condizioni elencate',
-              u'Verificare sensore morsa/carro/pinza aperti o posizionare '
-              u'morsa/carro/pinza aperti'],
-        156: [u'Blocco inserimento Carro per INTERFERENZA con Asse R',
-              u'Non è possibile chiudere il carro per Asse R non a raggio '
-              u'matrice',
-              u'Selezionare Asse R e portarlo a raggio matrice'],
-        157: [u'Blocco comando Asse-R per carro NON aperto',
-              u'Non è possibile muovere Asse R per carro chiuso',
-              u'Verificare sensore carro aperto o posizionare carro '
-              u'aperto'],
-        158: [u'Blocco comando Asse-R Indietro',
-              u'Non è possibile muovere Asse R indietro perchè raggiunto '
-              u'limite matrice', u''],
-        159: [u'Blocco avanti slitta Asse-Y INFERIORE 91°',
-              u'Non è possibile muovere slitta avanti perchè in u'
-              u'interferenza con asse Y',
-              u'Selezionare Asse Y e portarlo a una quota superiore di '
-              u'91°'],
-        160: [u'Blocco comando Asse-Y per Slitta NON indietro',
-              u'Non è possibile muovere Asse Y indietro perchè slitta non '
-              u'in posizione indietro',
-              u'Verificare sensore slitta indietro o posizionare slitta '
-              u'indietro'],
-        161: [u'Blocco inserimento Morsa per Asse-Y NON a 0°',
-              u'Non è possibile chiudere morsa perchè Asse Y non a zero',
-              u'Selezionare Asse Y e portarlo a una quota 0'],
-        164: [u'Blocco comando Asse-X per Piano Attuale UGUALE a 0',
-              u'Non è possibile muovere Asse X perchè il piano non è '
-              u'selezionato',
-              u'Verificare sensore piano attuale o cambiare piano 1 – 2'],
-        165: [u'Blocco inserimento Morsa per Matrice NON indietro',
-              u'Non è possibile chiudere morsa perchè matrice non in '
-              u'posizione indietro',
-              u'Verificare sensore matrice indietro o posizionare matrice '
-              u'indietro'],
-        167: [u'Blocco comando inserimento Carro per Slitta NON indietro',
-              u'Non è possibile chiudere carro perchè slitta non in '
-              u'posizione indietro',
-              u'Verificare sensore slitta indietro o posizionare slitta '
-              u'indietro'],
-        168: [u'Blocco comando Asse-R per morsa NON aperta',
-              u'Non è possibile muovere Asse R per morsa chiusa',
-              u'Verificare sensore morsa aperta o posizionare morsa '
-              u'aperta'],
-        169: [u'Blocco Inserimento Morsa INTERFERENZA con Asse R',
-              u'Non è possibile chiudere morsa per Asse R non a raggio '
-              u'matrice',
-              u'Selezionare Asse R e portarlo a raggio matrice'],
-        171: [u'Allarme Keyence', u'Modulo di sicurezza Keyence in errore',
-              u'Verificare il corretto funzionamento del modulo tramite il'
-              u' software installato sul PC'],
-        172: [u'ALLARME - Blocco Asse Z per Battuta Giu',
-              u'Non è possibile muovere Asse Z per battuta giu',
-              u'Verificare sensore battuta su o posizionare battuta su'],
-        173: [u'ALLARME - Blocco Battuta per Asse Z > 0',
-              u'Non è possibile muovere Battuta per Asse Z non a 0',
-              u'Selezionare Asse Z e portarlo a 0'],
-        177: [u'WARNING - Fine lotto impostato',
-              u'Lavorazione interrotta per limite raggiunti',
-              u'Reimpostare il nuovo lotto'],
-        178: [u'WARNING - Fine lotto impostato',
-              u'Lavorazione interrotta per limite raggiunti',
-              u'Reimpostare il nuovo lotto'],
-    }
+    def _load_alarms(self):
+        """ Load alarms from file parameters
+        """
+        pdb.set_trace()
+        self._alarms = {}
+        with io.open(
+                self._alarms_file, encoding='utf-8', errors='ignore') as f:
+            i = 0
+            for line in f:
+                i += 1
+                row = line.strip().split('|')
+                if not line or row != 4:
+                    print('%s. Load alarm error for this line' % i)
+                self._alarms[row[0]] = row[1:]
+                # alarm name, alarm description, alarm solution
 
     class RobotConnectionError(Exception):
         print(u'Cannot connect with robot')
@@ -223,7 +55,7 @@ class RobotOPCUA:
 
                 # Check running robot:
                 plc_version = self.get_data_value(
-                    'ns=6;s=::AsGlobalPV:VersionePLC')
+                    self._node_command['version_check'])
                 if plc_version:
                     print('PCL version: %s' % plc_version)
                 else:
@@ -233,7 +65,7 @@ class RobotOPCUA:
                 # Check 200 alarms:
                 for alarm in self._alarms.keys():  # range(201):
                     if self.get_data_value(
-                            'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' %
+                            self._node_command['alarm_mask'] %
                             alarm):
                         if alarm in error_found:
                             print('[WARN] Yet raised: %s' % alarm)
@@ -426,6 +258,15 @@ class RobotOPCUA:
             self._config_file,
         ))
 
+        # C. Command
+        self._node_command = {
+            'alarm_mask':  config.get(u'command', u'alarm_mask'),
+            'version_check': config.get(u'command', u'version_check'),
+        }
+
+        # D. Alarms
+        self._alarms_file = config.get(u'alarm', u'file')
+        self._load_alarms()
         try:
             self._robot_port = config.get(u'robot', u'port')
         except:

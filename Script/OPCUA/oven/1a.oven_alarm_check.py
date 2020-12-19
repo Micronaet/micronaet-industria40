@@ -48,6 +48,13 @@ telegram_token = config.get(u'Telegram', u'token')
 telegram_group = config.get(u'Telegram', u'group')
 check_from = config.get('robot', 'check_from')
 
+# Command parameters:
+robot_alarm_mask = config.get('robot', 'alarm_mask')
+# 'ns=3;s="DB_ALLARMI"."AL"[%s]'
+
+robot_version_check = config.get('robot', 'version')  # TODO change
+# 'ns=3;s="DB_ALLARMI"."AL"[0]'
+
 # Load Telegram BOT:
 bot = telepot.Bot(telegram_token)
 bot.getMe()

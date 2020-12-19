@@ -1,0 +1,48 @@
+1|Emergenza Fungo|Fungo di Emergenza premuto|Sbloccare fungo di emergenza e premere pulsante marcia
+2|Termico|Termica Motori|Verificare la termica motori nel quadro elettrico
+3|Termostato|Temperatura Olio superiore al valore impostato|Attendere raffreddamento o verificare il corretto funzionamento dello scambiatore
+4|Pressostato|Pressione aria inferiore al valore settato|Verificare pressione dell'aria
+7|Errore CNC|Errore generico durante l'esecuzione in automatico|Verificare quote assi e/o velocità
+8|Assi non abilitati|Assi non in ready|Verificare fusibili potenza o eventuali errori su driver led rosso
+11|Livello Olio|Livello dell'Olio sotto il minimo consentito|Reboccare Olio
+12|Filtro Olio|Filtro dell'Olio intasato|Togliere il Filtro e pulirlo con aria compressa
+17|Misura Canotto Modificata|Impostato un valore di misura canotto diversa dalla precedentemente trasferita|Ripetere azzeramento macchina
+18|Misura Quota Massima Modificata|Impostato un valore di lunghezza macchina diverso da quello impostato precedentemente|Trasferire Utensile e ripetere azzeramento macchina
+101|Timeout Matrice Avanti|Mancata verifica sul sensore di matrice avanti|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+102|Timeout Morsa Chiusa|Mancata verifica sul sensore di morsa chiusa|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+103|Timeout Carro Chiuso|Mancata verifica sul sensore di carro chiuso|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+104|Timeout Pinza Chiusa|Mancata verifica sul sensore di pinza chiusa|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+105|Timeout Anima Avanti|Mancata verifica sul sensore di anima avanti|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+106|Timeout Slitta Avanti|Mancata verifica sul sensore di slitta avanti|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+107|Timeout Cambio Piano|Mancata verifica sul sensore di piano 2|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+114|Timeout Battuta Avanti|Mancata verifica sul sensore di battuta avanti|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+121|Timeout Matrice Indietro|Mancata verifica sul sensore di matrice indietro|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+122|Timeout Morsa Aperta|Mancata verifica sul sensore di morsa aperta|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+123|Timeout Carro Aperto|Mancata verifica sul sensore di carro aperto|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+124|Timeout Pinza Aperta|Mancata verifica sul sensore di pinza aperta|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+125|Timeout Anima Indietro|Mancata verifica sul sensore di anima indietro|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+126|Timeout Slitta Indietro|Mancata verifica sul sensore di slitta indietro|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+127|Timeout Cambio Piano |Mancata verifica sul sensore di piano 1|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+134|Timeout Battuta Indietro|Mancata verifica sul sensore di battuta avanti|Verificare la corretta segnalazione del sensore e/o del movimento del cilindro
+150|Blocco comando Asse-X per INTERFERENZA con Matrice|Asse R non in posizione corretta|Selezionare Asse R e portarlo a raggio matrice
+151|Blocco inserimento Carro per INTERFERENZA con Asse X|Asse X in zona di interferenza, non è possibile chiudere il carro|Selezionare Asse X e portalo fuori dalla zona di interferenza
+152|Blocco discesa piano per INTERFERENZA|Asse X in zona di interferenza, non è possibile cambiare piano|Selezionare Asse X e portalo fuori dalla zona di interferenza
+153|Blocco salita piano per INTERFERENZA|Asse X in zona di interferenza, non è possibile cambiare piano|Selezionare Asse X e portalo fuori dalla zona di interferenza
+154|Blocco comando Asse-X per strappo tubo. APRIRE Morsa/Carro e/o la Pinza|Non è possibile muovere Asse X per condizioni elencate|Verificare sensore morsa/carro/pinza aperti o posizionare morsa/carro/pinza aperti
+155|Blocco comando Asse-Y per strappo tubo. APRIRE Morsa/Carro e/o la Pinza|Non è possibile muovere Asse Y per condizioni elencate|Verificare sensore morsa/carro/pinza aperti o posizionare morsa/carro/pinza aperti
+156|Blocco inserimento Carro per INTERFERENZA con Asse R|Non è possibile chiudere il carro per Asse R non a raggio matrice|Selezionare Asse R e portarlo a raggio matrice
+157|Blocco comando Asse-R per carro NON aperto|Non è possibile muovere Asse R per carro chiuso|Verificare sensore carro aperto o posizionare carro aperto
+158|Blocco comando Asse-R Indietro|Non è possibile muovere Asse R indietro perchè raggiunto limite matrice|
+159|Blocco avanti slitta Asse-Y INFERIORE 91°|Non è possibile muovere slitta avanti perchè in uinterferenza con asse Y|Selezionare Asse Y e portarlo a una quota superiore di 91°
+160|Blocco comando Asse-Y per Slitta NON indietro|Non è possibile muovere Asse Y indietro perchè slitta non in posizione indietro|Verificare sensore slitta indietro o posizionare slitta indietro
+161|Blocco inserimento Morsa per Asse-Y NON a 0°|Non è possibile chiudere morsa perchè Asse Y non a zero|Selezionare Asse Y e portarlo a una quota 0
+164|Blocco comando Asse-X per Piano Attuale UGUALE a 0|Non è possibile muovere Asse X perchè il piano non è selezionato|Verificare sensore piano attuale o cambiare piano 1 – 2
+165|Blocco inserimento Morsa per Matrice NON indietro|Non è possibile chiudere morsa perchè matrice non in posizione indietro|Verificare sensore matrice indietro o posizionare matrice indietro
+167|Blocco comando inserimento Carro per Slitta NON indietro|Non è possibile chiudere carro perchè slitta non in posizione indietro|Verificare sensore slitta indietro o posizionare slitta indietro
+168|Blocco comando Asse-R per morsa NON aperta|Non è possibile muovere Asse R per morsa chiusa|Verificare sensore morsa aperta o posizionare morsa aperta
+169|Blocco Inserimento Morsa INTERFERENZA con Asse R|Non è possibile chiudere morsa per Asse R non a raggio matrice|Selezionare Asse R e portarlo a raggio matrice
+171|Allarme Keyence|Modulo di sicurezza Keyence in errore|Verificare il corretto funzionamento del modulo tramite il software installato sul PC
+172|ALLARME - Blocco Asse Z per Battuta Giu|Non è possibile muovere Asse Z per battuta giu|Verificare sensore battuta su o posizionare battuta su
+173|ALLARME - Blocco Battuta per Asse Z > 0|Non è possibile muovere Battuta per Asse Z non a 0|Selezionare Asse Z e portarlo a 0
+177|WARNING - Fine lotto impostato|Lavorazione interrotta per limite raggiunti|Reimpostare il nuovo lotto
+178|WARNING - Fine lotto impostato|Lavorazione interrotta per limite raggiunti|Reimpostare il nuovo lotto

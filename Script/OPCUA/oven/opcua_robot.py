@@ -44,7 +44,7 @@ class RobotOPCUA:
 
                 # Check running robot:
                 plc_version = self.get_data_value(
-                    'ns=6;s=::AsGlobalPV:VersionePLC')
+                    'ns=3;s="DB_ALLARMI"."AL"[0]')
                 if plc_version:
                     print('PCL version: %s' % plc_version)
                 else:
@@ -54,8 +54,7 @@ class RobotOPCUA:
                 # Check 200 alarms:
                 for alarm in self._alarms.keys():  # range(201):
                     if self.get_data_value(
-                            'ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo' %
-                            alarm):
+                            'ns=3;s="DB_ALLARMI"."AL"[%s]' % alarm:
                         if alarm in error_found:
                             print('[WARN] Yet raised: %s' % alarm)
                             continue
