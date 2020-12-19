@@ -242,7 +242,6 @@ class RobotOPCUA:
 
         # D. Alarms
         self._alarms_file = config.get(u'alarm', u'file')
-        self._load_alarms()
         try:
             self._robot_port = config.get(u'robot', u'port')
         except:
