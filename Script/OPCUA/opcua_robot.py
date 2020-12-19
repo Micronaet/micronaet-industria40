@@ -25,7 +25,7 @@ class RobotOPCUA:
             for line in f:
                 i += 1
                 row = line.strip().split('|')
-                if not line or row != 4:
+                if not line or len(row) != 4:
                     print('%s. Load alarm error for this line' % i)
                 self._alarms[row[0]] = row[1:]
                 # alarm name, alarm description, alarm solution
