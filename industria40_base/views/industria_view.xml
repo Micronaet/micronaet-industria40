@@ -178,16 +178,25 @@
                             <field name="medium" widget="float_time" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
                             <field name="over_alarm" widget="float_time" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
 
-                            <separator string="Note" colspan="4"/>
-                            <field name="note" colspan="4" nolabel="1"/>
-
-                            <separator string="Parametri OPCUA" colspan="4"/>
-                            <field name="parameter_ids" colspan="4" nolabel="1">
-                                <tree string="Parametri" editable="bottom">
-                                    <field name="opcua_id" />
-                                    <field name="value" />
-                                </tree>
-                            </field>
+                            <notebook colspan="4">
+                                <page name="parameter_page" string="Parametri" attrs="{'invisible': [('mode', 'not in', ('opcua', ))]}">
+                                    <group>
+                                        <separator string="Parametri OPCUA" colspan="4" />
+                                        <field name="parameter_ids" colspan="4" nolabel="1">
+                                            <tree string="Parametri" editable="bottom">
+                                                <field name="opcua_id" />
+                                                <field name="value" />
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </page>
+                                <page name="note_page" string="Note">
+                                    <group>
+                                        <separator string="Note" colspan="4"/>
+                                        <field name="note" colspan="4" nolabel="1"/>
+                                    </group>
+                                </page>
+                            </notebook>
 
                             <field name="mode" invisible="1" />
                         </group>
@@ -224,6 +233,44 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_industria_program_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <!--industria.program.parameter.opcua-->
+        <record model="ir.ui.view" id="view_industria_program_parameter_opcua_form">
+            <field name="name">industria.program.parameter.opcua.form</field>
+            <field name="model">industria.program.parameter.opcua</field>
+            <field name="arch" type="xml">
+                <form string="Database" version="7.0">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="name" />
+                            <field name="type" />
+                            <field name="opcupa_variable" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_program_parameter_opcua_tree">
+            <field name="name">industria.program.parameter.opcua.tree</field>
+            <field name="model">industria.program.parameter.opcua</field>
+            <field name="arch" type="xml">
+                <tree string="Database" editable="bottom">
+                     <field name="name" />
+                     <field name="type" />
+                     <field name="opcupa_variable" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_program_parameter_opcua">
+            <field name="name">OPCUA Param.</field>
+            <field name="res_model">industria.program.parameter.opcua</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_industria_program_parameter_opcua_tree"/>
             <field name="context">{}</field>
             <field name="domain">[]</field>
         </record>
@@ -449,10 +496,16 @@
                     sequence="20"
                     />
                 <menuitem
+                    parent="menu_industria_program_parameter_opcua"
+                    id="menu_industria_program_parameter_opcua"
+                    action="action_industria_program_parameter_opcua"
+                    sequence="30"
+                    />
+                <menuitem
                     parent="menu_industria_configuration"
                     id="menu_industria_database"
                     action="action_industria_database"
-                    sequence="30"
+                    sequence="40"
                     />
     </data>
 </openerp>
