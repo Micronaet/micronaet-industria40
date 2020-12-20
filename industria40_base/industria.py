@@ -897,9 +897,10 @@ class IndustriaProgramParameter(orm.Model):
     _order = 'opcua_id'
 
     _columns = {
-        'opcua_id': fields.Many2one(
-            'industria.program.parameter.opcua', 'OPCUA Param.'),
-        'program_id': fields.Many2one(
+        'opcua_id': fields.many2one(
+            'industria.program.parameter.opcua', 'OPCUA Param.',
+            required=True),
+        'program_id': fields.many2one(
             'industria.program', 'Programma'),
         'value': fields.char(
             'Valore', size=20, required=True),
