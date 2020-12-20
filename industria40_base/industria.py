@@ -839,6 +839,14 @@ class IndustriaProgram(orm.Model):
             'source_id', 'partner_id',
             type='many2one', relation='res.partner',
             string='Supplier', store=True),
+        'mode': fields.related(
+            'database_id', 'mode', type='selection', string='Mode',
+            selection=[
+                ('mysql', 'My SQL'),
+                ('mssql', 'MS SQL'),
+                ('ftp', 'FTP'),
+                ('opcua', 'OPCUA'),
+            ], readonly=True),
         'note': fields.text('Note'),
         'medium': fields.float(
             'Media',
@@ -850,6 +858,64 @@ class IndustriaProgram(orm.Model):
 
     _defaults = {
         'piece': lambda *x: 1,
+    }
+
+
+class IndustriaProgramParameterOpcua(orm.Model):
+    """ Model name: Industria Program Parameter OPCUA
+    """
+
+    _name = 'industria.program.parameter.opcua'
+    _description = 'Programs parameter opcua'
+    _rec_name = 'name'
+    _order = 'name'
+
+    _columns = {
+        'name': fields.char(
+            'Name', size=64, required=True),
+        'opcua_variable': fields.char(
+            'OPCUA Variabile', size=80, required=True),
+        'type': fields.selection([
+            ('float', 'Reale'),
+            ('integer', 'Intero'),
+            ('char', 'Carattere'),
+            ], 'Tipo dato', required=True)
+        }
+
+    _defaults = {
+        'type': lambda *x: 'char',
+    }
+
+
+class IndustriaProgramParameter(orm.Model):
+    """ Model name: Industria Program Parameter
+    """
+
+    _name = 'industria.program.parameter'
+    _description = 'Programs parameter'
+    _rec_name = 'opcua_id'
+    _order = 'opcua_id'
+
+    _columns = {
+        'opcua_id': fields.Many2one(
+            'industria.program.parameter.opcua', 'OPCUA Param.'),
+        'program_id': fields.Many2one(
+            'industria.program', 'Programma'),
+        'value': fields.char(
+            'Valore', size=20, required=True),
+    }
+
+
+class IndustriaProgram(orm.Model):
+    """ Model name: Industria Program
+    """
+
+    _inherit = 'industria.program'
+
+    _columns = {
+        'parameter_ids': fields.one2many(
+            'industria.program.parameter', 'program_id',
+            string='Parametri'),
     }
 
 
@@ -909,6 +975,7 @@ class IndustriaJob(orm.Model):
             'source_id', 'partner_id',
             type='many2one', relation='res.partner',
             string='Supplier', store=True),
+
         'state': fields.selection([
             ('ERROR', 'Errore'),
             ('RUNNING', 'In esecuzione'),

@@ -163,23 +163,25 @@
                             <field name="code" />
                             <field name="name" />
 
-                            <field name="industria_ref" />
+                            <field name="industria_ref" attrs="{'invisible': [('mode', 'in', ('opcua', 'ftp'))]}"/>
                             <field name="timeout" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
 
                             <field name="piece" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
                             <button name="update_all_job_piece" type="object" string="Forza sui job" colspan="2" icon="gtk-refresh" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
 
-                            <field name="product_id" attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>
-                            <field name="source_id" />
+                            <field name="database_id" />
+                            <field name="source_id" domain="[('database_id', '=', database_id)]"/>
 
                             <field name="partner_id" readonly="1"/>
-                            <field name="database_id" />
+                            <field name="product_id" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>/><!--attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
 
                             <field name="medium" widget="float_time" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
                             <field name="over_alarm" widget="float_time" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
 
                             <separator string="Note" colspan="4"/>
                             <field name="note" colspan="4" nolabel="1"/>
+
+                            <field name="mode" invisible="1" />
                         </group>
                     </sheet>
                 </form>
