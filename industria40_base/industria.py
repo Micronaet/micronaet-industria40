@@ -63,8 +63,8 @@ class IndustriaDatabase(orm.Model):
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             program = job.program_id
             if program not in program_medium:
-                program_medium[program] = [0.0, 0.0]
-            program_medium[program][0] += 1.0
+                program_medium[program] = [0.0, 0.0]  # q, time
+            program_medium[program][0] += job.piece
             program_medium[program][1] += job.job_duration
 
         program_alarm = {}
