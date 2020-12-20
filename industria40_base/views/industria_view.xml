@@ -274,13 +274,14 @@
                     <sheet>
                         <group col="4" colspan="4">
                             <!--<field name="dismiss" />-->
-                            <field name="job_duration" widget="float_time"/>
-                            <field name="out_statistic" />
-
                             <field name="created_at" />
                             <field name="ended_at" />
 
                             <field name="updated_at" />
+                            <field name="piece" />
+
+                            <field name="job_duration" widget="float_time"/>
+                            <field name="out_statistic" />
 
                             <field name="database_id" />
                             <field name="industria_ref" />
@@ -310,7 +311,8 @@
                     <field name="created_at" />
                     <field name="ended_at" />
                     <field name="updated_at" />
-                    <field name="job_duration" widget="float_time" sum="total"/>
+                    <field name="job_duration" widget="float_time" sum="total_time"/>
+                    <field name="piece" widget="float_time" sum="total_piece"/>
                     <field name="out_statistic" />
 
                     <field name="database_id" />
