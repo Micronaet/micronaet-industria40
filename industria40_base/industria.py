@@ -134,7 +134,6 @@ class IndustriaDatabase(orm.Model):
             date = '%s 08:00:00' % job.created_at[:10]  # Always at 8 o'clock
             if date not in daily_job[origin]:
                 daily_job[origin][date] = {}
-            # product = job.program_id.product_id
             if product not in daily_job[origin][date]:
                 # Total, duration, job:
                 daily_job[origin][date][product] = [0, 0, []]
