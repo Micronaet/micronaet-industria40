@@ -247,7 +247,7 @@
                         <group col="4" colspan="4">
                             <field name="name" />
                             <field name="type" />
-                            <field name="opcupa_variable" />
+                            <field name="opcua_variable" />
                         </group>
                     </sheet>
                 </form>
@@ -260,7 +260,7 @@
                 <tree string="Database" editable="bottom">
                      <field name="name" />
                      <field name="type" />
-                     <field name="opcupa_variable" />
+                     <field name="opcua_variable" />
                 </tree>
             </field>
         </record>
@@ -496,7 +496,7 @@
                     sequence="20"
                     />
                 <menuitem
-                    parent="menu_industria_program_parameter_opcua"
+                    parent="menu_industria_configuration"
                     id="menu_industria_program_parameter_opcua"
                     action="action_industria_program_parameter_opcua"
                     sequence="30"

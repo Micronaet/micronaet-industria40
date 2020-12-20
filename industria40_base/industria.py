@@ -978,6 +978,7 @@ class IndustriaJob(orm.Model):
             string='Supplier', store=True),
 
         'state': fields.selection([
+            ('DRAFT', 'Bozza'),
             ('ERROR', 'Errore'),
             ('RUNNING', 'In esecuzione'),
             ('COMPLETED', 'Completato'),
@@ -1000,7 +1001,7 @@ class IndustriaJob(orm.Model):
     }
 
     _defaults = {
-        'state': lambda *x: 'RUNNING',
+        'state': lambda *x: 'DRAFT',
         'piece': lambda *x: 1,
     }
 
