@@ -395,6 +395,10 @@ class IndustriaDatabase(orm.Model):
         if database_proxy.mode == 'ftp':
             return self.import_job_ftp(cr, uid, ids, context=context)
 
+        # 2. OPCUA:
+        if database_proxy.mode == 'opcua':
+            return True  # TODO not used for now!
+
         # 2. MY SQL:
         _logger.info('Import Job via M*SQL')
         # TODO create context from ID (partial run)
@@ -544,7 +548,8 @@ class IndustriaDatabase(orm.Model):
             os.system(command)  # Get file and clean on server
 
         if not os.path.isfile(fullname):
-            _logger.error('Cannot extract file form robot via FTP')
+            _logger.error(
+                'Cannot extract file form robot via FTP: %s' % fullname)
             return False
 
         # ---------------------------------------------------------------------
@@ -647,6 +652,7 @@ class IndustriaDatabase(orm.Model):
             ('mysql', 'My SQL'),
             ('mssql', 'MS SQL'),
             ('ftp', 'FTP'),
+            ('opcua', 'OPCUA'),
         ], 'Mode', required=True),
     }
 
