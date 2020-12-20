@@ -934,6 +934,12 @@ class IndustriaJob(orm.Model):
         """ Send job to robot
         """
         # TODO send to robot:
+        job = self.browse(cr, uid, ids, context=context)[0]
+        url = 'opc.tcp://%s:%s' % (
+            job.database_id.ip,
+            job.database_id.port,
+        )
+        _logger.info('Send data to robot: %s' % url)
 
         return self.write(cr, uid, ids, {
             'state': 'RUNNING',
@@ -1012,6 +1018,7 @@ class IndustriaJob(orm.Model):
     _defaults = {
         'state': lambda *x: 'DRAFT',
         'piece': lambda *x: 1,
+        'created_at': lambda *d: ('%s' % datetime.now())[:19],
     }
 
 
