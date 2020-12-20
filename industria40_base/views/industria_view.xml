@@ -167,6 +167,9 @@
                             <field name="timeout" />
 
                             <field name="piece" />
+                            <button name="update_all_job_piece" type="object" string="Forza sui job" colspan="2" icon="gtk-refresh"/>
+
+                            <field name="product_id" required="1"/>
                             <field name="source_id" />
 
                             <field name="partner_id" />
@@ -175,7 +178,7 @@
                             <field name="medium" widget="float_time"/>
                             <field name="over_alarm" widget="float_time"/>
 
-                            <field name="product_id" required="1"/>
+
 
                             <separator string="Note" colspan="4"/>
                             <field name="note" colspan="4" nolabel="1"/>

@@ -800,6 +800,20 @@ class IndustriaProgram(orm.Model):
     _rec_name = 'name'
     _order = 'name'
 
+    def update_all_job_piece(self, cr, uid, ids, context=None):
+        """ Force piece as in program on all jobs
+        """
+        program_id = ids[0]
+        program = self.browse(cr, uid, program_id, context=context)
+        job_pool = self.pool.get('industria.job')
+        job_ids = job_pool.search(cr, uid, [
+            ('program_id', '=', program_id),
+        ], context=context)
+
+        return job_pool.write(cr, uid, job_ids, {
+            'piece': program.piece,
+        }, context=context)
+
     _columns = {
         'code': fields.char('Code', size=12),
         'name': fields.char('Name', size=64, required=True),
