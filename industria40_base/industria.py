@@ -403,7 +403,6 @@ class IndustriaDatabase(orm.Model):
         program_pool = self.pool.get('industria.program')
 
         from_industria_ref = False
-
         database_id = ids[0]
         connection = self.mssql_connect(cr, uid, ids, context=context)
         cursor = connection.cursor()
@@ -432,7 +431,7 @@ class IndustriaDatabase(orm.Model):
         ], context=context)
         for program in program_pool.browse(
                 cr, uid, program_ids, context=context):
-            program_db[program.industria_ref] = program.id
+            program_db[program.industria_ref] = program
 
         # Load robot:
         robot_db = {}
@@ -450,7 +449,9 @@ class IndustriaDatabase(orm.Model):
             if not counter % 50:
                 _logger.info('Job imported %s' % counter)
             industria_ref = record['id']
-            program_id = program_db.get(record['program_id'], False)
+            program = program_db.get(record['program_id'], False)
+            program_id = program.id
+            piece = program.piece or 1
             source_id = robot_db.get(record['source_id'], False)
             if source_id and program_id not in update_program:
                 update_program.append(program_id)
@@ -472,6 +473,7 @@ class IndustriaDatabase(orm.Model):
                 'program_id': program_id,
                 'database_id': database_id,
                 'state': record['state'],
+                'piece': piece,
             }
 
             job_ids = job_pool.search(cr, uid, [
@@ -613,6 +615,7 @@ class IndustriaDatabase(orm.Model):
                 'partner_id': partner_id,
                 'state': 'COMPLETED',
                 'source_id': robot_id,
+                'piece': 1,  # one job one piece always
             }
             if job_ids:
                 job_pool.write(cr, uid, job_ids, data, context=context)
