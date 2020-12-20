@@ -997,6 +997,8 @@ class IndustriaJob(orm.Model):
             'source_id', 'partner_id',
             type='many2one', relation='res.partner',
             string='Supplier', store=True),
+        'force_product_id': fields.many2one(
+            'product.product', 'Prodotto'),
 
         'state': fields.selection([
             ('DRAFT', 'Bozza'),
