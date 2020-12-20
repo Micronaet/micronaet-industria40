@@ -392,15 +392,15 @@
             <field name="model">industria.job</field>
             <field name="priority" eval="40"/>
             <field name="arch" type="xml">
-                <tree string="Job" colors="grey:state='DRAFT';red:state=='ERROR' OR unused==True;blue:state=='RUNNING'" editable="bottom">
+                <tree string="Job" colors="grey:state=='DRAFT';red:state=='ERROR' OR unused==True;blue:state=='RUNNING'" editable="bottom">
                     <!--<field name="dismiss" />-->
-                    <field name="created_at" />
-                    <field name="ended_at" />
+                    <!--<field name="created_at" />
+                    <field name="ended_at" />-->
+                    <!--<field name="job_duration" widget="float_time" sum="total_time"/>-->
+                    <field name="database_id" domain="[('mode', '=', 'opcua')]"/>
+                    <field name="source_id" domain="[('database_id', '=', database_id)]"/>
                     <field name="piece" sum="total_piece"/>
-                    <field name="job_duration" widget="float_time" sum="total_time"/>
-                    <field name="database_id" />
-                    <field name="source_id" />
-                    <field name="program_id" />
+                    <field name="program_id" domain="[('source_id', '=', source_id)]"/>
                     <field name="state" />
                     <button name="send_opcua_job" type="object" string="Invia lavoro"/>
                 </tree>
