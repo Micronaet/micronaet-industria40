@@ -81,6 +81,12 @@ class IndustriaDatabase(orm.Model):
 
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             program = job.program_id
+            database = job.database_id
+
+            # Exclude OPCUA job:
+            if database.mode == 'opcua':
+                continue  # Dont' used program with medium is a template!
+
             alarm = program_alarm.get(program, 0)
             if not alarm:
                 alarm = program.medium * 1.5  # If no alarm use 1,5 x medium
