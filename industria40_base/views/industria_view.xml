@@ -27,9 +27,9 @@
             <field name="arch" type="xml">
                 <form string="Database" version="7.0">
                     <header>
-                        <button name="test_database_connection" type="object" string="Test" icon="gtk-refresh" attrs="{'invisible': [('mode', '=', 'ftp')]}"/>
-                        <button name="import_program" type="object" string="Import program" icon="terp-calendar" attrs="{'invisible': [('mode', '=', 'ftp')]}"/>
-                        <button name="import_robot" type="object" string="Import robot" icon="gtk-network" attrs="{'invisible': [('mode', '=', 'ftp')]}"/>
+                        <button name="test_database_connection" type="object" string="Test" icon="gtk-refresh" attrs="{'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
+                        <button name="import_program" type="object" string="Import program" icon="terp-calendar" attrs="{'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
+                        <button name="import_robot" type="object" string="Import robot" icon="gtk-network" attrs="{'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
                         <button name="import_job" type="object" string="Import jobs" icon="gtk-justify-fill"/>
                         <button name="update_medium_program_job" type="object" string="Generate picking" icon="terp-graph"/>
                         <button name="generate_picking_from_job" type="object" string="Generate picking" icon="STOCK_EXECUTE"/>
@@ -40,10 +40,10 @@
                             <field name="partner_id" required="1"/>
 
                             <field name="ip" />
-                            <field name="username" attrs="{'required': [('mode', '!=', 'ftp')], 'invisible': [('mode', '=', 'ftp')]}"/>
-                            <field name="password" password="True" attrs="{'required': [('mode', '!=', 'ftp')], 'invisible': [('mode', '=', 'ftp')]}"/>
+                            <field name="username" attrs="{'required': [('mode', 'not in', ('ftp', 'opcua')], 'invisible': [('mode', '=', 'ftp')]}"/>
+                            <field name="password" password="True" attrs="{'required': [('mode', 'not in', ('ftp', 'opcua'))], 'invisible': [('mode', '=', 'ftp')]}"/>
 
-                            <field name="database" attrs="{'required': [('mode', '!=', 'ftp')], 'invisible': [('mode', '=', 'ftp')]}"/>
+                            <field name="database" attrs="{'required': [('mode', 'not in', ('ftp', 'opcua'))], 'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
                             <field name="port" attrs="{'required': [('mode', '!=', 'ftp')], 'invisible': [('mode', '=', 'ftp')]}" />
 
                             <field name="mode" />
@@ -70,9 +70,9 @@
 
                     <field name="database" />
                     <field name="port" />
-                    <button name="test_database_connection" type="object" string="Test" icon="gtk-refresh" attrs="{'invisible': [('mode', '=', 'ftp')]}"/>
-                    <button name="import_program" type="object" string="Import program" icon="terp-calendar" attrs="{'invisible': [('mode', '=', 'ftp')]}"/>
-                    <button name="import_robot" type="object" string="Import robot" icon="gtk-network" attrs="{'invisible': [('mode', '=', 'ftp')]}"/>
+                    <button name="test_database_connection" type="object" string="Test" icon="gtk-refresh" attrs="{'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
+                    <button name="import_program" type="object" string="Import program" icon="terp-calendar" attrs="{'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
+                    <button name="import_robot" type="object" string="Import robot" icon="gtk-network" attrs="{'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
                     <button name="import_job" type="object" string="Import jobs" icon="gtk-justify-fill"/>
                     <button name="update_medium_program_job" type="object" string="Generate picking" icon="terp-graph"/>
                     <button name="generate_picking_from_job" type="object" string="Generate picking" icon="STOCK_EXECUTE"/>
