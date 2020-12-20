@@ -930,6 +930,15 @@ class IndustriaJob(orm.Model):
     _rec_name = 'created_at'
     _order = 'created_at desc'
 
+    def send_opcua_job(self, cr, uid, ids, context=None):
+        """ Send job to robot
+        """
+        # TODO send to robot:
+
+        return self.write(cr, uid, ids, {
+            'state': 'RUNNING',
+        }, context=context)
+
     def _get_duration(self, cr, uid, ids, fields, args, context=None):
         """ Fields function for calculate
         """
