@@ -638,7 +638,7 @@ class IndustriaDatabase(orm.Model):
         'name': fields.char('Name', size=64, required=True),
         'partner_id': fields.many2one(
             'res.partner', 'Supplier'),
-        'ip': fields.char('IP address', size=15),
+        'ip': fields.char('IP address', size=15, required=True),
         'username': fields.char('Username', size=64),
         'password': fields.char('Password', size=64),
         'database': fields.char('Database', size=64),

@@ -40,7 +40,7 @@
                             <field name="partner_id" required="1"/>
 
                             <field name="ip" />
-                            <field name="username" attrs="{'required': [('mode', 'not in', ('ftp', 'opcua')], 'invisible': [('mode', '=', 'ftp')]}"/>
+                            <field name="username" attrs="{'required': [('mode', 'not in', ('ftp', 'opcua'))], 'invisible': [('mode', '=', 'ftp')]}"/>
                             <field name="password" password="True" attrs="{'required': [('mode', 'not in', ('ftp', 'opcua'))], 'invisible': [('mode', '=', 'ftp')]}"/>
 
                             <field name="database" attrs="{'required': [('mode', 'not in', ('ftp', 'opcua'))], 'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
