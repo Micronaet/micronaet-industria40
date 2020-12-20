@@ -935,12 +935,18 @@ class IndustriaJob(orm.Model):
         """
         # TODO send to robot:
         job = self.browse(cr, uid, ids, context=context)[0]
-        url = 'opc.tcp://%s:%s' % (
-            job.database_id.ip,
-            job.database_id.port,
-        )
-        _logger.info('Send data to robot: %s' % url)
+        database = job.database_id
+        program = job.program_id
+        url = 'opc.tcp://%s:%s' % (database.ip, database.port)
 
+        for parameter in program.parameter_ids:
+            opcua = parameter.opcua_id
+            parameter_command = opcua.opcua_variable
+            parameter_type = opcua.type
+            parameter_value = parameter.value
+            # TODO Write OPCUA variables
+
+        _logger.info('Send data to robot: %s' % url)
         return self.write(cr, uid, ids, {
             'state': 'RUNNING',
         }, context=context)
