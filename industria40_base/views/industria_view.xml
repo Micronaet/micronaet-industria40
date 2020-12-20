@@ -312,7 +312,7 @@
                     <field name="ended_at" />
                     <field name="updated_at" />
                     <field name="job_duration" widget="float_time" sum="total_time"/>
-                    <field name="piece" widget="float_time" sum="total_piece"/>
+                    <field name="piece" sum="total_piece"/>
                     <field name="out_statistic" />
 
                     <field name="database_id" />
