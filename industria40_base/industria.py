@@ -56,8 +56,9 @@ class IndustriaDatabase(orm.Model):
         program_pool = self.pool.get('industria.program')
 
         job_ids = job_pool.search(cr, uid, [
-            ('unused', '=', False),
-            ('state', '=', 'COMPLETED'),
+            ('unused', '=', False),  # Exclude unused marked job
+            ('state', '=', 'COMPLETED'),  # Only completed works
+            ('database_id.mode', '!=', 'opcua'),  # Exclude OPCUA program
         ], context=context)
         program_medium = {}
         for job in job_pool.browse(cr, uid, job_ids, context=context):
@@ -81,11 +82,6 @@ class IndustriaDatabase(orm.Model):
 
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             program = job.program_id
-            database = job.database_id
-
-            # Exclude OPCUA job:
-            if database.mode == 'opcua':
-                continue  # Dont' used program with medium is a template!
 
             alarm = program_alarm.get(program, 0)
             if not alarm:
