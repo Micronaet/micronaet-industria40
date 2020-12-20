@@ -130,9 +130,9 @@ class IndustriaDatabase(orm.Model):
                 daily_job[origin][date] = {}
             product = job.program_id.product_id
             if product not in daily_job[origin][date]:
-                daily_job[origin][date][product] = [
-                    0, 0, []]  # Total, duration, job
-            daily_job[origin][date][product][0] += 1  # piece (1 every job?)
+                # Total, duration, job:
+                daily_job[origin][date][product] = [0, 0, []]
+            daily_job[origin][date][product][0] += job.piece
             daily_job[origin][date][product][1] += job.job_duration
             daily_job[origin][date][product][2].append(job.id)
 
