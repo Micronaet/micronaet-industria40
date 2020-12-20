@@ -116,10 +116,14 @@ class IndustriaDatabase(orm.Model):
 
             ('state', '=', 'COMPLETED'),
 
-            ('program_id.product_id', '!=', False),  # With semi product
+            # ('program_id.product_id', '!=', False),  # With semi product
         ], context=context)
         daily_job = {}
         for job in job_pool.browse(cr, uid, job_ids, context=context):
+            product_id = job.force_product_id or job.program_id.product_id
+            if not product_id:
+                continue  # Not used
+
             database = job.database_id
             origin = '%s [%s]' % (database.name, database.ip)
             if origin not in daily_job:
