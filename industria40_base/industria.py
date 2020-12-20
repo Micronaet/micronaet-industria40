@@ -839,6 +839,10 @@ class IndustriaProgram(orm.Model):
             'Allarme', help='Tempo per considerare il programma fuori media'),
     }
 
+    _defaults = {
+        'piece': lambda *x: 1,
+    }
+
 
 class IndustriaJob(orm.Model):
     """ Model name: Industria Job
