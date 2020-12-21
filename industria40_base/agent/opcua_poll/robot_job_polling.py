@@ -22,6 +22,7 @@
 import os
 import erppeek
 import ConfigParser
+import sys
 import opcua
 import pdb
 
@@ -59,7 +60,7 @@ def set_data_value(robot, node_description, value):
     try:
         node.set_data_value(value)
     except:
-        print('Cannot read, robot unplugged?')
+        print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(), ))
         return False
     return True
 
