@@ -25,6 +25,32 @@ import ConfigParser
 import opcua
 import pdb
 
+def get_robot(address, port):
+    uri = u'opc.tcp://%s:%s' % (address, port)
+
+    # Create and connect as client:
+    robot = Client(self._uri)
+    try:
+        robot.connect()
+        return robot
+    except:
+        return False
+
+
+def get_data_value(robot, node_description, comment='', verbose=True):
+    """ Extract node data
+    """
+    node = robot._client.get_node(node_description)
+    try:
+        data = node.get_data_value().Value._value
+    except:
+        raise ValueError('Cannot read, robot unplugged?')
+    if verbose:
+        comment = comment or node_description
+        print(comment, data)
+    return data
+
+
 def host_up(host):
     if os.system('ping -c 2 %s' % host) is 0:
         return True
@@ -65,3 +91,7 @@ job_ids = job_pool.search([
 
 # TODO Test OPCUA variables
 # TODO Update ODOO if done (add time, duration)
+robot = get_robot('10.10.10.1', 4840)
+command = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."Colore"[0]'
+print(get_data_value(robot, command))
+
