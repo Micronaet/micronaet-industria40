@@ -44,7 +44,8 @@ def get_data_value(robot, node_description, comment='', verbose=True):
     try:
         data = node.get_data_value().Value._value
     except:
-        raise ValueError('Cannot read, robot unplugged?')
+        print('Cannot read, robot unplugged?')
+        return 'ERROR'
     if verbose:
         comment = comment or node_description
         print(comment, data)
@@ -116,7 +117,7 @@ variables = [
 robot = get_robot('10.10.10.1', 4840)
 mask = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 for item in range(20):
-    print('\nCommessa %s')
+    print('\nCommessa %s' % item)
     for variable in variables:
         result = get_data_value(
             robot,
