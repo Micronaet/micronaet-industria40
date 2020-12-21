@@ -40,7 +40,7 @@ def get_robot(address, port):
 def get_data_value(robot, node_description, comment='', verbose=True):
     """ Extract node data
     """
-    node = robot._client.get_node(node_description)
+    node = robot.get_node(node_description)
     try:
         data = node.get_data_value().Value._value
     except:
