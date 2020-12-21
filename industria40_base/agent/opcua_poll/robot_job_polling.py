@@ -61,7 +61,7 @@ def host_up(host):
 # Read configuration parameter:
 # -----------------------------------------------------------------------------
 # From config file:
-cfg_file = os.path.expanduser('../openerp.cfg')
+"""cfg_file = os.path.expanduser('../openerp.cfg')
 
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
@@ -88,7 +88,7 @@ job_ids = job_pool.search([
     ('database_id.mode', '=', 'opcua'),  # Only opcua database job
     ('state', '=', 'RUNNING'),  # Only running job
 ])
-
+"""
 # TODO Test OPCUA variables
 # TODO Update ODOO if done (add time, duration)
 robot = get_robot('10.10.10.1', 4840)
