@@ -91,7 +91,38 @@ job_ids = job_pool.search([
 """
 # TODO Test OPCUA variables
 # TODO Update ODOO if done (add time, duration)
+variables = [
+    'Colore',
+    'Commessa',
+    'FineAnno',
+    'FineGiorno',
+    'FineMese',
+    'FineMinuto',
+    'FineOra',
+    'InizioAnno',
+    'InizioGiorno',
+    'InizioMese',
+    'InizioMinuto',
+    'InizioOra',
+    'Live',
+    'Spunta_Completata',
+    'Spunta_In_Corso',
+    'Temperatura',
+    'TempoCambioColore',
+    'TempoFermo',
+    'TempoLavoro',
+    'Velocità',
+]
 robot = get_robot('10.10.10.1', 4840)
-command = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."Colore"[0]'
+mask = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 print(get_data_value(robot, command))
 
+for item in range(20):
+    print('\nCommessa %s')
+    for variable in variables:
+        result = get_data_value(
+            robot,
+            mask % (variable, item))
+        print('Variabile: %s >>%s<<' % (
+            variable, result
+        ))
