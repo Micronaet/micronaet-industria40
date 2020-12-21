@@ -1,1 +1,33 @@
-0|Allarme|Descrizione allarme|Soluzione allarme
+0|Allarme||
+1|Blocco termico vent. estrazione sgrassaggio (QF7.1)||
+2|Blocco termico pompa sgrassaggio (QF7.2)||
+3|Blocco bruciatore sgrassaggio (KA8.1)||
+4|Allarme livello minimo vasca sgrassaggio||
+6|Blocco termico pompa lavaggio 1 (QF9.1)||
+7|Allarme livello minimo vasca lavaggio 1||
+9|Blocco termico pompa lavaggio 2 (QF9.2)||
+10|Allarme livello minimo vasca lavaggio 2||
+11|Blocco termico pompa demi (QF9.3)||
+12|Allarme livello minimo vasca demi||
+81|Blocco termico veli d'aria asciugatura (QF10.1-QF10.2)||
+82|Blocco termico vent. ricircolo asciugatura (QF10.3)||
+86|Blocco termico vent. ricircolo cottura (QF11.1-QF11.5)||
+87|Blocco bruciatore cottura (KA12.1)||
+103|Blocco termico vent. bruciatore sgrassaggio (IA8.2)||
+104|Allarme livello massimo vasca sgrassaggio||
+107|Allarme livello massimo vasca lavaggio 1||
+110|Allarme livello massimo vasca lavaggio 2||
+112|Allarme livello massimo vasca demi||
+201|Allarme massima temperatura sgrassaggio||
+207|Allarme massima temperatura cottura||
+221|Allarme minima temperatura sgrassaggio||
+227|Allarme minima temperatura cottura||
+232|Allarme feedback inverter traino (A13.1)||
+233|Allarme fault inverter traino (A13.1)||
+241|Pulsante stop 1 traino premuto||
+242|Pulsante stop 2 traino premuto||
+243|Pulsante stop 3 traino premuto||
+255|Blocco termico vent. raffreddamento traino (IA14.1)||
+261|Allarme reed sicurezza traino||
+263|Allarme FC passo catena oliatore rotto||
+288|Allarme livello minimo oliatore||
