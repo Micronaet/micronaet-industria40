@@ -65,7 +65,6 @@ class RobotOPCUA:
                     return False
 
                 # Check N alarms in file:
-                pdb.set_trace()
                 for alarm in self._alarms.keys():
                     if self.get_data_value(
                             str(self._node_command['alarm_mask'] % alarm)):
