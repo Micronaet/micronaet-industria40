@@ -67,8 +67,7 @@ class RobotOPCUA:
                 # Check N alarms in file:
                 for alarm in self._alarms.keys():
                     if self.get_data_value(
-                            str(self._node_command['alarm_mask'] %
-                            alarm)):
+                            str(self._node_command['alarm_mask'] % alarm)):
                         if alarm in error_found:
                             print('[WARN] Yet raised: %s' % alarm)
                             continue
