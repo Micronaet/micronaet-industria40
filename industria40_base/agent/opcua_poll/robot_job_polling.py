@@ -29,7 +29,7 @@ def get_robot(address, port):
     uri = u'opc.tcp://%s:%s' % (address, port)
 
     # Create and connect as client:
-    robot = Client(self._uri)
+    robot = opcua.Client(uri)
     try:
         robot.connect()
         return robot
