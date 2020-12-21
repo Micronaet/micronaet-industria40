@@ -120,7 +120,9 @@ for item in range(20):
     for variable in variables:
         result = get_data_value(
             robot,
-            mask % (variable, item))
+            mask % (variable, item),
+            verbose=False,
+        )
         print('Variabile: %s >>%s<<' % (
             variable, result
         ))
