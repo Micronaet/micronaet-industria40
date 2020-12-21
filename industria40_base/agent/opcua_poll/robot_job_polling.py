@@ -132,7 +132,7 @@ mask = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 
 set_data_value(
     robot,
-    mask % ('Temperatura', 1),
+    mask % ('Velocità', 1),
     210.0,
 )
 
