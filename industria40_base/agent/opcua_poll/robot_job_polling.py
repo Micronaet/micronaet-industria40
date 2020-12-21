@@ -59,7 +59,7 @@ def set_data_value(robot, node_description, value):
     node = robot.get_node(node_description)
     pdb.set_trace()
     try:
-        node.set_value(value)  # set_value
+        node.set_data_value(value, varianttype=1)  # set_value
     except:
         print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(), ))
         return False
@@ -132,8 +132,8 @@ mask = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 
 set_data_value(
     robot,
-    mask % ('Velocità', 1),
-    210.0,
+    mask % ('Temperatura', 1),
+    210,
 )
 
 pdb.set_trace()
