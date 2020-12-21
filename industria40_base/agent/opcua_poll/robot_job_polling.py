@@ -115,8 +115,6 @@ variables = [
 ]
 robot = get_robot('10.10.10.1', 4840)
 mask = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
-print(get_data_value(robot, command))
-
 for item in range(20):
     print('\nCommessa %s')
     for variable in variables:
@@ -126,3 +124,4 @@ for item in range(20):
         print('Variabile: %s >>%s<<' % (
             variable, result
         ))
+robot.disconnect()
