@@ -114,7 +114,7 @@ class RobotOPCUA:
                 else:
                     print(u'Check # %s' % counter)
         except:
-            print('Master error on alarm check: %s' % (sys.exc_info()))
+            print('Master error on alarm check: %s' % (sys.exc_info(), ))
             return False
         return True
 
