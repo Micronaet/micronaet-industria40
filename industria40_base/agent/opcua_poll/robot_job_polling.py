@@ -51,6 +51,17 @@ def get_data_value(robot, node_description, comment='', verbose=True):
         print(comment, data)
     return data
 
+def set_data_value(robot, node_description, value):
+    """ Save node data
+    """
+    node = robot.get_node(node_description)
+    pdb.set_trace()
+    try:
+        node.set_data_value().Value._value
+    except:
+        print('Cannot read, robot unplugged?')
+        return False
+    return True
 
 def host_up(host):
     if os.system('ping -c 2 %s' % host) is 0:
@@ -116,7 +127,15 @@ variables = [
 ]
 robot = get_robot('10.10.10.1', 4840)
 mask = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
-for item in range(20):
+
+set_data_value(
+    robot,
+    mask % ('Commessa', 1),
+    'Prova commessa',
+)
+
+pdb.set_trace()
+for item in range(21):
     print('\nCommessa %s' % item)
     for variable in variables:
         result = get_data_value(
@@ -127,4 +146,6 @@ for item in range(20):
         print('Variabile: %s >>%s<<' % (
             variable, result
         ))
+
+
 robot.disconnect()
