@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import pdb
+import sys
 import time
 import io
 from opcua import Client
@@ -113,7 +114,7 @@ class RobotOPCUA:
                 else:
                     print(u'Check # %s' % counter)
         except:
-            print('Master error on alarm check')
+            print('Master error on alarm check: %s' % (sys.exc_info()))
             return False
         return True
 
