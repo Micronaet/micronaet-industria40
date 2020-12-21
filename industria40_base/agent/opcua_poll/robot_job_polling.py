@@ -105,7 +105,7 @@ variables = [
     'InizioMese',
     'InizioMinuto',
     'InizioOra',
-    'Live',
+    # 'Live',
     'Spunta_Completata',
     'Spunta_In_Corso',
     'Temperatura',
