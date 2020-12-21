@@ -26,6 +26,7 @@ import sys
 import opcua
 import pdb
 
+
 def get_robot(address, port):
     uri = u'opc.tcp://%s:%s' % (address, port)
 
@@ -58,7 +59,7 @@ def set_data_value(robot, node_description, value):
     node = robot.get_node(node_description)
     pdb.set_trace()
     try:
-        node.set_data_value(value)
+        node.set_value(value)
     except:
         print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(), ))
         return False
