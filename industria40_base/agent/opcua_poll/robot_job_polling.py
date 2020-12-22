@@ -134,6 +134,12 @@ variables = [
 robot = get_robot('10.10.10.1', 4840)
 mask = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 
+pdb.set_trace()
+ua = opcua.ua
+node = robot.get_node(mask % ('Temperatura', 1))
+node.set_value(ua.DataValue(ua.Variant(200, ua.VariantType.Int32)))
+
+
 set_data_value(robot, mask % ('Temperatura', 1), 240, 'Int32')
 set_data_value(robot, mask % ('Colore', 1), 'Bianco', 'String')
 
