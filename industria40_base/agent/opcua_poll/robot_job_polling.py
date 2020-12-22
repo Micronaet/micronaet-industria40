@@ -24,6 +24,7 @@ import erppeek
 import ConfigParser
 import sys
 import opcua
+from opcua import ua
 import pdb
 
 
@@ -53,33 +54,16 @@ def get_data_value(robot, node_description, comment='', verbose=True):
         print(comment, data)
     return data
 
-def set_data_value(robot, node_description, value, variant_type):
+def set_data_value(robot, node_description, value):
     """ Save node data
     """
     node = robot.get_node(node_description)
-    pdb.set_trace()
     try:
-        # node.set_value(value, varianttype=3)  # set_value
-
-        # node.set_value(opcua.ua.DataValue([23], opcua.ua.VariantType.Int64))
-        # node.set_value(opcua.ua.DataValue(value))
-
-        # 'Boolean', 'Byte', 'ByteString',
-        # 'DateTime', 'Double', 'Float', 'Guid', 'Int16', 'Int32', 'Int64',
-        # 'SByte', 'StatusCode', 'String', 'UInt16',
-        # 'UInt32', 'UInt64',
-        #
-        # 'DataValue', 'XmlElement', 'DiagnosticInfo', 'NodeId',
-        # 'LocalizedText', 'ExpandedNodeId', 'ExtensionObject',
-        # 'QualifiedName', 'Variant', 'Null',
-        # node.set_value(ua.DataValue(ua.Variant(value, ua.VariantType.Int32)))
-        ua = opcua.ua
-        pdb.set_trace()
-        variant_obj = node.get_data_type_as_variant_type()
-        node.set_value(ua.DataValue(ua.Variant(value, variant_obj)))
-
-        # node.set_value(ua.DataValue(ua.Variant(value, eval(
-        #    'ua.VariantType.%s' % variant_type))))
+        node.set_value(
+            ua.DataValue(ua.Variant(
+                value,
+                node.get_data_type_as_variant_type()
+            )))
     except:
         print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(), ))
         return False
