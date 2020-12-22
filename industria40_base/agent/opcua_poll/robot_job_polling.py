@@ -79,7 +79,8 @@ def host_up(host):
 # Read configuration parameter:
 # -----------------------------------------------------------------------------
 # From config file:
-"""cfg_file = os.path.expanduser('../openerp.cfg')
+"""
+cfg_file = os.path.expanduser('../openerp.cfg')
 
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
@@ -135,9 +136,5 @@ for item in [1]:  # range(0, 2):
             mask % (variable, item),
             verbose=False,
         )
-        print('Variabile: %s >>%s<<' % (
-            variable, result
-        ))
-
-
+        print('Variabile: %s [%s]' % (variable, result))
 robot.disconnect()
