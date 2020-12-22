@@ -128,7 +128,7 @@ set_data_value(robot, mask % ('Temperatura', 1), 240)
 set_data_value(robot, mask % ('Colore', 1), 'Bianco')
 set_data_value(robot, mask % ('Commessa', 1), 'Commessa numero 1')
 pdb.set_trace()
-for item in range(21):
+for item in [1]:  # range(0, 2):
     print('\nCommessa %s' % item)
     for variable in variables:
         result = get_data_value(
