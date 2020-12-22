@@ -121,10 +121,10 @@ variables = [
 robot = get_robot('10.10.10.1', 4840)
 mask = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 
-set_data_value(robot, mask % ('Colore', 1), 'Bianco')
-set_data_value(robot, mask % ('Commessa', 1), 'Commessa numero 1')
-set_data_value(robot, mask % ('Temperatura', 1), 240)
-set_data_value(robot, mask % ('Velocità', 1), 1.2)
+set_data_value(robot, mask % ('Colore', 1), 'Nero')
+set_data_value(robot, mask % ('Commessa', 1), 'Commessa numero 1bis')
+set_data_value(robot, mask % ('Temperatura', 1), 200)
+set_data_value(robot, mask % ('Velocità', 1), 1.15)
 
 for item in [1]:  # range(0, 2):
     print('\nCommessa %s' % item)
