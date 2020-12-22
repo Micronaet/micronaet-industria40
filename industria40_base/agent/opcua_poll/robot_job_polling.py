@@ -62,7 +62,9 @@ def set_data_value(robot, node_description, value):
         # node.set_value(value, varianttype=3)  # set_value
 
         # node.set_value(opcua.ua.DataValue([23], opcua.ua.VariantType.Int64))
-        node.set_value(opcua.ua.DataValue(value))
+        # node.set_value(opcua.ua.DataValue(value))
+        ua = opcua.ua
+        node.set_value(ua.DataValue(ua.Variant([23], ua.VariantType.Int64)))
     except:
         print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(), ))
         return False
