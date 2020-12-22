@@ -74,13 +74,14 @@ def set_data_value(robot, node_description, value, variant_type):
         # 'QualifiedName', 'Variant', 'Null',
         # node.set_value(ua.DataValue(ua.Variant(value, ua.VariantType.Int32)))
         ua = opcua.ua
-        pdb.set_trace()
-        node.set_value(ua.DataValue(ua.Variant(value, eval(
-            'ua.VariantType.%s' % variant_type))))
+        variant_obj = node.get_data_type_as_variant_type()
+        node.set_value(ua.DataValue(ua.Variant(value, variant_obj)))
+
+        # node.set_value(ua.DataValue(ua.Variant(value, eval(
+        #    'ua.VariantType.%s' % variant_type))))
     except:
         print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(), ))
         return False
-    node.set_data_value(value, varianttype=3)  # set_value
     return True
 
 def host_up(host):
