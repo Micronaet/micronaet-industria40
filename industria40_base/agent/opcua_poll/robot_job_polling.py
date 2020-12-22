@@ -63,6 +63,15 @@ def set_data_value(robot, node_description, value):
 
         # node.set_value(opcua.ua.DataValue([23], opcua.ua.VariantType.Int64))
         # node.set_value(opcua.ua.DataValue(value))
+
+        # 'Boolean', 'Byte', 'ByteString',
+        # 'DateTime', 'Double', 'Float', 'Guid', 'Int16', 'Int32', 'Int64',
+        # 'SByte', 'StatusCode', 'String', 'UInt16',
+        # 'UInt32', 'UInt64',
+        #
+        # 'DataValue', 'XmlElement', 'DiagnosticInfo', 'NodeId',
+        # 'LocalizedText', 'ExpandedNodeId', 'ExtensionObject',
+        # 'QualifiedName', 'Variant', 'Null',
         ua = opcua.ua
         node.set_value(ua.DataValue(ua.Variant([23], ua.VariantType.Int64)))
     except:
@@ -112,34 +121,20 @@ job_ids = job_pool.search([
 # TODO Test OPCUA variables
 # TODO Update ODOO if done (add time, duration)
 variables = [
-    'Colore',
-    'Commessa',
-    'FineAnno',
-    'FineGiorno',
-    'FineMese',
-    'FineMinuto',
-    'FineOra',
-    'InizioAnno',
-    'InizioGiorno',
-    'InizioMese',
-    'InizioMinuto',
-    'InizioOra',
+    'Colore', 'Commessa', 'FineAnno', 'FineGiorno',
+    'FineMese', 'FineMinuto', 'FineOra', 'InizioAnno',
+    'InizioGiorno', 'InizioMese', 'InizioMinuto', 'InizioOra',
     # 'Live',
-    'Spunta_Completata',
-    'Spunta_In_Corso',
-    'Temperatura',
-    'TempoCambioColore',
-    'TempoFermo',
-    'TempoLavoro',
-    'Velocità',
+    'Spunta_Completata', 'Spunta_In_Corso', 'Temperatura',
+    'TempoCambioColore', 'TempoFermo', 'TempoLavoro', 'Velocità',
 ]
 robot = get_robot('10.10.10.1', 4840)
 mask = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 
 set_data_value(
     robot,
-    mask % ('Temperatura', 1),
-    210,
+    mask % ('Colore', 1),
+    'Bianco',
 )
 
 pdb.set_trace()
