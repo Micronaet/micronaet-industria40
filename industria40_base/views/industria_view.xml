@@ -429,10 +429,12 @@
                             <field name="label" />
 
                             <separator string="Prodotti:" colspan="4" />
-                            <field name="product_ids" colspan="4" nolabel="1">
+                            <field name="product_ids" colspan="4" nolabel="1" context="{'default_job_id': active_id}">
                                 <tree string="Prodotti" editable="bottom">
-                                    <field name="product_id" domain="[('industria_in', '=', job_id.source_id)]"/>
+                                    <field name="product_id" domain="[('industria_in', '=', source_id)]"/>
                                     <field name="piece" sum="total"/>
+                                    <field name="source_id" invisible="1"/>
+                                    <field name="job_id" invisible="1"/>
                                 </tree>
                             </field>
                         </group>
