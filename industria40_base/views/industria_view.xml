@@ -433,8 +433,8 @@
                                 <tree string="Prodotti" editable="bottom">
                                     <field name="product_id" domain="[('industria_in', '=', source_id)]"/>
                                     <field name="piece" sum="total"/>
-                                    <field name="source_id" invisible="1"/>
-                                    <field name="job_id" invisible="1"/>
+                                    <field name="source_id" /> <!--invisible="1"-->
+                                    <field name="job_id" />
                                 </tree>
                             </field>
                         </group>
