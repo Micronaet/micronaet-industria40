@@ -72,8 +72,8 @@ def set_data_value(robot, node_description, value, variant_type):
         # 'DataValue', 'XmlElement', 'DiagnosticInfo', 'NodeId',
         # 'LocalizedText', 'ExpandedNodeId', 'ExtensionObject',
         # 'QualifiedName', 'Variant', 'Null',
-        ua = opcua.ua
         # node.set_value(ua.DataValue(ua.Variant(value, ua.VariantType.Int32)))
+        ua = opcua.ua
         pdb.set_trace()
         node.set_value(ua.DataValue(ua.Variant(value, eval(
             'ua.VariantType.%s' % variant_type))))
@@ -137,7 +137,7 @@ mask = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 pdb.set_trace()
 ua = opcua.ua
 node = robot.get_node(mask % ('Temperatura', 1))
-node.set_value(ua.DataValue(ua.Variant(200, ua.VariantType.Int32)))
+# node.set_value(ua.DataValue(ua.Variant(200, ua.VariantType.Int32)))
 
 
 set_data_value(robot, mask % ('Temperatura', 1), 240, 'Int16')
