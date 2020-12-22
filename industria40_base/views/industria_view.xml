@@ -426,7 +426,10 @@
                             <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
                             <!--<field name="piece" sum="total_piece" required="1"/>-->
                             <field name="program_id" domain="[('source_id', '=', source_id)]" required="1"/>
-                            <field name="product_ids" colspan="4">
+                            <field name="label" />
+
+                            <separator string="Prodotti:" colspan="4" />
+                            <field name="product_ids" colspan="4" nolabel="1">
                                 <tree string="Prodotti" editable="bottom">
                                     <field name="product_id" />
                                     <field name="piece" sum="total"/>
@@ -480,7 +483,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="view_id" ref="view_industria_job_opcua_tree"/>
-            <field name="context">{'form_view_id': 'industria40_base.view_industria_job_opcua_form', 'default_state': 'DRAFT'}</field>
+            <field name="context">{'form_view_ref': 'industria40_base.view_industria_job_opcua_form', 'default_state': 'DRAFT'}</field>
             <field name="domain">[('state', '=', 'DRAFT')]</field>
         </record>
 

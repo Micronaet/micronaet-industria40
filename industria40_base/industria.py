@@ -1008,6 +1008,8 @@ class IndustriaJob(orm.Model):
         # TODO duration seconds?
 
         'industria_ref': fields.integer('ID rif.'),
+        'label': fields.integer(
+            'Etichette', help='Totale etichette da stampare'),
 
         'program_id': fields.many2one(
             'industria.program', 'Programma'),
@@ -1050,6 +1052,7 @@ class IndustriaJob(orm.Model):
     _defaults = {
         'state': lambda *x: 'DRAFT',
         'piece': lambda *x: 1,
+        'label': lambda *x: 1,
         'created_at': lambda *d: ('%s' % datetime.now())[:19],
     }
 
