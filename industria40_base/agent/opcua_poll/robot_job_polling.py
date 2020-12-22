@@ -53,7 +53,7 @@ def get_data_value(robot, node_description, comment='', verbose=True):
         print(comment, data)
     return data
 
-def set_data_value(robot, node_description, value):
+def set_data_value(robot, node_description, value, variant_type):
     """ Save node data
     """
     node = robot.get_node(node_description)
@@ -73,11 +73,9 @@ def set_data_value(robot, node_description, value):
         # 'LocalizedText', 'ExpandedNodeId', 'ExtensionObject',
         # 'QualifiedName', 'Variant', 'Null',
         ua = opcua.ua
-        node.set_value(
-            ua.DataValue(
-                ua.Variant(
-                    value,
-                    ua.VariantType.Int64)))
+        # node.set_value(ua.DataValue(ua.Variant(value, ua.VariantType.Int32)))
+        node.set_value(ua.DataValue(ua.Variant(value, eval(
+            'ua.VariantType.%s' % variant_type))))
     except:
         print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(), ))
         return False
@@ -135,11 +133,8 @@ variables = [
 robot = get_robot('10.10.10.1', 4840)
 mask = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 
-set_data_value(
-    robot,
-    mask % ('Temperatura', 1),
-    240,
-)
+set_data_value(robot, mask % ('Temperatura', 1), 240, 'Int32')
+set_data_value(robot, mask % ('Colore', 1), 'Bianco', 'String')
 
 pdb.set_trace()
 for item in range(21):
