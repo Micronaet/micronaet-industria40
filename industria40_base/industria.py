@@ -1072,6 +1072,20 @@ class IndustriaRobotRelation(orm.Model):
     }
 
 
+class ProductProduct(orm.Model):
+    """ Model name: Product
+    """
+
+    _inherit = 'product.product'
+
+    _columns = {
+        'industria_in': fields.many2one(
+            'industria.robot', 'Ingresso', help='Semilavorato in ingresso'),
+        'industria_out': fields.many2one(
+            'industria.robot', 'Uscita', help='Semilavorato in uscita'),
+        }
+
+
 class ResPartner(orm.Model):
     """ Model name: Res Partner
     """
