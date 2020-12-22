@@ -74,6 +74,7 @@ def set_data_value(robot, node_description, value, variant_type):
         # 'QualifiedName', 'Variant', 'Null',
         # node.set_value(ua.DataValue(ua.Variant(value, ua.VariantType.Int32)))
         ua = opcua.ua
+        pdb.set_trace()
         variant_obj = node.get_data_type_as_variant_type()
         node.set_value(ua.DataValue(ua.Variant(value, variant_obj)))
 
