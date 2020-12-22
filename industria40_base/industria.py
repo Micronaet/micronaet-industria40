@@ -892,6 +892,23 @@ class IndustriaProgramParameterOpcua(orm.Model):
     }
 
 
+class IndustriaJobProduct(orm.Model):
+    """ Model name: Industria Program Product
+    """
+
+    _name = 'industria.job.product'
+    _description = 'Job program'
+    _rec_name = 'product_id'
+    _order = 'product_id'
+
+    _columns = {
+        'job_id': fields.many2one('industria.job', 'Job'),
+        'product_id': fields.many2one(
+            'product.product', 'Prodotto', required=True),
+        'piece': fields.integer('Pezzi', required=True),
+    }
+
+
 class IndustriaProgramParameter(orm.Model):
     """ Model name: Industria Program Parameter
     """
@@ -1026,6 +1043,8 @@ class IndustriaJob(orm.Model):
             help='When generate a picking for stock movement will be linked '
                  'here'),
         'piece': fields.integer('Total piece x job'),
+        'product_ids': fields.one2many(
+            'industria.job.product', 'job_id', 'Prodotti'),
     }
 
     _defaults = {

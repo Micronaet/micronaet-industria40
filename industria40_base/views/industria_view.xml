@@ -246,8 +246,8 @@
                     <sheet>
                         <group col="4" colspan="4">
                             <field name="name" />
-                            <field name="type" />
-                            <field name="opcua_variable" />
+                            <!--<field name="type" />
+                            <field name="opcua_variable" />-->
                         </group>
                     </sheet>
                 </form>
@@ -259,8 +259,8 @@
             <field name="arch" type="xml">
                 <tree string="Database" editable="bottom">
                      <field name="name" />
-                     <field name="type" />
-                     <field name="opcua_variable" />
+                     <!--<field name="type" />
+                     <field name="opcua_variable" />-->
                 </tree>
             </field>
         </record>
@@ -388,11 +388,11 @@
             </field>
         </record>
         <record model="ir.ui.view" id="view_industria_job_opcua_tree">
-            <field name="name">industria.job.opcuatree</field>
+            <field name="name">industria.job.opcua.tree</field>
             <field name="model">industria.job</field>
             <field name="priority" eval="40"/>
             <field name="arch" type="xml">
-                <tree string="Job" colors="grey:state=='DRAFT';red:state=='ERROR' OR unused==True;blue:state=='RUNNING'" editable="bottom">
+                <tree string="Job" colors="grey:state=='DRAFT';red:state=='ERROR' OR unused==True;blue:state=='RUNNING'">
                     <field name="created_at" string="Pianificato"/>
                     <!--<field name="dismiss" />-->
                     <!--
@@ -408,6 +408,36 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="view_industria_job_opcua_form">
+            <field name="name">industria.job.opcua.form</field>
+            <field name="model">industria.job</field>
+            <field name="priority" eval="40"/>
+            <field name="arch" type="xml">
+                <form string="Job">
+                    <header>
+                        <button name="send_opcua_job" type="object" string="Invia lavoro"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+
+                    <sheet>
+                        <group col="4">
+                            <field name="created_at" string="Pianificato"/>
+                            <field name="database_id" domain="[('mode', '=', 'opcua')]" required="1"/>
+                            <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
+                            <!--<field name="piece" sum="total_piece" required="1"/>-->
+                            <field name="program_id" domain="[('source_id', '=', source_id)]" required="1"/>
+                            <field name="product_ids" colspan="4">
+                                <tree string="Prodotti" editable="bottom">
+                                    <field name="product_id" />
+                                    <field name="piece" sum="total"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_industria_job">
             <field name="name">Job</field>
             <field name="res_model">industria.job</field>
@@ -448,9 +478,9 @@
             <field name="name">Job OPCUA</field>
             <field name="res_model">industria.job</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="view_id" ref="view_industria_job_opcua_tree"/>
-            <field name="context">{'default_state': 'DRAFT'}</field>
+            <field name="context">{'form_view_id': 'industria40_base.view_industria_job_opcua_form', 'default_state': 'DRAFT'}</field>
             <field name="domain">[('state', '=', 'DRAFT')]</field>
         </record>
 
