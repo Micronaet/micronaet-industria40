@@ -903,9 +903,10 @@ class IndustriaJobProduct(orm.Model):
 
     _columns = {
         'job_id': fields.many2one('industria.job', 'Job'),
-        'source_id': fields.related(
-            'job_id', 'source_id', type='many2one', relation='industria.robot',
-            string='robot_id'),
+        # 'source_id': fields.related(
+        #    'job_id', 'source_id', type='many2one',
+        #    relation='industria.robot',
+        #    string='robot_id'),
         'product_id': fields.many2one(
             'product.product', 'Prodotto', required=True),
         'piece': fields.integer('Pezzi', required=True),
