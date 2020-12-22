@@ -121,13 +121,11 @@ variables = [
 robot = get_robot('10.10.10.1', 4840)
 mask = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 
-pdb.set_trace()
 set_data_value(robot, mask % ('Colore', 1), 'Bianco')
 set_data_value(robot, mask % ('Commessa', 1), 'Commessa numero 1')
 set_data_value(robot, mask % ('Temperatura', 1), 240)
 set_data_value(robot, mask % ('Velocità', 1), 1.2)
 
-pdb.set_trace()
 for item in [1]:  # range(0, 2):
     print('\nCommessa %s' % item)
     for variable in variables:
