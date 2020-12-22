@@ -140,7 +140,7 @@ node = robot.get_node(mask % ('Temperatura', 1))
 node.set_value(ua.DataValue(ua.Variant(200, ua.VariantType.Int32)))
 
 
-set_data_value(robot, mask % ('Temperatura', 1), 240, 'Int32')
+set_data_value(robot, mask % ('Temperatura', 1), 240, 'Int16')
 set_data_value(robot, mask % ('Colore', 1), 'Bianco', 'String')
 
 pdb.set_trace()
