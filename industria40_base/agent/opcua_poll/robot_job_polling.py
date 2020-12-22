@@ -73,7 +73,11 @@ def set_data_value(robot, node_description, value):
         # 'LocalizedText', 'ExpandedNodeId', 'ExtensionObject',
         # 'QualifiedName', 'Variant', 'Null',
         ua = opcua.ua
-        node.set_value(ua.DataValue(ua.Variant([23], ua.VariantType.Int64)))
+        node.set_value(
+            ua.DataValue(
+                ua.Variant(
+                    value,
+                    ua.VariantType.Int64)))
     except:
         print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(), ))
         return False
@@ -133,8 +137,8 @@ mask = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 
 set_data_value(
     robot,
-    mask % ('Colore', 1),
-    'Bianco',
+    mask % ('Temperatura', 1),
+    240,
 )
 
 pdb.set_trace()
