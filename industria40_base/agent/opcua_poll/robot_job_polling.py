@@ -141,7 +141,7 @@ node = robot.get_node(mask % ('Temperatura', 1))
 
 
 set_data_value(robot, mask % ('Temperatura', 1), 240, 'Int16')
-set_data_value(robot, mask % ('Colore', 1), 'Bianco', 'String')
+# set_data_value(robot, mask % ('Colore', 1), 'Bianco', 'String')
 
 pdb.set_trace()
 for item in range(21):
