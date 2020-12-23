@@ -988,15 +988,15 @@ class IndustriaJob(orm.Model):
                 print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(),))
                 return False
             return True
-        pdb.set_trace()
         # TODO send to robot:
         job = self.browse(cr, uid, ids, context=context)[0]
         database = job.database_id
         program = job.program_id
+        source = job.source_id
 
         robot = get_robot(database.ip, database.port)
-        mask = robot.opcua_mask
-        # 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
+        pdb.set_trace()
+        mask = source.opcua_mask  # 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 
         # Get free program:
         # TODO
