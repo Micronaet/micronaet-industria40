@@ -999,7 +999,8 @@ class IndustriaJob(orm.Model):
 
         robot = get_robot(database.ip, database.port)
         pdb.set_trace()
-        mask = source.opcua_mask  # 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
+        mask = str(source.opcua_mask)
+        # 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 
         # Get free program:
         # TODO
