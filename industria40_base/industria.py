@@ -1018,7 +1018,6 @@ class IndustriaJob(orm.Model):
         source = job.source_id
 
         robot = get_robot(database.ip, database.port)
-        pdb.set_trace()
         mask = source.opcua_mask
         # 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 
