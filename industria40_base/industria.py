@@ -1083,9 +1083,9 @@ class ProductProduct(orm.Model):
     _inherit = 'product.product'
 
     _columns = {
-        'industria_in': fields.many2one(
+        'industria_in_id': fields.many2one(
             'industria.robot', 'Ingresso', help='Semilavorato in ingresso'),
-        'industria_out': fields.many2one(
+        'industria_out_id': fields.many2one(
             'industria.robot', 'Uscita', help='Semilavorato in uscita'),
         }
 

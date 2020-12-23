@@ -1,6 +1,53 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <!--product.product-->
+        <record model="ir.ui.view" id="view_product_product_tree">
+            <field name="name">product.product.upcua.tree</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <tree string="OPCUA Prodotti">
+                    <field name="name" readonly="1"/>
+                    <field name="default_code" readonly="1"/>
+                    <field name="uom_id" readonly="1"/>
+                    <field name="industria_in_id" />
+                    <field name="industria_out_id" />
+                    <field name="state" invisible="1" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_product_product_search">
+            <field name="name">product.product.upcua.search</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <search string="OPCUA Prodotti">
+                    <field string="default_code"/>
+                    <field string="name"/>
+                    <field string="industria_in_id"/>
+                    <field string="industria_out_id"/>
+                    <!--<field name="partner_id" filter_domain="[('partner_id','=',self)]"/>-->
+                    <filter name="industria_in_yes" string="I 4.0 in" domain="[('industria_in_id','!=',False')]"/>
+                    <filter name="industria_out_yes" string="I 4.0 out" domain="[('industria_out_id','!=',False')]"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="group_uom_id" string="UM" context="{'group_by': 'uom_id'}"/>
+                        <filter name="group_indstria_in_id" string="I 4.0 in" context="{'group_by': 'industria_in_id'}"/>
+                        <filter name="group_indstria_out_id" string="I 4.0 out" context="{'group_by': 'industria_out_id'}"/>
+                        <filter string="Status" context="{'group_by': 'state'}" />
+                    </group>
+            </search>
+           </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_product_product_opcua">
+            <field name="name">Prodotti OPCUA</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_product_tree"/>
+            <field name="search_view_id" ref="view_product_product_search"/>
+            <field name="context">{'search_default_industria_in_yes': True}</field>
+            <field name="domain">[('default_code', '!=', False)]</field>
+        </record>
+
         <!--stock.picking-->
         <record model="ir.ui.view" id="view_stock_picking_cl_form">
             <field name="name">stock.picking.cl.mrp.lavoration.form</field>
@@ -431,7 +478,7 @@
                             <separator string="Prodotti:" colspan="4" />
                             <field name="product_ids" colspan="4" nolabel="1" >
                                 <tree string="Prodotti" editable="bottom">
-                                    <field name="product_id" domain="[('industria_in', '!=', False)]"/>
+                                    <field name="product_id" domain="[('industria_in_id', '!=', False)]"/>
                                     <field name="piece" sum="total"/>
                                     <!--<field name="source_id" />
                                     <field name="job_id" />-->
@@ -578,6 +625,12 @@
                     id="menu_industria_database"
                     action="action_industria_database"
                     sequence="40"
+                    />
+                <menuitem
+                    parent="menu_industria_configuration"
+                    id="menu_product_product_opcua"
+                    action="action_product_product_opcua"
+                    sequence="50"
                     />
     </data>
 </openerp>
