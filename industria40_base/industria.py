@@ -78,6 +78,16 @@ class IndustriaDatabase(orm.Model):
     # -------------------------------------------------------------------------
     # ROBOT Interface:
     # -------------------------------------------------------------------------
+    # def extract_integer(self, field):
+    #    """ Extract date from OPCUA record
+    #    """
+    #    return field == 'true'
+
+    def extract_boolean(self, field):
+        """ Extract date from OPCUA record
+        """
+        return field == 'true'
+
     def extract_date(self, record, mode='Inizio'):
         """ Extract date from OPCUA record
             mode: 'Inizio', 'Fine'
@@ -778,12 +788,18 @@ class IndustriaRobot(orm.Model):
         production_pool = self.pool.get('industria.production')
 
         variables = [
-            'Colore', 'Commessa', 'FineAnno', 'FineGiorno',
-            'FineMese', 'FineMinuto', 'FineOra', 'InizioAnno',
-            'InizioGiorno', 'InizioMese', 'InizioMinuto', 'InizioOra',
-            # 'Live',
-            'Spunta_Completata', 'Spunta_In_Corso', 'Temperatura',
-            'TempoCambioColore', 'TempoFermo', 'TempoLavoro', 'Velocità',
+            'Colore', 'Commessa',
+            'Temperatura', 'Velocità',
+
+            'FineAnno', 'FineGiorno', 'FineMese',
+            'FineMinuto', 'FineOra',
+            'InizioAnno', 'InizioGiorno', 'InizioMese',
+            'InizioMinuto', 'InizioOra',
+
+            'Spunta_Completata', 'Spunta_In_Corso',
+
+            'TempoCambioColore', 'TempoFermo', 'TempoLavoro',
+            'Live',
         ]
         source = self.browse(cr, uid, ids, context=context)[0]
         if source.database_id.mode != 'opcua':
@@ -808,11 +824,23 @@ class IndustriaRobot(orm.Model):
             data = {
                 'ref': ref,
                 'name': record.get('Commessa'),
+                'color': record.get('Colore'),
                 'temperature': record.get('Temperatura'),
                 'speed': record.get('Velocità'),
-                'duration': record.get('Durata'),
                 'start': database_pool.extract_date(record, mode='Inizio'),
                 'stop': database_pool.extract_date(record, mode='Fine'),
+
+                'duration': record.get('Durata'),
+                'stop_duration': record.get('TempoFermo'),
+                'change_duration': record.get('TempoCambioColore'),
+
+                'is_working': database_pool.extract_boolean(
+                    record.get('Spunta_In_Corso')),
+                'is_completed': database_pool.extract_boolean(
+                    record.get('Spunta_Completata')),
+                'is_live': database_pool.extract_boolean(
+                    record.get('Live')),
+
             }
             # Parse production:
             production_ids = production_pool.search(cr, uid, [
@@ -824,9 +852,7 @@ class IndustriaRobot(orm.Model):
             else:
                 production_pool.create(
                     cr, uid, data, context=context)
-
         robot.disconnect()
-
         return True
 
     def get_today_state(self, cr, uid, ids, fields, args, context=None):
