@@ -3,10 +3,10 @@
     <data>
         <!--product.product-->
         <record model="ir.ui.view" id="view_product_product_tree">
-            <field name="name">product.product.upcua.tree</field>
+            <field name="name">product.product.opcua.tree</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <tree string="OPCUA Prodotti">
+                <tree string="OPCUA Prodotti" editable="bottom">
                     <field name="name" readonly="1"/>
                     <field name="default_code" readonly="1"/>
                     <field name="uom_id" readonly="1"/>
@@ -17,24 +17,23 @@
             </field>
         </record>
         <record model="ir.ui.view" id="view_product_product_search">
-            <field name="name">product.product.upcua.search</field>
+            <field name="name">product.product.opcua.search</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <search string="OPCUA Prodotti">
-                    <field string="default_code"/>
-                    <field string="name"/>
+                    <field name="default_code"/>
+                    <field name="name"/>
                     <field string="industria_in_id"/>
                     <field string="industria_out_id"/>
-                    <!--<field name="partner_id" filter_domain="[('partner_id','=',self)]"/>-->
                     <filter name="industria_in_yes" string="I 4.0 in" domain="[('industria_in_id','!=',False')]"/>
                     <filter name="industria_out_yes" string="I 4.0 out" domain="[('industria_out_id','!=',False')]"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_uom_id" string="UM" context="{'group_by': 'uom_id'}"/>
-                        <filter name="group_indstria_in_id" string="I 4.0 in" context="{'group_by': 'industria_in_id'}"/>
-                        <filter name="group_indstria_out_id" string="I 4.0 out" context="{'group_by': 'industria_out_id'}"/>
+                        <filter name="group_industria_in_id" string="I 4.0 in" context="{'group_by': 'industria_in_id'}"/>
+                        <filter name="group_industria_out_id" string="I 4.0 out" context="{'group_by': 'industria_out_id'}"/>
                         <filter string="Status" context="{'group_by': 'state'}" />
                     </group>
-            </search>
+                </search>
            </field>
         </record>
         <record model="ir.actions.act_window" id="action_product_product_opcua">
