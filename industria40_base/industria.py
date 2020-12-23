@@ -75,6 +75,61 @@ class IndustriaDatabase(orm.Model):
     _rec_name = 'name'
     _order = 'name'
 
+    # -------------------------------------------------------------------------
+    # ROBOT Interface:
+    # -------------------------------------------------------------------------
+    def get_robot(self, database):
+        import opcua
+
+        # Create and connect as client:
+        uri = u'opc.tcp://%s:%s' % (database.ip, database.port)
+        robot = opcua.Client(uri)
+        try:
+            robot.connect()
+            return robot
+        except:
+            return False
+
+    def get_data_value(
+            self, robot, node_description, comment='', verbose=True):
+        """ Extract node data
+        """
+        node = robot.get_node(node_description)
+        try:
+            data = node.get_data_value().Value._value
+        except:
+            print('Cannot read, robot unplugged?')
+            return 'ERROR'
+        if verbose:
+            comment = comment or node_description
+            print(comment, data)
+        return data
+
+    def set_data_value(self, robot, node_description, value):
+        """ Save node data
+        """
+        from opcua import ua
+
+        try:
+            node = robot.get_node(str(node_description))
+        except Exception:
+            _logger.error('Node name problem: %s' % node_description)
+            pdb.set_trace()
+        try:
+            node.set_value(
+                ua.DataValue(ua.Variant(
+                    value,
+                    node.get_data_type_as_variant_type()
+                )))
+        except:
+            _logger.error('Write parameter %s problem: %s' % (
+                node_description, value))
+            pdb.set_trace()
+            print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(),))
+            return False
+        return True
+
+
     def update_medium_program_job(self, cr, uid, ids, context=None):
         """ Update medium
         """
@@ -703,6 +758,58 @@ class IndustriaRobot(orm.Model):
     _rec_name = 'name'
     _order = 'name'
 
+    def button_load_production_from_robot(self, cr, uid, ids, context=None):
+        """ Load from robot list of production
+        """
+        database_pool = self.pool.get('industria.database')
+        production_pool = self.pool.get('industria.production')
+
+        variables = [
+            'Colore', 'Commessa', 'FineAnno', 'FineGiorno',
+            'FineMese', 'FineMinuto', 'FineOra', 'InizioAnno',
+            'InizioGiorno', 'InizioMese', 'InizioMinuto', 'InizioOra',
+            # 'Live',
+            'Spunta_Completata', 'Spunta_In_Corso', 'Temperatura',
+            'TempoCambioColore', 'TempoFermo', 'TempoLavoro', 'Velocità',
+        ]
+        source = self.browse(cr, uid, ids, context=context)[0]
+        mask = str(source.opcua_mask)
+        # 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
+        robot = database_pool.get_robot(source)
+
+        for ref in range(21):
+            print('\nCommessa %s' % ref)
+            record = {}
+            for variable in variables:
+                record[variable] = database_pool.get_data_value(
+                    robot,
+                    mask % (str(variable), ref),
+                    verbose=False,
+                )
+
+            data = {
+                'ref': ref,
+                'name': record.get('Commessa'),
+                'temperature': record.get('Temperatura'),
+                'speed': record.get('Velocità'),
+                'duration': record.get('Durata'),
+                # TODO
+            }
+            # Parse production:
+            production_ids = production_pool.search(cr, uid, [
+                ('ref', '=', ref),
+            ], context=context)
+            if production_ids:
+                production_pool.write(
+                    cr, uid, production_ids, data, context=context)
+            else:
+                production_pool.create(
+                    cr, uid, data, context=context)
+
+        robot.disconnect()
+
+        return True
+
     def get_today_state(self, cr, uid, ids, fields, args, context=None):
         """ Fields function for calculate (ensure one)
         """
@@ -1006,43 +1113,7 @@ class IndustriaJob(orm.Model):
                     res += '.'
             return str(res)
 
-        def get_robot(address, port):
-            import opcua
-
-            # Create and connect as client:
-            uri = u'opc.tcp://%s:%s' % (address, port)
-            robot = opcua.Client(uri)
-            try:
-                robot.connect()
-                return robot
-            except:
-                return False
-
-        def set_data_value(robot, node_description, value):
-            """ Save node data
-            """
-            from opcua import ua
-
-            try:
-                node = robot.get_node(str(node_description))
-            except Exception:
-                _logger.error('Node name problem: %s' % node_description)
-                pdb.set_trace()
-            # if type(value) in (unicode, ):
-            #    value = str(value)
-            try:
-                node.set_value(
-                    ua.DataValue(ua.Variant(
-                        value,
-                        node.get_data_type_as_variant_type()
-                    )))
-            except:
-                _logger.error('Write parameter %s problem: %s' % (
-                    node_description, value))
-                pdb.set_trace()
-                print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(),))
-                return False
-            return True
+        database_pool = self.pool.get('industria.database')
 
         # TODO send to robot:
         job = self.browse(cr, uid, ids, context=context)[0]
@@ -1050,7 +1121,7 @@ class IndustriaJob(orm.Model):
         program = job.program_id
         source = job.source_id
 
-        robot = get_robot(database.ip, database.port)
+        robot = database_pool.get_robot(database)
         mask = source.opcua_mask
         # 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 
@@ -1065,19 +1136,19 @@ class IndustriaJob(orm.Model):
                     opcua_ref
                 ))
             _logger.info('OPCUA get: %s' % command_text)
-            set_data_value(
+            database_pool.set_data_value(
                 robot,
                 command_text,
                 get_value(parameter),
             )
 
         # Header parameter:
-        set_data_value(
+        database_pool.set_data_value(
             robot,
             mask % ('Commessa', opcua_ref),
             get_ascii(job.force_name or ('Job #%s' % job.id)),
         )
-        set_data_value(
+        database_pool.set_data_value(
             robot,
             mask % ('Colore', opcua_ref),
             get_ascii(job.color or 'Non definito'),

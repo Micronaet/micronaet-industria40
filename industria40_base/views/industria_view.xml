@@ -217,6 +217,7 @@
                     <field name="name" />
                     <field name="partner_id" />
                     <field name="database_id" />
+                    <button name="button_load_production_from_robot" type="object" string="Carica commesse da robot" icon="gtk-refresh"/>
                 </tree>
             </field>
         </record>
