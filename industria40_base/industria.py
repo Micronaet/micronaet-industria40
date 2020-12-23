@@ -962,7 +962,7 @@ class IndustriaJob(orm.Model):
         """
         def get_value(parameter):
             value = parameter.value
-            out_type = parameter.type
+            out_type = parameter.opcua_id.type
             if out_type == 'float':
                 return float(value.replace(',', '.')) or 0.0
             elif out_type == 'integer':
