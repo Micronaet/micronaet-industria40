@@ -968,7 +968,7 @@ class IndustriaJob(orm.Model):
             elif out_type == 'integer':
                 return int(value) or 0
             else:
-                return value or ''
+                return str(value or '')
 
         def get_ascii(value):
             res = ''
