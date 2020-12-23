@@ -967,7 +967,7 @@ class IndustriaJob(orm.Model):
                     res += c
                 else:
                     res += '.'
-            return res
+            return str(res)
 
         def get_robot(address, port):
             import opcua
