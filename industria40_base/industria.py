@@ -884,7 +884,7 @@ class IndustriaProgramParameterOpcua(orm.Model):
         'type': fields.selection([
             ('float', 'Reale'),
             ('integer', 'Intero'),
-            ('char', 'Carattere'),
+            ('char', 'Stringa'),
             ], 'Tipo dato', required=True)
         }
 

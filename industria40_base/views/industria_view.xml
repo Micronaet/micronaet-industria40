@@ -292,8 +292,8 @@
                     <sheet>
                         <group col="4" colspan="4">
                             <field name="name" />
-                            <!--<field name="type" />
-                            <field name="opcua_variable" />-->
+                            <field name="type" />
+                            <!--<field name="opcua_variable" />-->
                         </group>
                     </sheet>
                 </form>
@@ -305,8 +305,8 @@
             <field name="arch" type="xml">
                 <tree string="Database" editable="bottom">
                      <field name="name" />
-                     <!--<field name="type" />
-                     <field name="opcua_variable" />-->
+                     <field name="type" />
+                     <!--<field name="opcua_variable" />-->
                 </tree>
             </field>
         </record>
