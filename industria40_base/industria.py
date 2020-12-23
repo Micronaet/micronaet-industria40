@@ -1006,6 +1006,7 @@ class IndustriaJob(orm.Model):
                         node.get_data_type_as_variant_type()
                     )))
             except:
+                pdb.set_trace()
                 print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(),))
                 return False
             return True
