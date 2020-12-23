@@ -987,7 +987,7 @@ class IndustriaJob(orm.Model):
                 print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(),))
                 return False
             return True
-
+        pdb.set_trace()
         # TODO send to robot:
         job = self.browse(cr, uid, ids, context=context)[0]
         database = job.database_id
@@ -1001,7 +1001,7 @@ class IndustriaJob(orm.Model):
         # TODO
         opcua_ref = 1
 
-        # Write setup parameter:
+        # Program parameter:
         for parameter in program.parameter_ids:
             opcua = parameter.opcua_id
 
@@ -1011,11 +1011,17 @@ class IndustriaJob(orm.Model):
                 mask % (parameter.name, opcua_ref),
                 parameter.value,
             )
-        # Write work parameter:
+
+        # Header parameter:
         set_data_value(
             robot,
             mask % ('Commessa', opcua_ref),
-            'Job #%s' % job.id,
+            job.force_name or ('Job #%s' % job.id),
+        )
+        set_data_value(
+            robot,
+            mask % ('Colore', opcua_ref),
+            job.color or 'Non definito',
         )
 
         _logger.info('Send data to robot: %s' % url)
@@ -1058,7 +1064,7 @@ class IndustriaJob(orm.Model):
         # TODO duration seconds?
 
         'force_name': fields.char('Forza nome', size=30),
-        'color': fields.char('Colore'),
+        'color': fields.char('Colore', size=20),
         'industria_ref': fields.integer('ID rif.'),
         'label': fields.integer(
             'Etichette', help='Totale etichette da stampare'),
