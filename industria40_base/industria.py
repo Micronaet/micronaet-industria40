@@ -996,7 +996,6 @@ class IndustriaJob(orm.Model):
             """
             from opcua import ua
 
-            pdb.set_trace()
             node = robot.get_node(node_description)
             # if type(value) in (unicode, ):
             #    value = str(value)
@@ -1042,12 +1041,12 @@ class IndustriaJob(orm.Model):
         set_data_value(
             robot,
             mask % ('Commessa', opcua_ref),
-            job.force_name or ('Job #%s' % job.id),
+            get_ascii(job.force_name or ('Job #%s' % job.id)),
         )
         set_data_value(
             robot,
             mask % ('Colore', opcua_ref),
-            job.color or 'Non definito',
+            get_ascii(job.color or 'Non definito'),
         )
 
         _logger.info('Send data to robot: %s' % url)
