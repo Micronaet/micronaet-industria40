@@ -373,7 +373,6 @@ class IndustriaDatabase(orm.Model):
         """ Update program list
         """
         program_pool = self.pool.get('industria.program')
-        database_pool = self.pool.get('industria.database')
 
         database_id = ids[0]
         connection = self.mssql_connect(cr, uid, ids, context=context)
@@ -404,13 +403,10 @@ class IndustriaDatabase(orm.Model):
 
                 'code': record['name'],
                 'name': record['description'],
+                'name': record['description'],
                 'piece': record['npieces'],
                 'timeout': record['maxexecutiontime'],
                 # TODO created_at | updated_at
-
-                'start': database_pool.extract_date(record, mode='Inizio'),
-                'stop': database_pool.extract_date(record, mode='Fine'),
-
             }
 
             program_ids = program_pool.search(cr, uid, [
@@ -797,7 +793,6 @@ class IndustriaRobot(orm.Model):
             )
 
         mask = str(source.opcua_mask)
-        # 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
         robot = database_pool.get_robot(source.database_id)
 
         for ref in range(21):
@@ -816,7 +811,8 @@ class IndustriaRobot(orm.Model):
                 'temperature': record.get('Temperatura'),
                 'speed': record.get('Velocità'),
                 'duration': record.get('Durata'),
-                # TODO
+                'start': database_pool.extract_date(record, mode='Inizio'),
+                'stop': database_pool.extract_date(record, mode='Fine'),
             }
             # Parse production:
             production_ids = production_pool.search(cr, uid, [
