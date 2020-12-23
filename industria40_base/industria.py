@@ -1052,7 +1052,7 @@ class IndustriaJob(orm.Model):
             get_ascii(job.color or 'Non definito'),
         )
 
-        _logger.info('Send data to robot: %s' % url)
+        _logger.info('Send data to robot...')
         return self.write(cr, uid, ids, {
             'state': 'RUNNING',
         }, context=context)
