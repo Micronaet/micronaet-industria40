@@ -977,10 +977,10 @@ class IndustriaJob(orm.Model):
             """
             from opcua import ua
 
+            pdb.set_trace()
             node = robot.get_node(node_description)
             # if type(value) in (unicode, ):
             #    value = str(value)
-
             try:
                 node.set_value(
                     ua.DataValue(ua.Variant(
@@ -999,7 +999,7 @@ class IndustriaJob(orm.Model):
 
         robot = get_robot(database.ip, database.port)
         pdb.set_trace()
-        mask = str(source.opcua_mask)
+        mask = source.opcua_mask
         # 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 
         # Get free program:
@@ -1008,12 +1008,14 @@ class IndustriaJob(orm.Model):
 
         # Program parameter:
         for parameter in program.parameter_ids:
+            command_text = str(mask % (
+                    parameter.opcua_id.name,
+                    opcua_ref
+                ))
+
             set_data_value(
                 robot,
-                mask % (
-                    str(parameter.opcua_id.name),
-                    opcua_ref
-                ),
+                command_text,
                 parameter.value,
             )
 
