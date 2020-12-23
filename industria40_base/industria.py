@@ -960,6 +960,15 @@ class IndustriaJob(orm.Model):
     def send_opcua_job(self, cr, uid, ids, context=None):
         """ Send job to robot
         """
+        def get_ascii(value):
+            res = ''
+            for c in value:
+                if ord(c) < 127:
+                    res += c
+                else:
+                    res += '.'
+            return res
+
         def get_robot(address, port):
             import opcua
 
@@ -991,6 +1000,7 @@ class IndustriaJob(orm.Model):
                 print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(),))
                 return False
             return True
+
         # TODO send to robot:
         job = self.browse(cr, uid, ids, context=context)[0]
         database = job.database_id
@@ -1008,7 +1018,7 @@ class IndustriaJob(orm.Model):
 
         # Program parameter:
         for parameter in program.parameter_ids:
-            command_text = str(mask % (
+            command_text = get_ascii(mask % (
                     parameter.opcua_id.name,
                     opcua_ref
                 ))
