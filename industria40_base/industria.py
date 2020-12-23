@@ -781,7 +781,7 @@ class IndustriaRobot(orm.Model):
 
         mask = str(source.opcua_mask)
         # 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
-        robot = database_pool.get_robot(source)
+        robot = database_pool.get_robot(source.database_id)
 
         for ref in range(21):
             print('\nCommessa %s' % ref)
