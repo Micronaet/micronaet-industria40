@@ -40,6 +40,33 @@ from openerp.tools import (
 _logger = logging.getLogger(__name__)
 
 
+class IndustriaProduction(orm.Model):
+    """ Model name: Industria Program Parameter
+    """
+
+    _name = 'industria.production'
+    _description = 'Industria Production'
+    _rec_name = 'name'
+    _order = 'ref'
+
+    _columns = {
+        'ref': fields.integer('Rif.'),
+        'name': fields.char('Commessa', size=30),
+        'temperature': fields.char('Temperatura', size=5),
+        'speed': fields.char('Velocità', size=5),
+        'color': fields.char('Colore', size=20),
+        'start': fields.datetime('Inizio'),
+        'stop': fields.datetime('Fine'),
+        'duration': fields.integer('Durata'),
+        'stop_duration': fields.integer('Durata fermo'),
+        'change_duration': fields.integer('Durata cambio colore'),
+
+        'is_working': fields.integer('In lavorazione'),
+        'is_completed': fields.integer('Completata'),
+        'is_live': fields.integer('Live'),
+    }
+
+
 class IndustriaDatabase(orm.Model):
     """ Model name: Industria Database
     """
@@ -1134,6 +1161,8 @@ class IndustriaJob(orm.Model):
             'stock.picking', 'Picking',
             help='When generate a picking for stock movement will be linked '
                  'here'),
+        'production_id': fields.many2one(
+            'industria.production', 'OPCUA production'),
         'piece': fields.integer('Total piece x job'),
         'product_ids': fields.one2many(
             'industria.job.product', 'job_id', 'Prodotti'),
@@ -1200,3 +1229,5 @@ class StockPicking(orm.Model):
         'job_ids': fields.one2many(
             'industria.job', 'picking_id', 'Jobs'),
     }
+
+

@@ -341,6 +341,7 @@
                     <field name="database_id" />
                     <field name="program_id" />
                     <field name="source_id" />
+                    <field name="production_id" />
 
                     <field name="partner_id" filter_domain="[('partner_id','=',self)]"/>
 
@@ -365,6 +366,7 @@
                         <filter string="Database" context="{'group_by': 'database_id'}" />
                         <filter string="Program" context="{'group_by': 'program_id'}" />
                         <filter string="Robot" context="{'group_by': 'source_id'}" />
+                        <filter string="Commessa" context="{'group_by': 'production_id'}" />
                         <filter string="Status" context="{'group_by': 'state'}" />
                     </group>
                 </search>
@@ -394,6 +396,7 @@
                             <field name="source_id" />
 
                             <field name="partner_id" />
+                            <field name="production_id" />
                             <field name="state" />
 
                             <field name="picking_id" readonly="1" />
@@ -449,6 +452,7 @@
                     <field name="force_product_id" required="1"/>
                     <field name="piece" sum="total_piece" required="1"/>
                     <field name="program_id" domain="[('source_id', '=', source_id)]" required="1"/>
+                    <field name="production_id" />
                     <field name="state" />
                     <button name="send_opcua_job" type="object" string="Invia lavoro"/>
                 </tree>
@@ -475,6 +479,7 @@
                             <field name="force_name" />
                             <field name="color" />
                             <field name="label" />
+                            <field name="production_id" readonly="1"/>
 
                             <separator string="Prodotti:" colspan="4" />
                             <field name="product_ids" colspan="4" nolabel="1" >
