@@ -999,6 +999,7 @@ class IndustriaJob(orm.Model):
             try:
                 node = robot.get_node(str(node_description))
             except Exception:
+                _logger.error('Node name problem: %s' % node_description)
                 pdb.set_trace()
             # if type(value) in (unicode, ):
             #    value = str(value)
@@ -1009,6 +1010,9 @@ class IndustriaJob(orm.Model):
                         node.get_data_type_as_variant_type()
                     )))
             except:
+                _logger.error('Write parameter %s problem: %s' % (
+                    node_description, value))
+                pdb.set_trace()
                 print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(),))
                 return False
             return True
