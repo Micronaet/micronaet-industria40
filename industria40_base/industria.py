@@ -978,8 +978,8 @@ class IndustriaJob(orm.Model):
             from opcua import ua
 
             node = robot.get_node(node_description)
-            if type(value) in (unicode, ):
-                value = str(value)
+            # if type(value) in (unicode, ):
+            #    value = str(value)
 
             try:
                 node.set_value(
