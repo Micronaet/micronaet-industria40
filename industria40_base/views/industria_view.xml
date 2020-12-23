@@ -23,15 +23,14 @@
                 <search string="OPCUA Prodotti">
                     <field name="default_code"/>
                     <field name="name"/>
-                    <field string="industria_in_id"/>
-                    <field string="industria_out_id"/>
+                    <field name="industria_in_id"/>
+                    <field name="industria_out_id"/>
                     <filter name="industria_in_yes" string="I 4.0 in" domain="[('industria_in_id','!=',False')]"/>
                     <filter name="industria_out_yes" string="I 4.0 out" domain="[('industria_out_id','!=',False')]"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_uom_id" string="UM" context="{'group_by': 'uom_id'}"/>
                         <filter name="group_industria_in_id" string="I 4.0 in" context="{'group_by': 'industria_in_id'}"/>
                         <filter name="group_industria_out_id" string="I 4.0 out" context="{'group_by': 'industria_out_id'}"/>
-                        <filter string="Status" context="{'group_by': 'state'}" />
                     </group>
                 </search>
            </field>
@@ -44,7 +43,7 @@
             <field name="view_id" ref="view_product_product_tree"/>
             <field name="search_view_id" ref="view_product_product_search"/>
             <field name="context">{'search_default_industria_in_yes': True}</field>
-            <field name="domain">[('default_code', '!=', False)]</field>
+            <field name="domain">[('default_code', '!=', False), ('relative_type', '=', 'half')]</field>
         </record>
 
         <!--stock.picking-->
