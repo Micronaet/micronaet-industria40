@@ -996,7 +996,10 @@ class IndustriaJob(orm.Model):
             """
             from opcua import ua
 
-            node = robot.get_node(node_description)
+            try:
+                node = robot.get_node(node_description)
+            except Exception:
+                pdb.set_trace()
             # if type(value) in (unicode, ):
             #    value = str(value)
             try:
@@ -1006,7 +1009,6 @@ class IndustriaJob(orm.Model):
                         node.get_data_type_as_variant_type()
                     )))
             except:
-                pdb.set_trace()
                 print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(),))
                 return False
             return True
