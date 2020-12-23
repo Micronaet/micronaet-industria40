@@ -997,7 +997,7 @@ class IndustriaJob(orm.Model):
             from opcua import ua
 
             try:
-                node = robot.get_node(node_description)
+                node = robot.get_node(str(node_description))
             except Exception:
                 pdb.set_trace()
             # if type(value) in (unicode, ):
