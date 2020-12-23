@@ -1,6 +1,38 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <!--industria.production-->
+        <record model="ir.ui.view" id="view_industria_production_tree">
+            <field name="name">industria.production.tree</field>
+            <field name="model">industria.production</field>
+            <field name="arch" type="xml">
+                <tree string="Commesse" editable="bottom">
+                    <field name="ref" />
+                    <field name="name" />
+                    <field name="temperature" />
+                    <field name="speed" />
+                    <field name="color" />
+                    <field name="start" />
+                    <field name="stop" />
+                    <field name="duration" />
+                    <field name="stop_duration" />
+                    <field name="change_duration" />
+                    <field name="is_working" />
+                    <field name="is_completed" />
+                    <field name="is_live" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_production">
+            <field name="name">Commesse in lavorazione</field>
+            <field name="res_model">industria.production</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_industria_production_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
         <!--product.product-->
         <record model="ir.ui.view" id="view_product_product_tree">
             <field name="name">product.product.opcua.tree</field>
@@ -600,6 +632,12 @@
                     id="menu_industria_job_opcua"
                     action="action_industria_job_opcua_statistic"
                     sequence="30"
+                    />
+                <menuitem
+                    parent="menu_industria_master_data"
+                    id="menu_industria_production"
+                    action="action_industria_production"
+                    sequence="40"
                     />
 
             <menuitem
