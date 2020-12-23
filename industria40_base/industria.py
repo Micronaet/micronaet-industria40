@@ -1004,9 +1004,6 @@ class IndustriaJob(orm.Model):
 
         # Program parameter:
         for parameter in program.parameter_ids:
-            opcua = parameter.opcua_id
-
-            # Setup parameter:
             set_data_value(
                 robot,
                 mask % (parameter.name, opcua_ref),
