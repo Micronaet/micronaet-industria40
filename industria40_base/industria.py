@@ -773,6 +773,12 @@ class IndustriaRobot(orm.Model):
             'TempoCambioColore', 'TempoFermo', 'TempoLavoro', 'Velocità',
         ]
         source = self.browse(cr, uid, ids, context=context)[0]
+        if source.database_id.mode != 'opcua':
+            raise osv.except_osv(
+                _('Import non permesso'),
+                _('Il robot non permette la improtazione delle commesse'),
+            )
+
         mask = str(source.opcua_mask)
         # 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
         robot = database_pool.get_robot(source)
