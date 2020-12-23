@@ -61,9 +61,9 @@ class IndustriaProduction(orm.Model):
         'stop_duration': fields.integer('Durata fermo'),
         'change_duration': fields.integer('Durata cambio colore'),
 
-        'is_working': fields.integer('In lavorazione'),
-        'is_completed': fields.integer('Completata'),
-        'is_live': fields.integer('Live'),
+        'is_working': fields.boolean('In lavorazione'),
+        'is_completed': fields.boolean('Completata'),
+        'is_live': fields.boolean('Live'),
     }
 
 
@@ -78,6 +78,18 @@ class IndustriaDatabase(orm.Model):
     # -------------------------------------------------------------------------
     # ROBOT Interface:
     # -------------------------------------------------------------------------
+    def extract_date(self, record, mode='Inizio'):
+        """ Extract date from OPCUA record
+            mode: 'Inizio', 'Fine'
+        """
+        return '%s-%s-%s %s:%s:00' % (
+            record['%sAnno' % mode],
+            record['%sMese' % mode],
+            record['%sGiorno' % mode],
+            record['%sOra' % mode],
+            record['%sMinuto' % mode],
+        )
+
     def get_robot(self, database):
         import opcua
 
@@ -361,6 +373,7 @@ class IndustriaDatabase(orm.Model):
         """ Update program list
         """
         program_pool = self.pool.get('industria.program')
+        database_pool = self.pool.get('industria.database')
 
         database_id = ids[0]
         connection = self.mssql_connect(cr, uid, ids, context=context)
@@ -394,6 +407,10 @@ class IndustriaDatabase(orm.Model):
                 'piece': record['npieces'],
                 'timeout': record['maxexecutiontime'],
                 # TODO created_at | updated_at
+
+                'start': database_pool.extract_date(record, mode='Inizio'),
+                'stop': database_pool.extract_date(record, mode='Fine'),
+
             }
 
             program_ids = program_pool.search(cr, uid, [
