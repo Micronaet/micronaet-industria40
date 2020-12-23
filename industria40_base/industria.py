@@ -36,8 +36,6 @@ from openerp.tools import (
     DATETIME_FORMATS_MAP,
     float_compare,
     )
-import opcua
-from opcua import ua
 
 _logger = logging.getLogger(__name__)
 
@@ -963,9 +961,10 @@ class IndustriaJob(orm.Model):
         """ Send job to robot
         """
         def get_robot(address, port):
-            uri = u'opc.tcp://%s:%s' % (address, port)
+            import opcua
 
             # Create and connect as client:
+            uri = u'opc.tcp://%s:%s' % (address, port)
             robot = opcua.Client(uri)
             try:
                 robot.connect()
@@ -976,6 +975,8 @@ class IndustriaJob(orm.Model):
         def set_data_value(robot, node_description, value):
             """ Save node data
             """
+            from opcua import ua
+
             node = robot.get_node(node_description)
             try:
                 node.set_value(
