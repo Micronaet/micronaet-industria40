@@ -1022,7 +1022,7 @@ class IndustriaJob(orm.Model):
                     parameter.opcua_id.name,
                     opcua_ref
                 ))
-
+            _logger.info('OPCUA get: %s' % command_text)
             set_data_value(
                 robot,
                 command_text,
