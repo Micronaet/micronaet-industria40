@@ -960,6 +960,16 @@ class IndustriaJob(orm.Model):
     def send_opcua_job(self, cr, uid, ids, context=None):
         """ Send job to robot
         """
+        def get_value(parameter):
+            value = parameter.value
+            out_type = parameter.type
+            if out_type == 'float':
+                return float(value.replace(',', '.')) or 0.0
+            elif out_type == 'integer':
+                return int(value) or 0
+            else:
+                return value or ''
+
         def get_ascii(value):
             res = ''
             for c in value:
@@ -1026,7 +1036,7 @@ class IndustriaJob(orm.Model):
             set_data_value(
                 robot,
                 command_text,
-                parameter.value,
+                get_value(parameter),
             )
 
         # Header parameter:
