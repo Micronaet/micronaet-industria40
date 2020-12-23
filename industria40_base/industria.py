@@ -36,6 +36,8 @@ from openerp.tools import (
     DATETIME_FORMATS_MAP,
     float_compare,
     )
+import opcua
+from opcua import ua
 
 _logger = logging.getLogger(__name__)
 
@@ -792,6 +794,7 @@ class IndustriaRobot(orm.Model):
     _columns = {
         'ip': fields.char('IP address', size=15),
         'name': fields.char('Name', size=64, required=True),
+        'opcua_mask': fields.char('OPCUA Mask', size=180),
         'industria_ref': fields.integer('Industria ref key'),
         'database_id': fields.many2one(
             'industria.database', 'Database'),
@@ -959,18 +962,61 @@ class IndustriaJob(orm.Model):
     def send_opcua_job(self, cr, uid, ids, context=None):
         """ Send job to robot
         """
+        def get_robot(address, port):
+            uri = u'opc.tcp://%s:%s' % (address, port)
+
+            # Create and connect as client:
+            robot = opcua.Client(uri)
+            try:
+                robot.connect()
+                return robot
+            except:
+                return False
+
+        def set_data_value(robot, node_description, value):
+            """ Save node data
+            """
+            node = robot.get_node(node_description)
+            try:
+                node.set_value(
+                    ua.DataValue(ua.Variant(
+                        value,
+                        node.get_data_type_as_variant_type()
+                    )))
+            except:
+                print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(),))
+                return False
+            return True
+
         # TODO send to robot:
         job = self.browse(cr, uid, ids, context=context)[0]
         database = job.database_id
         program = job.program_id
-        url = 'opc.tcp://%s:%s' % (database.ip, database.port)
 
+        robot = get_robot(database.ip, database.port)
+        mask = robot.opcua_mask
+        # 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
+
+        # Get free program:
+        # TODO
+        opcua_ref = 1
+
+        # Write setup parameter:
         for parameter in program.parameter_ids:
             opcua = parameter.opcua_id
-            parameter_command = opcua.opcua_variable
-            parameter_type = opcua.type
-            parameter_value = parameter.value
-            # TODO Write OPCUA variables
+
+            # Setup parameter:
+            set_data_value(
+                robot,
+                mask % (parameter.name, opcua_ref),
+                parameter.value,
+            )
+        # Write work parameter:
+        set_data_value(
+            robot,
+            mask % ('Commessa', opcua_ref),
+            'Job #%s' % job.id,
+        )
 
         _logger.info('Send data to robot: %s' % url)
         return self.write(cr, uid, ids, {
@@ -1011,6 +1057,8 @@ class IndustriaJob(orm.Model):
         'updated_at': fields.datetime('Modifica'),
         # TODO duration seconds?
 
+        'force_name': fields.char('Forza nome', size=30),
+        'color': fields.char('Colore'),
         'industria_ref': fields.integer('ID rif.'),
         'label': fields.integer(
             'Etichette', help='Totale etichette da stampare'),

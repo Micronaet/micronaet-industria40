@@ -36,7 +36,7 @@
         'stock',
         'product',
         'lavoration_cl_sl',
-        'product_relative_bom',  # For BOM relative type filter
+        'bom_type',  # For BOM relative type filter
         ],
     'init_xml': [],
     'demo': [],
