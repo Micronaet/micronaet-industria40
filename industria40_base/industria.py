@@ -110,7 +110,10 @@ class IndustriaDatabase(orm.Model):
             robot.connect()
             return robot
         except:
-            return False
+            raise osv.except_osv(
+                _('Errore connessione'),
+                _('Dispositivo non disponibile verificare sia acceso e '
+                  'connesso'))
 
     def get_data_value(
             self, robot, node_description, comment='', verbose=True):
