@@ -202,8 +202,8 @@ class IndustriaDatabase(orm.Model):
             '': [
                 'Commessa', 'Colore'],
             0: [
-                'Temperatura'
-                
+                'Temperatura',
+
                 'FineAnno', 'FineGiorno', 'FineMese',
                 'FineMinuto', 'FineOra',
 
@@ -216,8 +216,7 @@ class IndustriaDatabase(orm.Model):
                 # TODO 'Velocità'
             ],
             False: [
-                'Spunta_Completata', 'Spunta_In_Corso',
-                # 'Live'
+                'Spunta_Completata', 'Spunta_In_Corso', 'Live',
             ],
         }
 
