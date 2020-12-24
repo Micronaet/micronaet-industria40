@@ -54,6 +54,7 @@ class IndustriaProduction(orm.Model):
         """ Check status for this production
         """
         database_pool = self.pool.get('industria.database')
+        job_pool = self.pool.get('industria.database')
 
         production = self.browse(cr, uid, ids, context=context)[0]
 
@@ -62,17 +63,17 @@ class IndustriaProduction(orm.Model):
         record = self.get_opcua_record(robot, source, production.ref)
         # 'Spunta_Completata', 'Spunta_In_Corso',
         # 'TempoCambioColore', 'TempoFermo', 'TempoLavoro', 'Live',
+        pdb.set_trace()
 
-        if record.get('Spunta_Completata') == 'true':
-            # Update ODOO:
-            self.write_record_in_odoo(
-                cr, uid, source.id, record, context=context)
-
-            # Check if it is closed
+        # Update ODOO:
+        self.write_record_in_odoo(
+            cr, uid, source.id, record, context=context)
+        if database_pool.extract_boolean(record.get('Spunta_Completata'):
             # TODO close job
 
-            # TODO clean production
 
+            # TODO clean production
+        robot.disconnect()
         return
 
     def button_load_production_from_robot(self, cr, uid, ids, context=None):
@@ -89,6 +90,7 @@ class IndustriaProduction(orm.Model):
 
     _columns = {
         'source_id': fields.many2one('industria.robot', 'Robot'),
+        'job_id': fields.many2one('industria.job', 'Job'),
         'ref': fields.integer('Rif.'),
         'name': fields.char('Commessa', size=30),
         'temperature': fields.char('Temperatura', size=5),
@@ -212,6 +214,7 @@ class IndustriaDatabase(orm.Model):
         if production_ids:
             production_pool.write(cr, uid, production_ids, {
                 'source_id': False,
+                'job_id': False,
                 # 'ref'
                 'name': False,
                 'temperature': False,
@@ -933,6 +936,10 @@ class IndustriaRobot(orm.Model):
     def write_record_in_odoo(self, cr, uid, robot_id, record, context=None):
         """ Write record in ODOO
         """
+        if context is None:
+            context = {}
+        force_job_id = context.get('force_job_id')
+
         production_pool = self.pool.get('industria.production')
         database_pool = self.pool.get('industria.database')
 
@@ -940,6 +947,7 @@ class IndustriaRobot(orm.Model):
 
         data = {
             'source_id': robot_id,
+            'job_id': force_job_id,
             'ref': ref,
             'name': record.get('Commessa'),
             'color': record.get('Colore'),
@@ -985,7 +993,6 @@ class IndustriaRobot(orm.Model):
             check_range = range(21)
 
         database_pool = self.pool.get('industria.database')
-        production_pool = self.pool.get('industria.production')
 
         robot_id = ids[0]
         source = self.browse(cr, uid, robot_id, context=context)
@@ -1003,7 +1010,10 @@ class IndustriaRobot(orm.Model):
             # Write in ODOO:
             self.write_record_in_odoo(
                 cr, uid, robot_id, record, context=context)
-        robot.disconnect()
+        try:
+            robot.disconnect()
+        except:
+            pass
         return True
 
     def get_today_state(self, cr, uid, ids, fields, args, context=None):
@@ -1309,6 +1319,9 @@ class IndustriaJob(orm.Model):
                     res += '.'
             return str(res)
 
+        if context is None:
+            context = {}
+
         database_pool = self.pool.get('industria.database')
         production_pool = self.pool.get('industria.production')
 
@@ -1362,6 +1375,10 @@ class IndustriaJob(orm.Model):
             mask % ('Colore', opcua_ref),
             get_ascii(job.color or 'Non definito'),
         )
+
+        # Reload this ref production (link to this job_id:
+        context['force_job_id'] = ids[0]
+        self.button_load_production_from_robot(cr, uid, ids, context=context)
 
         _logger.info('Send data to robot...')
         return self.write(cr, uid, ids, {
