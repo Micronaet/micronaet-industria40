@@ -987,7 +987,7 @@ class IndustriaRobot(orm.Model):
             'start': database_pool.extract_date(record, mode='Inizio'),
             'stop': database_pool.extract_date(record, mode='Fine'),
 
-            'duration': record.get('Durata'),
+            'duration': record.get('TempoLavoro'),
             'stop_duration': record.get('TempoFermo'),
             'change_duration': record.get('TempoCambioColore'),
 
