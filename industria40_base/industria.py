@@ -406,7 +406,8 @@ class IndustriaDatabase(orm.Model):
             if date not in daily_job[origin]:
                 daily_job[origin][date] = {}
 
-            multi_duration = job.duration + job.stop + job.duration_change
+            multi_duration = \
+                job.duration + job.duration_stop + job.duration_change / 60.0
             duration = multi_duration or job.job_duration
             linked_job_id = job.id
             for product, piece in products:
