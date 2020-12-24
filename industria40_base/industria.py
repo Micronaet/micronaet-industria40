@@ -49,6 +49,14 @@ class IndustriaProduction(orm.Model):
     _rec_name = 'name'
     _order = 'ref'
 
+    def button_clean_production(self, cr, uid, ids, context=None):
+        """ Clean job
+        """
+        database_pool = self.pool.get('industria.database')
+        production = self.browse(cr, uid, ids, context=context)[0]
+        return database_pool.clean_opcua_job(
+            cr, uid, production.source_id, production.ref, context=context)
+
     def button_check_status_production_from_robot(
             self, cr, uid, ids, context=None):
         """ Check status for this production
@@ -79,7 +87,7 @@ class IndustriaProduction(orm.Model):
         if not job:
             _logger.error('No job linked, clean!')
             # TODO
-            return False
+            return self.button_clean_production(cr, uid, ids, context=context)
 
         if production.is_completed:
             pass
