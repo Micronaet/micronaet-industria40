@@ -62,41 +62,41 @@ class IndustriaProduction(orm.Model):
         """ Check status for this production
         """
         database_pool = self.pool.get('industria.database')
+        job_pool = self.pool.get('industria.job')
 
-        # Update status:
+        # 1. Update status from robot:
         self.button_load_production_from_robot(cr, uid, ids, context=context)
 
+        # 2. Load updated production:
         production = self.browse(cr, uid, ids, context=context)[0]
-        # source = production.source_id
-        # job = production.job_id
-
-        # robot = database_pool.get_robot(source.database_id)
-        # record = self.get_opcua_record(robot, source, production.ref)
-        ## 'Spunta_Completata', 'Spunta_In_Corso',
-        ## 'TempoCambioColore', 'TempoFermo', 'TempoLavoro', 'Live',
-
-        # Update ODOO:
-        # ref = production.ref
-        # self.write_record_in_odoo(
-        #    cr, uid, source.id, record, ref, context=context)
-        # if database_pool.extract_boolean(record.get('Spunta_Completata')):
-        #    # TODO close job
-        #    pass
         pdb.set_trace()
+
+        # 3. Clean if job not present
         job = production.job_id
         if not job:
             _logger.error('No job linked, clean!')
-            # TODO
             return self.button_clean_production(cr, uid, ids, context=context)
 
-        if production.is_completed:
-            pass
-            # TODO clean production
-        # robot.disconnect()
-        return
+        # 4. Close if completed:
+        if not production.is_completed:
+            _logger.info('No need to close job!')
+            return False
+
+        job_pool.write(cr, uid, [job.id], {
+            'duration': production.duration,
+            'duration_stop': production.stop_duration,
+            'duration_change': production.change_duration,
+
+            'created_at': production.start,
+            'ended_at': production.stop,
+
+            'state': 'COMPLETED',
+        }, context=context)
+
+        return self.button_clean_production(cr, uid, ids, context=context)
 
     def button_load_production_from_robot(self, cr, uid, ids, context=None):
-        """ Update only this
+        """ Update only this, force robot call passing ref and job_id
         """
         source_pool = self.pool.get('industria.robot')
         if context is None:
@@ -186,7 +186,6 @@ class IndustriaDatabase(orm.Model):
     def clean_opcua_job(self, cr, uid, source, opcua_ref, context=None):
         """ Send job to robot
         """
-        pdb.set_trace()
         database_pool = self.pool.get('industria.database')
         # job_pool = self.pool.get('industria.job')
         production_pool = self.pool.get('industria.production')
@@ -243,8 +242,8 @@ class IndustriaDatabase(orm.Model):
         if production_ids:
             production_pool.write(cr, uid, production_ids, {
                 # 'source_id': False,
-                'job_id': False,
                 # 'ref'
+                'job_id': False,
                 'name': False,
                 'temperature': False,
                 'speed': False,
@@ -1490,6 +1489,9 @@ class IndustriaJob(orm.Model):
                     ['create_at', 'ended_at'],
                     10,
                 )}),
+        'duration': fields.float('Durata', digits=(10,3)),
+        'duration_stop': fields.float('Durata fermo', digits=(10,3)),
+        'duration_change': fields.float('Durata approntamento', digits=(10,3)),
         'picking_id': fields.many2one(
             'stock.picking', 'Picking',
             help='When generate a picking for stock movement will be linked '
