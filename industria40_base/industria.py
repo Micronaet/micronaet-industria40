@@ -1210,6 +1210,8 @@ class IndustriaJob(orm.Model):
                 cr, uid, production_ids, context=context):
             if not production.name:
                 opcua_ref = production.ref
+                break
+
         if not opcua_ref:
             raise osv.except_osv(
                 _('Errore commessa'),
