@@ -68,7 +68,7 @@ class IndustriaProduction(orm.Model):
         # Update ODOO:
         self.write_record_in_odoo(
             cr, uid, source.id, record, context=context)
-        if database_pool.extract_boolean(record.get('Spunta_Completata'):
+        if database_pool.extract_boolean(record.get('Spunta_Completata')):
             # TODO close job
             pass
 
