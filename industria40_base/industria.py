@@ -273,7 +273,6 @@ class IndustriaDatabase(orm.Model):
             node = robot.get_node(str(node_description))
         except Exception:
             _logger.error('Node name problem: %s' % node_description)
-            pdb.set_trace()
         try:
             node.set_value(
                 ua.DataValue(ua.Variant(
@@ -283,7 +282,6 @@ class IndustriaDatabase(orm.Model):
         except:
             _logger.error('Write parameter %s problem: %s' % (
                 node_description, value))
-            pdb.set_trace()
             print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(),))
             return False
         return True
@@ -1019,7 +1017,7 @@ class IndustriaRobot(orm.Model):
         for ref in check_range:
             # Extract from robot:
             record = self.get_opcua_record(robot, source, ref)
-            pdb.set_trace()
+
             # Write in ODOO:
             self.write_record_in_odoo(
                 cr, uid, robot_id, record, ref, context=context)
