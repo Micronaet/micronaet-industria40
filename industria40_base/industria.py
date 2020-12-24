@@ -216,7 +216,9 @@ class IndustriaDatabase(orm.Model):
                 # TODO 'Velocità'
             ],
             'false': [
-                'Spunta_Completata', 'Spunta_In_Corso', 'Live'],
+                'Spunta_Completata', 'Spunta_In_Corso',
+                # 'Live'
+            ],
         }
 
         # Loop for reset parameter:
