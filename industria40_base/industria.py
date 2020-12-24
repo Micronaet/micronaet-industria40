@@ -391,7 +391,7 @@ class IndustriaDatabase(orm.Model):
 
             # B. Multi production:
             for item in job.product_ids:
-                products.append((item.product_id, item.piece)
+                products.append((item.product_id, item.piece))
 
             if not products:
                 continue  # Not used
@@ -443,6 +443,7 @@ class IndustriaDatabase(orm.Model):
                     'is_mrp_lavoration': True,
                     # 'location_id': location_id,
                 }, context=context)
+
                 new_picking_ids.append(picking_id)
                 total_work = 0.0
                 for product in daily_job[origin][date]:
