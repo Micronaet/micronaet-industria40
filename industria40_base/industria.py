@@ -86,6 +86,8 @@ class IndustriaProduction(orm.Model):
         job = self.browse(cr, uid, ids, context=context)[0]
         context_forced = context.copy()
         context_forced['reload_only_ref'] = job.ref
+        context_forced['force_job_id'] = job.id
+
         return source_pool.button_load_production_from_robot(
             cr, uid, [job.source_id.id], context=context_forced)
 
@@ -1379,10 +1381,13 @@ class IndustriaJob(orm.Model):
         )
 
         # Reload this ref production (link to this job_id:
-        context['force_job_id'] = ids[0]
+        context_forced = context.copy()
+        context_forced['reload_only_ref'] = opcua_ref
+        context_forced['force_job_id'] = ids[0]
+
         source_pool.button_load_production_from_robot(cr, uid, [
             source.id,
-        ], context=context)
+        ], context=context_forced)
 
         _logger.info('Send data to robot...')
         return self.write(cr, uid, ids, {
