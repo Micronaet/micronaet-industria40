@@ -7,19 +7,19 @@
             <field name="model">industria.production</field>
             <field name="arch" type="xml">
                 <tree string="Commesse" editable="bottom" colors="red:name == ''">
-                    <field name="ref" />
-                    <field name="name" />
-                    <field name="temperature" />
-                    <field name="speed" />
-                    <field name="color" />
-                    <field name="start" />
-                    <field name="stop" />
-                    <field name="duration" />
-                    <field name="stop_duration" />
-                    <field name="change_duration" />
-                    <field name="is_working" />
-                    <field name="is_completed" />
-                    <field name="is_live" />
+                    <field name="ref" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="temperature" readonly="1"/>
+                    <field name="speed" readonly="1"/>
+                    <field name="color" readonly="1"/>
+                    <field name="start" readonly="1"/>
+                    <field name="stop" readonly="1"/>
+                    <field name="duration" readonly="1"/>
+                    <field name="stop_duration" readonly="1"/>
+                    <field name="change_duration" readonly="1"/>
+                    <field name="is_working" readonly="1"/>
+                    <field name="is_completed" readonly="1"/>
+                    <field name="is_live" readonly="1"/>
                 </tree>
             </field>
         </record>
