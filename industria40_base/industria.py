@@ -1019,7 +1019,7 @@ class IndustriaRobot(orm.Model):
         for ref in check_range:
             # Extract from robot:
             record = self.get_opcua_record(robot, source, ref)
-
+            pdb.set_trace()
             # Write in ODOO:
             self.write_record_in_odoo(
                 cr, uid, robot_id, record, ref, context=context)
