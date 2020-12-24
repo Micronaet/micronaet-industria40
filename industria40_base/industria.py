@@ -213,7 +213,8 @@ class IndustriaDatabase(orm.Model):
                 'TempoCambioColore', 'TempoFermo', 'TempoLavoro',
             ],
             0.0: [
-                'Velocità'],
+                # TODO 'Velocità'
+            ],
             'false': [
                 'Spunta_Completata', 'Spunta_In_Corso', 'Live'],
         }
