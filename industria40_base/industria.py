@@ -828,7 +828,7 @@ class IndustriaRobot(orm.Model):
             'TempoCambioColore', 'TempoFermo', 'TempoLavoro',
             'Live',
         ]
-        robot_id = self.id
+        robot_id = ids[0]
         source = self.browse(cr, uid, robot_id, context=context)
         if source.database_id.mode != 'opcua':
             raise osv.except_osv(
