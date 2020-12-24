@@ -49,6 +49,32 @@ class IndustriaProduction(orm.Model):
     _rec_name = 'name'
     _order = 'ref'
 
+    def button_check_status_production_from_robot(
+            self, cr, uid, ids, context=None):
+        """ Check status for this production
+        """
+        database_pool = self.pool.get('industria.database')
+
+        production = self.browse(cr, uid, ids, context=context)[0]
+
+        source = production.source_id
+        robot = database_pool.get_robot(source.database_id)
+        record = self.get_opcua_record(robot, source, production.ref)
+        # 'Spunta_Completata', 'Spunta_In_Corso',
+        # 'TempoCambioColore', 'TempoFermo', 'TempoLavoro', 'Live',
+
+        if record.get('Spunta_Completata') == 'true':
+            # Update ODOO:
+            self.write_record_in_odoo(
+                cr, uid, source.id, record, context=context)
+
+            # Check if it is closed
+            # TODO close job
+
+            # TODO clean production
+
+        return
+
     def button_load_production_from_robot(self, cr, uid, ids, context=None):
         """ Update only this
         """
@@ -875,20 +901,10 @@ class IndustriaRobot(orm.Model):
     _rec_name = 'name'
     _order = 'name'
 
-    def button_load_production_from_robot(self, cr, uid, ids, context=None):
-        """ Load from robot list of production
+    def get_opcua_record(self, robot, source, ref):
+        """ Extract OPCUA record from robot
         """
-        if context is None:
-            context = {}
-        reload_only_ref = context.get('reload_only_ref')
-        if reload_only_ref:
-            check_range = [reload_only_ref]
-        else:
-            check_range = range(21)
-
         database_pool = self.pool.get('industria.database')
-        production_pool = self.pool.get('industria.production')
-
         variables = [
             'Colore', 'Commessa',
             'Temperatura', 'Velocità',
@@ -903,59 +919,90 @@ class IndustriaRobot(orm.Model):
             'TempoCambioColore', 'TempoFermo', 'TempoLavoro',
             'Live',
         ]
+        mask = str(source.opcua_mask)
+        print('\nCommessa %s' % ref)
+        record = {}
+        for variable in variables:
+            record[variable] = database_pool.get_data_value(
+                robot,
+                mask % (str(variable), ref),
+                verbose=False,
+            )
+        return record
+
+    def write_record_in_odoo(self, cr, uid, robot_id, record, context=None):
+        """ Write record in ODOO
+        """
+        production_pool = self.pool.get('industria.production')
+        database_pool = self.pool.get('industria.database')
+
+        ref = record['ref']
+
+        data = {
+            'source_id': robot_id,
+            'ref': ref,
+            'name': record.get('Commessa'),
+            'color': record.get('Colore'),
+            'temperature': record.get('Temperatura'),
+            'speed': record.get('Velocità'),
+            'start': database_pool.extract_date(record, mode='Inizio'),
+            'stop': database_pool.extract_date(record, mode='Fine'),
+
+            'duration': record.get('Durata'),
+            'stop_duration': record.get('TempoFermo'),
+            'change_duration': record.get('TempoCambioColore'),
+
+            'is_working': database_pool.extract_boolean(
+                record.get('Spunta_In_Corso')),
+            'is_completed': database_pool.extract_boolean(
+                record.get('Spunta_Completata')),
+            'is_live': database_pool.extract_boolean(
+                record.get('Live')),
+        }
+
+        # Check in ODOOs:
+        production_ids = production_pool.search(cr, uid, [
+            ('ref', '=', ref),
+            ('source_id', '=', robot_id),
+        ], context=context)
+        if production_ids:
+            production_pool.write(
+                cr, uid, production_ids, data, context=context)
+        else:
+            production_pool.create(
+                cr, uid, data, context=context)
+        return True
+
+    def button_load_production_from_robot(self, cr, uid, ids, context=None):
+        """ Load from robot list of production
+        """
+        if context is None:
+            context = {}
+        reload_only_ref = context.get('reload_only_ref')
+        if reload_only_ref:
+            check_range = [reload_only_ref]
+        else:
+            check_range = range(21)
+
+        database_pool = self.pool.get('industria.database')
+        production_pool = self.pool.get('industria.production')
+
         robot_id = ids[0]
         source = self.browse(cr, uid, robot_id, context=context)
         if source.database_id.mode != 'opcua':
             raise osv.except_osv(
                 _('Import non permesso'),
-                _('Il robot non permette la improtazione delle commesse'),
+                _('Il robot non permette la importazione delle commesse'),
             )
 
-        mask = str(source.opcua_mask)
         robot = database_pool.get_robot(source.database_id)
-
         for ref in check_range:
-            print('\nCommessa %s' % ref)
-            record = {}
-            for variable in variables:
-                record[variable] = database_pool.get_data_value(
-                    robot,
-                    mask % (str(variable), ref),
-                    verbose=False,
-                )
+            # Extract from robot:
+            record = self.get_opcua_record(robot, source, ref)
 
-            data = {
-                'source_id': robot_id,
-                'ref': ref,
-                'name': record.get('Commessa'),
-                'color': record.get('Colore'),
-                'temperature': record.get('Temperatura'),
-                'speed': record.get('Velocità'),
-                'start': database_pool.extract_date(record, mode='Inizio'),
-                'stop': database_pool.extract_date(record, mode='Fine'),
-
-                'duration': record.get('Durata'),
-                'stop_duration': record.get('TempoFermo'),
-                'change_duration': record.get('TempoCambioColore'),
-
-                'is_working': database_pool.extract_boolean(
-                    record.get('Spunta_In_Corso')),
-                'is_completed': database_pool.extract_boolean(
-                    record.get('Spunta_Completata')),
-                'is_live': database_pool.extract_boolean(
-                    record.get('Live')),
-            }
-            # Parse production:
-            production_ids = production_pool.search(cr, uid, [
-                ('ref', '=', ref),
-                ('source_id', '=', robot_id),
-            ], context=context)
-            if production_ids:
-                production_pool.write(
-                    cr, uid, production_ids, data, context=context)
-            else:
-                production_pool.create(
-                    cr, uid, data, context=context)
+            # Write in ODOO:
+            self.write_record_in_odoo(
+                cr, uid, robot_id, record, context=context)
         robot.disconnect()
         return True
 
