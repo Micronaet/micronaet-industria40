@@ -578,7 +578,7 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="view_id" ref="view_industria_job_opcua_tree"/>
             <field name="context">{'search_default_state_draft': True, 'form_view_ref': 'industria40_base.view_industria_job_opcua_form', 'default_state': 'DRAFT'}</field>
-            <field name="domain">[]</field>
+            <field name="domain">[('database_id.mode', '=', 'opcua')]</field>
         </record>
 
         <!--res.partner-->
