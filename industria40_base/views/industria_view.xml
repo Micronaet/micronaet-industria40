@@ -492,7 +492,7 @@
                     <field name="program_id" domain="[('source_id', '=', source_id)]" required="1"/>
                     <field name="production_id" />
                     <field name="state" />
-                    <button name="send_opcua_job" type="object" string="Invia lavoro"/>
+                    <button name="send_opcua_job" type="object" string="Invia lavoro" attrs="{'invisible': [('state', '!=', 'DRAFT')]}"/>
                 </tree>
             </field>
         </record>
@@ -577,7 +577,7 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="view_id" ref="view_industria_job_opcua_tree"/>
             <field name="context">{'form_view_ref': 'industria40_base.view_industria_job_opcua_form', 'default_state': 'DRAFT'}</field>
-            <field name="domain">[('state', '=', 'DRAFT')]</field>
+            <field name="domain">[]</field>
         </record>
 
         <!--res.partner-->
