@@ -828,7 +828,8 @@ class IndustriaRobot(orm.Model):
             'TempoCambioColore', 'TempoFermo', 'TempoLavoro',
             'Live',
         ]
-        source = self.browse(cr, uid, ids, context=context)[0]
+        robot_id = self.id
+        source = self.browse(cr, uid, robot_id, context=context)
         if source.database_id.mode != 'opcua':
             raise osv.except_osv(
                 _('Import non permesso'),
@@ -837,7 +838,6 @@ class IndustriaRobot(orm.Model):
 
         mask = str(source.opcua_mask)
         robot = database_pool.get_robot(source.database_id)
-        robot_id = self.id
 
         for ref in check_range:
             print('\nCommessa %s' % ref)
