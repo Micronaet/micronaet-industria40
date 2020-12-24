@@ -221,7 +221,6 @@ class IndustriaDatabase(orm.Model):
 
         # Loop for reset parameter:
         _logger.info('Clean program in robot...')
-        pdb.set_trace()
         for update_value, fields in cleaning_parameter:
             for field in fields:
                 try:
