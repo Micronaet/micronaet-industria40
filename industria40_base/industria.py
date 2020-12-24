@@ -59,7 +59,7 @@ class IndustriaProduction(orm.Model):
         context_forced = context.copy()
         context_forced['reload_only_ref'] = job.ref
         return source_pool.button_load_production_from_robot(
-            self, cr, uid, ids, context=context_forced)
+            cr, uid, ids, context=context_forced)
 
     _columns = {
         'ref': fields.integer('Rif.'),
