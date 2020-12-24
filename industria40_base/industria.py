@@ -278,7 +278,7 @@ class IndustriaDatabase(orm.Model):
             print(comment, data)
         return data
 
-    def set_data_value(self, robot, node_description, value):
+    def set_data_value(self, robot, node_description, value, verbose=True):
         """ Save node data
         """
         from opcua import ua
@@ -293,6 +293,11 @@ class IndustriaDatabase(orm.Model):
                     value,
                     node.get_data_type_as_variant_type()
                 )))
+            if verbose:
+                _logger.info('Update %s with %s' % (
+                    node_description, value,
+                ))
+
         except:
             _logger.error('Write parameter %s problem: %s' % (
                 node_description, value))
