@@ -1188,6 +1188,7 @@ class IndustriaJob(orm.Model):
             return str(res)
 
         database_pool = self.pool.get('industria.database')
+        production_pool = self.pool.get('industria.production')
 
         # TODO send to robot:
         job = self.browse(cr, uid, ids, context=context)[0]
@@ -1201,7 +1202,19 @@ class IndustriaJob(orm.Model):
 
         # Get free program:
         # TODO
-        opcua_ref = 1
+        production_ids = production_pool.search(cr, uid, [
+            ('ref', '>', 0),  # XXX exclude 0
+        ], context=context)
+        opcua_ref = 0
+        for production in production_pool.browse(
+                cr, uid, production_ids, context=context):
+            if not production.name:
+                opcua_ref = production.ref
+        if not opcua_ref:
+            raise osv.except_osv(
+                _('Errore commessa'),
+                _('Impossibile creare commesse, il numero massimo è stato '
+                  'raggiunto, chiuderne qualcuna e riprovare'))
 
         # Program parameter:
         for parameter in program.parameter_ids:
