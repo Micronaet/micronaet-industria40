@@ -198,8 +198,8 @@ class IndustriaDatabase(orm.Model):
         robot = database_pool.get_robot(database)
         mask = source.opcua_mask
 
-        cleaning_parameter = {
-            0: [
+        cleaning_parameter = [
+            (0, [
                 'FineAnno', 'FineGiorno', 'FineMese',
                 'FineMinuto', 'FineOra',
 
@@ -209,23 +209,19 @@ class IndustriaDatabase(orm.Model):
                 'TempoCambioColore', 'TempoFermo', 'TempoLavoro',
 
                 'Temperatura',
-            ],
-            0.0: [
+            ]),
+            (0.0, [
                 # TODO 'Velocità'
-            ],
-            False: [
-                'Spunta_Completata', 'Spunta_In_Corso',
-                # 'Live',
-            ],
-            '': [
-                'Commessa', 'Colore'],
-        }
+            ]),
+            (False, ['Spunta_Completata', 'Spunta_In_Corso', 'Live']),
+            ('', ['Commessa', 'Colore']),
+        ]
 
         # Loop for reset parameter:
         _logger.info('Clean program in robot...')
         pdb.set_trace()
-        for update_value in cleaning_parameter:
-            for field in cleaning_parameter[update_value]:
+        for update_value, fields in cleaning_parameter:
+            for field in fields:
                 try:
                     database_pool.set_data_value(
                         robot, mask % (field, opcua_ref), update_value)
