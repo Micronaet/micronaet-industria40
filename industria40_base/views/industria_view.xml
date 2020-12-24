@@ -6,7 +6,7 @@
             <field name="name">industria.production.tree</field>
             <field name="model">industria.production</field>
             <field name="arch" type="xml">
-                <tree string="Commesse" editable="bottom">
+                <tree string="Commesse" editable="bottom" colors="red:name == ''">
                     <field name="ref" />
                     <field name="name" />
                     <field name="temperature" />
