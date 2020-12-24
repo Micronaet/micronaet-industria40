@@ -1324,6 +1324,7 @@ class IndustriaJob(orm.Model):
 
         database_pool = self.pool.get('industria.database')
         production_pool = self.pool.get('industria.production')
+        source_pool = self.pool.get('industria.robot')
 
         # Send to robot:
         job = self.browse(cr, uid, ids, context=context)[0]
@@ -1378,7 +1379,9 @@ class IndustriaJob(orm.Model):
 
         # Reload this ref production (link to this job_id:
         context['force_job_id'] = ids[0]
-        self.button_load_production_from_robot(cr, uid, ids, context=context)
+        source_pool.button_load_production_from_robot(cr, uid, [
+            source.id,
+        ], context=context)
 
         _logger.info('Send data to robot...')
         return self.write(cr, uid, ids, {
