@@ -381,11 +381,21 @@ class IndustriaDatabase(orm.Model):
             # ('program_id.product_id', '!=', False),  # With semi product
         ], context=context)
         daily_job = {}
-        pdb.set_trace()
         for job in job_pool.browse(cr, uid, job_ids, context=context):
+            products = []
+
+            # A. Normal mono production:
             product = job.force_product_id or job.program_id.product_id
-            if not product:
+            if product:
+                products.append((product, job.piece))
+
+            # B. Multi production:
+            for item in job.product_ids:
+                products.append((item.product_id, item.piece)
+
+            if not products:
                 continue  # Not used
+            pdb.set_trace()
 
             database = job.database_id
             origin = '%s [%s]' % (database.name, database.ip)
@@ -395,12 +405,23 @@ class IndustriaDatabase(orm.Model):
             date = '%s 08:00:00' % job.created_at[:10]  # Always at 8 o'clock
             if date not in daily_job[origin]:
                 daily_job[origin][date] = {}
-            if product not in daily_job[origin][date]:
-                # Total, duration, job:
-                daily_job[origin][date][product] = [0, 0, []]
-            daily_job[origin][date][product][0] += job.piece
-            daily_job[origin][date][product][1] += job.job_duration
-            daily_job[origin][date][product][2].append(job.id)
+
+            multi_duration = job.duration + job.stop + job.duration_change
+            duration = multi_duration or job.job_duration
+            linked_job_id = job.id
+            for product, piece in products:
+                if product not in daily_job[origin][date]:
+                    # Total, duration, job:
+                    daily_job[origin][date][product] = [0, 0, []]
+                daily_job[origin][date][product][0] += piece
+                daily_job[origin][date][product][1] += duration
+                if linked_job_id:
+                    daily_job[origin][date][product][2].append(linked_job_id)
+
+                # Multi product mode clean data:
+                duration = 0  # only fist for multi product
+                linked_job_id = False
+
 
         # Generate picking form collected data:
         new_picking_ids = []
