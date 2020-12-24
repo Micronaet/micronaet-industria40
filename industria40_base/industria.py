@@ -202,8 +202,6 @@ class IndustriaDatabase(orm.Model):
             '': [
                 'Commessa', 'Colore'],
             0: [
-                'Temperatura',
-
                 'FineAnno', 'FineGiorno', 'FineMese',
                 'FineMinuto', 'FineOra',
 
@@ -211,6 +209,8 @@ class IndustriaDatabase(orm.Model):
                 'InizioMinuto', 'InizioOra',
 
                 'TempoCambioColore', 'TempoFermo', 'TempoLavoro',
+
+                'Temperatura',
             ],
             0.0: [
                 # TODO 'Velocità'
@@ -255,7 +255,7 @@ class IndustriaDatabase(orm.Model):
 
                 'is_working': False,
                 'is_completed': False,
-                'is_live': False,
+                'is_live': True,
             }, context=context)
             _logger.info('Cleaned program')
         else:
