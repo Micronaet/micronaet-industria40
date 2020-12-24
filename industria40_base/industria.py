@@ -199,8 +199,6 @@ class IndustriaDatabase(orm.Model):
         mask = source.opcua_mask
 
         cleaning_parameter = {
-            '': [
-                'Commessa', 'Colore'],
             0: [
                 'FineAnno', 'FineGiorno', 'FineMese',
                 'FineMinuto', 'FineOra',
@@ -218,14 +216,20 @@ class IndustriaDatabase(orm.Model):
             False: [
                 'Spunta_Completata', 'Spunta_In_Corso', 'Live',
             ],
+            '': [
+                'Commessa', 'Colore'],
         }
 
         # Loop for reset parameter:
         _logger.info('Clean program in robot...')
-        for value in cleaning_parameter:
-            for field in cleaning_parameter[value]:
-                database_pool.set_data_value(
-                    robot, mask % (field, opcua_ref), value)
+        for update_value in cleaning_parameter:
+            for field in cleaning_parameter[update_value]:
+                try:
+                    database_pool.set_data_value(
+                        robot, mask % (field, opcua_ref), update_value)
+                except:
+                    _logger.error('Updating %s field' % field)
+                    continue
 
         # ---------------------------------------------------------------------
         # Reload in ODOO:
