@@ -947,7 +947,6 @@ class IndustriaRobot(orm.Model):
 
         data = {
             'source_id': robot_id,
-            'job_id': force_job_id,
             'ref': ref,
             'name': record.get('Commessa'),
             'color': record.get('Colore'),
@@ -967,6 +966,8 @@ class IndustriaRobot(orm.Model):
             'is_live': database_pool.extract_boolean(
                 record.get('Live')),
         }
+        if force_job_id:
+            data['job_id'] = force_job_id
 
         # Check in ODOOs:
         production_ids = production_pool.search(cr, uid, [
