@@ -141,7 +141,7 @@ class IndustriaDatabase(orm.Model):
     def extract_boolean(self, field_value):
         """ Extract date from OPCUA record
         """
-        return field_value == 'true'
+        return field_value  # == 'true'
 
     def extract_date(self, record, mode='Inizio'):
         """ Extract date from OPCUA record
