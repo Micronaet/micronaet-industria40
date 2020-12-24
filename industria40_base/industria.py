@@ -188,6 +188,7 @@ class IndustriaDatabase(orm.Model):
         """
         pdb.set_trace()
         database_pool = self.pool.get('industria.database')
+        # job_pool = self.pool.get('industria.job')
         production_pool = self.pool.get('industria.production')
 
         # ---------------------------------------------------------------------
@@ -229,8 +230,12 @@ class IndustriaDatabase(orm.Model):
                     robot, mask % (field, opcua_ref), value)
 
         # ---------------------------------------------------------------------
-        # Clean in ODOO:
+        # Reload in ODOO:
         # ---------------------------------------------------------------------
+        # TODO use original button? need job_id!
+        # job_pool.button_load_production_from_robot(
+        #    cr, uid, [], context=context)
+
         production_ids = production_pool.search(cr, uid, [
             ('source_id', '=', source.id),
             ('ref', '=', opcua_ref),
