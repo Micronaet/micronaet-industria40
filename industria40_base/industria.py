@@ -75,6 +75,12 @@ class IndustriaProduction(orm.Model):
         #    # TODO close job
         #    pass
         pdb.set_trace()
+        job = production.job_id
+        if not job:
+            _logger.error('No job linked, clean!')
+            # TODO
+            return False
+
         if production.is_completed:
             pass
             # TODO clean production
