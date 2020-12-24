@@ -49,6 +49,18 @@ class IndustriaProduction(orm.Model):
     _rec_name = 'name'
     _order = 'ref'
 
+    def button_load_production_from_robot(self, cr, uid, ids, context=None):
+        """ Update only this
+        """
+        source_pool = self.pool.get('industria.robot')
+        if context is None:
+            context = {}
+        job = self.browse(cr, uid, ids, context=context)[0]
+        context_forced = context.copy()
+        context_forced['reload_only_ref'] = job.ref
+        return source_pool.button_load_production_from_robot(
+            self, cr, uid, ids, context=context_forced)
+
     _columns = {
         'ref': fields.integer('Rif.'),
         'name': fields.char('Commessa', size=30),
@@ -790,6 +802,14 @@ class IndustriaRobot(orm.Model):
     def button_load_production_from_robot(self, cr, uid, ids, context=None):
         """ Load from robot list of production
         """
+        if context is None:
+            context = {}
+        reload_only_ref = context.get('reload_only_ref')
+        if reload_only_ref:
+            check_range = [reload_only_ref]
+        else:
+            check_range = range(21)
+
         database_pool = self.pool.get('industria.database')
         production_pool = self.pool.get('industria.production')
 
@@ -817,7 +837,7 @@ class IndustriaRobot(orm.Model):
         mask = str(source.opcua_mask)
         robot = database_pool.get_robot(source.database_id)
 
-        for ref in range(21):
+        for ref in check_range:
             print('\nCommessa %s' % ref)
             record = {}
             for variable in variables:
