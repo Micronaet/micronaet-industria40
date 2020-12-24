@@ -70,7 +70,7 @@ class IndustriaProduction(orm.Model):
             cr, uid, source.id, record, context=context)
         if database_pool.extract_boolean(record.get('Spunta_Completata'):
             # TODO close job
-
+            pass
 
             # TODO clean production
         robot.disconnect()
