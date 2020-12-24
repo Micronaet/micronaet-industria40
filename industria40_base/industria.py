@@ -91,6 +91,7 @@ class IndustriaDatabase(orm.Model):
     # -------------------------------------------------------------------------
     # ROBOT Interface:
     # -------------------------------------------------------------------------
+    # Format function:
     # def extract_integer(self, field):
     #    """ Extract date from OPCUA record
     #    """
@@ -131,6 +132,80 @@ class IndustriaDatabase(orm.Model):
                 _('Errore connessione'),
                 _('Dispositivo non disponibile verificare sia acceso e '
                   'connesso'))
+
+    # OCPUA function:
+    def clean_opcua_job(self, cr, uid, source, opcua_ref, context=None):
+        """ Send job to robot
+        """
+        pdb.set_trace()
+        database_pool = self.pool.get('industria.database')
+        production_pool = self.pool.get('industria.production')
+
+        # ---------------------------------------------------------------------
+        # Clean on robot:
+        # ---------------------------------------------------------------------
+        database = source.database_id
+
+        robot = database_pool.get_robot(database)
+        mask = source.opcua_mask
+
+        cleaning_parameter = {
+            '': [
+                'Commessa', 'Colore'],
+            0: [
+                'Temperatura'
+                
+                'FineAnno', 'FineGiorno', 'FineMese',
+                'FineMinuto', 'FineOra',
+
+                'InizioAnno', 'InizioGiorno', 'InizioMese',
+                'InizioMinuto', 'InizioOra',
+
+                'TempoCambioColore', 'TempoFermo', 'TempoLavoro',
+            ],
+            0.0: [
+                'Velocità'],
+            'false': [
+                'Spunta_Completata', 'Spunta_In_Corso', 'Live'],
+        }
+
+        # Loop for reset parameter:
+        _logger.info('Clean program in robot...')
+        for value in cleaning_parameter:
+            for field in cleaning_parameter[value]:
+                database_pool.set_data_value(
+                    robot, mask % (field, opcua_ref), value)
+
+        # ---------------------------------------------------------------------
+        # Clean in ODOO:
+        # ---------------------------------------------------------------------
+        production_ids = production_pool.search(cr, uid, [
+            ('source_id', '=', source.id),
+            ('ref', '=', opcua_ref),
+        ], context=context)
+        if production_ids:
+            production_pool.write(cr, uid, production_ids, {
+                'source_id': False,
+                # 'ref'
+                'name': False,
+                'temperature': False,
+                'speed': False,
+                'color': False,
+                'start': False,
+                'stop': False,
+                'duration': False,
+                'stop_duration': False,
+                'change_duration': False,
+
+                'is_working': False,
+                'is_completed': False,
+                'is_live': False,
+            }, context=context)
+            _logger.info('Cleaned program')
+        else:
+            _logger.error('ODOO production not found!')
+
+        return True
 
     def get_data_value(
             self, robot, node_description, comment='', verbose=True):
@@ -1190,7 +1265,7 @@ class IndustriaJob(orm.Model):
         database_pool = self.pool.get('industria.database')
         production_pool = self.pool.get('industria.production')
 
-        # TODO send to robot:
+        # Send to robot:
         job = self.browse(cr, uid, ids, context=context)[0]
         database = job.database_id
         program = job.program_id
@@ -1198,10 +1273,8 @@ class IndustriaJob(orm.Model):
 
         robot = database_pool.get_robot(database)
         mask = source.opcua_mask
-        # 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
 
         # Get free program:
-        # TODO
         production_ids = production_pool.search(cr, uid, [
             ('ref', '>', 0),  # XXX exclude 0
         ], context=context)
