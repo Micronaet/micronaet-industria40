@@ -214,7 +214,8 @@ class IndustriaDatabase(orm.Model):
                 # TODO 'Velocità'
             ],
             False: [
-                'Spunta_Completata', 'Spunta_In_Corso', 'Live',
+                'Spunta_Completata', 'Spunta_In_Corso',
+                # 'Live',
             ],
             '': [
                 'Commessa', 'Colore'],
