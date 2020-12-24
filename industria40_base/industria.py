@@ -66,8 +66,9 @@ class IndustriaProduction(orm.Model):
         pdb.set_trace()
 
         # Update ODOO:
+        ref = 0  # TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         self.write_record_in_odoo(
-            cr, uid, source.id, record, context=context)
+            cr, uid, source.id, record, ref, context=context)
         if database_pool.extract_boolean(record.get('Spunta_Completata')):
             # TODO close job
             pass
@@ -933,7 +934,8 @@ class IndustriaRobot(orm.Model):
             )
         return record
 
-    def write_record_in_odoo(self, cr, uid, robot_id, record, context=None):
+    def write_record_in_odoo(
+            self, cr, uid, robot_id, record, ref, context=None):
         """ Write record in ODOO
         """
         if context is None:
@@ -942,8 +944,6 @@ class IndustriaRobot(orm.Model):
 
         production_pool = self.pool.get('industria.production')
         database_pool = self.pool.get('industria.database')
-
-        ref = record['ref']
 
         data = {
             'source_id': robot_id,
@@ -1009,7 +1009,7 @@ class IndustriaRobot(orm.Model):
 
             # Write in ODOO:
             self.write_record_in_odoo(
-                cr, uid, robot_id, record, context=context)
+                cr, uid, robot_id, record, ref, context=context)
         try:
             robot.disconnect()
         except:
