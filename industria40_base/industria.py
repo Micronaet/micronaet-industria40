@@ -83,17 +83,21 @@ class IndustriaDatabase(orm.Model):
     #    """
     #    return field == 'true'
 
-    def extract_boolean(self, field):
+    def extract_boolean(self, field_value):
         """ Extract date from OPCUA record
         """
-        return field == 'true'
+        return field_value == 'true'
 
     def extract_date(self, record, mode='Inizio'):
         """ Extract date from OPCUA record
             mode: 'Inizio', 'Fine'
         """
+        year = record['%sAnno' % mode]
+        if not year or year == '0':  # Check all?
+            return False
+
         return '%s-%s-%s %s:%s:00' % (
-            record['%sAnno' % mode],
+            year,
             record['%sMese' % mode],
             record['%sGiorno' % mode],
             record['%sOra' % mode],
@@ -153,7 +157,6 @@ class IndustriaDatabase(orm.Model):
             print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(),))
             return False
         return True
-
 
     def update_medium_program_job(self, cr, uid, ids, context=None):
         """ Update medium
@@ -843,7 +846,6 @@ class IndustriaRobot(orm.Model):
                     record.get('Spunta_Completata')),
                 'is_live': database_pool.extract_boolean(
                     record.get('Live')),
-
             }
             # Parse production:
             production_ids = production_pool.search(cr, uid, [
