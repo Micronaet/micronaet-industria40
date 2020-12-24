@@ -62,6 +62,7 @@ class IndustriaProduction(orm.Model):
             cr, uid, [job.source_id.id], context=context_forced)
 
     _columns = {
+        'source_id': fields.many2one('industria.robot', 'Robot'),
         'ref': fields.integer('Rif.'),
         'name': fields.char('Commessa', size=30),
         'temperature': fields.char('Temperatura', size=5),
@@ -836,6 +837,7 @@ class IndustriaRobot(orm.Model):
 
         mask = str(source.opcua_mask)
         robot = database_pool.get_robot(source.database_id)
+        robot_id = robot.id
 
         for ref in check_range:
             print('\nCommessa %s' % ref)
@@ -848,6 +850,7 @@ class IndustriaRobot(orm.Model):
                 )
 
             data = {
+                'source_id': robot_id,
                 'ref': ref,
                 'name': record.get('Commessa'),
                 'color': record.get('Colore'),
@@ -870,6 +873,7 @@ class IndustriaRobot(orm.Model):
             # Parse production:
             production_ids = production_pool.search(cr, uid, [
                 ('ref', '=', ref),
+                ('source_id', '=', robot_id),
             ], context=context)
             if production_ids:
                 production_pool.write(
