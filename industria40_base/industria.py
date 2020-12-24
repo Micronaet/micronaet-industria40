@@ -237,7 +237,7 @@ class IndustriaDatabase(orm.Model):
         ], context=context)
         if production_ids:
             production_pool.write(cr, uid, production_ids, {
-                'source_id': False,
+                # 'source_id': False,
                 'job_id': False,
                 # 'ref'
                 'name': False,
