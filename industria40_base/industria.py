@@ -381,6 +381,7 @@ class IndustriaDatabase(orm.Model):
             # ('program_id.product_id', '!=', False),  # With semi product
         ], context=context)
         daily_job = {}
+        pdb.set_trace()
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             product = job.force_product_id or job.program_id.product_id
             if not product:
