@@ -54,27 +54,31 @@ class IndustriaProduction(orm.Model):
         """ Check status for this production
         """
         database_pool = self.pool.get('industria.database')
-        job_pool = self.pool.get('industria.database')
+
+        # Update status:
+        self.button_load_production_from_robot(cr, uid, ids, context=context)
 
         production = self.browse(cr, uid, ids, context=context)[0]
+        #source = production.source_id
+        #job = production.job_id
 
-        source = production.source_id
-        robot = database_pool.get_robot(source.database_id)
-        record = self.get_opcua_record(robot, source, production.ref)
-        # 'Spunta_Completata', 'Spunta_In_Corso',
-        # 'TempoCambioColore', 'TempoFermo', 'TempoLavoro', 'Live',
-        pdb.set_trace()
+        #robot = database_pool.get_robot(source.database_id)
+        #record = self.get_opcua_record(robot, source, production.ref)
+        ## 'Spunta_Completata', 'Spunta_In_Corso',
+        ## 'TempoCambioColore', 'TempoFermo', 'TempoLavoro', 'Live',
 
         # Update ODOO:
-        ref = 0  # TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        self.write_record_in_odoo(
-            cr, uid, source.id, record, ref, context=context)
-        if database_pool.extract_boolean(record.get('Spunta_Completata')):
-            # TODO close job
+        #ref = production.ref
+        #self.write_record_in_odoo(
+        #    cr, uid, source.id, record, ref, context=context)
+        #if database_pool.extract_boolean(record.get('Spunta_Completata')):
+        #    # TODO close job
+        #    pass
+        pdb.set_trace()
+        if production.is_completed:
             pass
-
             # TODO clean production
-        robot.disconnect()
+        # robot.disconnect()
         return
 
     def button_load_production_from_robot(self, cr, uid, ids, context=None):
@@ -1297,7 +1301,7 @@ class IndustriaJob(orm.Model):
 
     _name = 'industria.job'
     _description = 'Jobs'
-    _rec_name = 'created_at'
+    # _rec_name = 'created_at'
     _order = 'created_at desc'
 
     def send_opcua_job(self, cr, uid, ids, context=None):
