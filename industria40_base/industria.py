@@ -83,13 +83,13 @@ class IndustriaProduction(orm.Model):
         source_pool = self.pool.get('industria.robot')
         if context is None:
             context = {}
-        job = self.browse(cr, uid, ids, context=context)[0]
+        production = self.browse(cr, uid, ids, context=context)[0]
         context_forced = context.copy()
-        context_forced['reload_only_ref'] = job.ref
-        context_forced['force_job_id'] = job.id
+        context_forced['reload_only_ref'] = production.ref
+        context_forced['force_job_id'] = production.job_id.id
 
         return source_pool.button_load_production_from_robot(
-            cr, uid, [job.source_id.id], context=context_forced)
+            cr, uid, [production.source_id.id], context=context_forced)
 
     _columns = {
         'source_id': fields.many2one('industria.robot', 'Robot'),
