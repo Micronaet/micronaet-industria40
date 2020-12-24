@@ -504,7 +504,7 @@
             <field name="arch" type="xml">
                 <form string="Job">
                     <header>
-                        <button name="send_opcua_job" type="object" string="Invia lavoro"/>
+                        <button name="send_opcua_job" type="object" string="Invia lavoro" attrs="{'invisible': [('state', '!=', 'DRAFT')]}"/>
                         <field name="state" widget="statusbar"/>
                     </header>
 
@@ -518,7 +518,8 @@
                             <field name="force_name" />
                             <field name="color" />
                             <field name="label" />
-                            <field name="production_id" readonly="1"/>
+                            <field name="state" />
+                            <!--<field name="production_id" readonly="1"/>-->
 
                             <separator string="Prodotti:" colspan="4" />
                             <field name="product_ids" colspan="4" nolabel="1" >
@@ -529,6 +530,7 @@
                                     <field name="job_id" />-->
                                 </tree>
                             </field>
+
                         </group>
                     </sheet>
                 </form>
