@@ -9,6 +9,7 @@
                 <tree string="Commesse" editable="bottom" colors="red:name == ''">
                     <field name="ref" readonly="1"/>
                     <field name="name" readonly="1"/>
+                    <field name="source_id" readonly="1"/>
                     <field name="temperature" readonly="1"/>
                     <field name="speed" readonly="1"/>
                     <field name="color" readonly="1"/>
