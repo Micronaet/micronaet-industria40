@@ -26,3 +26,7 @@ access_industria_program_parameter_opcua_all,industria.program.parameter.opcua,m
 access_industria_job_manager,industria.job,model_industria_job,industria40_base.group_industria_manager,1,1,1,1
 access_industria_job_user,industria.job,model_industria_job,industria40_base.group_industria_user,1,0,0,0
 access_industria_job_all,industria.job,model_industria_job,base.group_user,1,1,1,1
+
+access_industria_job_product_manager,industria.job.product,model_industria_job_product,industria40_base.group_industria_manager,1,1,1,1
+access_industria_job_product_user,industria.job.product,model_industria_job_product,industria40_base.group_industria_user,1,0,0,0
+access_industria_job_product_all,industria.job.product,model_industria_job_product,base.group_user,1,1,1,1
