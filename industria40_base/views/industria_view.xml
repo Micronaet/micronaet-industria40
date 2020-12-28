@@ -12,7 +12,7 @@
                     <field name="source_id" readonly="1"/>
                     <field name="job_id" /> <!--readonly="1"-->
                     <field name="temperature" readonly="1"/>
-                    <field name="speed" readonly="1"/>
+                    <field name="speed" /><!--readonly="1"-->
                     <field name="color" readonly="1"/>
                     <field name="start" readonly="1"/>
                     <field name="stop" readonly="1"/>
@@ -512,14 +512,14 @@
                         <group col="4">
                             <field name="created_at" string="Pianificato"/>
                             <field name="database_id" domain="[('mode', '=', 'opcua')]" required="1"/>
-                            
+
                             <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
                             <!--<field name="piece" sum="total_piece" required="1"/>-->
                             <field name="program_id" domain="[('source_id', '=', source_id)]" required="1"/>
-                            
+
                             <field name="force_name" />
                             <field name="color" />
-                            
+
                             <field name="label" />
                             <button name="button_print_job_report" string="Stampa" type="object" colspan="2"/>
                             <field name="state" />
