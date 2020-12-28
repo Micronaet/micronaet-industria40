@@ -35,6 +35,7 @@
         'base',
         'stock',
         'product',
+        'report_aeroo',
         'lavoration_cl_sl',
         'bom_type',  # For BOM relative type filter
         ],
