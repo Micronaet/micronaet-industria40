@@ -1355,6 +1355,19 @@ class IndustriaJob(orm.Model):
     # _rec_name = 'created_at'
     _order = 'created_at desc'
 
+    def button_print_job_report(self, cr, uid, ids, context=None):
+        """ Redirect to report passing parameters
+        """
+        wiz_proxy = self.browse(cr, uid, ids)[0]
+
+        datas = {}
+        report_name = 'mx_multi_report_order_line_report'
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': report_name,
+            'datas': datas,
+        }
+
     def send_opcua_job(self, cr, uid, ids, context=None):
         """ Send job to robot
         """

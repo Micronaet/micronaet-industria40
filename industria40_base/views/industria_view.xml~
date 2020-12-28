@@ -521,7 +521,7 @@
                             <field name="color" />
                             
                             <field name="label" />
-                            <button name="button_print_job_report" string="Stampa" type="object" colspan="2"/>
+                            <button name="button_print_job_report" string="Stampa" type="object" />
                             <field name="state" />
                             <field name="picking_id" />
                             <!--<field name="production_id" readonly="1"/>-->
