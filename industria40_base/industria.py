@@ -82,9 +82,9 @@ class IndustriaProduction(orm.Model):
             return False
 
         job_pool.write(cr, uid, [job.id], {
-            'duration': production.duration,
-            'duration_stop': production.stop_duration,
-            'duration_change': production.change_duration,
+            'duration': production.duration,  # Minute
+            'duration_stop': production.stop_duration,  # Minute
+            'duration_change': production.change_duration / 60.0,  # Second
 
             'created_at': production.start,
             'ended_at': production.stop,
@@ -405,7 +405,7 @@ class IndustriaDatabase(orm.Model):
                 daily_job[origin][date] = {}
 
             multi_duration = \
-                job.duration + job.duration_stop + job.duration_change / 60.0
+                job.duration + job.duration_stop + job.duration_change
             duration = multi_duration or job.job_duration
             linked_job_id = job.id
             for product, piece in products:
@@ -1518,9 +1518,10 @@ class IndustriaJob(orm.Model):
                     ['create_at', 'ended_at'],
                     10,
                 )}),
-        'duration': fields.float('Durata', digits=(10,3)),
-        'duration_stop': fields.float('Durata fermo', digits=(10,3)),
-        'duration_change': fields.float('Durata approntamento', digits=(10,3)),
+        'duration': fields.float('Durata', digits=(10, 3)),
+        'duration_stop': fields.float('Durata fermo', digits=(10, 3)),
+        'duration_change': fields.float(
+            'Durata approntamento', digits=(10, 3)),
         'picking_id': fields.many2one(
             'stock.picking', 'Picking',
             help='When generate a picking for stock movement will be linked '
