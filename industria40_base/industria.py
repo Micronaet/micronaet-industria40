@@ -69,7 +69,6 @@ class IndustriaProduction(orm.Model):
 
         # 2. Load updated production:
         production = self.browse(cr, uid, ids, context=context)[0]
-        pdb.set_trace()
 
         # 3. Clean if job not present
         job = production.job_id
@@ -395,7 +394,6 @@ class IndustriaDatabase(orm.Model):
 
             if not products:
                 continue  # Not used
-            pdb.set_trace()
 
             database = job.database_id
             origin = '%s [%s]' % (database.name, database.ip)
