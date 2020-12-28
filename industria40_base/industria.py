@@ -1361,7 +1361,7 @@ class IndustriaJob(orm.Model):
         wiz_proxy = self.browse(cr, uid, ids)[0]
 
         datas = {}
-        report_name = 'mx_multi_report_order_line_report'
+        report_name = 'job_report_industria'
         return {
             'type': 'ir.actions.report.xml',
             'report_name': report_name,
