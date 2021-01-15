@@ -157,8 +157,16 @@ while True:  # Master loop:
                                 code,
                                 'Codice error non presente nella tabella: %s'
                                 % code)
+                            # Manage unnecessary messages here
+                            if code in warning_error:
+                                relevance = 'BASSA'
+                            else:
+                                relevance = 'ALTA'
+
                             event_text = \
-                                'Robot: %s\nDate: %s\nMessaggio: %s' % (
+                                'Importanza: %s\nRobot: %s\nDate: %s\n' \
+                                'Messaggio: %s' % (
+                                    relevance,
                                     robot_name,
                                     data['date'],
                                     message,
