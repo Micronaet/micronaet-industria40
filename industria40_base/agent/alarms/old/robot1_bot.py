@@ -27,7 +27,6 @@ import pdb
 import time
 import telepot
 import ConfigParser
-import pickle
 
 # -----------------------------------------------------------------------------
 # Read configuration parameter:
@@ -39,18 +38,27 @@ config.read([cfg_file])
 # -----------------------------------------------------------------------------
 # Load error comment:
 # -----------------------------------------------------------------------------
-# Main list:
-error_comment = pickle.load(open('./error_comment.csv', 'r'))
-
-# Exclude list:
 file_err = open('./error_comment.csv', 'r')
-warning_error = []
+error_comment = {}
+header = True
+counter = 0
 for line in file_err:
-    line = line.strip()
-    try:
-        warning_error.append(int(line))
-    except:
-        print('Exclude code not found: %s' % line)
+    counter += 1
+    row = line.strip().split('|')
+    if header:
+        total_column = len(row)
+        header = False
+        continue
+    code = int(row[0])
+    if len(row) == total_column:
+        message = '[%s] Tipo: %s\n' \
+                  'Commento: %s\n' \
+                  'Dettaglio: %s\n' \
+                  'Correzione: %s' % tuple(row[:5])
+    else:
+        print('%s. Line not in correct format (take as is)' % counter)
+        message = line
+    error_comment[code] = message
 
 # -----------------------------------------------------------------------------
 # FTP Access:
