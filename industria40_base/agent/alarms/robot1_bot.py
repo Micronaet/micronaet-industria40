@@ -40,10 +40,10 @@ config.read([cfg_file])
 # Load error comment:
 # -----------------------------------------------------------------------------
 # Main list:
-error_comment = pickle.load(open('./error_comment.csv', 'r'))
+error_comment = pickle.load(open('./error_comment.pickle', 'r'))
 
 # Exclude list:
-file_err = open('./error_comment.csv', 'r')
+file_err = open('./exclude.csv', 'r')
 warning_error = []
 for line in file_err:
     line = line.strip()
