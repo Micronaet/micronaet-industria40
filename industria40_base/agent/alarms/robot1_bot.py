@@ -36,6 +36,16 @@ cfg_file = os.path.expanduser('./robot.cfg')
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
 
+def clean(value):
+    value = value or ''
+    res = ''
+    for c in value:
+        if ord(c) > 127:
+            res += '#'
+        else:
+            res += c
+    return res
+
 # -----------------------------------------------------------------------------
 # Load error comment:
 # -----------------------------------------------------------------------------
@@ -179,7 +189,7 @@ while True:  # Master loop:
                                 time.sleep(15)  # wait 15 seconds
                             else:
                                 error_counter += 1
-
+                            event_text = clean(event_text)
                             bot.sendMessage(telegram_group, event_text)
                             clean_file.append(fullname)
 
