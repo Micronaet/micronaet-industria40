@@ -378,10 +378,10 @@
                 <search string="Jobs" version="7.0">
                     <field name="database_id" />
                     <field name="program_id" />
-                    <field name="source_id" />
+                    <field name="source_id" filter_domain="[('source_id.name','ilike',self)]"/>
                     <field name="production_id" />
 
-                    <field name="partner_id" filter_domain="[('partner_id','=',self)]"/>
+                    <field name="partner_id" filter_domain="[('partner_id.name','ilike',self)]"/>
 
                     <filter name="state_draft" string="Stato Bozza" domain="[('state','=','DRAFT')]"/>
                     <filter name="state_error" string="Stato Errore" domain="[('state','=','ERROR')]"/>
