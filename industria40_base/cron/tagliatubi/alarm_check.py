@@ -138,7 +138,7 @@ while True:  # Master loop:
                     continue
 
                 event_text = \
-                    'Robot: %s\n[%s] Messaggio: %s [%s] %s' % (
+                    'Robot: %s\n[%s] Messaggio: %s \nRif.: %s - %s' % (
                         robot_name,
                         line_part[1] or '',
                         line_part[3] or '',
