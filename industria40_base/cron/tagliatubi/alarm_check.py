@@ -39,9 +39,9 @@ cfg_file = os.path.expanduser('./robot.cfg')
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
 time_db = {
-    'file': 2 * 60,  # file check waiting period
-    'telegram': 15,  # Timeout for telegram limit messages
-    'error': 30,  # Timeout on error check
+    'file': 2 * 60,  # file check waiting period (120)
+    'telegram': 15,  # Timeout for telegram limit messages (15)
+    'error': 5,  # Timeout on error check (30)
 }
 
 # -----------------------------------------------------------------------------
