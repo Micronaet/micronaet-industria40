@@ -41,7 +41,7 @@ config.read([cfg_file])
 time_db = {
     'file': 2 * 60,  # file check waiting period (120)
     'telegram': 15,  # Timeout for telegram limit messages (15)
-    'error': 5,  # Timeout on error check (30)
+    'error': 30,  # Timeout on error check (30)
 }
 
 # -----------------------------------------------------------------------------
@@ -125,7 +125,8 @@ while True:  # Master loop:
                 print('Nessun file di errore: %s' % fullname)
                 continue
             last_total = file_lines[filename]
-            row = error_counter = 0
+            row = 1
+            error_counter = 0
             print('Check alarm')
             for line in open(fullname, 'r'):
                 row += 1
@@ -157,6 +158,7 @@ while True:  # Master loop:
                 bot.sendMessage(telegram_group, event_text)
                 file_lines[filename] = row  # Update row total
 
+            print('Write pickle file: %s' % pickle_file)
             pickle.dump(file_lines, open(pickle_file, 'wb'))
             time.sleep(time_db['error'])  # Master period for check error
 
