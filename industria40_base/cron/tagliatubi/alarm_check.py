@@ -155,7 +155,7 @@ while True:  # Master loop:
                         break
                     except:
                         print(
-                            'Telegram error, wait period\n[%s]' % event_text)
+                            'Telegram error, wait period\n%s' % event_text)
                         time.sleep(time_db['telegram'])  # wait 15 seconds
 
                 file_lines[filename] = row  # Update row total
@@ -163,21 +163,18 @@ while True:  # Master loop:
             print('Write pickle file: %s' % pickle_file)
             pickle.dump(file_lines, open(pickle_file, 'wb'))
             time.sleep(time_db['error'])  # Master period for check error
-
         except:
             print('Error in file access')
             break
-
     try:
         bot.sendMessage(
             telegram_group,
-            '[WARNING]: Disconnesso dal Robot (spento o bloccato il programma '
-            'di controllo?): %s\n%s' % (
+            '[WARNING]: Disconnesso dal Robot '
+            '(spento o bloccato il programma di controllo?): %s\n%s' % (
                 '-' * 40,
                 robot_name,
             ))
     except Exception:
         print(Exception)
         print('Telegram error: Robot shutdown?')
-
 pickle.dump(file_lines, load(open(pickle_file, 'wb')))
