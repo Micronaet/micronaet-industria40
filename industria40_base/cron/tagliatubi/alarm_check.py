@@ -119,16 +119,18 @@ while True:  # Master loop:
         try:
             filename = datetime.now().strftime('Alarms_%y_%m_%d.txt')
             if filename not in file_lines:
-                file_lines[filename] = 1  # jump header
+                file_lines[filename] = 0
             fullname = os.path.join(path_robot, filename)
             if not os.path.isfile(fullname):
                 print('Nessun file di errore: %s' % fullname)
                 continue
             last_total = file_lines[filename]
-            row = 1
-            error_counter = 0
+            row = error_counter = 0
             print('Check alarm')
             for line in open(fullname, 'r'):
+                if not row:  # jump header
+                    row += 1
+                    continue
                 row += 1
                 if row <= last_total:
                     continue
