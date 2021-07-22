@@ -38,6 +38,11 @@ pickle_file = os.path.expanduser('./error.status.pickle')
 cfg_file = os.path.expanduser('./robot.cfg')
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
+time_db = {
+    'file': 2 * 60,  # file check waiting period
+    'telegram': 15,  # Timeout for telegram limit messages
+    'error': 30,  # Timeout on error check
+}
 
 # -----------------------------------------------------------------------------
 # Utility:
@@ -94,7 +99,7 @@ while True:  # Master loop:
     # -------------------------------------------------------------------------
     while not os.path.isfile(file_check):
         if not os.path.isfile(file_check):
-            time.sleep(2 * 60)
+            time.sleep(time_db['file'])
 
     try:
         bot.sendMessage(
@@ -114,7 +119,7 @@ while True:  # Master loop:
         try:
             filename = datetime.now().strftime('Alarms_%y_%m_%d.txt')
             if filename not in file_lines:
-                file_lines[filename] = 0
+                file_lines[filename] = 1  # jump header
             fullname = os.path.join(path_robot, filename)
             if not os.path.isfile(fullname):
                 print('Nessun file di errore: %s' % fullname)
@@ -124,26 +129,35 @@ while True:  # Master loop:
             print('Check alarm')
             for line in open(fullname, 'r'):
                 row += 1
-                if row > last_total:
+                if row <= last_total:
+                    continue
+                line_part = line.split(';')
+                if len(line_part) != 5:
+                    print('Riga non conforme: %s' % line)
+                    file_lines[filename] = row  # Update row total
                     continue
 
                 event_text = \
-                    'Robot: %s\nMessaggio: %s' % (
+                    'Robot: %s\n[%s] Messaggio: %s [%s] %s' % (
+                        line_part[1] or '',
                         robot_name,
-                        line,
+                        line_part[3] or '',
+                        line_part[2] or '',
+                        line_part[4] or '',
                         )
 
                 # Telegram message limit prevent:
                 if error_counter > telegram_limit:
                     error_counter = 0
                     print('Telegram wait period...')
-                    time.sleep(15)  # wait 15 seconds
+                    time.sleep(time_db['telegram'])  # wait 15 seconds
                 else:
                     error_counter += 1
                 event_text = clean(event_text)
                 bot.sendMessage(telegram_group, event_text)
                 file_lines[filename] = row  # Update row total
-                time.sleep(30)  # Master period for check error
+
+            time.sleep(time_db['error'])  # Master period for check error
         except:
             print('Error in file access')
             break
