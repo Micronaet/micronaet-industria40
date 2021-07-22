@@ -159,6 +159,7 @@ while True:  # Master loop:
 
             pickle.dump(file_lines, open(pickle_file, 'wb'))
             time.sleep(time_db['error'])  # Master period for check error
+
         except:
             print('Error in file access')
             break
@@ -172,7 +173,7 @@ while True:  # Master loop:
                 robot_name,
             ))
     except Exception:
-        print Exception
+        print(Exception)
         print('Telegram error: Robot shutdown?')
 
 pickle.dump(file_lines, load(open(pickle_file, 'wb')))
