@@ -124,8 +124,9 @@ while True:  # Master loop:
             print('Check alarm')
             for line in open(fullname, 'r'):
                 row += 1
-                if line > last_total:
+                if row > last_total:
                     continue
+
                 event_text = \
                     'Robot: %s\nMessaggio: %s' % (
                         robot_name,
@@ -141,7 +142,7 @@ while True:  # Master loop:
                     error_counter += 1
                 event_text = clean(event_text)
                 bot.sendMessage(telegram_group, event_text)
-
+                file_lines[filename] = row  # Update row total
                 time.sleep(30)  # Master period for check error
         except:
             print('Error in file access')
