@@ -132,15 +132,15 @@ while True:  # Master loop:
                 if row <= last_total:
                     continue
                 line_part = line.split(';')
-                if len(line_part) != 5:
+                if len(line_part) != 6:
                     print('Riga non conforme: %s' % line)
                     file_lines[filename] = row  # Update row total
                     continue
 
                 event_text = \
                     'Robot: %s\n[%s] Messaggio: %s [%s] %s' % (
-                        line_part[1] or '',
                         robot_name,
+                        line_part[1] or '',
                         line_part[3] or '',
                         line_part[2] or '',
                         line_part[4] or '',
@@ -157,6 +157,7 @@ while True:  # Master loop:
                 bot.sendMessage(telegram_group, event_text)
                 file_lines[filename] = row  # Update row total
 
+            pickle.dump(file_lines, open(pickle_file, 'wb'))
             time.sleep(time_db['error'])  # Master period for check error
         except:
             print('Error in file access')
