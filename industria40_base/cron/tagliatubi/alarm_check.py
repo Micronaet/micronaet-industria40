@@ -33,7 +33,6 @@ from datetime import datetime
 # -----------------------------------------------------------------------------
 # Read configuration parameter:
 # -----------------------------------------------------------------------------
-import pdb; pdb.set_trace()
 pickle_file = os.path.expanduser('./error.status.pickle')
 cfg_file = os.path.expanduser('./robot.cfg')
 config = ConfigParser.ConfigParser()
@@ -125,7 +124,7 @@ while True:  # Master loop:
                 print('Nessun file di errore: %s' % fullname)
                 continue
             last_total = file_lines[filename]
-            row = error_counter = 0
+            row = 0
             print('Check alarm')
             for line in open(fullname, 'r'):
                 if not row:  # jump header
@@ -149,15 +148,16 @@ while True:  # Master loop:
                         line_part[4] or '',
                         )
 
-                # Telegram message limit prevent:
-                if error_counter > telegram_limit:
-                    error_counter = 0
-                    print('Telegram wait period...')
-                    time.sleep(time_db['telegram'])  # wait 15 seconds
-                else:
-                    error_counter += 1
                 event_text = clean(event_text)
-                bot.sendMessage(telegram_group, event_text)
+                while True:
+                    try:
+                        bot.sendMessage(telegram_group, event_text)
+                        break
+                    except:
+                        print(
+                            'Telegram error, wait period\n[%s]' % event_text)
+                        time.sleep(time_db['telegram'])  # wait 15 seconds
+
                 file_lines[filename] = row  # Update row total
 
             print('Write pickle file: %s' % pickle_file)
