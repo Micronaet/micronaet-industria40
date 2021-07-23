@@ -29,7 +29,7 @@ import telepot
 import ConfigParser
 import pickle
 from datetime import datetime
-import io
+import cgi
 
 # -----------------------------------------------------------------------------
 # Read configuration parameter:
@@ -134,7 +134,7 @@ while True:  # Master loop:
             pdb.set_trace()
             for line in log_file:
                 row += 1
-                print line
+                line = cgi.escape(line)
                 if row <= last_total:
                     continue
                 if '[AlarmMsg]' not in line:
