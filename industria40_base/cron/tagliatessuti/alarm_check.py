@@ -133,8 +133,8 @@ while True:  # Master loop:
             # log_file = io.open(fullname, mode='r')  # , encoding='utf-8')
             pdb.set_trace()
             for line in log_file:
-                line = line.encode('ascii', errors='ignore')
                 row += 1
+                print line
                 if row <= last_total:
                     continue
                 if '[AlarmMsg]' not in line:
