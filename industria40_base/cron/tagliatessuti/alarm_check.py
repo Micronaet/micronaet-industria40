@@ -129,8 +129,11 @@ while True:  # Master loop:
             row = 0
             print('Check alarm')
             last_error = False
-            log_file = io.open(fullname, mode='r')  # , encoding='utf-8')
-            for line in log_file:   # open(fullname, 'r'):
+            log_file = open(fullname, 'r')
+            # log_file = io.open(fullname, mode='r')  # , encoding='utf-8')
+            pdb.set_trace()
+            for line in log_file:
+                line = line.encode('ascii', errors='ignore')
                 row += 1
                 if row <= last_total:
                     continue
