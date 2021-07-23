@@ -143,7 +143,7 @@ while True:  # Master loop:
 
                 date = line_detail[0]
                 line_error = \
-                    ' '.join(line_detail[1:]) + ' '.join(line_part[:1])
+                    ' '.join(line_detail[1:]) + ' '.join(line_part[1:])
 
                 if line_error == last_error:  # Yet raised
                     continue
