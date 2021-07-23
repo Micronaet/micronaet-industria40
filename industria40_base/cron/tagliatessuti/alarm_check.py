@@ -132,14 +132,13 @@ while True:  # Master loop:
             last_error = False
             # log_file = open(fullname, 'r')
             log_file = io.open(fullname, mode='r', encoding='utf-16')
-            pdb.set_trace()
             for line in log_file:
                 row += 1
                 if row <= last_total:
                     continue
                 if '[AlarmMsg]' not in line:
                     continue
-                print(line)
+                pdb.set_trace()
                 line_part = line.split(':')[-1].split(';')
                 if len(line_part) != 4:
                     print('Riga non conforme: %s' % line)
