@@ -122,6 +122,7 @@ while True:  # Master loop:
             fullname = os.path.join(path_robot, filename)
             if not os.path.isfile(fullname):
                 print('Nessun file di errore: %s' % fullname)
+                time.sleep(time_db['error'])  # Master period for check error
                 continue
             last_total = file_lines[filename]
             row = 0
