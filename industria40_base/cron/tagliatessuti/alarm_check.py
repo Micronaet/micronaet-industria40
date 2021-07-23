@@ -130,7 +130,6 @@ while True:  # Master loop:
             row = 0
             print('Check alarm')
             last_error = False
-            # log_file = open(fullname, 'r')
             log_file = io.open(fullname, mode='r', encoding='utf-16')
             for line in log_file:
                 row += 1
@@ -138,25 +137,25 @@ while True:  # Master loop:
                     continue
                 if '[AlarmMsg]' not in line:
                     continue
+                pdb.set_trace()
                 line_part = line.split(':')[-1].split(';')
-                if len(line_part) != 4:
-                    print('Riga non conforme: %s' % line)
-                    file_lines[filename] = row  # Update row total
-                    continue
+                line_detail = line_part[0].split('-')
 
-                if line_part[1:] == last_error:  # Yet raised
+                date = line_detail[0]
+                line_error = \
+                    ' '.join(line_detail[1:]) + ' '.join(line_part[:1])
+
+                if line_error == last_error:  # Yet raised
                     continue
                 else:  # Not raised
                     # todo raise error out?
-                    last_error = line_part[1:]
+                    last_error = line_error
 
                 event_text = \
-                    'Robot: %s\n[%s] Messaggio: %s \nDettaglio: %s - %s' % (
+                    'Robot: %s\n[%s] Dettaglio: %s' % (
                         robot_name,
-                        line_part[0] or '',
-                        line_part[1] or '',
-                        line_part[2] or '',
-                        line_part[3] or '',
+                        date,
+                        line_error,
                         )
 
                 event_text = clean(event_text)
