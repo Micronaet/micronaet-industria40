@@ -129,8 +129,8 @@ while True:  # Master loop:
             row = 0
             print('Check alarm')
             last_error = False
-            log_file = io.open("test", mode='r', encoding='utf-8')
-            for line in open(fullname, 'r'):
+            log_file = io.open(filename, mode='r', encoding='utf-8')
+            for line in log_file:   # open(fullname, 'r'):
                 row += 1
                 if row <= last_total:
                     continue
