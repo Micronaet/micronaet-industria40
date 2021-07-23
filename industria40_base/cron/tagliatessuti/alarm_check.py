@@ -29,6 +29,7 @@ import telepot
 import ConfigParser
 import pickle
 from datetime import datetime
+import io
 
 # -----------------------------------------------------------------------------
 # Read configuration parameter:
@@ -128,6 +129,7 @@ while True:  # Master loop:
             row = 0
             print('Check alarm')
             last_error = False
+            log_file = io.open("test", mode='r', encoding='utf-8')
             for line in open(fullname, 'r'):
                 row += 1
                 if row <= last_total:
