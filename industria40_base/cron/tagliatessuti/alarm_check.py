@@ -135,11 +135,11 @@ while True:  # Master loop:
             pdb.set_trace()
             for line in log_file:
                 row += 1
-                # line = cgi.escape(line)
                 if row <= last_total:
                     continue
                 if '[AlarmMsg]' not in line:
                     continue
+                print(line)
                 line_part = line.split(':')[-1].line.split(';')
                 if len(line_part) != 4:
                     print('Riga non conforme: %s' % line)
