@@ -129,7 +129,7 @@ while True:  # Master loop:
             row = 0
             print('Check alarm')
             last_error = False
-            log_file = open(fullname, 'rb')
+            log_file = open(fullname, 'r')
             # log_file = io.open(fullname, mode='r')  # , encoding='utf-8')
             pdb.set_trace()
             for line in log_file:
