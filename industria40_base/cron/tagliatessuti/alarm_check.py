@@ -137,7 +137,6 @@ while True:  # Master loop:
                     continue
                 if '[AlarmMsg]' not in line:
                     continue
-                pdb.set_trace()
                 line_part = line.split(':')[-1].split(';')
                 line_detail = line_part[0].split('-')
 
