@@ -141,9 +141,9 @@ while True:  # Master loop:
                 line_part = line.split(':')[-1].split(';')
                 line_detail = line_part[0].split('-')
 
-                date = line_detail[0]
+                date = line_detail[0].strip()
                 line_error = \
-                    ' '.join(line_detail[1:]) + ' '.join(line_part[1:])
+                    ' '.join(line_detail[1:]) + ' ' + ' '.join(line_part[1:])
 
                 if line_error == last_error:  # Yet raised
                     continue
