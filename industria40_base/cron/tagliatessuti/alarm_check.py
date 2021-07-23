@@ -116,6 +116,7 @@ while True:  # Master loop:
     # -------------------------------------------------------------------------
     # Check alarm loop:
     # -------------------------------------------------------------------------
+    last_error = False
     while True:
         try:
             filename = datetime.now().strftime('%Y%m%d_err.log')
@@ -129,7 +130,6 @@ while True:  # Master loop:
             last_total = file_lines[filename]
             row = 0
             print('Check alarm')
-            last_error = False
             log_file = io.open(fullname, mode='r', encoding='utf-16')
             for line in log_file:
                 row += 1
