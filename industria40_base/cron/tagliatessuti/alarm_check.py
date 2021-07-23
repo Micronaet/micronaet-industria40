@@ -145,11 +145,11 @@ while True:  # Master loop:
                     file_lines[filename] = row  # Update row total
                     continue
 
-                if line_part == last_error:  # Yet raised
+                if line_part[1:] == last_error:  # Yet raised
                     continue
                 else:  # Not raised
                     # todo raise error out?
-                    last_error = line_part
+                    last_error = line_part[1:]
 
                 event_text = \
                     'Robot: %s\n[%s] Messaggio: %s \nDettaglio: %s - %s' % (
