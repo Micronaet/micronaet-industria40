@@ -39,8 +39,8 @@ config = ConfigParser.ConfigParser()
 config.read([cfg_file])
 time_db = {
     'file': 2 * 60,  # file check waiting period (120)
-    'telegram': 60,  # Timeout for telegram limit messages (15)
-    'error': 30,  # Timeout on error check (30)
+    'telegram': 50,  # Timeout for telegram limit messages (15)
+    'error': 15,  # Timeout on error check (30)
 }
 
 # -----------------------------------------------------------------------------
