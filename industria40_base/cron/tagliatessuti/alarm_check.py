@@ -30,6 +30,7 @@ import ConfigParser
 import pickle
 from datetime import datetime
 import cgi
+import io
 
 # -----------------------------------------------------------------------------
 # Read configuration parameter:
@@ -129,12 +130,12 @@ while True:  # Master loop:
             row = 0
             print('Check alarm')
             last_error = False
-            log_file = open(fullname, 'r')
-            # log_file = io.open(fullname, mode='r')  # , encoding='utf-8')
+            # log_file = open(fullname, 'r')
+            log_file = io.open(fullname, mode='r', encoding='utf-16')
             pdb.set_trace()
             for line in log_file:
                 row += 1
-                line = cgi.escape(line)
+                # line = cgi.escape(line)
                 if row <= last_total:
                     continue
                 if '[AlarmMsg]' not in line:
