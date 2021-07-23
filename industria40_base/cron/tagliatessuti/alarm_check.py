@@ -140,7 +140,7 @@ while True:  # Master loop:
                 if '[AlarmMsg]' not in line:
                     continue
                 print(line)
-                line_part = line.split(':')[-1].line.split(';')
+                line_part = line.split(':')[-1].split(';')
                 if len(line_part) != 4:
                     print('Riga non conforme: %s' % line)
                     file_lines[filename] = row  # Update row total
