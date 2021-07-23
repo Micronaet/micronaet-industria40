@@ -138,7 +138,6 @@ while True:  # Master loop:
                     continue
                 if '[AlarmMsg]' not in line:
                     continue
-                pdb.set_trace()
                 line_part = line.split(':')[-1].split(';')
                 if len(line_part) != 4:
                     print('Riga non conforme: %s' % line)
