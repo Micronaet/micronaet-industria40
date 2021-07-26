@@ -40,6 +40,15 @@ from openerp.tools import (
 _logger = logging.getLogger(__name__)
 
 
+class IndustriaProgram(orm.Model):
+    """ Model name: Industria program
+    """
+
+    _inherit = 'industria.program'
+
+
+
+
 class IndustriaJob(orm.Model):
     """ Model name: Industria job
     """
@@ -210,7 +219,7 @@ class IndustriaRobotFile(orm.Model):
             program_id = job.program_id.id
 
             # Total till now for last job:
-            job_piece1_start = job.piece1
+            job_piece1_start = job.piece1_start
             job_bar_counter = job.bar
 
         else:
@@ -272,6 +281,7 @@ class IndustriaRobotFile(orm.Model):
                 job_piece1_start = piece1
                 job_id = job_pool.create(cr, uid, {
                     'created_at': record_date,
+                    'piece1_start': job_piece1_start,
                     # 'updated_at': 'ended_at':
                     # 'duration':
                     # 'duration_stop':

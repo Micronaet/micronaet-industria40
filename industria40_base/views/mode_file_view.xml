@@ -12,7 +12,8 @@
                     <field name="program_id" filter_domain="[('program_id','=',self)]"/>
                     <field name="file_id" filter_domain="[('file_id','=',self)]"/>
                     <field name="job_id" filter_domain="[('job_id','=',self)]"/>
-                    <filter name="state_draft" string="Draft state" domain="[('state','=','draft')]"/>
+                    <filter name="state_change" string="Cambio barra" domain="[('state','=','CAMBIO BARRA')]"/>
+                    <filter name="state_stop" string="Stop" domain="[('state','=','STOP')]"/>
                     <group expand="0" string="Group By...">
                         <filter name="group_timestamp" string="Timestamp" context="{'group_by': 'timestamp'}"/>
                         <filter name="group_program_id" string="Programma" context="{'group_by': 'program_id'}"/>

@@ -1240,6 +1240,8 @@ class IndustriaProgram(orm.Model):
             'industria.database', 'Database'),
         'product_id': fields.many2one(
             'product.product', 'Semi product'),
+        'in_product_id': fields.many2one(
+            'product.product', 'Matariale input'),
         'partner_id': fields.related(
             'source_id', 'partner_id',
             type='many2one', relation='res.partner',
@@ -1544,6 +1546,9 @@ class IndustriaJob(orm.Model):
         'production_id': fields.many2one(
             'industria.production', 'OPCUA production'),
         'piece': fields.integer('Total piece x job'),
+        'piece1_start': fields.integer(
+            'Fondo scala pezzi',
+            help='Totale pezzi fondo scala del primo record'),
         'bar': fields.integer('Totale barre', help='Usate per taglia tubi'),
         'product_ids': fields.one2many(
             'industria.job.product', 'job_id', 'Prodotti'),

@@ -291,11 +291,14 @@
                             <field name="database_id" />
                             <field name="source_id" domain="[('database_id', '=', database_id)]"/>
 
-                            <field name="partner_id" readonly="1"/>
-                            <field name="product_id" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>/><!--attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
-
                             <field name="medium" widget="float_time" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
                             <field name="over_alarm" widget="float_time" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
+
+                            <field name="partner_id" readonly="1"/>
+                            <field name="mode" /> <!--invisible="1" -->
+
+                            <field name="product_id" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>/><!--attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
+                            <field name="in_product_id" attrs="{'invisible': [('mode', '!=', 'file')]}"/>/><!--attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
 
                             <notebook colspan="4">
                                 <page name="parameter_page" string="Parametri" attrs="{'invisible': [('mode', 'not in', ('opcua', ))]}">
@@ -317,7 +320,6 @@
                                 </page>
                             </notebook>
 
-                            <field name="mode" invisible="1" />
                         </group>
                     </sheet>
                 </form>
