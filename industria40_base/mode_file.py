@@ -162,11 +162,10 @@ class IndustriaRobotFile(orm.Model):
         current_row = file.row
         if current_row:  # Update last job found:
             last_job_id = job_id = file.last_job_id
-            last_program_ref = file.last_program_ref
             job = job_pool.browse(cr, uid, last_job_id, context=context)
             program_id = job.program_id.id
         else:
-            last_job_id = last_program_ref = False
+            last_job_id = False
 
         counter = 0
         for line in open(fullname, 'r'):
@@ -178,15 +177,22 @@ class IndustriaRobotFile(orm.Model):
             if not line:
                 continue  # Jump empty line
             row = line.split(separator)
-            if counter <= current_row:
-                last_program = row[3]
-                continue  # yet read
-            state = row[0]
+
+            # Read neede fields:
+            last_program = row[3]
             date = row[1]
             time = row[2]
-            program_ref = row[3]
             record_date = '%s-%s-%s %s' % (
                     date[-4:], date[3:5], date[:2], time)
+
+            if counter <= current_row:
+                last_record_date = record_date  # Save last record date
+                last_program_ref = file.last_program_ref
+                continue  # yet read
+
+            # Read remain fields:
+            state = row[0]
+            program_ref = row[3]
             # active1 active2 not used
 
             # Calculated:
@@ -215,8 +221,7 @@ class IndustriaRobotFile(orm.Model):
                 # Get new job:
                 job_id = job_pool.create(cr, uid, {
                     'created_at': record_date,
-                    # 'updated_at':
-                    # 'ended_at':
+                    # 'updated_at': 'ended_at':
                     # 'duration':
                     # 'duration_stop':
                     # 'duration_change':
@@ -239,18 +244,16 @@ class IndustriaRobotFile(orm.Model):
                     # 'dismiss'
                     # 'unused'
                     # 'partner_id':
-
                 }, context=context)
                 if last_job_id:
                     # Mark as completed:
                     job_pool.write(cr, uid, [last_job_id], {
                         'state': 'COMPLETED',
-                        'updated_at': record_date,
-                        'ended_at': record_date,
+                        'updated_at': last_record_date,
+                        'ended_at': last_record_date,
 
                         # todo Update statistic data?
                         # 'out_statistic': 'dismiss' 'unused' 'job_duration'
-
                         # todo Update production
                         # 'picking_id': 'production_id': 'piece' 'product_ids'
 
@@ -281,12 +284,11 @@ class IndustriaRobotFile(orm.Model):
             # Mark as completed:
             job_pool.write(cr, uid, [last_job_id], {
                 'state': 'COMPLETED',
-                'updated_at': record_date,
-                'ended_at': record_date,
+                'updated_at': last_record_date,
+                'ended_at': last_record_date,
 
                 # todo Update statistic data?
                 # 'out_statistic': 'dismiss' 'unused' 'job_duration'
-
                 # todo Update production
                 # 'picking_id': 'production_id': 'piece' 'product_ids'
 
