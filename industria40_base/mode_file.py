@@ -98,7 +98,7 @@ class IndustriaRobot(orm.Model):
                         'fullname': fullname,
                         'robot_id': robot_id,
                         'database_id': database_id,  # todo related!
-                        'timestamp': timestamp,
+                        # 'timestamp': timestamp,  # Not the first time!
                         'row': 0,
                     }, context=context)]
 
