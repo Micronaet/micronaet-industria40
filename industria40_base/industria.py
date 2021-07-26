@@ -955,7 +955,7 @@ class IndustriaDatabase(orm.Model):
         'name': fields.char('Name', size=64, required=True),
         'partner_id': fields.many2one(
             'res.partner', 'Supplier'),
-        'ip': fields.char('IP address', size=15, required=True),
+        'ip': fields.char('IP address', size=15),
         'username': fields.char('Username', size=64),
         'password': fields.char('Password', size=64),
         'database': fields.char('Database', size=64),
@@ -1308,14 +1308,14 @@ class IndustriaProgramFabric(orm.Model):
 
     _name = 'industria.program.fabric'
     _description = 'Programma tessuti'
-    _rec_name = 'product_id'
-    _order = 'product_id'
+    _rec_name = 'fabric_id'
+    # _order = 'fabric_id'
 
     _columns = {
         'program_id': fields.many2one('industria.program', 'Programma'),
         'fabric_id': fields.many2one('product.product', 'Tessuto'),
         'length': fields.related(
-            'program_id.fabric_length',
+            'program_id', 'fabric_length',
             'Lunghezza', type='float',
             digits=(10, 2), readonly=True),
     }
@@ -1328,7 +1328,7 @@ class IndustriaProgramFabricPart(orm.Model):
     _name = 'industria.program.fabric.part'
     _description = 'Programma parti tessuti'
     _rec_name = 'product_id'
-    _order = 'product_id'
+    # _order = 'product_id'
 
     _columns = {
         'fabric_id': fields.many2one('industria.program.fabric', 'Tessuto'),

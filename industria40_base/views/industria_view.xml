@@ -137,7 +137,7 @@
                                 </page>
                                 <page name="setup_page" string="Setup" attrs="{'invisible': [('mode', 'in', ('file', ))]}">
                                     <group col="4" colspan="4">
-                                        <field name="ip" attrs="{'invisible': [('mode', 'in', ('file', ))]}"/>
+                                        <field name="ip" attrs="{'invisible': [('mode', 'not in', ('file', ))], 'invisible': [('mode', 'in', ('file', ))]}"/>
                                         <field name="username" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}"/>
                                         <field name="password" password="True" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}"/>
 
@@ -300,11 +300,11 @@
                             <field name="mode" /> <!--invisible="1" -->
 
                             <!--<field name="in_product_id" attrs="{'invisible': [('mode', '!=', 'file')], 'required': [('mode', '=', 'file')]}" />/>--><!--attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
-                            <field name="product_id" attrs="{'required': [('mode', '=', 'file')], 'invisible': [('mode', 'in', ('opcua', ))]}"/>/><!--attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
+                            <field name="product_id" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>/><!-- 'required': [('mode', '=', 'file')],  attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
 
                             <notebook colspan="4">
                                 <page name="parameter_page" string="Parametri" attrs="{'invisible': [('mode', 'not in', ('opcua', ))]}">
-                                    <group>
+                                        <group colspan="4" col="4">
                                         <separator string="Parametri OPCUA" colspan="4" />
                                         <field name="parameter_ids" colspan="4" nolabel="1">
                                             <tree string="Parametri" editable="bottom">
@@ -314,6 +314,32 @@
                                         </field>
                                     </group>
                                 </page>
+                                <page name="fabric_page" string="Tessuti" attrs="{'invisible': [('mode', '!=', 'file')]}">
+                                    <group colspan="4" col="4">
+                                        <field name="fabric_length" />
+                                        <separator string="Strati:" colspan="4" />
+                                        <field name="fabric_ids" colspan="4" nolabel="1" >
+                                            <tree string="Tessuti utilizzati">
+                                                <field name="fabric_id" />
+                                                <field name="length" />
+                                            </tree>
+                                            <form string="Tessuti utilizzati">
+                                                <group colspan="4" col="4">
+                                                    <field name="fabric_id" />
+                                                    <field name="length" />
+                                                    <separator string="Parti" colspan="4"/>
+                                                    <field name="part_ids" colspan="4" nolabel="1">
+                                                        <tree string="Parti" editable="bottom">
+                                                            <field name="product_id"/>
+                                                            <field name="total"/>
+                                                        </tree>
+                                                    </field>
+                                                </group>
+                                            </form>
+                                        </field>
+                                    </group>
+                                </page>
+
                                 <page name="note_page" string="Note">
                                     <group>
                                         <separator string="Note" colspan="4"/>
@@ -620,7 +646,7 @@
                     </header>
 
                     <sheet>
-                        <group col="4">
+                        <group col="4" colspan="4">
                             <field name="created_at" string="Pianificato"/>
                             <field name="database_id" domain="[('mode', '=', 'opcua')]" required="1"/>
 
@@ -632,27 +658,6 @@
                             <field name="state" />
                             <field name="picking_id" />
                             <!--<field name="production_id" readonly="1"/>-->
-
-                            <separator string="Strati:" colspan="4" />
-                            <field name="fabric_length" />
-                            <field name="fabric_ids" colspan="4" nolabel="1" >
-                                <tree string="Tessuti utilizzati">
-                                    <field name="fabric_id" domain="[]"/> <!--todo filter?-->
-                                    <field name="length" />
-                                </tree>
-                                <form string="Tessuti utilizzati">
-                                    <field name="fabric_id" domain="[]"/> <!--todo filter?-->
-                                    <field name="length" />
-                                    <separator string="Parti" colspan="4"/>
-                                    <field name="fabric_ids" colspan="4" nolabel="1">
-                                        <tree string="Parti" editable="bottom">
-                                            <field name="product_id"/>
-                                            <field name="total"/>
-                                        </tree>
-                                    </field>
-                                </form>
-                            </field>
-                            <!--<field name="source_id" /><field name="job_id" />-->
                         </group>
                     </sheet>
                 </form>

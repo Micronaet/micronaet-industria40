@@ -34,3 +34,6 @@ access_industria_job_product_all,industria.job.product,model_industria_job_produ
 access_industria_robot_file_all,industria.robot.file,model_industria_robot_file,base.group_user,1,1,1,1
 access_industria_pipe_file_stat_all,industria.pipe.file.stat,model_industria_pipe_file_stat,base.group_user,1,1,1,1
 access_industria_fabric_file_stat_all,industria.fabric.file.stat,model_industria_fabric_file_stat,base.group_user,1,1,1,1
+
+access_industria_program_fabric_part_all,industria.program.fabric.part,model_industria_program_fabric_part,base.group_user,1,1,1,1
+access_industria_program_fabric_all,industria.program.fabric,model_industria_program_fabric,base.group_user,1,1,1,1
