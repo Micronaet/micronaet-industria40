@@ -1234,7 +1234,6 @@ class IndustriaProgram(orm.Model):
         'industria_ref': fields.integer('Industria ref key'),
         'timeout': fields.integer('Timeout'),
         'piece': fields.integer('Total piece x job'),
-        'bar': fields.integer('Totale barre', help='Usate per taglia tubi'),
         'source_id': fields.many2one(
             'industria.robot', 'Robot'),
         'database_id': fields.many2one(
@@ -1545,6 +1544,7 @@ class IndustriaJob(orm.Model):
         'production_id': fields.many2one(
             'industria.production', 'OPCUA production'),
         'piece': fields.integer('Total piece x job'),
+        'bar': fields.integer('Totale barre', help='Usate per taglia tubi'),
         'product_ids': fields.one2many(
             'industria.job.product', 'job_id', 'Prodotti'),
     }

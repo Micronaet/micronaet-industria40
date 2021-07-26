@@ -18,7 +18,7 @@
                         <filter name="group_program_id" string="Programma" context="{'group_by': 'program_id'}"/>
                         <filter name="group_file_id" string="File" context="{'group_by': 'file_id'}"/>
                         <filter name="group_job_id" string="Job" context="{'group_by': 'job_id'}"/>
-                        <filter string="Stato" name="state_group" context="{'group_by': 'state'}" />
+                        <filter string="Statp" name="state_group" context="{'group_by': 'state'}" />
                     </group>                
                 </search>
             </field>
