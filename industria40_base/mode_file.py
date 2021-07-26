@@ -265,7 +265,7 @@ class IndustriaRobotFile(orm.Model):
         self.write(cr, uid, ids, {
             'row': row,
             'timestamp': timestamp,
-            'last_program_ref': last_program_ref
+            'last_program_ref': last_program_ref,
             'last_job_id': last_job_id,
         }, context=context)
 
