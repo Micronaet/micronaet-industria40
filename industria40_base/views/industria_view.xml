@@ -114,7 +114,8 @@
                         <button name="import_robot" type="object" string="Import robot" icon="gtk-network" attrs="{'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
                         <button name="import_job" type="object" string="Import jobs" icon="gtk-justify-fill" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
                         <button name="update_medium_program_job" type="object" string="Generate picking" icon="terp-graph" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
-                        <button name="generate_picking_from_job" type="object" string="Generate picking" icon="STOCK_EXECUTE"/>
+                        <button name="generate_picking_from_job" type="object" string="Generate picking di tutti i DB" icon="STOCK_EXECUTE" confirm="Crea i picking per tutti i database presenti, confermi?"/>
+                        <button name="generate_this_picking_from_job" type="object" string="Generate picking questo DB" icon="STOCK_EXECUTE"/>
                     </header>
                     <sheet>
                         <group col="4" colspan="4">
@@ -182,6 +183,7 @@
                     <button name="import_job" type="object" string="Import jobs" icon="gtk-justify-fill" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
                     <button name="update_medium_program_job" type="object" string="Generate picking" icon="terp-graph" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
                     <button name="generate_picking_from_job" type="object" string="Generate picking" icon="STOCK_EXECUTE"/>
+                    <button name="generate_this_picking_from_job" type="object" string="Generate picking questo DB" icon="STOCK_EXECUTE"/>
                 </tree>
             </field>
         </record>
@@ -630,6 +632,16 @@
             <field name="domain">[('database_id.mode', '=', 'opcua')]</field>
         </record>
 
+        <record model="ir.actions.act_window" id="action_stock_picking_industria">
+            <field name="name">Picking industria</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_id" ref="lavoration_cl_sl.view_stock_picking_cl_form"/>
+            <field name="context">{'form_view_ref': 'lavoration_cl_sl.view_stock_picking_cl_form'}</field>
+            <field name="domain">[('job_ids', '!=', [])]</field>
+        </record>
+
         <!--res.partner-->
         <record model="ir.ui.view" id="view_res_partner_industria_form">
             <field name="name">res.partner.form</field>
@@ -694,6 +706,12 @@
                     id="menu_industria_production"
                     action="action_industria_production"
                     sequence="40"
+                    />
+                <menuitem
+                    parent="menu_industria_master_data"
+                    id="menu_industria_picking_industria"
+                    action="action_stock_picking_industria"
+                    sequence="50"
                     />
 
             <menuitem

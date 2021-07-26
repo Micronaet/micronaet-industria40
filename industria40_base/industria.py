@@ -352,9 +352,22 @@ class IndustriaDatabase(orm.Model):
             job_pool.write(cr, uid, [job.id], data, context=context)
         _logger.info('End update medium for program # job: %s' % len(job_ids))
 
+    def generate_this_picking_from_job(self, cr, uid, ids, context=None):
+        """ Generate picking from jobs
+        """
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        ctx['force_database_id'] = ids[0]
+        return self.generate_picking_from_job(cr, uid, ids, context=ctx)
+
     def generate_picking_from_job(self, cr, uid, ids, context=None):
         """ Generate picking from jobs
         """
+        if context is None:
+            context = {}
+        force_database_id = context.get('force_database_id')
+
         model_pool = self.pool.get('ir.model.data')
         picking_pool = self.pool.get('stock.picking')
         move_pool = self.pool.get('stock.move')
@@ -368,7 +381,7 @@ class IndustriaDatabase(orm.Model):
         location_src_id = cl_type.default_location_src_id.id
         location_dest_id = cl_type.default_location_dest_id.id
 
-        job_ids = job_pool.search(cr, uid, [
+        domain = [
             ('picking_id', '=', False),
             ('unused', '=', False),
 
@@ -378,7 +391,11 @@ class IndustriaDatabase(orm.Model):
             ('state', '=', 'COMPLETED'),
 
             # ('program_id.product_id', '!=', False),  # With semi product
-        ], context=context)
+        ]
+        if force_database_id:
+            domain.append(('database_id', '=', force_database_id))
+        pdb.set_trace()
+        job_ids = job_pool.search(cr, uid, domain, context=context)
         daily_job = {}
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             products = []
@@ -389,9 +406,9 @@ class IndustriaDatabase(orm.Model):
                 products.append((product, job.piece))
 
             # A2. Normal mono production (unload):
-            product = job.in_product_id
-            if product:
-                products.append((product, -job.bar))
+            # product = job.in_product_id
+            # if product:
+            #    products.append((product, -job.bar))
 
             # B. Multi production:
             for item in job.product_ids:
@@ -1369,7 +1386,7 @@ class IndustriaJob(orm.Model):
 
     _name = 'industria.job'
     _description = 'Jobs'
-    # _rec_name = 'created_at'
+    _rec_name = 'created_at'
     _order = 'created_at desc'
 
     def button_print_job_report(self, cr, uid, ids, context=None):
