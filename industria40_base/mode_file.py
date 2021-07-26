@@ -138,6 +138,8 @@ class IndustriaRobotFile(orm.Model):
     def file_import_stat_csv(self, cr, uid, ids, context=None):
         """ Import CSV file (pipe)
         """
+        pdb.set_trace()
+
         program_pool = self.pool.get('industria.program')
         job_pool = self.pool.get('industria.job')
 
@@ -281,8 +283,6 @@ class IndustriaRobotFile(orm.Model):
     def load_file(self, cr, uid, ids, context=None):
         """ Load daily file from data folder
         """
-        pdb.set_trace()
-
         file_id = ids[0]
         file = self.browse(cr, uid, file_id, context=context)
         fullname = file.fullname
@@ -295,9 +295,9 @@ class IndustriaRobotFile(orm.Model):
         #    fullname = os.path.join(path, self.get_today_file(
         #        cr, uid, ids, context=context))
 
-        if robot.file_mode == 'csv':
+        if robot.database_id.file_mode == 'csv':
             self.file_import_stat_csv(cr, uid, ids, context=context)
-        elif robot.file_mode == 'xml':
+        elif robot.database_id.file_mode == 'xml':
             self.file_import_stat_xml(cr, uid, ids, context=context)
         return True
 
