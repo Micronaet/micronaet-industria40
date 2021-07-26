@@ -140,6 +140,13 @@ class IndustriaRobotFile(orm.Model):
             return float(value.replace('s', ''))
         def clean_integer(value):
             return int(value)
+        def get_datetime(date, time):
+            gmt_daylight = 2
+            return '%s-%s-%s %s%s' % (
+                date[-4:], date[3:5], date[:2],
+                '%02d' % int(time[:2]) - gmt_daylight,
+                time[2:],
+            )
 
         program_pool = self.pool.get('industria.program')
         job_pool = self.pool.get('industria.job')
@@ -184,8 +191,8 @@ class IndustriaRobotFile(orm.Model):
             last_program = row[3]
             date = row[1]
             time = row[2]
-            record_date = '%s-%s-%s %s' % (
-                    date[-4:], date[3:5], date[:2], time)
+
+            record_date = get_datetime(date, time)
 
             if not last_record_date:
                 last_record_date = record_date
