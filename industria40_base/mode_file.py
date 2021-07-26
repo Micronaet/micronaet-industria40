@@ -81,23 +81,24 @@ class IndustriaRobot(orm.Model):
         """
         file_pool = self.pool.get('industria.robot.file')
         pdb.set_trace()
-        database_id = ids[0]
-        database = self.browse(cr, uid, database_id, context=context)
-        path = os.path.expanduser(database.file_stat_path)
+        robot_id = ids[0]
+        robot = self.browse(cr, uid, robot_id, context=context)
+        database_id = robot.database_id.id
+        path = os.path.expanduser(robot.file_stat_path)
         for root, folders, files in os.walk(path):
             for filename in files:
                 fullname = os.path.join(root, filename)
-
                 file_ids = file_pool.search(cr, uid, [
                     ('name', '=', filename),
-                    ('database_id', '=', database_id),
+                    ('robot_id', '=', robot_id),
                 ], context=context)
                 if not file_ids:
                     timestamp = str(os.stat(fullname).st_mtime)
                     file_ids = [file_pool.create(cr, uid, {
                         'name': filename,
                         'fullname': fullname,
-                        'database_id': database_id,
+                        'robot_id': robot_id,
+                        'database_id': database_id,  # todo related!
                         'timestamp': timestamp,
                         'row': 0,
                     }, context=context)]
@@ -144,6 +145,9 @@ class IndustriaRobotFile(orm.Model):
         separator = ';'
         file_id = ids[0]
         file = self.browse(cr, uid, file_id, context=context)
+        robot_id = file.robot_id.id
+        database_id = file.database_id.id
+
         fullname = file.fullname
         timestamp = str(os.stat(fullname).st_mtime)
         current_row = file.row
@@ -163,6 +167,25 @@ class IndustriaRobotFile(orm.Model):
 
             # Calculated:
             if last_program != program_ref:
+                program_ids = program_pool.search(cr, uid, [
+                    ('source_id', '=', robot_id),
+                    ('name', '=', program_ref),
+                ], context=context)
+                if program_ids:
+                    program_id = program_ids[0]
+                else:
+                    program_id = program_pool.create(cr, uid, {
+                        'code': program_ref,
+                        'name': program_ref,
+                        'source_id': robot_id,
+                        'database_id': database_id,
+                        # 'product_id': False,
+                        # 'partner_id': ,
+                        # 'mode':
+                        # 'note':
+                        # 'medium'
+                        # 'over_alarm'
+                    }, context=context)
                 # todo Change job here
                 pass
 
@@ -211,15 +234,15 @@ class IndustriaRobotFile(orm.Model):
         if file.timestamp == str(os.stat(fullname).st_mtime):
             _logger.warning('File %s has same timestamp, not reloaded')
             return False
-        database = file.database_id
+        robot = file.robot_id
         # if not fullname:
         #    path = database.file_stat_path
         #    fullname = os.path.join(path, self.get_today_file(
         #        cr, uid, ids, context=context))
 
-        if database.file_mode == 'csv':
+        if robot.file_mode == 'csv':
             self.file_import_stat_csv(cr, uid, ids, context=context)
-        elif database.file_mode == 'xml':
+        elif robot.file_mode == 'xml':
             self.file_import_stat_xml(cr, uid, ids, context=context)
         return True
 

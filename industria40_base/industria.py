@@ -1251,6 +1251,7 @@ class IndustriaProgram(orm.Model):
                 ('mssql', 'MS SQL'),
                 ('ftp', 'FTP'),
                 ('opcua', 'OPCUA'),
+                ('file', 'File'),
             ], readonly=True),
         'note': fields.text('Note'),
         'medium': fields.float(
