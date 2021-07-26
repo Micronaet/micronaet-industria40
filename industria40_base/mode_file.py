@@ -151,8 +151,13 @@ class IndustriaRobotFile(orm.Model):
         fullname = file.fullname
         timestamp = str(os.stat(fullname).st_mtime)
         current_row = file.row
+        if current_row:  # Update last job found:
+            last_job_id = file.last_job_id
+            last_program_ref = file.last_program_ref
+        else:
+            last_job_id = last_program_ref = False
+
         row = 0
-        last_line = False
         for line in open(fullname, 'r'):
             row += 1
             line.split(separator)
@@ -166,7 +171,8 @@ class IndustriaRobotFile(orm.Model):
             # active1 active2 not used
 
             # Calculated:
-            if last_program != program_ref:
+            if last_program_ref != program_ref:
+                # Get program_id:
                 program_ids = program_pool.search(cr, uid, [
                     ('source_id', '=', robot_id),
                     ('name', '=', program_ref),
@@ -186,11 +192,57 @@ class IndustriaRobotFile(orm.Model):
                         # 'medium'
                         # 'over_alarm'
                     }, context=context)
-                # todo Change job here
-                pass
 
-            program_id = False  # todo find
-            job_id = False  # todo find
+                # Get new job:
+                job_id = job_pool.create(cr, uid, {
+                    # 'created_at':
+                    # 'updated_at':
+                    # 'ended_at':
+                    # 'duration':
+                    # 'duration_stop':
+                    # 'duration_change':
+
+                    'program_id': program_id,
+                    'database_id': database_id,
+                    'source_id': robot_id,
+                    'force_product_id': fields.many2one(
+                        'product.product', 'Prodotto'),
+                    # todo update previous!
+                    'state':  'RUNNING',
+                    # 'DRAFT' 'ERROR' 'RUNNING' 'COMPLETED'
+                    # 'notes'
+                    # 'job_duration':
+                    # 'picking_id':
+
+                    # 'production_id':
+                    # 'piece'
+                    # 'product_ids'
+
+                    # 'out_statistic':
+                    # 'dismiss'
+                    # 'unused'
+                    # 'partner_id':
+
+                }, context=context)
+                if last_job_id:
+                    # Mark as completed:
+                    job_pool.write(cr, uid, [last_job_id], {
+                        'state': 'COMPLETED',
+                        # todo Update statistic data?
+                        # 'out_statistic':
+                        # 'dismiss'
+                        # 'unused'
+                        # 'job_duration':
+
+                        # todo Update production
+                        # 'picking_id':
+                        # 'production_id':
+                        # 'piece'
+                        # 'product_ids'
+
+                    }, context=context)
+                    last_job_id = job_id
+
             data = {
                 'name': program_ref,
                 'timestamp': '%s-%s-%s %s' % (
@@ -213,6 +265,8 @@ class IndustriaRobotFile(orm.Model):
         self.write(cr, uid, ids, {
             'row': row,
             'timestamp': timestamp,
+            'last_program_ref': last_program_ref
+            'last_job_id': last_job_id,
         }, context=context)
 
         return True
@@ -259,6 +313,14 @@ class IndustriaRobotFile(orm.Model):
             'industria.robot', 'Robot'),
         'database_id': fields.many2one(  # todo related
             'industria.database', 'Database'),
+        # Last reference_
+
+        'last_program_ref': fields.char(
+            'Ultimo rif. programma',
+            help='Per tenere lo storico delle letture parziali')
+        'last_job_id': fields.integer(
+            'Ultimo ID job',
+            help='Per tenere lo storico delle letture parziali')
     }
 
     _defaults = {
