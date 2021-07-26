@@ -301,7 +301,7 @@ class IndustriaRobotFile(orm.Model):
             'last_program_ref': last_program_ref,
             'last_job_id': last_job_id,
         }, context=context)
-        _logger.warning('File %s loaded' % fullname)
+        _logger.info('File %s loaded' % fullname)
         return True
 
     def file_import_stat_xml(self, cr, uid, ids, context=None):
