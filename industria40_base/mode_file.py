@@ -154,7 +154,6 @@ class IndustriaRobotFile(orm.Model):
         fullname = file.fullname
         timestamp = str(os.stat(fullname).st_mtime)
         current_row = file.row
-        pdb.set_trace()
         if current_row:  # Update last job found:
             last_job_id = file.last_job_id
             last_program_ref = file.last_program_ref
@@ -260,8 +259,9 @@ class IndustriaRobotFile(orm.Model):
                 'job_id': job_id,
                 'state': state,
             }
-            pdb.set_trace()
+            print(data)
             file_pool.create(cr, uid, data, context=context)
+            pdb.set_trace()
 
         self.write(cr, uid, ids, {
             'row': row,
