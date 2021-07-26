@@ -11,6 +11,7 @@
                     <field name="name" readonly="1"/>
                     <field name="piece1" readonly="1"/>
                     <field name="total1" readonly="1"/>
+                    <field name="piece1" readonly="1"/>
                     <field name="total2" readonly="1"/>
                     <field name="duration_piece" readonly="1"/>
                     <field name="duration_bar" readonly="1"/>

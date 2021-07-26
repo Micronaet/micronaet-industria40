@@ -177,7 +177,6 @@ class IndustriaRobotFile(orm.Model):
 
         last_record_date = False
         counter = 0
-        pdb.set_trace()
         for line in open(fullname, 'r'):
             if not counter:
                 counter += 1
@@ -188,21 +187,21 @@ class IndustriaRobotFile(orm.Model):
                 continue  # Jump empty line
             row = line.split(separator)
 
-            # Read neede fields:
-            last_program = row[3]
+            # Read need fields:
+            program_ref = row[3]
             date = row[1]
             time = row[2]
+            piece1 = clean_integer(row[4])
 
             record_date = get_datetime(date, time)
 
             if counter <= current_row:
                 last_record_date = record_date  # Save last record date
-                last_program_ref = file.last_program_ref
+                last_program_ref = program_ref
                 continue  # yet read
 
             # Read remain fields:
             state = row[0]
-            program_ref = row[3]
             # active1 active2 not used
 
             # Calculated:
@@ -229,6 +228,7 @@ class IndustriaRobotFile(orm.Model):
                     }, context=context)
 
                 # Get new job:
+                job_piece1_start = piece1
                 job_id = job_pool.create(cr, uid, {
                     'created_at': record_date,
                     # 'updated_at': 'ended_at':
@@ -261,6 +261,7 @@ class IndustriaRobotFile(orm.Model):
                         'state': 'COMPLETED',
                         'updated_at': last_record_date,
                         'ended_at': last_record_date,
+                        'piece': piece1 - job_piece1_start,
 
                         # todo Update statistic data?
                         # 'out_statistic': 'dismiss' 'unused' 'job_duration'
@@ -271,12 +272,11 @@ class IndustriaRobotFile(orm.Model):
                 # Last data:
                 last_job_id = job_id
                 last_program_ref = program_ref
-                last_record_date = record_date
 
             data = {
                 'name': program_ref,
                 'timestamp': record_date,
-                'piece1': clean_integer(row[4]),
+                'piece1': piece1,
                 'total1': clean_integer(row[5]),
                 'piece2': clean_integer(row[6]),
                 'total2': clean_integer(row[7]),
@@ -288,6 +288,8 @@ class IndustriaRobotFile(orm.Model):
                 'state': state,
             }
             file_pool.create(cr, uid, data, context=context)
+            last_record_date = record_date
+            # todo counter pieces
 
         # ---------------------------------------------------------------------
         # Update last job:
@@ -298,6 +300,7 @@ class IndustriaRobotFile(orm.Model):
                 'state': 'COMPLETED',
                 'updated_at': last_record_date,
                 'ended_at': last_record_date,
+                'piece': piece1 - job_piece1_start,
 
                 # todo Update statistic data?
                 # 'out_statistic': 'dismiss' 'unused' 'job_duration'
