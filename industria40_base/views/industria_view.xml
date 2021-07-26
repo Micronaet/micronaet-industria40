@@ -299,7 +299,7 @@
                             <field name="partner_id" readonly="1"/>
                             <field name="mode" /> <!--invisible="1" -->
 
-                            <field name="in_product_id" attrs="{'invisible': [('mode', '!=', 'file')], 'required': [('mode', '=', 'file')]}" />/><!--attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
+                            <!--<field name="in_product_id" attrs="{'invisible': [('mode', '!=', 'file')], 'required': [('mode', '=', 'file')]}" />/>--><!--attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
                             <field name="product_id" attrs="{'required': [('mode', '=', 'file')], 'invisible': [('mode', 'in', ('opcua', ))]}"/>/><!--attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
 
                             <notebook colspan="4">
@@ -632,12 +632,12 @@
             <field name="domain">[('database_id.mode', '=', 'opcua')]</field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_stock_picking_industria">
+        <record model="ir.actions.act_window" id="action_stock_picking_industria_job">
             <field name="name">Picking industria</field>
             <field name="res_model">stock.picking</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="view_id" ref="lavoration_cl_sl.view_stock_picking_cl_form"/>
+            <field name="view_id" ref="lavoration_cl_sl.view_stock_picking_cl_tree"/>
             <field name="context">{'form_view_ref': 'lavoration_cl_sl.view_stock_picking_cl_form'}</field>
             <field name="domain">[('job_ids', '!=', [])]</field>
         </record>
@@ -710,7 +710,7 @@
                 <menuitem
                     parent="menu_industria_master_data"
                     id="menu_industria_picking_industria"
-                    action="action_stock_picking_industria"
+                    action="action_stock_picking_industria_job"
                     sequence="50"
                     />
 

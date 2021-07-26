@@ -179,10 +179,19 @@ class IndustriaRobotFile(orm.Model):
     def file_import_stat_csv(self, cr, uid, ids, context=None):
         """ Import CSV file (pipe)
         """
+        # Convert function:
         def clean_float(value):
-            return float(value.replace('s', ''))
+            res = 0.0
+            for block in value.split(' '):
+                if block.endswith('m'):
+                    res = int(block[:-1]) * 60
+                if block.endswith('s'):
+                    res = float(block[:-1])
+            return res
+
         def clean_integer(value):
             return int(value)
+
         def get_datetime(date, time):
             gmt_daylight = 2
             return '%s-%s-%s %s%s' % (
