@@ -154,7 +154,6 @@ class IndustriaRobotFile(orm.Model):
         fullname = file.fullname
         timestamp = str(os.stat(fullname).st_mtime)
         current_row = file.row
-        pdb.set_trace()
         if current_row:  # Update last job found:
             last_job_id = file.last_job_id
             last_program_ref = file.last_program_ref
@@ -171,9 +170,10 @@ class IndustriaRobotFile(orm.Model):
             if not line:
                 continue  # Jump empty line
             row = line.split(separator)
-            if counter <= current_row:
+            if counter < current_row:
                 last_program = row[3]
                 continue  # yet read
+            pdb.set_trace()
             state = row[0]
             date = row[1]
             time = row[2]
