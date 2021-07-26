@@ -178,10 +178,9 @@ class IndustriaRobotFile(orm.Model):
             if not line:
                 continue  # Jump empty line
             row = line.split(separator)
-            if counter < current_row:
+            if counter <= current_row:
                 last_program = row[3]
                 continue  # yet read
-            pdb.set_trace()
             state = row[0]
             date = row[1]
             time = row[2]
@@ -296,7 +295,8 @@ class IndustriaRobotFile(orm.Model):
         file = self.browse(cr, uid, file_id, context=context)
         fullname = file.fullname
         if file.timestamp == str(os.stat(fullname).st_mtime):
-            _logger.warning('File %s has same timestamp, not reloaded')
+            _logger.warning(
+                'File %s has same timestamp, not reloaded' % fullname)
             return False
         robot = file.robot_id
         # if not fullname:
