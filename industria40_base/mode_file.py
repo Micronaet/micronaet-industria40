@@ -158,17 +158,20 @@ class IndustriaRobotFile(orm.Model):
         else:
             last_job_id = last_program_ref = False
 
-        row = 0
+        counter = 0
         for line in open(fullname, 'r'):
-            row += 1
-            line.split(separator)
-            if row <= current_row:
-                last_program = line[3]
+            if not counter:
+                counter += 1
+                continue
+            counter += 1
+            row = line.split(separator)
+            if counter <= current_row:
+                last_program = row[3]
                 continue  # yet read
-            state = line[0]
-            date = line[1]
-            time = line[2]
-            program_ref = line[3]
+            state = row[0]
+            date = row[1]
+            time = row[2]
+            program_ref = row[3]
             # active1 active2 not used
 
             # Calculated:
@@ -250,12 +253,12 @@ class IndustriaRobotFile(orm.Model):
                     date[:4], date[5:8], date[:2],
                     time,
                 ),
-                'piece1': line[4],
-                'total1': line[5],
-                'piece2': line[6],
-                'total2': line[7],
-                'duration_piece': line[8],
-                'duration_bar': line[9],
+                'piece1': row[4],
+                'total1': row[5],
+                'piece2': row[6],
+                'total2': row[7],
+                'duration_piece': row[8],
+                'duration_bar': row[9],
                 'program_id': program_id,
                 'file_id': file_id,
                 'job_id': job_id,
@@ -295,9 +298,9 @@ class IndustriaRobotFile(orm.Model):
         #    fullname = os.path.join(path, self.get_today_file(
         #        cr, uid, ids, context=context))
 
-        if robot.database_id.file_mode == 'csv':
+        if robot.file_mode == 'pipe':  # csv
             self.file_import_stat_csv(cr, uid, ids, context=context)
-        elif robot.database_id.file_mode == 'xml':
+        elif robot.file_mode == 'fabric':  # xml
             self.file_import_stat_xml(cr, uid, ids, context=context)
         return True
 
