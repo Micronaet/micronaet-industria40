@@ -653,10 +653,26 @@
                             <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
                             <field name="program_id" domain="[('source_id', '=', source_id)]" required="1"/>
 
-                            <field name="label" />
-                            <button name="button_print_job_fabric_report" string="Stampa" type="object" colspan="2"/>
-                            <field name="state" />
-                            <field name="picking_id" />
+                            <notebook>
+                                <page name="page_composition" string="Materasso">
+                                    <group col="4" colspan="4">
+                                        <field name="fabric_ids">
+                                            <tree string="Tessuti" colspan="4" editable="bottom">
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="fabric_id" />
+                                                <field name="total" />
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </page>
+                                <page name="page_production" string="Produzione">
+                                    <group col="4" colspan="4">
+                                        <field name="label" />
+                                        <button name="button_print_job_fabric_report" string="Stampa" type="object" colspan="2"/>
+                                        <field name="picking_id" />
+                                    </group>
+                                </page>
+                            </notebook>
                             <!--<field name="production_id" readonly="1"/>-->
                         </group>
                     </sheet>
@@ -709,13 +725,13 @@
             <field name="context">{'search_default_state_draft': True, 'form_view_ref': 'industria40_base.view_industria_job_opcua_form', 'default_state': 'DRAFT'}</field>
             <field name="domain">[('database_id.mode', '=', 'opcua')]</field>
         </record>
-        <record model="ir.actions.act_window" id="action_industria_job_fabric_statistic">
+        <record model="ir.actions.act_window" id="action_industria_job_fabric">
             <field name="name">Job Tessuti</field>
             <field name="res_model">industria.job</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="view_id" ref="view_industria_job_fabric_tree"/>
-            <field name="context">{'form_view_ref': 'industria40_base.view_industria_job_fabric_tree', 'default_state': 'DRAFT'}</field>
+            <field name="context">{'form_view_ref': 'industria40_base.view_industria_job_fabric_form', 'default_state': 'DRAFT'}</field>
             <field name="domain">[('database_id.mode', '=', 'file')]</field>
         </record>
 
@@ -790,8 +806,8 @@
                     />
                 <menuitem
                     parent="menu_industria_master_data"
-                    id="menu_industria_job_fabric"
-                    action="action_industria_job_fabric_statistic"
+                    id="menu_industria_job_fabric_list"
+                    action="action_industria_job_fabric"
                     sequence="35"
                     />
                 <menuitem

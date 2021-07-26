@@ -1629,6 +1629,26 @@ class IndustriaJob(orm.Model):
     }
 
 
+class IndustriaJobFabric(orm.Model):
+    """ Model name: Industria Job fabric
+        Field name keep as in MySQL for fast import
+    """
+
+    _name = 'industria.job.fabric'
+    _description = 'Job tessuti'
+    _rec_name = 'sequence'
+    _order = 'sequence'
+
+    _columns = {
+        'sequence': fields.integer('Seq.'),
+        'job_id': fields.many2one(
+            'industria.job', 'Job'),
+        'fabric_id': fields.many2one(
+            'product.product', 'Tessuto', required=True),
+        'total': fields.integer('Totale'),
+    }
+
+
 class IndustriaRobotRelation(orm.Model):
     """ Model name: Industria Robot Relations
     """
@@ -1709,3 +1729,15 @@ class IndustriaProgram(orm.Model):
             'industria.program.fabric', 'program_id', 'Tessuti')
     }
 
+
+class IndustriaJobInherit(orm.Model):
+    """ Model name: Industria Job
+        Field name keep as in MySQL for fast import
+    """
+
+    _inherit = 'industria.job'
+
+    _columns = {
+        'fabric_ids': fields.one2many(
+            'industria.job.fabric', 'job_id', 'Tessuti')
+    }
