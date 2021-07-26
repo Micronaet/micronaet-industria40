@@ -451,14 +451,20 @@
             <field name="model">industria.job</field>
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
+                    <header>
+                         <button name="open_file_stat_row" type="object" string="Righe "/>
+                    </header>
                     <sheet>
                         <group col="4" colspan="4">
                             <!--<field name="dismiss" />-->
+                            <field name="state" />
                             <field name="created_at" />
-                            <field name="ended_at" />
 
                             <field name="updated_at" />
+                            <field name="ended_at" />
+
                             <field name="piece" />
+                            <field name="bar" />
 
                             <field name="job_duration" widget="float_time"/>
                             <field name="out_statistic" />
@@ -471,7 +477,6 @@
 
                             <field name="partner_id" />
                             <field name="production_id" />
-                            <field name="state" />
 
                             <field name="picking_id" readonly="1" />
                             <field name="unused" attrs="{'invisible': [('picking_id', '!=', False)]}"/>

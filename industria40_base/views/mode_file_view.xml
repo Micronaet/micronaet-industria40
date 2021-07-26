@@ -6,7 +6,7 @@
             <field name="name">industria.pipe.file.stat.search</field>
             <field name="model">industria.pipe.file.stat</field>
             <field name="arch" type="xml">
-                <search string="Statistiche" version="7.0">        
+                <search string="Statistiche" version="7.0">
                     <field name="name" />
                     <field name="timestamp" />
                     <field name="program_id" filter_domain="[('program_id','=',self)]"/>
@@ -19,7 +19,7 @@
                         <filter name="group_file_id" string="File" context="{'group_by': 'file_id'}"/>
                         <filter name="group_job_id" string="Job" context="{'group_by': 'job_id'}"/>
                         <filter string="Stato" name="state_group" context="{'group_by': 'state'}" />
-                    </group>                
+                    </group>
                 </search>
             </field>
         </record>

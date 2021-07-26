@@ -40,6 +40,42 @@ from openerp.tools import (
 _logger = logging.getLogger(__name__)
 
 
+class IndustriaJob(orm.Model):
+    """ Model name: Industria job
+    """
+
+    _inherit = 'industria.job'
+
+    def open_file_stat_row(self, cr, uid, ids, context=None):
+        """ Open list of imported row
+        """
+        stat_pool = self.pool.get('industria.pipe.file.stat')
+        model_pool = self.pool.get('ir.model.data')
+
+        job_id = ids[0]
+        stat_ids = stat_pool.search(cr, uid, [
+            ('job_id', '=', job_id),
+        ], context=context)
+
+        view_id = model_pool.get_object_reference(
+            cr, uid,
+            'industria40_base', 'view_industria_pipe_file_stat_tree')[1]
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Result for view_name'),
+            'view_type': 'form',
+            'view_mode': 'tree',
+            # 'res_id': 1,
+            'res_model': 'industria.pipe.file.stat',
+            'view_id': view_id,  # False
+            'views': [(False, 'tree')],
+            'domain': [('id', 'in', stat_ids)],
+            'context': context,
+            'target': 'current',  # 'new'
+            'nodestroy': False,
+        }
+
+
 class IndustriaDatabase(orm.Model):
     """ Model name: Industria database
     """
