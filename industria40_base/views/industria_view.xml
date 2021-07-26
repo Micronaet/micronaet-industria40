@@ -122,16 +122,21 @@
                             <field name="partner_id" required="1"/>
 
                             <field name="ip" />
-                            <field name="username" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('file', 'mode', 'in', ('file', 'ftp'))]}"/>
+                            <field name="mode" />
+
+                            <field name="username" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}"/>
                             <field name="password" password="True" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}"/>
 
-                            <field name="database" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
+                            <field name="database" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('file', 'ftp', 'opcua'))]}"/>
                             <field name="port" attrs="{'required': [('mode', 'not in', ('file', 'ftp'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}" />
 
-                            <field name="mode" />
+                            <!--FTP-->
+                            <separator string="Modo file:" colspan="4" attrs="'invisible': [('mode', '!=', 'ftp')]"/>
                             <field name="ftp_command" colspan="4"  attrs="{'required': [('mode', '=', 'ftp')], 'invisible': [('mode', '!=', 'ftp')]}"/>
                             <field name="ftp_fullname" colspan="4"  attrs="{'required': [('mode', '=', 'ftp')], 'invisible': [('mode', '!=', 'ftp')]}"/>
 
+                            <!--File-->
+                            <separator string="Modo file:" colspan="4" attrs="'invisible': [('mode', '!=', 'file')]"/>
                             <field name="file_stat_path" colspan="2"  attrs="{'required': [('mode', '=', 'file')], 'invisible': [('mode', '!=', 'file')]}"/>
                             <field name="file_execute_path" colspan="2"  attrs="{'required': [('mode', '=', 'file')], 'invisible': [('mode', '!=', 'file')]}"/>
 

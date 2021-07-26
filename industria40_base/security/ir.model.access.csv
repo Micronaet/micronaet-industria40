@@ -30,3 +30,7 @@ access_industria_job_all,industria.job,model_industria_job,base.group_user,1,1,1
 access_industria_job_product_manager,industria.job.product,model_industria_job_product,industria40_base.group_industria_manager,1,1,1,1
 access_industria_job_product_user,industria.job.product,model_industria_job_product,industria40_base.group_industria_user,1,0,0,0
 access_industria_job_product_all,industria.job.product,model_industria_job_product,base.group_user,1,1,1,1
+
+access_industria_robot_file_all,industria.robot.file,model_industria_robot_file,base.group_user,1,1,1,1
+access_industria_pipe_file_stat_all,industria.pipe.file.stat,model_industria_pipe_file_stat,base.group_user,1,1,1,1
+access_industria_fabric_file_stat_all,industria.fabric.file.stat,model_industria_fabric_file_stat,base.group_user,1,1,1,1
