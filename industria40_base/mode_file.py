@@ -162,12 +162,13 @@ class IndustriaRobotFile(orm.Model):
         current_row = file.row
         if current_row:  # Update last job found:
             last_job_id = job_id = file.last_job_id
-            last_program_ref = file.last_program_ref
+            last_program_ref = file.last_program_ref  # todo not used!
             job = job_pool.browse(cr, uid, last_job_id, context=context)
             program_id = job.program_id.id
         else:
-            last_job_id = False
+            last_job_id = last_program_ref = False
 
+        last_record_date = False
         counter = 0
         for line in open(fullname, 'r'):
             if not counter:
@@ -186,6 +187,8 @@ class IndustriaRobotFile(orm.Model):
             record_date = '%s-%s-%s %s' % (
                     date[-4:], date[3:5], date[:2], time)
 
+            if not last_record_date:
+                last_record_date = record_date
             if counter <= current_row:
                 last_record_date = record_date  # Save last record date
                 last_program_ref = file.last_program_ref
