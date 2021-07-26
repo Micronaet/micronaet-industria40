@@ -310,6 +310,35 @@ class IndustriaRobotFile(orm.Model):
             self.file_import_stat_xml(cr, uid, ids, context=context)
         return True
 
+    def open_file_stat_row(self, cr, uid, ids, context=None):
+        """ Open list of imported row
+        """
+        stat_pool = self.pool.get('industria.pipe.file.stat')
+        model_pool = self.pool.get('ir.model.data')
+
+        file_id = ids[0]
+        stat_ids = stat_pool.search(cr, uid, [
+            ('file_id', '=', file_id),
+        ], context=context)
+
+        view_id = model_pool.get_object_reference(
+            cr, uid,
+            'industria40_base', 'view_industria_pipe_file_stat_tree')[1]
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Result for view_name'),
+            'view_type': 'form',
+            'view_mode': 'tree',
+            # 'res_id': 1,
+            'res_model': 'industria.pipe.file.stat',
+            'view_id': view_id,  # False
+            'views': [(False, 'tree')],
+            'domain': [('id', 'in', stat_ids)],
+            'context': context,
+            'target': 'current',  # 'new'
+            'nodestroy': False,
+            }
+
     _columns = {
         'name': fields.char('Nome file', size=40),
         'fullname': fields.char('Nome file', size=180),
