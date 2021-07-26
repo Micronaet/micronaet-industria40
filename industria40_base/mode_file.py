@@ -259,6 +259,7 @@ class IndustriaRobotFile(orm.Model):
                 'job_id': job_id,
                 'state': state,
             }
+            pdb.set_trace()
             file_pool.create(cr, uid, data, context=context)
 
         self.write(cr, uid, ids, {
