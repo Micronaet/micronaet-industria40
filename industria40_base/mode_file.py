@@ -271,13 +271,13 @@ class IndustriaRobotFile(orm.Model):
                 'state': state,
             }
             file_pool.create(cr, uid, data, context=context)
-
         self.write(cr, uid, ids, {
             'row': counter,
             'timestamp': timestamp,
             'last_program_ref': last_program_ref,
             'last_job_id': last_job_id,
         }, context=context)
+        _logger.warning('File %s loaded' % fullname)
         return True
 
     def file_import_stat_xml(self, cr, uid, ids, context=None):
@@ -298,6 +298,7 @@ class IndustriaRobotFile(orm.Model):
             _logger.warning(
                 'File %s has same timestamp, not reloaded' % fullname)
             return False
+
         robot = file.robot_id
         # if not fullname:
         #    path = database.file_stat_path
