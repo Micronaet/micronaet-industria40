@@ -519,6 +519,7 @@
                 </tree>
             </field>
         </record>
+        <!--OPCUA-->
         <record model="ir.ui.view" id="view_industria_job_opcua_tree">
             <field name="name">industria.job.opcua.tree</field>
             <field name="model">industria.job</field>
@@ -586,6 +587,78 @@
             </field>
         </record>
 
+        <!-- Fabric management -->
+        <record model="ir.ui.view" id="view_industria_job_fabric_tree">
+            <field name="name">industria.job.fabric.tree</field>
+            <field name="model">industria.job</field>
+            <field name="priority" eval="40"/>
+            <field name="arch" type="xml">
+                <tree string="Job" colors="grey:state=='DRAFT';red:state=='ERROR' OR unused==True;blue:state=='RUNNING'">
+                    <field name="created_at" string="Pianificato"/>
+                    <!--<field name="dismiss" />-->
+                    <!--
+                    <field name="ended_at" />-->
+                    <!--<field name="job_duration" widget="float_time" sum="total_time"/>-->
+                    <field name="database_id" domain="[('mode', '=', 'file')]" required="1"/>
+                    <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
+                    <field name="program_id" domain="[('source_id', '=', source_id)]" required="1"/>
+                    <!--<field name="production_id" />-->
+                    <field name="state" />
+                    <button name="send_fabric_job" type="object" string="Invia lavoro" attrs="{'invisible': [('state', '!=', 'DRAFT')]}"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_job_fabric_form">
+            <field name="name">industria.job.fabric.form</field>
+            <field name="model">industria.job</field>
+            <field name="priority" eval="40"/>
+            <field name="arch" type="xml">
+                <form string="Job">
+                    <header>
+                        <button name="send_fabric_job" type="object" string="Invia lavoro" attrs="{'invisible': [('state', '!=', 'DRAFT')]}"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+
+                    <sheet>
+                        <group col="4">
+                            <field name="created_at" string="Pianificato"/>
+                            <field name="database_id" domain="[('mode', '=', 'opcua')]" required="1"/>
+
+                            <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
+                            <field name="program_id" domain="[('source_id', '=', source_id)]" required="1"/>
+
+                            <field name="label" />
+                            <button name="button_print_job_fabric_report" string="Stampa" type="object" colspan="2"/>
+                            <field name="state" />
+                            <field name="picking_id" />
+                            <!--<field name="production_id" readonly="1"/>-->
+
+                            <separator string="Strati:" colspan="4" />
+                            <field name="fabric_length" />
+                            <field name="fabric_ids" colspan="4" nolabel="1" >
+                                <tree string="Tessuti utilizzati">
+                                    <field name="fabric_id" domain="[]"/> <!--todo filter?-->
+                                    <field name="length" />
+                                </tree>
+                                <form string="Tessuti utilizzati">
+                                    <field name="fabric_id" domain="[]"/> <!--todo filter?-->
+                                    <field name="length" />
+                                    <separator string="Parti" colspan="4"/>
+                                    <field name="fabric_ids" colspan="4" nolabel="1">
+                                        <tree string="Parti" editable="bottom">
+                                            <field name="product_id"/>
+                                            <field name="total"/>
+                                        </tree>
+                                    </field>
+                                </form>
+                            </field>
+                            <!--<field name="source_id" /><field name="job_id" />-->
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_industria_job">
             <field name="name">Job</field>
             <field name="res_model">industria.job</field>
@@ -630,6 +703,15 @@
             <field name="view_id" ref="view_industria_job_opcua_tree"/>
             <field name="context">{'search_default_state_draft': True, 'form_view_ref': 'industria40_base.view_industria_job_opcua_form', 'default_state': 'DRAFT'}</field>
             <field name="domain">[('database_id.mode', '=', 'opcua')]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_job_fabric_statistic">
+            <field name="name">Job Tessuti</field>
+            <field name="res_model">industria.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_id" ref="view_industria_job_fabric_tree"/>
+            <field name="context">{'form_view_ref': 'industria40_base.view_industria_job_fabric_tree', 'default_state': 'DRAFT'}</field>
+            <field name="domain">[('database_id.mode', '=', 'file')]</field>
         </record>
 
         <record model="ir.actions.act_window" id="action_stock_picking_industria_job">
@@ -700,6 +782,12 @@
                     id="menu_industria_job_opcua"
                     action="action_industria_job_opcua_statistic"
                     sequence="30"
+                    />
+                <menuitem
+                    parent="menu_industria_master_data"
+                    id="menu_industria_job_fabric"
+                    action="action_industria_job_fabric_statistic"
+                    sequence="35"
                     />
                 <menuitem
                     parent="menu_industria_master_data"

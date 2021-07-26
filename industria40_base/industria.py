@@ -1269,12 +1269,16 @@ class IndustriaProgram(orm.Model):
             'industria.database', 'Database'),
         'product_id': fields.many2one(
             'product.product', 'Semi product'),
-        'in_product_id': fields.many2one(
+        'in_product_id': fields.many2one(  # Not used for now
             'product.product', 'Matariale input'),
         'partner_id': fields.related(
             'source_id', 'partner_id',
             type='many2one', relation='res.partner',
             string='Supplier', store=True),
+        'fabric_length': fields.float(
+            'Lunghezza tesssuto', digits=(10, 2),
+            help='Utilizzato come default per gli strati di tessuto'),
+
         'mode': fields.related(
             'database_id', 'mode', type='selection', string='Mode',
             selection=[
@@ -1295,6 +1299,53 @@ class IndustriaProgram(orm.Model):
 
     _defaults = {
         'piece': lambda *x: 1,
+    }
+
+
+class IndustriaProgramFabric(orm.Model):
+    """ Model name: Industria Program fabric
+    """
+
+    _name = 'industria.program.fabric'
+    _description = 'Programma tessuti'
+    _rec_name = 'product_id'
+    _order = 'product_id'
+
+    _columns = {
+        'program_id': fields.many2one('industria.program', 'Programma'),
+        'fabric_id': fields.many2one('product.product', 'Tessuto'),
+        'length': fields.related(
+            'program_id.fabric_length',
+            'Lunghezza', type='float',
+            digits=(10, 2), readonly=True),
+    }
+
+
+class IndustriaProgramFabricPart(orm.Model):
+    """ Model name: Industria Program fabric
+    """
+
+    _name = 'industria.program.fabric.part'
+    _description = 'Programma parti tessuti'
+    _rec_name = 'product_id'
+    _order = 'product_id'
+
+    _columns = {
+        'fabric_id': fields.many2one('industria.program.fabric', 'Tessuto'),
+        'product_id': fields.many2one('product.product', 'Semilavorato'),
+        'total': fields.float('Pezzi'),
+    }
+
+
+class IndustriaProgramFabricInherit(orm.Model):
+    """ Model name: Industria Program fabric
+    """
+
+    _inherit = 'industria.program.fabric'
+
+    _columns = {
+        'part_ids': fields.one2many(
+            'industria.program.fabric.part', 'fabric_id', 'Parti')
     }
 
 
@@ -1362,19 +1413,6 @@ class IndustriaProgramParameter(orm.Model):
             'industria.program', 'Programma'),
         'value': fields.char(
             'Valore', size=20, required=True),
-    }
-
-
-class IndustriaProgram(orm.Model):
-    """ Model name: Industria Program
-    """
-
-    _inherit = 'industria.program'
-
-    _columns = {
-        'parameter_ids': fields.one2many(
-            'industria.program.parameter', 'program_id',
-            string='Parametri'),
     }
 
 
@@ -1655,3 +1693,19 @@ class IndustriaDatabaseInherit(orm.Model):
         'robot_ids': fields.one2many(
             'industria.robot', 'database_id', 'Robot'),
     }
+
+
+class IndustriaProgram(orm.Model):
+    """ Model name: Industria Program
+    """
+
+    _inherit = 'industria.program'
+
+    _columns = {
+        'parameter_ids': fields.one2many(
+            'industria.program.parameter', 'program_id',
+            string='Parametri'),
+        'fabric_ids': fields.one2many(
+            'industria.program.fabric', 'program_id', 'Tessuti')
+    }
+
