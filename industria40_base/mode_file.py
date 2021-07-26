@@ -79,6 +79,8 @@ class IndustriaDatabase(orm.Model):
                 cr, uid, ids, context=context))
         if database.file_mode == 'csv':
             self.file_import_stat_csv(cr, uid, ids, fullname, context=context)
+        elif database.file_mode == 'xml':
+            self.file_import_stat_xml(cr, uid, ids, fullname, context=context)
         return True
 
     def load_all_stat_file(self, cr, uid, ids, context=None):
