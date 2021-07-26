@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!--industria.production-->
+        <record model="ir.ui.view" id="view_industria_robot_file_tree">
+            <field name="name">industria.robot.file.tree</field>
+            <field name="model">industria.robot.file</field>
+            <field name="arch" type="xml">
+                <tree string="File" editable="bottom">
+                    <field name="fullname" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="timestamp" readonly="1"/>
+                    <field name="database_id" readonly="1"/>
+                    <field name="robot_id" readonly="1"/>
+                    <field name="last_job_id"  readonly="1"/>
+                    <field name="last_program_ref"  readonly="1"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_stats_file">
+            <field name="name">File statistici</field>
+            <field name="res_model">industria.robot.file</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_industria_robot_file_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+            <menuitem
+                parent="menu_industria_configuration"
+                id="menu_industria_stats_file"
+                action="action_industria_stats_file"
+                sequence="60"
+                />
+    </data>
+</openerp>
+
