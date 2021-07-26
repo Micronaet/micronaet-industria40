@@ -137,7 +137,8 @@
 
                             <!--File-->
                             <separator string="Modo file:" colspan="3" attrs="{'invisible': [('mode', '!=', 'file')]}"/>
-                            <button name="load_all_stat_file" type="object" string="Importa file stats" icon="gtk-justify-fill" attrs="{'invisible': [('mode', 'in', ('file', ))]}"/>
+                            <button name="load_all_stat_file" type="object" string="Importa file stats" icon="gtk-justify-fill" attrs="{'invisible': [('mode', '!=', 'file')]}"/>
+
                             <field name="file_mode" colspan="2"  attrs="{'required': [('mode', '=', 'file')], 'invisible': [('mode', '!=', 'file')]}"/>
                             <newline/>
                             <field name="file_stat_path" colspan="2"  attrs="{'required': [('mode', '=', 'file')], 'invisible': [('mode', '!=', 'file')]}"/>
