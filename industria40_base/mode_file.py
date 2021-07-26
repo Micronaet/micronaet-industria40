@@ -146,12 +146,18 @@ class IndustriaRobotFile(orm.Model):
         file_pool = self.pool.get('industria.pipe.file.stat')
 
         separator = ';'
+        extension = 'txt'
+
         file_id = ids[0]
         file = self.browse(cr, uid, file_id, context=context)
         robot_id = file.robot_id.id
         database_id = file.database_id.id
 
         fullname = file.fullname
+        if not fullname.endswith(extension):
+            _logger.error('File: %s not used!')
+            return False
+
         timestamp = str(os.stat(fullname).st_mtime)
         current_row = file.row
         if current_row:  # Update last job found:
