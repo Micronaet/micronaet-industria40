@@ -259,12 +259,10 @@ class IndustriaRobotFile(orm.Model):
                 'job_id': job_id,
                 'state': state,
             }
-            print(data)
             file_pool.create(cr, uid, data, context=context)
-            pdb.set_trace()
 
         self.write(cr, uid, ids, {
-            'row': row,
+            'row': counter,
             'timestamp': timestamp,
             'last_program_ref': last_program_ref,
             'last_job_id': last_job_id,
