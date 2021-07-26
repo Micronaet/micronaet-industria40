@@ -136,6 +136,11 @@ class IndustriaRobotFile(orm.Model):
     def file_import_stat_csv(self, cr, uid, ids, context=None):
         """ Import CSV file (pipe)
         """
+        def clean_float(value):
+            return float(value.replace('s', ''))
+        def clean_integer(value):
+            return int(value)
+
         program_pool = self.pool.get('industria.program')
         job_pool = self.pool.get('industria.job')
         file_pool = self.pool.get('industria.pipe.file.stat')
@@ -243,12 +248,12 @@ class IndustriaRobotFile(orm.Model):
                     date[:4], date[5:8], date[:2],
                     time,
                 ),
-                'piece1': row[4],
-                'total1': row[5],
-                'piece2': row[6],
-                'total2': row[7],
-                'duration_piece': row[8],
-                'duration_bar': row[9],
+                'piece1': clean_integer(row[4]),
+                'total1': clean_integer(row[5]),
+                'piece2': clean_integer(row[6]),
+                'total2': clean_integer(row[7]),
+                'duration_piece': clean_float(row[8]),
+                'duration_bar': clean_float(row[9]),
                 'program_id': program_id,
                 'file_id': file_id,
                 'job_id': job_id,
