@@ -83,7 +83,7 @@ class IndustriaRobot(orm.Model):
         pdb.set_trace()
         database_id = ids[0]
         database = self.browse(cr, uid, database_id, context=context)
-        path = database.file_stat_path
+        path = os.path.expanduser(database.file_stat_path)
         for root, folders, files in os.walk(path):
             for filename in files:
                 fullname = os.path.join(root, filename)
