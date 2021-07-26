@@ -12,8 +12,9 @@
                     <field name="timestamp" readonly="1"/>
                     <field name="database_id" readonly="1"/>
                     <field name="robot_id" readonly="1"/>
-                    <field name="last_job_id"  readonly="1"/>
-                    <field name="last_program_ref"  readonly="1"/>
+                    <field name="last_job_id" readonly="1"/>
+                    <field name="last_program_ref" readonly="1"/>
+                    <field name="row" readonly="1"/>
                 </tree>
             </field>
         </record>
