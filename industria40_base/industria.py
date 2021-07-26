@@ -936,12 +936,6 @@ class IndustriaDatabase(orm.Model):
             'FTP command', help='FTP command for unload Job'),
         'ftp_fullname': fields.char(
             'FTP fullname', size=180, help='Fullname for file with log'),
-        'file_stat_path': fields.text(
-            'Cartella statistiche', help='Nella gestione DB con file'),
-        'file_execute_path': fields.text(
-            'Cartella job', help='Nella gestione DB con file'),
-        # 'file_alarm_path': fields.text(
-        #    'Cartella allarmi', help='Nella gestione DB con file'),
         'mode': fields.selection([
             ('mysql', 'My SQL'),
             ('mssql', 'MS SQL'),
@@ -1616,3 +1610,12 @@ class StockPicking(orm.Model):
     }
 
 
+class IndustriaDatabaseInherit(orm.Model):
+    """ Model name: Industria Database inherit
+    """
+    _inherit = 'industria.database'
+
+    _columns = {
+        'robot_ids': fields.one2many(
+            'industria.robot', 'database_id', 'Robot'),
+    }

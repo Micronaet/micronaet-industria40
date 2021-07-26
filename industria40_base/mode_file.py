@@ -46,7 +46,25 @@ class IndustriaDatabase(orm.Model):
 
     _inherit = 'industria.database'
 
+    def load_all_stat_file(self, cr, uid, ids, context=None):
+        """ Call every robot same action
+        """
+        robot_pool = self.pool.get('industria.robot')
+
+        for robot in self.browse(cr, uid, ids, context=context)[0].robot_ids:
+            robot_pool.load_all_stat_file(
+                cr, uid, [robot.id], context=context)
+
+
+class IndustriaRobot(orm.Model):
+    """ Model name: Industria robot
+    """
+
+    _inherit = 'industria.robot'
+
     def get_today_file(self, cr, uid, ids, context=None):
+        """ Estract filename for today log
+        """
         database_id = ids[0]
         database = self.browse(cr, uid, database_id, context=context)
         mode = database.file_mode
@@ -58,34 +76,10 @@ class IndustriaDatabase(orm.Model):
             _logger.error('Not found default file!')
             return ''
 
-    def file_import_stat_csv(self, cr, uid, ids, fullname, context=None):
-        """ Import CSV file (pipe)
-        """
-        return True
-
-    def file_import_stat_xml(self, cr, uid, ids, fullname, context=None):
-        """ Import CSV file (fabric)
-        """
-        return True
-
-    def load_daily_file(self, cr, uid, ids, fullname, context=None):
-        """ Load daily file from data folder
-        """
-        database_id = ids[0]
-        database = self.browse(cr, uid, database_id, context=context)
-        if not fullname:
-            path = database.file_stat_path
-            fullname = os.path.join(path, self.get_today_file(
-                cr, uid, ids, context=context))
-        if database.file_mode == 'csv':
-            self.file_import_stat_csv(cr, uid, ids, fullname, context=context)
-        elif database.file_mode == 'xml':
-            self.file_import_stat_xml(cr, uid, ids, fullname, context=context)
-        return True
-
     def load_all_stat_file(self, cr, uid, ids, context=None):
         """ Load all daily file from data folder
         """
+        file_pool = self.pool.get('industria.robot.file')
         pdb.set_trace()
         database_id = ids[0]
         database = self.browse(cr, uid, database_id, context=context)
@@ -93,9 +87,24 @@ class IndustriaDatabase(orm.Model):
         for root, folders, files in os.walk(path):
             for filename in files:
                 fullname = os.path.join(root, filename)
-                self.load_daily_file(cr, uid, ids, fullname, context=context)
-            break  # No subfolders
 
+                file_ids = file_pool.search(cr, uid, [
+                    ('name', '=', filename),
+                    ('database_id', '=', database_id),
+                ], context=context)
+                if not file_ids:
+                    timestamp = str(os.stat(fullname).st_mtime)
+                    file_ids = [file_pool.create(cr, uid, {
+                        'name': filename,
+                        'fullname': fullname,
+                        'database_id': database_id,
+                        'timestamp': timestamp,
+                        'row': 0,
+                    }, context=context)]
+
+                file_pool.load_file(
+                    cr, uid, file_ids, fullname, context=context)
+            break  # No subfolders
         return True
 
     _columns = {
@@ -103,10 +112,18 @@ class IndustriaDatabase(orm.Model):
             ('fabric', 'Tessuti (XML)'),
             ('pipe', 'Tubi (csv)'),
         ], 'Mode', required=True),
+        'file_stat_path': fields.text(
+            'Cartella statistiche', help='Nella gestione DB con file'),
+        'file_execute_path': fields.text(
+            'Cartella job', help='Nella gestione DB con file'),
+        # 'file_alarm_path': fields.text(
+        #    'Cartella allarmi', help='Nella gestione DB con file'),
     }
     _defaults = {
         'file_mode': lambda *x: 'pipe',
     }
+
+
 
 
 class IndustriaRobotFile(orm.Model):
@@ -118,17 +135,107 @@ class IndustriaRobotFile(orm.Model):
     _rec_name = 'name'
     _order = 'name desc'
 
+    def file_import_stat_csv(self, cr, uid, ids, context=None):
+        """ Import CSV file (pipe)
+        """
+        program_pool = self.pool.get('industria.program')
+        job_pool = self.pool.get('industria.job')
+
+        separator = ';'
+        file_id = ids[0]
+        file = self.browse(cr, uid, file_id, context=context)
+        fullname = file.fullname
+        timestamp = str(os.stat(fullname).st_mtime)
+        current_row = file.row
+        row = 0
+        last_line = False
+        for line in open(fullname, 'r'):
+            row += 1
+            line.split(separator)
+            if row <= current_row:
+                last_program = line[3]
+                continue  # yet read
+            state = line[0]
+            date = line[1]
+            time = line[2]
+            program_ref = line[3]
+            # active1 active2 not used
+
+            # Calculated:
+            if last_program != program_ref:
+                # todo Change job here
+                pass
+
+            program_id = False  # todo find
+            job_id = False  # todo find
+            data = {
+                'name': program_ref,
+                'timestamp': '%s-%s-%s %s' % (
+                    date[:4], date[5:8], date[:2],
+                    time,
+                ),
+                'piece1': line[4],
+                'total1': line[5],
+                'piece2': line[6],
+                'total2': line[7],
+                'duration_piece': line[8],
+                'duration_bar': line[9],
+                'program_id': program_id,
+                'file_id': file_id,
+                'job_id': job_id,
+                'state': state,
+            }
+            self.create(cr, uid, data, context=context)
+
+        self.write(cr, uid, ids, {
+            'row': row,
+            'timestamp': timestamp,
+        }, context=context)
+
+        return True
+
+    def file_import_stat_xml(self, cr, uid, ids, context=None):
+        """ Import CSV file (fabric)
+        """
+        file_id = ids[0]
+        file = self.browse(cr, uid, file_id, context=context)
+        fullname = file.fullname
+        return True
+
+    def load_file(self, cr, uid, ids, context=None):
+        """ Load daily file from data folder
+        """
+        file_id = ids[0]
+        file = self.browse(cr, uid, file_id, context=context)
+        fullname = file.fullname
+        if file.timestamp == str(os.stat(fullname).st_mtime):
+            _logger.warning('File %s has same timestamp, not reloaded')
+            return False
+        database = file.database_id
+        # if not fullname:
+        #    path = database.file_stat_path
+        #    fullname = os.path.join(path, self.get_today_file(
+        #        cr, uid, ids, context=context))
+
+        if database.file_mode == 'csv':
+            self.file_import_stat_csv(cr, uid, ids, context=context)
+        elif database.file_mode == 'xml':
+            self.file_import_stat_xml(cr, uid, ids, context=context)
+        return True
+
     _columns = {
         'name': fields.char('Nome file', size=40),
-        'datetime': fields.char(
+        'fullname': fields.char('Nome file', size=180),
+        'timestamp': fields.char(
             'Data ora',
             size=40,
             help='Date e ora del file per sapere se è sato modificato dalla '
                  'ultima lettura'),
         'row': fields.integer('Riga', help='Ultima riga analizzata'),
-        'database_id': fields.many2one(
+        'robot_id': fields.many2one(
+            'industria.robot', 'Robot'),
+        'database_id': fields.many2one(  # todo related
             'industria.database', 'Database'),
-
     }
 
     _defaults = {
@@ -142,40 +249,30 @@ class IndustriaPipeFileStat(orm.Model):
 
     _name = 'industria.pipe.file.stat'
     _description = 'Industria Fabric stat'
-    _rec_name = 'name'
-    _order = 'create, name'
+    _rec_name = 'timestamp'
+    _order = 'timestamp desc'
 
     _columns = {
-        'name': fields.char('Rif. job', size=30),
-        'ref': fields.char('Rif.', size=10),
-        # Sent job ID
-        'shape': fields.integer(
-            'Totale forme', help='Totale forme del taglio'),
+        'name': fields.char('Nome programma', size=30),
+        'timestamp': fields.datetime('Timestamp'),
+        'piece1': fields.integer('Pezzi (1)'),
+        'total1': fields.integer('Su totale (1)'),
+        'piece2': fields.integer('Pezzi (2)'),
+        'total2': fields.integer('Su totale (2)'),
+        'duration_piece': fields.float('Durata pezzo', digits=(10, 4)),
+        'duration_bar': fields.float('Durata barra', digits=(10, 4)),
+        'program_id': fields.many2one(
+            'industria.program', 'Programma'),
         'file_id': fields.many2one(
             'industria.robot.file', 'File'),
         'job_id': fields.many2one(
             'industria.job', 'Job'),
-        'program_id': fields.many2one(
-            'industria.program', 'Programma'),
-        'fullname': fields.char('Nome file', size=90),
-        'create': fields.datetime('Creazione'),
-        'modify': fields.datetime('Modify'),
         'state': fields.selection([
-            ('None', 'Nessuno'),  # Anomalia
-            ('Preparation', 'Preparazione'),  # A. In preparazione iniziale
-            ('Collimation', 'Collimazione'),  # B. Taratura post preparazione
-            ('Simulation', 'Simulazione'),  # C. Simulazione dopo collimazione
-            ('Cutting', 'Taglio'),  # D. In taglio
-            ('Pending', 'Pendente'),  # E1 Fermato (tutti i casi extra)
-            ('Completed', 'Completato'),  # E1. Terminato
-            ('Aborted', 'Annullato'),  # E2. Annullato (si può riprendere?)
+            ('STOP', 'Stop'),
+            ('TAGLIO', 'Taglio'),
+            ('CAMBIO BARRA', 'Cambio barra'),
         ], 'State', required=True),
-        'notes': fields.text('Note'),
         }
-
-    _default = {
-        'stat': lambda *x: 'None',
-    }
 
 
 class IndustriaFabricFileStat(orm.Model):
@@ -218,3 +315,7 @@ class IndustriaFabricFileStat(orm.Model):
     _default = {
         'stat': lambda *x: 'None',
     }
+
+    # 'last_record_id': fields.many2one(
+    #    'industria.fabric.file.stat', 'Ultimo record creato'),
+    #    'industria.pipe.file.stat', 'Ultimo record creato'),
