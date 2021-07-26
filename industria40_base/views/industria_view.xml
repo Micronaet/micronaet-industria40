@@ -216,11 +216,11 @@
                                 <page name="robot_setup" string="Setup">
                                     <separator string="Modo file:" colspan="3" />
                                     <button name="load_all_stat_file" type="object" string="Importa file stats" icon="gtk-justify-fill"/>
-
-                                    <field name="file_mode" colspan="2"  attrs="{'required': [('database_id.mode', '=', 'file')], 'invisible': [('database_id.mode', '!=', 'file')]}"/>
+                                    <!-- attrs="{'required': [('database_id.mode', '=', 'file')], 'invisible': [('database_id.mode', '!=', 'file')]}"-->
+                                    <field name="file_mode" colspan="2" />
                                     <newline/>
-                                    <field name="file_stat_path" colspan="2"  attrs="{'required': [('database_id.mode', '=', 'file')], 'invisible': [('database_id.mode', '!=', 'file')]}"/>
-                                    <field name="file_execute_path" colspan="2"  attrs="{'required': [('database_id.mode', '=', 'file')], 'invisible': [('database_id.mode', '!=', 'file')]}"/>
+                                    <field name="file_stat_path" colspan="2" />
+                                    <field name="file_execute_path" colspan="2" />
                                 </page>
                                 <page name="program_page" string="Program">
                                     <group colspan="4" col="4">
