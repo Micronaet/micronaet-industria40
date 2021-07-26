@@ -241,11 +241,12 @@ class IndustriaRobotFile(orm.Model):
 
                     }, context=context)
                 last_job_id = job_id
+                last_program_ref = program_ref
 
             data = {
                 'name': program_ref,
                 'timestamp': '%s-%s-%s %s' % (
-                    date[:4], date[5:8], date[:2],
+                    date[-4:], date[3:5], date[:2],
                     time,
                 ),
                 'piece1': clean_integer(row[4]),
