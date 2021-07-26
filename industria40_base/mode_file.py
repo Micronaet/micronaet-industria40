@@ -40,10 +40,70 @@ from openerp.tools import (
 _logger = logging.getLogger(__name__)
 
 
-def load_daily_file(self, cr, uid, ids, context=None):
-    """ Load daily file from data folder
+class IndustriaDatabase(orm.Model):
+    """ Model name: Industria database
     """
-    return True
+
+    _inherit = 'industria.database'
+
+    def get_today_file(self, cr, uid, ids, context=None):
+        database_id = ids[0]
+        database = self.browse(cr, uid, database_id, context=context)
+        mode = database.file_mode
+        if mode == 'pipe':
+            return datetime.now().strftime('%y_%m_%d.txt')
+        elif mode == 'fabric':
+            return datetime.now().strftime('%Y%m%d.xml')
+        else:
+            _logger.error('Not found default file!')
+            return ''
+
+    def file_import_stat_csv(self, cr, uid, ids, fullname, context=None):
+        """ Import CSV file (pipe)
+        """
+        return True
+
+    def file_import_stat_xml(self, cr, uid, ids, fullname, context=None):
+        """ Import CSV file (fabric)
+        """
+        return True
+
+    def load_daily_file(self, cr, uid, ids, fullname, context=None):
+        """ Load daily file from data folder
+        """
+        database_id = ids[0]
+        database = self.browse(cr, uid, database_id, context=context)
+        if not fullname:
+            path = database.file_stat_path
+            fullname = os.path.join(path, self.get_today_file(
+                cr, uid, ids, context=context))
+        if database.file_mode == 'csv':
+            self.file_import_stat_csv(cr, uid, ids, fullname, context=context)
+        return True
+
+    def load_all_stat_file(self, cr, uid, ids, context=None):
+        """ Load all daily file from data folder
+        """
+        database_id = ids[0]
+        database = self.browse(cr, uid, database_id, context=context)
+        path = database.file_stat_path
+        for root, folders, files in os.path.walk(path):
+            for filename in files:
+                fullname = os.path(root, filename)
+                self.load_daily_file(cr, uid, ids, fullname, context=context)
+            break  # No subfolders
+
+        return True
+
+    _columns = {
+        'file_mode': fields.selection([
+            ('fabric', 'Tessuti (XML)'),
+            ('pipe', 'Tubi (csv)'),
+        ], 'Mode', required=True),
+    }
+    _defaults = {
+        'file_mode': lambda *x: 'pipe',
+    }
 
 
 class IndustriaRobotFile(orm.Model):
@@ -78,6 +138,48 @@ class IndustriaPipeFileStat(orm.Model):
     """
 
     _name = 'industria.pipe.file.stat'
+    _description = 'Industria Fabric stat'
+    _rec_name = 'name'
+    _order = 'create, name'
+
+    _columns = {
+        'name': fields.char('Rif. job', size=30),
+        'ref': fields.char('Rif.', size=10),
+        # Sent job ID
+        'shape': fields.integer(
+            'Totale forme', help='Totale forme del taglio'),
+        'file_id': fields.many2one(
+            'industria.robot.file', 'File'),
+        'job_id': fields.many2one(
+            'industria.job', 'Job'),
+        'program_id': fields.many2one(
+            'industria.program', 'Programma'),
+        'fullname': fields.char('Nome file', size=90),
+        'create': fields.datetime('Creazione'),
+        'modify': fields.datetime('Modify'),
+        'state': fields.selection([
+            ('None', 'Nessuno'),  # Anomalia
+            ('Preparation', 'Preparazione'),  # A. In preparazione iniziale
+            ('Collimation', 'Collimazione'),  # B. Taratura post preparazione
+            ('Simulation', 'Simulazione'),  # C. Simulazione dopo collimazione
+            ('Cutting', 'Taglio'),  # D. In taglio
+            ('Pending', 'Pendente'),  # E1 Fermato (tutti i casi extra)
+            ('Completed', 'Completato'),  # E1. Terminato
+            ('Aborted', 'Annullato'),  # E2. Annullato (si può riprendere?)
+        ], 'State', required=True),
+        'notes': fields.text('Note'),
+        }
+
+    _default = {
+        'stat': lambda *x: 'None',
+    }
+
+
+class IndustriaFabricFileStat(orm.Model):
+    """ Model name: Industria fabric file stat
+    """
+
+    _name = 'industria.fabric.file.stat'
     _description = 'Industria Fabric stat'
     _rec_name = 'name'
     _order = 'create, name'
