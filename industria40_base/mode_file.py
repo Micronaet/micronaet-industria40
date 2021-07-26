@@ -317,7 +317,7 @@ class IndustriaRobotFile(orm.Model):
 
         'last_program_ref': fields.char(
             'Ultimo rif. programma',
-            help='Per tenere lo storico delle letture parziali')
+            help='Per tenere lo storico delle letture parziali'),
         'last_job_id': fields.integer(
             'Ultimo ID job',
             help='Per tenere lo storico delle letture parziali')
