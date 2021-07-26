@@ -185,6 +185,8 @@ class IndustriaRobotFile(orm.Model):
             date = row[1]
             time = row[2]
             program_ref = row[3]
+            record_date = '%s-%s-%s %s' % (
+                    date[-4:], date[3:5], date[:2], time)
             # active1 active2 not used
 
             # Calculated:
@@ -212,7 +214,7 @@ class IndustriaRobotFile(orm.Model):
 
                 # Get new job:
                 job_id = job_pool.create(cr, uid, {
-                    # 'created_at':
+                    'created_at': record_date,
                     # 'updated_at':
                     # 'ended_at':
                     # 'duration':
@@ -222,7 +224,7 @@ class IndustriaRobotFile(orm.Model):
                     'program_id': program_id,
                     'database_id': database_id,
                     'source_id': robot_id,
-                    'state':  'RUNNING',
+                    'state': 'RUNNING',
                     # 'force_product_id': ,
                     # 'DRAFT' 'ERROR' 'RUNNING' 'COMPLETED'
                     # 'notes'
@@ -243,6 +245,9 @@ class IndustriaRobotFile(orm.Model):
                     # Mark as completed:
                     job_pool.write(cr, uid, [last_job_id], {
                         'state': 'COMPLETED',
+                        'updated_at': record_date,
+                        'ended_at': record_date,
+
                         # todo Update statistic data?
                         # 'out_statistic': 'dismiss' 'unused' 'job_duration'
 
@@ -255,10 +260,7 @@ class IndustriaRobotFile(orm.Model):
 
             data = {
                 'name': program_ref,
-                'timestamp': '%s-%s-%s %s' % (
-                    date[-4:], date[3:5], date[:2],
-                    time,
-                ),
+                'timestamp': record_date,
                 'piece1': clean_integer(row[4]),
                 'total1': clean_integer(row[5]),
                 'piece2': clean_integer(row[6]),
@@ -271,6 +273,28 @@ class IndustriaRobotFile(orm.Model):
                 'state': state,
             }
             file_pool.create(cr, uid, data, context=context)
+
+        # ---------------------------------------------------------------------
+        # Update last job:
+        # ---------------------------------------------------------------------
+        if last_job_id:
+            # Mark as completed:
+            job_pool.write(cr, uid, [last_job_id], {
+                'state': 'COMPLETED',
+                'updated_at': record_date,
+                'ended_at': record_date,
+
+                # todo Update statistic data?
+                # 'out_statistic': 'dismiss' 'unused' 'job_duration'
+
+                # todo Update production
+                # 'picking_id': 'production_id': 'piece' 'product_ids'
+
+            }, context=context)
+
+        # ---------------------------------------------------------------------
+        # Update reference for file:
+        # ---------------------------------------------------------------------
         self.write(cr, uid, ids, {
             'row': counter,
             'timestamp': timestamp,
