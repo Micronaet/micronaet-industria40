@@ -208,6 +208,11 @@ class IndustriaRobotFile(orm.Model):
             last_program_ref = file.last_program_ref  # todo not used!
             job = job_pool.browse(cr, uid, last_job_id, context=context)
             program_id = job.program_id.id
+
+            # Total till now for last job:
+            job_piece1_start = job.piece1
+            job_bar_counter = job.bar
+
         else:
             last_job_id = last_program_ref = False
 
