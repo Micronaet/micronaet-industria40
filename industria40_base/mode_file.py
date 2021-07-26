@@ -144,7 +144,7 @@ class IndustriaRobotFile(orm.Model):
             gmt_daylight = 2
             return '%s-%s-%s %s%s' % (
                 date[-4:], date[3:5], date[:2],
-                '%02d' % int(time[:2]) - gmt_daylight,
+                '%02d' % (int(time[:2]) - gmt_daylight),
                 time[2:],
             )
 
@@ -194,8 +194,6 @@ class IndustriaRobotFile(orm.Model):
 
             record_date = get_datetime(date, time)
 
-            if not last_record_date:
-                last_record_date = record_date
             if counter <= current_row:
                 last_record_date = record_date  # Save last record date
                 last_program_ref = file.last_program_ref
@@ -269,8 +267,10 @@ class IndustriaRobotFile(orm.Model):
                         # 'picking_id': 'production_id': 'piece' 'product_ids'
 
                     }, context=context)
+                # Last data:
                 last_job_id = job_id
                 last_program_ref = program_ref
+                last_record_date = record_date
 
             data = {
                 'name': program_ref,
