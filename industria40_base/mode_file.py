@@ -138,6 +138,7 @@ class IndustriaRobotFile(orm.Model):
         """
         program_pool = self.pool.get('industria.program')
         job_pool = self.pool.get('industria.job')
+        file_pool = self.pool.get('industria.pipe.file.stat')
 
         separator = ';'
         file_id = ids[0]
@@ -253,7 +254,7 @@ class IndustriaRobotFile(orm.Model):
                 'job_id': job_id,
                 'state': state,
             }
-            self.create(cr, uid, data, context=context)
+            file_pool.create(cr, uid, data, context=context)
 
         self.write(cr, uid, ids, {
             'row': row,
@@ -261,7 +262,6 @@ class IndustriaRobotFile(orm.Model):
             'last_program_ref': last_program_ref,
             'last_job_id': last_job_id,
         }, context=context)
-
         return True
 
     def file_import_stat_xml(self, cr, uid, ids, context=None):
