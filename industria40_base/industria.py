@@ -1314,10 +1314,10 @@ class IndustriaProgramFabric(orm.Model):
     _columns = {
         'program_id': fields.many2one('industria.program', 'Programma'),
         'fabric_id': fields.many2one('product.product', 'Tessuto'),
-        'length': fields.related(
-            'program_id', 'fabric_length',
-            'Lunghezza', type='float',
-            digits=(10, 2), readonly=True),
+        # 'length': fields.related(
+        #    'program_id', 'fabric_length',
+        #    'Lunghezza', type='float',
+        #    digits=(10, 2), readonly=True),
     }
 
 

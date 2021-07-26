@@ -321,12 +321,12 @@
                                         <field name="fabric_ids" colspan="4" nolabel="1" >
                                             <tree string="Tessuti utilizzati">
                                                 <field name="fabric_id" />
-                                                <field name="length" />
+                                                <!--<field name="length" />-->
                                             </tree>
                                             <form string="Tessuti utilizzati">
                                                 <group colspan="4" col="4">
                                                     <field name="fabric_id" />
-                                                    <field name="length" />
+                                                    <!--<field name="length" />-->
                                                     <separator string="Parti" colspan="4"/>
                                                     <field name="part_ids" colspan="4" nolabel="1">
                                                         <tree string="Parti" editable="bottom">
