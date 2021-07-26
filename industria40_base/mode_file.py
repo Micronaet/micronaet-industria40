@@ -154,9 +154,8 @@ class IndustriaRobotFile(orm.Model):
         database_id = file.database_id.id
 
         fullname = file.fullname
-        pdb.set_trace()
         if not fullname.endswith(extension):
-            _logger.error('File: %s not used!')
+            _logger.error('File: %s not used!' % fullname)
             return False
 
         timestamp = str(os.stat(fullname).st_mtime)
