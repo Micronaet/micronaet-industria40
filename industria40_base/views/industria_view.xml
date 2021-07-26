@@ -656,7 +656,8 @@
                             <notebook>
                                 <page name="page_composition" string="Materasso">
                                     <group col="4" colspan="4">
-                                        <field name="fabric_ids">
+                                        <separator string="Tessuti" colspan="4"/>
+                                        <field name="fabric_ids" colspan="4" nolabel="1">
                                             <tree string="Tessuti" colspan="4" editable="bottom">
                                                 <field name="sequence" widget="handle"/>
                                                 <field name="fabric_id" />
