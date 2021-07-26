@@ -124,8 +124,6 @@ class IndustriaRobot(orm.Model):
     }
 
 
-
-
 class IndustriaRobotFile(orm.Model):
     """ Model name: Industria fabric file
     """
@@ -138,8 +136,6 @@ class IndustriaRobotFile(orm.Model):
     def file_import_stat_csv(self, cr, uid, ids, context=None):
         """ Import CSV file (pipe)
         """
-        pdb.set_trace()
-
         program_pool = self.pool.get('industria.program')
         job_pool = self.pool.get('industria.job')
 
@@ -152,6 +148,7 @@ class IndustriaRobotFile(orm.Model):
         fullname = file.fullname
         timestamp = str(os.stat(fullname).st_mtime)
         current_row = file.row
+        pdb.set_trace()
         if current_row:  # Update last job found:
             last_job_id = file.last_job_id
             last_program_ref = file.last_program_ref
@@ -164,7 +161,7 @@ class IndustriaRobotFile(orm.Model):
                 counter += 1
                 continue
             counter += 1
-            row = line.split(separator)
+            row = line.strip().split(separator)
             if counter <= current_row:
                 last_program = row[3]
                 continue  # yet read
@@ -209,10 +206,8 @@ class IndustriaRobotFile(orm.Model):
                     'program_id': program_id,
                     'database_id': database_id,
                     'source_id': robot_id,
-                    'force_product_id': fields.many2one(
-                        'product.product', 'Prodotto'),
-                    # todo update previous!
                     'state':  'RUNNING',
+                    # 'force_product_id': ,
                     # 'DRAFT' 'ERROR' 'RUNNING' 'COMPLETED'
                     # 'notes'
                     # 'job_duration':
@@ -233,19 +228,13 @@ class IndustriaRobotFile(orm.Model):
                     job_pool.write(cr, uid, [last_job_id], {
                         'state': 'COMPLETED',
                         # todo Update statistic data?
-                        # 'out_statistic':
-                        # 'dismiss'
-                        # 'unused'
-                        # 'job_duration':
+                        # 'out_statistic': 'dismiss' 'unused' 'job_duration'
 
                         # todo Update production
-                        # 'picking_id':
-                        # 'production_id':
-                        # 'piece'
-                        # 'product_ids'
+                        # 'picking_id': 'production_id': 'piece' 'product_ids'
 
                     }, context=context)
-                    last_job_id = job_id
+                last_job_id = job_id
 
             data = {
                 'name': program_ref,
