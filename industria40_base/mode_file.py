@@ -177,6 +177,7 @@ class IndustriaRobotFile(orm.Model):
 
         last_record_date = False
         counter = 0
+        pdb.set_trace()
         for line in open(fullname, 'r'):
             if not counter:
                 counter += 1
