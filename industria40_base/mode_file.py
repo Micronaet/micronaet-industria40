@@ -166,7 +166,10 @@ class IndustriaRobotFile(orm.Model):
                 counter += 1
                 continue
             counter += 1
-            row = line.strip().split(separator)
+            line = line.strip()
+            if not line:
+                continue  # Jump empty line
+            row = line.split(separator)
             if counter <= current_row:
                 last_program = row[3]
                 continue  # yet read
