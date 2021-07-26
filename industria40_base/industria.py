@@ -383,10 +383,15 @@ class IndustriaDatabase(orm.Model):
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             products = []
 
-            # A. Normal mono production:
+            # A1. Normal mono production:
             product = job.force_product_id or job.program_id.product_id
             if product:
                 products.append((product, job.piece))
+
+            # A2. Normal mono production (unload):
+            product = job.in_product_id
+            if product:
+                products.append((product, -job.bar))
 
             # B. Multi production:
             for item in job.product_ids:
@@ -421,7 +426,6 @@ class IndustriaDatabase(orm.Model):
                 duration = 0  # only fist for multi product
                 linked_job_id = False
 
-
         # Generate picking form collected data:
         new_picking_ids = []
         for origin in daily_job:
@@ -453,12 +457,21 @@ class IndustriaDatabase(orm.Model):
                         cr, uid, False, product.id, location_src_id,
                         location_dest_id, False)  # no partner
                     move_data = onchange.get('value', {})
-                    move_data.update({
-                        'picking_id': picking_id,
-                        'product_id': product.id,
-                        'product_uom_qty': qty,
-                        'location_id': location_src_id,
-                        'location_dest_id': location_dest_id,
+                    if qty > 0:
+                        move_data.update({
+                            'picking_id': picking_id,
+                            'product_id': product.id,
+                            'product_uom_qty': qty,
+                            'location_id': location_src_id,
+                            'location_dest_id': location_dest_id,
+                            })
+                    else:
+                        move_data.update({
+                            'picking_id': picking_id,
+                            'product_id': product.id,
+                            'product_uom_qty': qty,
+                            'location_id': location_dest_id,
+                            'location_dest_id': location_src_id,
                         })
 
                     move_pool.create(cr, uid, move_data, context=context)

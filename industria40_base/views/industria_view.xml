@@ -297,8 +297,8 @@
                             <field name="partner_id" readonly="1"/>
                             <field name="mode" /> <!--invisible="1" -->
 
-                            <field name="product_id" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>/><!--attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
-                            <field name="in_product_id" attrs="{'invisible': [('mode', '!=', 'file')]}"/>/><!--attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
+                            <field name="in_product_id" attrs="{'invisible': [('mode', '!=', 'file')], 'required': [('mode', '=', 'file')]}" />/><!--attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
+                            <field name="product_id" attrs="{'required': [('mode', '=', 'file')], 'invisible': [('mode', 'in', ('opcua', ))]}"/>/><!--attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
 
                             <notebook colspan="4">
                                 <page name="parameter_page" string="Parametri" attrs="{'invisible': [('mode', 'not in', ('opcua', ))]}">

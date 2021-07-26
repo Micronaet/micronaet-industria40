@@ -47,8 +47,6 @@ class IndustriaProgram(orm.Model):
     _inherit = 'industria.program'
 
 
-
-
 class IndustriaJob(orm.Model):
     """ Model name: Industria job
     """
