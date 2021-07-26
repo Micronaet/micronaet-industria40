@@ -936,11 +936,18 @@ class IndustriaDatabase(orm.Model):
             'FTP command', help='FTP command for unload Job'),
         'ftp_fullname': fields.char(
             'FTP fullname', size=180, help='Fullname for file with log'),
+        'file_stat_path': fields.text(
+            'Cartella statistiche', help='Nella gestione DB con file'),
+        'file_execute_path': fields.text(
+            'Cartella job', help='Nella gestione DB con file'),
+        # 'file_alarm_path': fields.text(
+        #    'Cartella allarmi', help='Nella gestione DB con file'),
         'mode': fields.selection([
             ('mysql', 'My SQL'),
             ('mssql', 'MS SQL'),
             ('ftp', 'FTP'),
             ('opcua', 'OPCUA'),
+            ('file', 'File'),
         ], 'Mode', required=True),
     }
 

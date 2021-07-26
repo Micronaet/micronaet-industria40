@@ -122,15 +122,18 @@
                             <field name="partner_id" required="1"/>
 
                             <field name="ip" />
-                            <field name="username" attrs="{'required': [('mode', 'not in', ('ftp', 'opcua'))], 'invisible': [('mode', '=', 'ftp')]}"/>
-                            <field name="password" password="True" attrs="{'required': [('mode', 'not in', ('ftp', 'opcua'))], 'invisible': [('mode', '=', 'ftp')]}"/>
+                            <field name="username" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('file', 'mode', 'in', ('file', 'ftp'))]}"/>
+                            <field name="password" password="True" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}"/>
 
-                            <field name="database" attrs="{'required': [('mode', 'not in', ('ftp', 'opcua'))], 'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
-                            <field name="port" attrs="{'required': [('mode', '!=', 'ftp')], 'invisible': [('mode', '=', 'ftp')]}" />
+                            <field name="database" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
+                            <field name="port" attrs="{'required': [('mode', 'not in', ('file', 'ftp'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}" />
 
                             <field name="mode" />
                             <field name="ftp_command" colspan="4"  attrs="{'required': [('mode', '=', 'ftp')], 'invisible': [('mode', '!=', 'ftp')]}"/>
                             <field name="ftp_fullname" colspan="4"  attrs="{'required': [('mode', '=', 'ftp')], 'invisible': [('mode', '!=', 'ftp')]}"/>
+
+                            <field name="file_stat_path" colspan="2"  attrs="{'required': [('mode', '=', 'file')], 'invisible': [('mode', '!=', 'file')]}"/>
+                            <field name="file_execute_path" colspan="2"  attrs="{'required': [('mode', '=', 'file')], 'invisible': [('mode', '!=', 'file')]}"/>
 
                             <separator string="Note" colspan="4"/>
                             <field name="note" colspan="4" nolabel="1"/>

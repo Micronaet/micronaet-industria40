@@ -22,4 +22,6 @@
 ###############################################################################
 
 from . import industria
+from . import pipe
+from . import fabric
 from . import report
