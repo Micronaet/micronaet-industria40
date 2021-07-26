@@ -80,7 +80,6 @@ class IndustriaRobot(orm.Model):
         """ Load all daily file from data folder
         """
         file_pool = self.pool.get('industria.robot.file')
-        pdb.set_trace()
         robot_id = ids[0]
         robot = self.browse(cr, uid, robot_id, context=context)
         database_id = robot.database_id.id
@@ -104,7 +103,7 @@ class IndustriaRobot(orm.Model):
                     }, context=context)]
 
                 file_pool.load_file(
-                    cr, uid, file_ids, fullname, context=context)
+                    cr, uid, file_ids, context=context)
             break  # No subfolders
         return True
 
@@ -282,6 +281,8 @@ class IndustriaRobotFile(orm.Model):
     def load_file(self, cr, uid, ids, context=None):
         """ Load daily file from data folder
         """
+        pdb.set_trace()
+
         file_id = ids[0]
         file = self.browse(cr, uid, file_id, context=context)
         fullname = file.fullname
