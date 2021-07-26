@@ -21,6 +21,16 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.actions.act_window" id="action_industria_stats_records">
+            <field name="name">Record statistici</field>
+            <field name="res_model">industria.pipe.file.stat</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_industria_pipe_file_stat_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
         <!--industria.production-->
         <record model="ir.ui.view" id="view_industria_robot_file_tree">
             <field name="name">industria.robot.file.tree</field>
@@ -52,6 +62,12 @@
                 parent="menu_industria_configuration"
                 id="menu_industria_stats_file"
                 action="action_industria_stats_file"
+                sequence="60"
+                />
+            <menuitem
+                parent="menu_industria_configuration"
+                id="menu_industria_stats_record_file"
+                action="action_industria_stats_records"
                 sequence="60"
                 />
     </data>
