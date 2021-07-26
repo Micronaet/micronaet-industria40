@@ -1234,6 +1234,7 @@ class IndustriaProgram(orm.Model):
         'industria_ref': fields.integer('Industria ref key'),
         'timeout': fields.integer('Timeout'),
         'piece': fields.integer('Total piece x job'),
+        'bar': fields.integer('Totale barre', help='Usate per taglia tubi'),
         'source_id': fields.many2one(
             'industria.robot', 'Robot'),
         'database_id': fields.many2one(

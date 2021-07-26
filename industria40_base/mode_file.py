@@ -262,6 +262,7 @@ class IndustriaRobotFile(orm.Model):
                         'updated_at': last_record_date,
                         'ended_at': last_record_date,
                         'piece': piece1 - job_piece1_start,
+                        'bar': job_bar_counter,
 
                         # todo Update statistic data?
                         # 'out_statistic': 'dismiss' 'unused' 'job_duration'
@@ -269,10 +270,15 @@ class IndustriaRobotFile(orm.Model):
                         # 'picking_id': 'production_id': 'piece' 'product_ids'
 
                     }, context=context)
+
+                job_bar_counter = 0
+
                 # Last data:
                 last_job_id = job_id
                 last_program_ref = program_ref
 
+            if state == 'CAMBIO BARRA':
+                job_bar_counter += 1
             data = {
                 'name': program_ref,
                 'timestamp': record_date,
@@ -301,6 +307,7 @@ class IndustriaRobotFile(orm.Model):
                 'updated_at': last_record_date,
                 'ended_at': last_record_date,
                 'piece': piece1 - job_piece1_start,
+                'bar': job_bar_counter,
 
                 # todo Update statistic data?
                 # 'out_statistic': 'dismiss' 'unused' 'job_duration'
