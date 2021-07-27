@@ -116,7 +116,7 @@ class IndustriaRobot(orm.Model):
         extension = 'gbr'
         for root, folders, files in os.walk(path):
             for filename in files:
-                if filename.endswith(extension):
+                if not filename.endswith(extension):
                     _logger.error('File not used: %s' % filename)
                     continue
 
@@ -130,11 +130,10 @@ class IndustriaRobot(orm.Model):
                     program_pool.create(cr, uid, {
                         'name': name,
                         'code': name.upper().replace(' ', ''),
-                        'filename': filename,
-                        'robot_id': robot_id,
+                        'fabric_filename': filename,
+                        'source_id': robot_id,
                         'database_id': database_id,  # todo related!
                         # 'timestamp': timestamp,  # Not the first time!
-                        'row': 0,
                     }, context=context)
             break  # No subfolders
         return True
