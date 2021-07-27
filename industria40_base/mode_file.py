@@ -121,7 +121,7 @@ class IndustriaRobot(orm.Model):
                     continue
 
                 file_ids = program_pool.search(cr, uid, [
-                    ('robot_id', '=', robot_id),
+                    ('source_id', '=', robot_id),
                     ('fabric_filename', '=', filename),
                 ], context=context)
                 if not file_ids:
