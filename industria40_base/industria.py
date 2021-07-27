@@ -1458,7 +1458,6 @@ class IndustriaJob(orm.Model):
         prefix_tender_file = robot.fabric_prefix_cad
         fullname = os.path.expanduser(
             os.path.join(tender_path, 'job_%s.txt' % job_id))
-        pdb.set_trace()
         file_out = open(fullname, 'w')
 
         date = get_date(job.created_at)
