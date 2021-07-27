@@ -355,6 +355,7 @@ class IndustriaDatabase(orm.Model):
     def generate_this_picking_from_job(self, cr, uid, ids, context=None):
         """ Generate picking from jobs
         """
+        pdb.set_trace()
         if context is None:
             context = {}
         ctx = context.copy()
@@ -364,6 +365,7 @@ class IndustriaDatabase(orm.Model):
     def generate_picking_from_job(self, cr, uid, ids, context=None):
         """ Generate picking from jobs
         """
+        pdb.set_trace()
         if context is None:
             context = {}
         force_database_id = context.get('force_database_id')
@@ -396,7 +398,6 @@ class IndustriaDatabase(orm.Model):
             domain.append(('database_id', '=', force_database_id))
         job_ids = job_pool.search(cr, uid, domain, context=context)
         daily_job = {}
-        pdb.set_trace()
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             products = []
 
