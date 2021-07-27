@@ -105,6 +105,40 @@ class IndustriaRobot(orm.Model):
 
     _inherit = 'industria.robot'
 
+    def load_fabric_program(self, cr, uid, ids, context=None):
+        """ Load all daily file from data folder
+        """
+        program_pool = self.pool.get('industria.program')
+        robot_id = ids[0]
+        robot = self.browse(cr, uid, robot_id, context=context)
+        database_id = robot.database_id.id
+        path = os.path.expanduser(robot.file_cad_path)
+        extension = 'gbr'
+        for root, folders, files in os.walk(path):
+            for filename in files:
+                if filename.endswith(extension):
+                    _logger.error('File not used: %s' % filename)
+                    continue
+
+                file_ids = program_pool.search(cr, uid, [
+                    ('robot_id', '=', robot_id),
+                    ('fabric_filename', '=', filename),
+                ], context=context)
+                if not file_ids:
+                    # timestamp = str(os.stat(fullname).st_mtime)
+                    name = filename[:-4]
+                    program_pool.create(cr, uid, {
+                        'name': name,
+                        'code': name.upper().replace(' ', ''),
+                        'filename': filename,
+                        'robot_id': robot_id,
+                        'database_id': database_id,  # todo related!
+                        # 'timestamp': timestamp,  # Not the first time!
+                        'row': 0,
+                    }, context=context)
+            break  # No subfolders
+        return True
+
     def get_today_file(self, cr, uid, ids, context=None):
         """ Estract filename for today log
         """
@@ -157,8 +191,8 @@ class IndustriaRobot(orm.Model):
         ], 'Mode', required=True),
         'file_stat_path': fields.text(
             'Cartella statistiche', help='Nella gestione DB con file'),
-        'file_execute_path': fields.text(
-            'Cartella job', help='Nella gestione DB con file'),
+        # 'file_execute_path': fields.text(
+        #    'Cartella job', help='Nella gestione DB con file'),
         # 'file_alarm_path': fields.text(
         #    'Cartella allarmi', help='Nella gestione DB con file'),
     }

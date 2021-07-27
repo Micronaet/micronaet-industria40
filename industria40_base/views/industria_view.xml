@@ -217,28 +217,33 @@
                             <notebook colspan="4">
                                 <page name="robot_setup" string="Setup">
                                     <group colspan="4" col="4">
-                                        <separator string="Modo file:" colspan="3" />
-                                        <button name="load_all_stat_file" type="object" string="Importa file stats" icon="gtk-justify-fill" attrs="{'invisible': [('file_stat_path', '=', False)]}"/>
-                                        <!-- attrs="{'required': [('database_id.mode', '=', 'file')], 'invisible': [('database_id.mode', '!=', 'file')]}"-->
-                                        <field name="file_mode" colspan="2" />
-                                        <newline/>
-                                        <field name="file_stat_path" colspan="2" />
-                                        <field name="file_execute_path" colspan="2" />
                                     </group>
                                 </page>
                                 <page name="program_page" string="Program">
                                     <group colspan="4" col="4">
-                                        <separator string="Program" colspan="4"/>
+                                        <separator string="Program" colspan="1"/>
+                                        <button name="load_fabric_program" type="object" string="Carica programmi CAD" icon="STOCK_DND_MULTIPLE" colspan="1"/>
+
                                         <field name="program_ids" colspan="4" nolabel="1"/>
                                     </group>
                                 </page>
                                 <page name="fabric_page" string="Tessuti">
                                     <group colspan="4" col="4">
-                                        <separator string="Parametri programmazione" colspan="4"/>
+                                        <separator string="Modo file:" colspan="3" />
+                                        <button name="load_all_stat_file" type="object" string="Importa file stats" icon="gtk-justify-fill" attrs="{'invisible': [('file_stat_path', '=', False)]}"/>
+
+                                        <!-- attrs="{'required': [('database_id.mode', '=', 'file')], 'invisible': [('database_id.mode', '!=', 'file')]}"-->
+                                        <field name="file_mode" colspan="2" />
+                                        <newline/>
+
+                                        <!--<field name="file_execute_path" colspan="2" />-->
+                                        <separator string="Parametri setup invio job" colspan="4"/>
                                         <field name="fabric_tender_name" />
                                         <field name="fabric_prefix_cad" />
                                         <field name="fabric_cad_path" />
                                         <field name="fabric_tender_path" />
+
+                                        <field name="file_stat_path" colspan="2" /> <!--todo not used for now-->
                                     </group>
                                 </page>
 
@@ -270,6 +275,7 @@
                     <field name="partner_id" />
                     <field name="database_id" />
                     <button name="button_load_production_from_robot" type="object" string="Carica commesse da robot" icon="gtk-refresh"/>
+                    <button name="load_fabric_program" type="object" string="Carica programmi CAD" icon="STOCK_DND_MULTIPLE"/>
                 </tree>
             </field>
         </record>
