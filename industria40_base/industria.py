@@ -409,6 +409,17 @@ class IndustriaDatabase(orm.Model):
             # if product:
             #    products.append((product, -job.bar))
 
+            # A3. Fabric half worked:
+            for step in job.step_ids:
+                program = step.program_id
+                for line in step.fabric_ids:  # fabric in job
+                    fabric = line.fabric_id
+                    flat_total = line.total
+                    for part in program.fabric_ids:  # check fabric in program
+                        if fabric in part.fabric_id:
+                            products.append(
+                                (fabric, flat_total * fabric.total))
+
             # B. Multi production:
             for item in job.product_ids:
                 products.append((item.product_id, item.piece))

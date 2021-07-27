@@ -711,7 +711,7 @@
                                                         <field name="sequence" />
                                                         <field name="program_id" />
                                                         <separator string="Strati tessuto" colspan="4"/>
-                                                        <field name="fabric_ids" colspan="4">
+                                                        <field name="fabric_ids" colspan="4" nolabel="1">
                                                             <tree string="Tessuti" editable="bottom">
                                                                 <field name="fabric_id"/>
                                                                  <field name="total" />
@@ -790,7 +790,7 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="view_id" ref="view_industria_job_fabric_tree"/>
             <field name="context">{'form_view_ref': 'industria40_base.view_industria_job_fabric_form', 'default_state': 'DRAFT'}</field>
-            <field name="domain">[('database_id.mode', '=', 'file')]</field>
+            <field name="domain">[('database_id.mode', '=', 'file'), ('source_id.file_mode', '=', 'fabric')]</field>
         </record>
 
         <record model="ir.actions.act_window" id="action_stock_picking_industria_job">
