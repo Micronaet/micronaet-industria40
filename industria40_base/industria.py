@@ -395,7 +395,6 @@ class IndustriaDatabase(orm.Model):
         if force_database_id:
             domain.append(('database_id', '=', force_database_id))
         job_ids = job_pool.search(cr, uid, domain, context=context)
-        pdb.set_trace()
         daily_job = {}
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             products = []
@@ -415,6 +414,7 @@ class IndustriaDatabase(orm.Model):
                 products.append((item.product_id, item.piece))
 
             if not products:
+                _logger.error('Jump job, no half worked!')
                 continue  # Not used
 
             database = job.database_id
