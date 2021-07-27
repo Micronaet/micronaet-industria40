@@ -355,7 +355,6 @@ class IndustriaDatabase(orm.Model):
     def generate_this_picking_from_job(self, cr, uid, ids, context=None):
         """ Generate picking from jobs
         """
-        pdb.set_trace()
         if context is None:
             context = {}
         ctx = context.copy()
@@ -365,7 +364,6 @@ class IndustriaDatabase(orm.Model):
     def generate_picking_from_job(self, cr, uid, ids, context=None):
         """ Generate picking from jobs
         """
-        pdb.set_trace()
         if context is None:
             context = {}
         force_database_id = context.get('force_database_id')
@@ -412,7 +410,6 @@ class IndustriaDatabase(orm.Model):
             #    products.append((product, -job.bar))
 
             # A3. Fabric half worked:
-            pdb.set_trace()
             for step in job.step_ids:
                 program = step.program_id
                 for line in step.fabric_ids:  # fabric in job
@@ -422,6 +419,7 @@ class IndustriaDatabase(orm.Model):
                         if fabric == part.fabric_id:
                             products.append(
                                 (fabric, flat_total * part.total))
+            pdb.set_trace()
 
             # B. Multi production:
             for item in job.product_ids:
