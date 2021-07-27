@@ -1445,7 +1445,6 @@ class IndustriaJob(orm.Model):
                 date[5:7],
                 date[:4],
             )
-
         job_id = ids[0]
         job = self.browse(cr, uid, job_id, context=context)
 
@@ -1453,7 +1452,6 @@ class IndustriaJob(orm.Model):
         from_mm = 0
         gap = 0
         file_text = '$D$|%s|$O$|Job_%s' % (date, job_id)
-        counter = 0
 
         robot = job.source_id
         tender_path = robot.fabric_tender_path
@@ -1462,9 +1460,23 @@ class IndustriaJob(orm.Model):
         file_out = open(fullname, 'w')
 
         data_files = []
-        data_fabric = []
-        step_loop = range(1, len(job.step_ids) + 1)
-        for step in step_loop:
+        data_fabric = {}
+        counter = 0
+
+        file_text += '|$S$'
+
+        # Generate fabric total block:
+        fabric_list = []
+        pos = 0
+        for step in job.step_ids:
+            for fabric in step.fabric_ids:
+                product_fabric = fabric.fabric_id
+                if product_fabric not in fabric_list:
+                    fabric_list[product_fabric] = pos
+                    pos += 1
+        step_loop = range(len(fabric_list))
+
+        for step in job.step_ids:
             counter += 1
             program = job.program_id
             prefix_tender_file = robot.fabric_prefix_cad
@@ -1472,48 +1484,40 @@ class IndustriaJob(orm.Model):
             iso_filename = program.fabric_filename
             to_mm = int(from_mm + length + gap)
 
-            file_text += '|$S$|GR%s:%s;%s' % (
-                counter, from_mm, to_mm)
+            file_text += '|GR%s:%s;%s' % (counter, from_mm, to_mm)
             from_mm = to_mm
 
             # Block files:
             data_files.append(iso_filename)
 
             # Block fabric:
-            for fabric in job.fabric_ids:
+            for fabric in step.fabric_ids:
                 fabric_product = fabric.fabric_id
                 data_fabric[fabric] = [
-                    '%s|%s|%s|' % (
+                    '%s|%s|%s' % (
                         fabric_product.default_code,
                         fabric_product.name,
                         ' ',  # Bagni
                     ),
                     [0 for element in step_loop],  # Q block (total)
-                    ]
+                ]
 
                 total = fabric.total
-                data_fabric[fabric][1][counter - 1] = total
-                file_text += '|$C$|%s|%s|%s' % (
-                    fabric_product.default_code,
-                    fabric_product.name,
-                    ' ',  # Bagni
-                )
-                file_text += '|$Q$|%s' % total
-                # file_text +=  '|$R$|r1col1;20,00|
+                data_fabric[fabric][1][fabric_list[fabric_product]] = total
 
         # ISO file:
-        for iso_filename in data_files:
-            file_text += '|$M$|%s\\%s' % (
+        file_text += '|$M$'
+        for iso_filename in sorted(data_files):
+            file_text += '|%s\\%s' % (
                 prefix_tender_file, iso_filename)
 
         # Loop for materasso:
-        for fabric_product in data_fabric:
+        for fabric_product in sorted(data_fabric, key=lambda a: a.sequence):
             fabric_text, totals = data_fabric[fabric_product]
             file_text += '|$C$|%s' % fabric_text
-            file_text += '|$Q$' % fabric_text
+            file_text += '|$Q$'
             for item in totals:
                 file_text += '|%s' % item
-            file_text += '|'
         file_text += '\n'
         file_out.write(file_text)
         file_out.close()
