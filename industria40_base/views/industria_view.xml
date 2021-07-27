@@ -659,7 +659,7 @@
                     <sheet>
                         <group col="4" colspan="4">
                             <field name="created_at" string="Pianificato"/>
-                            <field name="database_id" domain="[('mode', '=', 'opcua')]" required="1"/>
+                            <field name="database_id" domain="[('mode', '=', 'file')]" required="1"/>
 
                             <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
                             <field name="program_id" domain="[('source_id', '=', source_id)]" invisible="1"/>
