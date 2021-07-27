@@ -417,7 +417,7 @@ class IndustriaDatabase(orm.Model):
                     fabric = line.fabric_id
                     flat_total = line.total
                     for program_fabric in program.fabric_ids:  # check fabric in program
-                        if fabric == part.fabric_id:
+                        if fabric == program_fabric.fabric_id:
                             for part in program_fabric.part_ids:
                                 product = part.product_id
                                 products.append(
