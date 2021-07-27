@@ -1455,6 +1455,7 @@ class IndustriaJob(orm.Model):
 
         robot = job.source_id
         tender_path = robot.fabric_tender_path
+        tender_name = robot.fabric_tender_name
         fullname = os.path.expanduser(
             os.path.join(tender_path, 'job_%s.txt' % job_id))
         file_out = open(fullname, 'w')
@@ -1507,6 +1508,8 @@ class IndustriaJob(orm.Model):
         file_text += '|$M$'
         for iso_fullname in data_files:
             file_text += '|%s' % iso_fullname
+
+        file_text += '|$CS$|%s' % tender_name
 
         # Loop for materasso:
         for fabric_product in data_fabric:
