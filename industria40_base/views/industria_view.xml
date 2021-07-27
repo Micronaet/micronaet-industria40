@@ -665,15 +665,25 @@
                             <field name="program_id" domain="[('source_id', '=', source_id)]" required="1"/>
 
                             <notebook colspan="4">
-                                <page name="page_composition" string="Materasso">
+                                <page name="page_composition" string="Strati Materasso">
                                     <group col="4" colspan="4">
-                                        <separator string="Tessuti" colspan="4"/>
-                                        <field name="fabric_ids" colspan="4" nolabel="1">
-                                            <tree string="Tessuti" editable="bottom">
+                                        <separator string="Gradini" colspan="4"/>
+                                        <field name="step_ids" colspan="4" nolabel="1">
+                                            <tree string="Gradini">
                                                 <field name="sequence" widget="handle"/>
-                                                <field name="fabric_id" />
-                                                <field name="total" />
+                                                <field name="program_id" />
                                             </tree>
+                                            <form>
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="program_id" />
+                                                <field name="total" />
+                                                <field name="fabric_ids">
+                                                    <tree string="Tessuti" editable="bottom">
+                                                        <field name="fabric_id"/>
+                                                         <field name="total" />
+                                                    </tree>
+                                                </field>
+                                            </form>
                                         </field>
                                     </group>
                                 </page>

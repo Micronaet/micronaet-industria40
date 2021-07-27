@@ -1310,6 +1310,7 @@ class IndustriaProgram(orm.Model):
     }
 
 
+
 class IndustriaProgramFabric(orm.Model):
     """ Model name: Industria Program fabric
     """
@@ -1691,6 +1692,24 @@ class IndustriaJob(orm.Model):
     }
 
 
+class IndustriaJobStep(orm.Model):
+    """ Model name: Industria Job fabric
+        Field name keep as in MySQL for fast import
+    """
+
+    _name = 'industria.job.step'
+    _description = 'Job step'
+    _rec_name = 'sequence'
+    _order = 'sequence'
+
+    _columns = {
+        'name': fields.integer('Nome'),
+        'sequence': fields.integer('Sequenza'),
+        'job_id': fields.many2one('industria.job', 'Job'),
+        'program_id': fields.many2one('industria.program', 'Programma'),
+    }
+
+
 class IndustriaJobFabric(orm.Model):
     """ Model name: Industria Job fabric
         Field name keep as in MySQL for fast import
@@ -1703,11 +1722,24 @@ class IndustriaJobFabric(orm.Model):
 
     _columns = {
         'sequence': fields.integer('Seq.'),
-        'job_id': fields.many2one(
-            'industria.job', 'Job'),
+        'step_id': fields.many2one(
+            'industria.job.step', 'Step'),
         'fabric_id': fields.many2one(
             'product.product', 'Tessuto', required=True),
-        'total': fields.integer('Totale'),
+        'total': fields.integer('Totale', required=True),
+    }
+
+
+class IndustriaJobStepInherit(orm.Model):
+    """ Model name: Industria Job fabric
+        Field name keep as in MySQL for fast import
+    """
+
+    _inherit = 'industria.job.step'
+
+    _columns = {
+        'fabric_ids': fields.one2many(
+            'industria.job.fabric', 'step_id', 'Tessuti')
     }
 
 
@@ -1722,7 +1754,6 @@ class IndustriaRobotRelation(orm.Model):
             'industria.program', 'source_id', 'Program'),
         'job_ids': fields.one2many(
             'industria.job', 'source_id', 'Job'),
-
     }
 
 
@@ -1800,6 +1831,6 @@ class IndustriaJobInherit(orm.Model):
     _inherit = 'industria.job'
 
     _columns = {
-        'fabric_ids': fields.one2many(
-            'industria.job.fabric', 'job_id', 'Tessuti')
+        'step_ids': fields.one2many(
+            'industria.job.step', 'job_id', 'Gradini')
     }
