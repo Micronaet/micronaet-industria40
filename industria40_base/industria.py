@@ -1485,7 +1485,7 @@ class IndustriaJob(orm.Model):
 
         for step in job.step_ids:
             counter += 1
-            program = job.program_id
+            program = step.program_id
             prefix_tender_file = robot.fabric_prefix_cad
             length = int(program.fabric_length)
             iso_filename = program.fabric_filename
@@ -1512,7 +1512,7 @@ class IndustriaJob(orm.Model):
                     ]
 
                 total = fabric.total
-                data_fabric[fabric][1][step_pos[step]] = total
+                data_fabric[fabric_product][1][step_pos[step]] = total
 
         # ISO file:
         file_text += '|$M$'
@@ -1520,7 +1520,7 @@ class IndustriaJob(orm.Model):
             file_text += '|%s' % iso_fullname
 
         # Loop for materasso:
-        for fabric_product in sorted(data_fabric, key=lambda a: a.sequence):
+        for fabric_product in data_fabric:
             fabric_text, totals = data_fabric[fabric_product]
             file_text += '|$C$|%s' % fabric_text
             file_text += '|$Q$'
