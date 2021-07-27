@@ -290,6 +290,29 @@
         </record>
 
         <!--industria.program-->
+        <record model="ir.ui.view" id="view_industria_program_search">
+            <field name="name">industria.program.search</field>
+            <field name="model">industria.program</field>
+            <field name="arch" type="xml">
+                <search string="Jobs" version="7.0">
+                    <field name="database_id" />
+                    <field name="name" />
+                    <field name="fabric_filename" />
+                    <field name="code" />
+                    <field name="mode" />
+                    <field name="source_id" filter_domain="[('source_id.name','ilike',self)]"/>
+                    <field name="partner_id" filter_domain="[('partner_id.name','ilike',self)]"/>
+
+                    <!--<filter name="state_draft" string="Stato Bozza" domain="[('state','=','DRAFT')]"/>-->
+                    <group expand="0" string="Group By...">
+                        <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Database" context="{'group_by': 'database_id'}" />
+                        <filter string="Robot" context="{'group_by': 'source_id'}" />
+                        <filter string="Modalità" context="{'group_by': 'mode'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
         <record model="ir.ui.view" id="view_industria_program_form">
             <field name="name">industria.program.form</field>
             <field name="model">industria.program</field>
