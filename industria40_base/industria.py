@@ -1465,17 +1465,6 @@ class IndustriaJob(orm.Model):
 
         file_text += '|$S$'
 
-        # Generate fabric total block:
-        #fabric_pos = {}
-        #pos = 0
-        #for step in job.step_ids:
-        #    for fabric in step.fabric_ids:
-        #        product_fabric = fabric.fabric_id
-        #        if product_fabric not in fabric_pos:
-        #            fabric_pos[product_fabric] = pos
-        #            pos += 1
-        #step_loop = range(len(fabric_pos))
-
         # Step loop for fabric:
         step_pos = {}
         pos = 0
@@ -1526,7 +1515,7 @@ class IndustriaJob(orm.Model):
             file_text += '|$Q$'
             for item in totals:
                 file_text += '|%s' % item
-        file_text += '\n'
+        file_text += '|\n'
         file_out.write(file_text)
         file_out.close()
 
