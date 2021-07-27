@@ -1501,14 +1501,15 @@ class IndustriaJob(orm.Model):
             # Block fabric:
             for fabric in step.fabric_ids:
                 fabric_product = fabric.fabric_id
-                data_fabric[fabric] = [
-                    '%s|%s|%s' % (
-                        fabric_product.default_code,
-                        fabric_product.name,
-                        ' ',  # Bagni
-                    ),
-                    [0 for element in step_pos],  # Q block (total)
-                ]
+                if fabric_product not in data_fabric:
+                    data_fabric[fabric_product] = [
+                        '%s|%s|%s' % (
+                            fabric_product.default_code,
+                            fabric_product.name,
+                            ' ',  # Bagni
+                        ),
+                        [0 for element in step_pos],  # Q block (total)
+                    ]
 
                 total = fabric.total
                 data_fabric[fabric][1][step_pos[step]] = total
