@@ -395,6 +395,7 @@ class IndustriaDatabase(orm.Model):
         if force_database_id:
             domain.append(('database_id', '=', force_database_id))
         job_ids = job_pool.search(cr, uid, domain, context=context)
+        pdb.set_trace()
         daily_job = {}
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             products = []
