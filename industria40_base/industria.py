@@ -1466,15 +1466,22 @@ class IndustriaJob(orm.Model):
         file_text += '|$S$'
 
         # Generate fabric total block:
-        fabric_pos = {}
+        #fabric_pos = {}
+        #pos = 0
+        #for step in job.step_ids:
+        #    for fabric in step.fabric_ids:
+        #        product_fabric = fabric.fabric_id
+        #        if product_fabric not in fabric_pos:
+        #            fabric_pos[product_fabric] = pos
+        #            pos += 1
+        #step_loop = range(len(fabric_pos))
+
+        # Step loop for fabric:
+        step_pos = {}
         pos = 0
         for step in job.step_ids:
-            for fabric in step.fabric_ids:
-                product_fabric = fabric.fabric_id
-                if product_fabric not in fabric_pos:
-                    fabric_pos[product_fabric] = pos
-                    pos += 1
-        step_loop = range(len(fabric_pos))
+            step_pos[step] = pos
+            pos += 1
 
         for step in job.step_ids:
             counter += 1
@@ -1500,11 +1507,11 @@ class IndustriaJob(orm.Model):
                         fabric_product.name,
                         ' ',  # Bagni
                     ),
-                    [0 for element in step_loop],  # Q block (total)
+                    [0 for element in step_pos],  # Q block (total)
                 ]
 
                 total = fabric.total
-                data_fabric[fabric][1][fabric_pos[fabric_product]] = total
+                data_fabric[fabric][1][step_pos[step]] = total
 
         # ISO file:
         file_text += '|$M$'
