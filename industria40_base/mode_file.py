@@ -392,6 +392,197 @@ class IndustriaRobotFile(orm.Model):
         file_id = ids[0]
         file = self.browse(cr, uid, file_id, context=context)
         fullname = file.fullname
+
+        # Convert function:
+        def clean_float(value):
+            return float(value)
+        def clean_integer(value):
+            return int(value)
+        def get_datetime(date, time):
+            return date + ' ' + time
+
+        program_pool = self.pool.get('industria.program')
+        job_pool = self.pool.get('industria.job')
+        file_pool = self.pool.get('industria.pipe.file.stat')
+
+        extension = 'xml'
+
+        file_id = ids[0]
+        file = self.browse(cr, uid, file_id, context=context)
+        robot_id = file.robot_id.id
+        database_id = file.database_id.id
+
+        fullname = file.fullname
+        if not fullname.endswith(extension):
+            _logger.error('File: %s not used!' % fullname)
+            return False
+
+        timestamp = str(os.stat(fullname).st_mtime)
+        current_row = file.row
+        if current_row:  # Update last job found:
+            last_job_id = job_id = file.last_job_id
+            last_program_ref = file.last_program_ref  # todo not used!
+            job = job_pool.browse(cr, uid, last_job_id, context=context)
+            program_id = job.program_id.id
+
+            # Total till now for last job:
+            job_piece1_start = job.piece1_start
+            job_bar_counter = job.bar
+        else:
+            last_job_id = last_program_ref = False
+
+        last_record_date = False
+        counter = 0
+        for line in open(fullname, 'r'):
+            if not counter:
+                counter += 1
+                continue
+            counter += 1
+            line = line.strip()
+            if not line:
+                continue  # Jump empty line
+            row = line.split(separator)
+
+            # Read need fields:
+            program_ref = row[3]
+            date = row[1]
+            time = row[2]
+            piece1 = clean_integer(row[4])
+
+            record_date = get_datetime(date, time)
+
+            if counter <= current_row:
+                last_record_date = record_date  # Save last record date
+                last_program_ref = program_ref
+                continue  # yet read
+
+            # Read remain fields:
+            state = row[0]
+            # active1 active2 not used
+
+            # Calculated:
+            if last_program_ref != program_ref:
+                # Get program_id:
+                program_ids = program_pool.search(cr, uid, [
+                    ('source_id', '=', robot_id),
+                    ('name', '=', program_ref),
+                ], context=context)
+                if program_ids:
+                    program_id = program_ids[0]
+                else:
+                    program_id = program_pool.create(cr, uid, {
+                        'code': program_ref,
+                        'name': program_ref,
+                        'source_id': robot_id,
+                        'database_id': database_id,
+                        # 'product_id': False,
+                        # 'partner_id': ,
+                        # 'mode':
+                        # 'note':
+                        # 'medium'
+                        # 'over_alarm'
+                    }, context=context)
+
+                # Get new job:
+                job_piece1_start = piece1
+                job_id = job_pool.create(cr, uid, {
+                    'created_at': record_date,
+                    'piece1_start': job_piece1_start,
+                    # 'updated_at': 'ended_at':
+                    # 'duration':
+                    # 'duration_stop':
+                    # 'duration_change':
+
+                    'program_id': program_id,
+                    'database_id': database_id,
+                    'source_id': robot_id,
+                    'state': 'RUNNING',
+                    # 'force_product_id': ,
+                    # 'DRAFT' 'ERROR' 'RUNNING' 'COMPLETED'
+                    # 'notes'
+                    # 'job_duration':
+                    # 'picking_id':
+
+                    # 'production_id':
+                    # 'piece'
+                    # 'product_ids'
+
+                    # 'out_statistic':
+                    # 'dismiss'
+                    # 'unused'
+                    # 'partner_id':
+                }, context=context)
+                if last_job_id:
+                    # Mark as completed:
+                    job_pool.write(cr, uid, [last_job_id], {
+                        'state': 'COMPLETED',
+                        'updated_at': last_record_date,
+                        'ended_at': last_record_date,
+                        'piece': piece1 - job_piece1_start,
+                        'bar': job_bar_counter,
+
+                        # todo Update statistic data?
+                        # 'out_statistic': 'dismiss' 'unused' 'job_duration'
+                        # todo Update production
+                        # 'picking_id': 'production_id': 'piece' 'product_ids'
+
+                    }, context=context)
+
+                job_bar_counter = 0
+
+                # Last data:
+                last_job_id = job_id
+                last_program_ref = program_ref
+
+            if state == 'CAMBIO BARRA':
+                job_bar_counter += 1
+            data = {
+                'name': program_ref,
+                'timestamp': record_date,
+                'piece1': piece1,
+                'total1': clean_integer(row[5]),
+                'piece2': clean_integer(row[6]),
+                'total2': clean_integer(row[7]),
+                'duration_piece': clean_float(row[8]),
+                'duration_bar': clean_float(row[9]),
+                'program_id': program_id,
+                'file_id': file_id,
+                'job_id': job_id,
+                'state': state,
+            }
+            file_pool.create(cr, uid, data, context=context)
+            last_record_date = record_date
+            # todo counter pieces
+
+        # ---------------------------------------------------------------------
+        # Update last job:
+        # ---------------------------------------------------------------------
+        if last_job_id:
+            # Mark as completed:
+            job_pool.write(cr, uid, [last_job_id], {
+                'state': 'COMPLETED',
+                'updated_at': last_record_date,
+                'ended_at': last_record_date,
+                'piece': piece1 - job_piece1_start,
+                'bar': job_bar_counter,
+
+                # todo Update statistic data?
+                # 'out_statistic': 'dismiss' 'unused' 'job_duration'
+                # todo Update production
+                # 'picking_id': 'production_id': 'piece' 'product_ids'
+
+            }, context=context)
+
+        # ---------------------------------------------------------------------
+        # Update reference for file:
+        # ---------------------------------------------------------------------
+        self.write(cr, uid, ids, {
+            'row': counter,
+            'timestamp': timestamp,
+            'last_program_ref': last_program_ref,
+            'last_job_id': last_job_id,
+        }, context=context)
+        _logger.info('File %s loaded' % fullname)
         return True
 
     def load_file(self, cr, uid, ids, context=None):

@@ -1229,6 +1229,13 @@ class IndustriaRobot(orm.Model):
             type='many2one', relation='res.partner',
             string='Supplier', store=True),
         'note': fields.text('Note'),
+
+        # Fabric custom:
+        'fabric_tender_name': fields.char('Nome stenditore'),
+        'fabric_prefix_cad': fields.char('Previsso disegni CAD'),
+        'fabric_cad_path': fields.char('ISO path'),
+        'fabric_tender_path': fields.char('Stenditore path'),
+
         'today_state': fields.function(
             get_today_state, 'Status', type='text', method=True),
     }
@@ -1276,8 +1283,9 @@ class IndustriaProgram(orm.Model):
             type='many2one', relation='res.partner',
             string='Supplier', store=True),
         'fabric_length': fields.float(
-            'Lunghezza tesssuto', digits=(10, 2),
+            'Lunghezza tesssuto mm.', digits=(10, 2),
             help='Utilizzato come default per gli strati di tessuto'),
+        'fabric_filename': fields.char('Nome file ISO', size=60),
 
         'mode': fields.related(
             'database_id', 'mode', type='selection', string='Mode',
@@ -1425,6 +1433,60 @@ class IndustriaJob(orm.Model):
     _description = 'Jobs'
     _rec_name = 'created_at'
     _order = 'created_at desc'
+
+    def send_fabric_job(self, cr, uid, ids, context=None):
+        """ Send job to tender
+        """
+        def get_date(date):
+            """ Extract FTP date
+            """
+            date = date.strip()[:10]
+            if not date:
+                return ''
+            return '%s/%s/%s' % (
+                date[8:],
+                date[5:7],
+                date[:4],
+            )
+
+        job_id = ids[0]
+        job = self.browse(cr, uid, job_id, context=context)
+        program = job.program_id
+        robot = program.source_id
+
+        tender_path = robot.fabric_tender_path
+        prefix_tender_file = robot.fabric_prefix_cad
+        fullname = os.path.expanduser(
+            os.path.join(tender_path, 'job_%s.txt' % job_id))
+        pdb.set_trace()
+        file_out = open(fullname, 'w')
+
+        date = get_date(job.created_at)
+        from_mm = 0
+        gap = 0
+        length = int(program.fabric_length)
+        iso_filename = program.fabric_filename
+        to_mm = int(from_mm + length + gap)
+        file_text = '$D$|%s|$O$|Job_%s' % (date, job_id)
+        for step in range(1):
+            file_text += '|$S$|GR%s:%s;%s'  % (
+                step, from_mm, to_mm)
+            file_text += '|$M$|%s\%s' % (
+                prefix_tender_file, iso_filename)
+            from_mm = to_mm
+
+        for fabric in job.fabric_ids:
+            total = fabric.total
+            file_text += '|$C$|%s|%s|%s|' % (
+                fabric.default_code,
+                fabric.name,
+                ' ',  # Bagni
+            )
+            file_text += '$Q$|%s' % total
+            # file_text +=  '|$R$|r1col1;20,00|
+        file_text += '\n'
+        file_out.write(file_text)
+        file_out.close()
 
     def button_print_job_report(self, cr, uid, ids, context=None):
         """ Redirect to report passing parameters
