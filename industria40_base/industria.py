@@ -419,9 +419,9 @@ class IndustriaDatabase(orm.Model):
                     fabric = line.fabric_id
                     flat_total = line.total
                     for part in program.fabric_ids:  # check fabric in program
-                        if fabric in part.fabric_id:
+                        if fabric == part.fabric_id:
                             products.append(
-                                (fabric, flat_total * fabric.total))
+                                (fabric, flat_total * part.total))
 
             # B. Multi production:
             for item in job.product_ids:
