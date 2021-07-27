@@ -410,7 +410,6 @@ class IndustriaDatabase(orm.Model):
             #    products.append((product, -job.bar))
 
             # A3. Fabric half worked:
-            pdb.set_trace()
             for step in job.step_ids:
                 program = step.program_id
                 for line in step.fabric_ids:  # fabric in job
@@ -422,7 +421,6 @@ class IndustriaDatabase(orm.Model):
                                 product = part.product_id
                                 products.append(
                                     (product, flat_total * part.total))
-            pdb.set_trace()
 
             # B. Multi production:
             for item in job.product_ids:
