@@ -1522,6 +1522,31 @@ class IndustriaJob(orm.Model):
 
         file_out.write(file_text)
         file_out.close()
+        self.write(cr, uid, ids, {
+            'state': 'RUNNING',
+        }, context=context)
+
+    def restart_fabric_job(self, cr, uid, ids, context=None):
+        """ Send job to tender
+        """
+        self.write(cr, uid, ids, {
+            'state': 'DRAFT',
+        }, context=context)
+
+    def completed_fabric_job(self, cr, uid, ids, context=None):
+        """ Send job to tender
+        """
+        # todo generate picking
+        self.write(cr, uid, ids, {
+            'state': 'COMPLETED',
+        }, context=context)
+
+    def error_fabric_job(self, cr, uid, ids, context=None):
+        """ Send job to tender
+        """
+        self.write(cr, uid, ids, {
+            'state': 'ERROR',
+        }, context=context)
 
     def button_print_job_report(self, cr, uid, ids, context=None):
         """ Redirect to report passing parameters

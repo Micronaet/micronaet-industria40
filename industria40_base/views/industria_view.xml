@@ -682,6 +682,9 @@
                 <form string="Job">
                     <header>
                         <button name="send_fabric_job" type="object" string="Invia lavoro" attrs="{'invisible': [('state', '!=', 'DRAFT')]}"/>
+                        <button name="restart_fabric_job" type="object" string="Riavvia" attrs="{'invisible': [('state', '=', 'DRAFT')]}"/>
+                        <button name="error_fabric_job" type="object" string="Errato" attrs="{'invisible': [('state', 'not in', ('DRAFT', 'RUNNING'))]}"/>
+                        <button name="completed_fabric_job" type="object" string="Completato" attrs="{'invisible': [('state', '!=', 'RUNNING')]}"/>
                         <field name="state" widget="statusbar"/>
                     </header>
 
