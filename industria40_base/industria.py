@@ -1553,6 +1553,7 @@ class IndustriaJob(orm.Model):
         """
         # todo generate picking
         self.write(cr, uid, ids, {
+            'ended_at': datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             'state': 'COMPLETED',
         }, context=context)
 
