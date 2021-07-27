@@ -1466,15 +1466,15 @@ class IndustriaJob(orm.Model):
         file_text += '|$S$'
 
         # Generate fabric total block:
-        fabric_list = []
+        fabric_pos = {}
         pos = 0
         for step in job.step_ids:
             for fabric in step.fabric_ids:
                 product_fabric = fabric.fabric_id
-                if product_fabric not in fabric_list:
-                    fabric_list[product_fabric] = pos
+                if product_fabric not in fabric_pos:
+                    fabric_pos[product_fabric] = pos
                     pos += 1
-        step_loop = range(len(fabric_list))
+        step_loop = range(len(fabric_pos))
 
         for step in job.step_ids:
             counter += 1
@@ -1482,13 +1482,14 @@ class IndustriaJob(orm.Model):
             prefix_tender_file = robot.fabric_prefix_cad
             length = int(program.fabric_length)
             iso_filename = program.fabric_filename
+            iso_fullname = '%s\\%s' % (prefix_tender_file, iso_filename)
             to_mm = int(from_mm + length + gap)
 
             file_text += '|GR%s:%s;%s' % (counter, from_mm, to_mm)
             from_mm = to_mm
 
             # Block files:
-            data_files.append(iso_filename)
+            data_files.append(iso_fullname)
 
             # Block fabric:
             for fabric in step.fabric_ids:
@@ -1503,13 +1504,12 @@ class IndustriaJob(orm.Model):
                 ]
 
                 total = fabric.total
-                data_fabric[fabric][1][fabric_list[fabric_product]] = total
+                data_fabric[fabric][1][fabric_pos[fabric_product]] = total
 
         # ISO file:
         file_text += '|$M$'
-        for iso_filename in sorted(data_files):
-            file_text += '|%s\\%s' % (
-                prefix_tender_file, iso_filename)
+        for iso_fullname in data_files:
+            file_text += '|%s' % iso_fullname
 
         # Loop for materasso:
         for fabric_product in sorted(data_fabric, key=lambda a: a.sequence):
