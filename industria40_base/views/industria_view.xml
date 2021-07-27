@@ -662,7 +662,7 @@
                             <field name="database_id" domain="[('mode', '=', 'opcua')]" required="1"/>
 
                             <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
-                            <field name="program_id" domain="[('source_id', '=', source_id)]" required="1"/>
+                            <field name="program_id" domain="[('source_id', '=', source_id)]" invisible="1"/>
 
                             <notebook colspan="4">
                                 <page name="page_composition" string="Strati Materasso">
@@ -674,15 +674,19 @@
                                                 <field name="program_id" />
                                             </tree>
                                             <form>
-                                                <field name="sequence" widget="handle"/>
-                                                <field name="program_id" />
-                                                <field name="total" />
-                                                <field name="fabric_ids">
-                                                    <tree string="Tessuti" editable="bottom">
-                                                        <field name="fabric_id"/>
-                                                         <field name="total" />
-                                                    </tree>
-                                                </field>
+                                                <sheet>
+                                                    <group col="4" colspan="4">
+                                                        <field name="sequence" />
+                                                        <field name="program_id" />
+                                                        <separator string="Strati tessuto" colspan="4"/>
+                                                        <field name="fabric_ids" colspan="4">
+                                                            <tree string="Tessuti" editable="bottom">
+                                                                <field name="fabric_id"/>
+                                                                 <field name="total" />
+                                                            </tree>
+                                                        </field>
+                                                    </group>
+                                                </sheet>
                                             </form>
                                         </field>
                                     </group>

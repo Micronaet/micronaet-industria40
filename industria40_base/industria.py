@@ -1310,7 +1310,6 @@ class IndustriaProgram(orm.Model):
     }
 
 
-
 class IndustriaProgramFabric(orm.Model):
     """ Model name: Industria Program fabric
     """
@@ -1323,10 +1322,7 @@ class IndustriaProgramFabric(orm.Model):
     _columns = {
         'program_id': fields.many2one('industria.program', 'Programma'),
         'fabric_id': fields.many2one('product.product', 'Tessuto'),
-        # 'length': fields.related(
-        #    'program_id', 'fabric_length',
-        #    'Lunghezza', type='float',
-        #    digits=(10, 2), readonly=True),
+        'total': fields.float('Pezzi'),
     }
 
 
@@ -1452,39 +1448,72 @@ class IndustriaJob(orm.Model):
 
         job_id = ids[0]
         job = self.browse(cr, uid, job_id, context=context)
-        program = job.program_id
-        robot = program.source_id
-
-        tender_path = robot.fabric_tender_path
-        prefix_tender_file = robot.fabric_prefix_cad
-        fullname = os.path.expanduser(
-            os.path.join(tender_path, 'job_%s.txt' % job_id))
-        file_out = open(fullname, 'w')
 
         date = get_date(job.created_at)
         from_mm = 0
         gap = 0
-        length = int(program.fabric_length)
-        iso_filename = program.fabric_filename
-        to_mm = int(from_mm + length + gap)
         file_text = '$D$|%s|$O$|Job_%s' % (date, job_id)
-        for step in range(1, 2):
+        counter = 0
+
+        robot = job.source_id
+        tender_path = robot.fabric_tender_path
+        fullname = os.path.expanduser(
+            os.path.join(tender_path, 'job_%s.txt' % job_id))
+        file_out = open(fullname, 'w')
+
+        data_files = []
+        data_fabric = []
+        step_loop = range(1, len(job.step_ids) + 1)
+        for step in step_loop:
+            counter += 1
+            program = job.program_id
+            prefix_tender_file = robot.fabric_prefix_cad
+            length = int(program.fabric_length)
+            iso_filename = program.fabric_filename
+            to_mm = int(from_mm + length + gap)
+
             file_text += '|$S$|GR%s:%s;%s' % (
-                step, from_mm, to_mm)
-            file_text += '|$M$|%s\%s' % (
-                prefix_tender_file, iso_filename)
+                counter, from_mm, to_mm)
             from_mm = to_mm
 
-        for fabric in job.fabric_ids:
-            fabric_product = fabric.fabric_id
-            total = fabric.total
-            file_text += '|$C$|%s|%s|%s|' % (
-                fabric_product.default_code,
-                fabric_product.name,
-                ' ',  # Bagni
-            )
-            file_text += '$Q$|%s' % total
-            # file_text +=  '|$R$|r1col1;20,00|
+            # Block files:
+            data_files.append(iso_filename)
+
+            # Block fabric:
+            for fabric in job.fabric_ids:
+                fabric_product = fabric.fabric_id
+                data_fabric[fabric] = [
+                    '%s|%s|%s|' % (
+                        fabric_product.default_code,
+                        fabric_product.name,
+                        ' ',  # Bagni
+                    ),
+                    [0 for element in step_loop],  # Q block (total)
+                    ]
+
+                total = fabric.total
+                data_fabric[fabric][1][counter - 1] = total
+                file_text += '|$C$|%s|%s|%s' % (
+                    fabric_product.default_code,
+                    fabric_product.name,
+                    ' ',  # Bagni
+                )
+                file_text += '|$Q$|%s' % total
+                # file_text +=  '|$R$|r1col1;20,00|
+
+        # ISO file:
+        for iso_filename in data_files:
+            file_text += '|$M$|%s\\%s' % (
+                prefix_tender_file, iso_filename)
+
+        # Loop for materasso:
+        for fabric_product in data_fabric:
+            fabric_text, totals = data_fabric[fabric_product]
+            file_text += '|$C$|%s' % fabric_text
+            file_text += '|$Q$' % fabric_text
+            for item in totals:
+                file_text += '|%s' % item
+            file_text += '|'
         file_text += '\n'
         file_out.write(file_text)
         file_out.close()
