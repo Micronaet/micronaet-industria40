@@ -1468,18 +1468,19 @@ class IndustriaJob(orm.Model):
         iso_filename = program.fabric_filename
         to_mm = int(from_mm + length + gap)
         file_text = '$D$|%s|$O$|Job_%s' % (date, job_id)
-        for step in range(1):
-            file_text += '|$S$|GR%s:%s;%s'  % (
+        for step in range(1, 2):
+            file_text += '|$S$|GR%s:%s;%s' % (
                 step, from_mm, to_mm)
             file_text += '|$M$|%s\%s' % (
                 prefix_tender_file, iso_filename)
             from_mm = to_mm
 
         for fabric in job.fabric_ids:
+            fabric_product = fabric.fabric_id
             total = fabric.total
             file_text += '|$C$|%s|%s|%s|' % (
-                fabric.default_code,
-                fabric.name,
+                fabric_product.default_code,
+                fabric_product.name,
                 ' ',  # Bagni
             )
             file_text += '$Q$|%s' % total
