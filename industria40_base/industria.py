@@ -1516,6 +1516,7 @@ class IndustriaJob(orm.Model):
             for item in totals:
                 file_text += '|%s' % item
         file_text += '|\n'
+
         file_out.write(file_text)
         file_out.close()
 
