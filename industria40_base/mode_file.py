@@ -112,7 +112,7 @@ class IndustriaRobot(orm.Model):
         robot_id = ids[0]
         robot = self.browse(cr, uid, robot_id, context=context)
         database_id = robot.database_id.id
-        path = os.path.expanduser(robot.file_cad_path)
+        path = os.path.expanduser(robot.fabric_cad_path)
         extension = 'gbr'
         for root, folders, files in os.walk(path):
             for filename in files:

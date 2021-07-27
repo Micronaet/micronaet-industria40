@@ -1232,8 +1232,8 @@ class IndustriaRobot(orm.Model):
 
         # Fabric custom:
         'fabric_tender_name': fields.char('Nome stenditore'),
-        'fabric_prefix_cad': fields.char('Previsso disegni CAD'),
-        'fabric_cad_path': fields.char('ISO path'),
+        'fabric_prefix_cad': fields.char('Prefisso disegni CAD (Robot)'),
+        'fabric_cad_path': fields.char('ISO path (ODOO)'),
         'fabric_tender_path': fields.char('Stenditore path'),
 
         'today_state': fields.function(
