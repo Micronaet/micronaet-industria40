@@ -593,9 +593,10 @@
             <field name="arch" type="xml">
                 <tree string="Job" colors="grey:state=='DRAFT';red:state=='ERROR' OR unused==True;blue:state=='RUNNING'">
                     <field name="created_at" string="Pianificato"/>
+                    <field name="ended_at" />
                     <!--<field name="dismiss" />-->
                     <!--
-                    <field name="ended_at" />-->
+                    -->
                     <!--<field name="job_duration" widget="float_time" sum="total_time"/>-->
                     <field name="database_id" domain="[('mode', '=', 'opcua')]" required="1"/>
                     <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
