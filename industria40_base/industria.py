@@ -416,10 +416,12 @@ class IndustriaDatabase(orm.Model):
                 for line in step.fabric_ids:  # fabric in job
                     fabric = line.fabric_id
                     flat_total = line.total
-                    for part in program.fabric_ids:  # check fabric in program
+                    for program_fabric in program.fabric_ids:  # check fabric in program
                         if fabric == part.fabric_id:
-                            products.append(
-                                (fabric, flat_total * part.total))
+                            for part in program_fabric.part_ids:
+                                product = part.product_id
+                                products.append(
+                                    (product, flat_total * part.total))
             pdb.set_trace()
 
             # B. Multi production:
