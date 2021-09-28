@@ -635,7 +635,6 @@ class IndustriaDatabase(orm.Model):
 
                 'code': record['name'],
                 'name': record['description'],
-                'name': record['description'],
                 'piece': record['npieces'],
                 'timeout': record['maxexecutiontime'],
                 # TODO created_at | updated_at

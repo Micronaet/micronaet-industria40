@@ -150,15 +150,13 @@
                                         <field name="ftp_fullname" colspan="4"  attrs="{'required': [('mode', '=', 'ftp')], 'invisible': [('mode', '!=', 'ftp')]}"/>
                                     </group>
                                 </page>
-                                <page name="note_page" string="Setup">
+                                <page name="note_page" string="Note">
                                     <group col="4" colspan="4">
                                         <separator string="Note" colspan="4"/>
                                         <field name="note" colspan="4" nolabel="1"/>
                                     </group>
                                 </page>
                             </notebook>
-
-
                         </group>
                     </sheet>
                 </form>
