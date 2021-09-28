@@ -18,7 +18,7 @@
             />
             <menuitem
                 parent="menu_industria_robot4"
-                id="menu_industria_job"
+                id="menu_industria_job4"
                 action="action_industria_job_robot4"
                 sequence="10"
                 />
