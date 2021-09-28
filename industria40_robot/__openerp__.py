@@ -22,7 +22,7 @@
 ###############################################################################
 
 {
-    'name': 'Industria 4.0 - Menu Robot 1',
+    'name': 'Industria 4.0 - Menu Robot',
     'version': '0.1',
     'category': 'Menu',
     'description': ''' 
