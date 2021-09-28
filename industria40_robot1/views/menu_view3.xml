@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.actions.act_window" id="action_industria_job_robot3">
+            <field name="name">Job Tagliatubi</field>
+            <field name="res_model">industria.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_id" ref="industria40_base.view_industria_job_fabric_tree"/>
+            <field name="context">{'form_view_ref': 'industria40_base.view_industria_job_fabric_form', 'default_state': 'DRAFT'}</field>
+            <field name="domain">[('source_id.code', '=', 'TAGL01')]</field>
+        </record>
+        <menuitem
+            parent="industria40_base.menu_industria_master_single"
+            id="menu_industria_robot3"
+            name="Tagliatubi"
+            sequence="3"
+            />
+            <menuitem
+                parent="menu_industria_robot3"
+                id="menu_industria_job"
+                action="action_industria_job_robot3"
+                sequence="10"
+                />
+    </data>
+</openerp>
+

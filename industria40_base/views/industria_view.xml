@@ -204,7 +204,9 @@
                     <sheet>
                         <group col="4" colspan="4">
                             <field name="ip" />
+                            <newline/>
                             <field name="name" />
+                            <field name="code" />
 
                             <field name="partner_id" />
                             <field name="database_id" />
@@ -824,6 +826,13 @@
             groups="industria40_base.group_industria_manager,industria40_base.group_industria_user"
             sequence="50"
             />
+            <menuitem
+                parent="menu_industria_root"
+                id="menu_industria_master_single"
+                name="Macchinari"
+                sequence="5"
+                />
+
             <menuitem
                 parent="menu_industria_root"
                 id="menu_industria_master_data"
