@@ -14,7 +14,7 @@
             parent="industria40_base.menu_industria_master_single"
             id="menu_industria_robot3"
             name="Tagliatubi"
-            sequence="3"
+            sequence="30"
             />
             <menuitem
                 parent="menu_industria_robot3"
