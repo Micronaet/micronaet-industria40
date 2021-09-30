@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <record model="ir.actions.act_window" id="action_industria_job_robot4">
-            <field name="name">Job Saldatrice</field>
+            <field name="name">Job Forno</field>
             <field name="res_model">industria.job</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
@@ -13,7 +13,7 @@
         <menuitem
             parent="industria40_base.menu_industria_master_single"
             id="menu_industria_robot4"
-            name="Saldatrice"
+            name="Forno (Elettrofrigo)"
             sequence="40"
             />
             <menuitem

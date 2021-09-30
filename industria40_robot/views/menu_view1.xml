@@ -13,7 +13,7 @@
         <menuitem
             parent="industria40_base.menu_industria_master_single"
             id="menu_industria_robot1"
-            name="Saldatrice"
+            name="Saldatrice (GIMAF)"
             sequence="10"
             />
             <menuitem

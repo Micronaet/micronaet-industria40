@@ -13,7 +13,7 @@
         <menuitem
             parent="industria40_base.menu_industria_master_single"
             id="menu_industria_robot5"
-            name="Tagliatessuti"
+            name="Tagliatessuti (FK Group)"
             sequence="50"
             />
             <menuitem

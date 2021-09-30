@@ -13,7 +13,7 @@
         <menuitem
             parent="industria40_base.menu_industria_master_single"
             id="menu_industria_robot2"
-            name="Piegatubi"
+            name="Piegatubi (FLECTE)"
             sequence="20"
             />
             <menuitem

@@ -13,7 +13,7 @@
         <menuitem
             parent="industria40_base.menu_industria_master_single"
             id="menu_industria_robot3"
-            name="Tagliatubi"
+            name="Tagliatubi (ADIGE)"
             sequence="30"
             />
             <menuitem
