@@ -1915,6 +1915,18 @@ class IndustriaJobInherit(orm.Model):
 
     _inherit = 'industria.job'
 
+    def realign_previous_state(self, cr, uid, ids, context=None):
+        """ Realign previous link:
+        """
+        job_ids = self.search(cr, uid, [], context=context)
+        previous_id = job_ids[0]
+        for job_id in job_ids:
+            self.browse(cr, uid, [job_id.id], {
+                'previous_id': previous_id,
+            }, context=context)
+            previous_id = job_id,
+        return True
+
     _columns = {
         'previous_id': fields.many2one(
             'industria.job', 'Precedente'),
