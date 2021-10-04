@@ -1930,7 +1930,6 @@ class IndustriaJobInherit(orm.Model):
                 'previous_id': previous_id,
             }, context=context)
             previous_id = job_id
-
         return True
 
     def _get_duration_extra_data(
@@ -1942,7 +1941,7 @@ class IndustriaJobInherit(orm.Model):
                 from_date, DEFAULT_SERVER_DATETIME_FORMAT) -\
                     datetime.strptime(
                         to_date, DEFAULT_SERVER_DATETIME_FORMAT)
-            return delta.seconds()
+            return delta.seconds
 
         not_consider_value = 3600  # sec.
         res = {}
