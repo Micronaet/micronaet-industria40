@@ -699,6 +699,7 @@
                             <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
                             <field name="program_id" domain="[('source_id', '=', source_id)]" invisible="1"/>
 
+                            <field name="previous_id" readonly="1"/>
                             <notebook colspan="4">
                                 <page name="page_composition" string="Strati Materasso">
                                     <group col="4" colspan="4">
