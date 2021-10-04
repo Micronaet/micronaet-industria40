@@ -1941,9 +1941,9 @@ class IndustriaJobInherit(orm.Model):
                 from_date, DEFAULT_SERVER_DATETIME_FORMAT) -\
                     datetime.strptime(
                         to_date, DEFAULT_SERVER_DATETIME_FORMAT)
-            return delta.seconds / 60.0
+            return delta.seconds / 60.0  # return minutes
 
-        not_consider_value = 3600  # sec.
+        not_consider_value = 60  # sec.
         res = {}
         for job in self.browse(cr, uid, ids, context=context):
             previous = job.previous_id
