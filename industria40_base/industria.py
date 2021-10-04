@@ -1955,9 +1955,9 @@ class IndustriaJobInherit(orm.Model):
                     previous.previous_id.program_id.id,
                 ]
                 previous_from = previous.created_at
-                previous_to = previous.endend_at
+                previous_to = previous.ended_at
                 current_from = job.created_at
-                # current_to = job.endend_at  # not used
+                # current_to = job.ended_at  # not used
 
                 duration_change_total = date_difference(
                     previous_from, current_from)
