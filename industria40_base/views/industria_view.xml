@@ -735,6 +735,14 @@
                                         <field name="picking_id" />
                                     </group>
                                 </page>
+                                <page name="page_extra_data" string="Tempi extra" attrs="{'invisible': [('previous_id', '=', False)]}">
+                                    <group col="4" colspan="4">
+                                        <field name="duration_change_total" />
+                                        <field name="duration_change_gap" />
+                                        <field name="duration_setup" />
+                                        <field name="duration_not_considered" />
+                                    </group>
+                                </page>
                             </notebook>
                             <!--<field name="production_id" readonly="1"/>-->
                         </group>

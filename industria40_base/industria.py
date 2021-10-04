@@ -1933,9 +1933,103 @@ class IndustriaJobInherit(orm.Model):
 
         return True
 
+    def _get_duration_extra_data(
+            self, cr, uid, ids, fields, args, context=None):
+        """ Fields function for calculate extra data for compute duration
+        """
+        def date_difference(from_date, to_date):
+            delta = datetime.strptime(
+                from_date, DEFAULT_SERVER_DATETIME_FORMAT) -\
+                    datetime.strptime(
+                        to_date, DEFAULT_SERVER_DATETIME_FORMAT)
+            return delta.seconds()
+
+        not_consider_value = 3600  # sec.
+        res = {}
+        for job in self.browse(cr, uid, ids, context=context):
+            previous = job.previous_id
+            duration_not_considered = duration_need_setup = False
+            if previous:
+                last_program = [
+                    previous.program_id,
+                    previous.previous_id.program_id.id,
+                ]
+                previous_from = previous.created_at
+                previous_to = previous.endend_at
+                current_from = job.created_at
+                # current_to = job.endend_at  # not used
+
+                duration_change_total = date_difference(
+                    previous_from, current_from)
+                duration_change_gap = date_difference(
+                    previous_to, current_from)
+
+                # New work job (setup needed)
+                if job.program_id.id not in last_program:
+                    duration_setup = duration_change_gap
+                    # Not considered change when setup:
+                    duration_change_total = 0.0
+                    duration_change_gap = 0.0
+                    duration_need_setup = True
+                else:
+                    duration_setup = 0.0
+
+                # Duration very long
+                if duration_change_gap > not_consider_value:
+                    duration_not_considered = True
+            else:
+                duration_change_total = duration_change_gap = \
+                    duration_setup = 0.0
+
+            res[job.id] = {
+                'duration_change_total': duration_change_total,
+                'duration_change_gap': duration_change_gap,
+                'duration_setup': duration_setup,
+                'duration_not_considered': duration_not_considered,
+                'duration_need_setup': duration_need_setup,
+            }
+        return res
+
     _columns = {
         'previous_id': fields.many2one(
             'industria.job', 'Precedente'),
+
+        'duration_change_total': fields.function(
+            _get_duration_extra_data, method=True,
+            type='float', string='Durata complessiva cambio',
+            store=False, multi=True,
+            help='Durata complessiva del cambio '
+                 '(durata lav. successiva + gap tra le 2 lavorazioni),'
+                 'durata attrezzaggio completa però la parte in cui'
+                 'sta lavorando la lavorazione precedente non è importante'),
+        'duration_change_gap': fields.function(
+            _get_duration_extra_data, method=True,
+            type='float', string='Durata influente del cambio',
+            store=False, multi=True,
+            help='Tempo morto tra due lavorazioni consecutive di solito dato '
+                 'dal fatto che si inizia ad attrezzare la seconda mentre sta'
+                 'girando la prima e quandi finisce la prima non si è ancora'
+                 'ultimato il setup (gap puro!)'),
+        'duration_setup': fields.function(
+            _get_duration_extra_data, method=True,
+            type='float', string='Durata attrezzaggio',
+            store=False, multi=True,
+            help='Durata complessiva tempo di riattezzaggio della macchina'
+                 'considerando il cambio dime sul piano di lavoro'),
+        'duration_not_considered': fields.function(
+            _get_duration_extra_data, method=True,
+            type='boolean', string='Non considerare la lavorazione',
+            store=False, multi=True,
+            help='Indica che è difficile capire i tempi dedotti automaticamente'
+                 'perchè risultano gap troppo alti e non è possibile fare '
+                 'ipotesi corrette sul perchè'),
+        'duration_need_setup': fields.function(
+            _get_duration_extra_data, method=True,
+            type='boolean', string='Cambio lavorazione',
+            store=False, multi=True,
+            help='Questa lavorazione effettua un cambio rispetto alle 2 '
+                 'precedenti ha quindi un setup da considerare maggiore'
+                 'come tempo di approntamento macchinario'),
 
         'step_ids': fields.one2many(
             'industria.job.step', 'job_id', 'Gradini')
