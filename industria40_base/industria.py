@@ -1922,14 +1922,13 @@ class IndustriaJobInherit(orm.Model):
         source_id = current_job.source_id.id
         job_ids = self.search(cr, uid, [
             ('source_id', '=', source_id),
-        ], context=context)
+        ], order='created_at', context=context)
+
         previous_id = job_ids[0]
         for job_id in job_ids:
-            self.browse(cr, uid, [job_id.id], {
+            self.write(cr, uid, [job_id], {
                 'previous_id': previous_id,
             }, context=context)
-            if job_id < previous_id:
-                pdb.set_trace()
             previous_id = job_id
 
         return True
