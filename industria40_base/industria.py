@@ -1924,7 +1924,10 @@ class IndustriaJobInherit(orm.Model):
             self.browse(cr, uid, [job_id.id], {
                 'previous_id': previous_id,
             }, context=context)
-            previous_id = job_id,
+            if job_id < previous_id:
+                pdb.set_trace()
+            previous_id = job_id
+
         return True
 
     _columns = {
