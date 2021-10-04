@@ -698,8 +698,7 @@ class IndustriaDatabase(orm.Model):
                 robot_pool.write(
                     cr, uid, source_ids, data, context=context)
             else:
-                robot_pool.create(
-                    cr, uid, data, context=context)
+                robot_pool.create(cr, uid, data, context=context)
         return True
 
     def import_job(self, cr, uid, ids, context=None):
@@ -742,10 +741,18 @@ class IndustriaDatabase(orm.Model):
         connection = self.mssql_connect(cr, uid, ids, context=context)
         cursor = connection.cursor()
 
+        previous_id = False
         try:
             if from_industria_ref:
                 query = "SELECT * FROM jobs WHERE id >= %s;" % \
                         from_industria_ref
+
+                # Find last record to create join element:
+                last_ids = job_pool.search(cr, uid, [
+                    ('industria_ref', '=', from_industria_ref),
+                ], context=context)
+                if last_ids:
+                    previous_id = last_ids[0]
             else:
                 query = "SELECT * FROM jobs;"
             cursor.execute(query)
@@ -797,6 +804,7 @@ class IndustriaDatabase(orm.Model):
                 }, context=context)
 
             data = {
+                'previous_id': previous_id,
                 'industria_ref': industria_ref,
 
                 # TODO check correct format
@@ -818,8 +826,9 @@ class IndustriaDatabase(orm.Model):
             if job_ids:
                 job_pool.write(
                     cr, uid, job_ids, data, context=context)
+                previous_id = job_ids[0]
             else:
-                job_pool.create(
+                previous_id = job_pool.create(
                     cr, uid, data, context=context)
 
         # Update medium:
@@ -1907,6 +1916,9 @@ class IndustriaJobInherit(orm.Model):
     _inherit = 'industria.job'
 
     _columns = {
+        'previous_id': fields.many2one(
+            'industria.job', 'Precedente'),
+
         'step_ids': fields.one2many(
             'industria.job.step', 'job_id', 'Gradini')
     }
