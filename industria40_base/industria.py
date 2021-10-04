@@ -1937,6 +1937,11 @@ class IndustriaJobInherit(orm.Model):
         """ Fields function for calculate extra data for compute duration
         """
         def date_difference(from_date, to_date):
+            """ Calculate difference from date to date
+            """
+            if not from_date or not to_date:
+                return 0.0
+
             delta = \
                 datetime.strptime(to_date, DEFAULT_SERVER_DATETIME_FORMAT) - \
                 datetime.strptime(from_date, DEFAULT_SERVER_DATETIME_FORMAT)
@@ -1947,6 +1952,7 @@ class IndustriaJobInherit(orm.Model):
             previous = job.previous_id
             duration_not_considered = duration_need_setup = False
             if previous:
+                # Check days jump
                 last_program = [
                     previous.program_id,
                     previous.previous_id.program_id.id,
