@@ -1941,7 +1941,7 @@ class IndustriaJobInherit(orm.Model):
                 from_date, DEFAULT_SERVER_DATETIME_FORMAT) -\
                     datetime.strptime(
                         to_date, DEFAULT_SERVER_DATETIME_FORMAT)
-            return delta.seconds
+            return delta.seconds / 60.0
 
         not_consider_value = 3600  # sec.
         res = {}
