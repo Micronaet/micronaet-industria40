@@ -1937,10 +1937,9 @@ class IndustriaJobInherit(orm.Model):
         """ Fields function for calculate extra data for compute duration
         """
         def date_difference(from_date, to_date):
-            delta = datetime.strptime(
-                from_date, DEFAULT_SERVER_DATETIME_FORMAT) -\
-                    datetime.strptime(
-                        to_date, DEFAULT_SERVER_DATETIME_FORMAT)
+            delta = \
+                datetime.strptime(to_date, DEFAULT_SERVER_DATETIME_FORMAT) - \
+                datetime.strptime(from_date, DEFAULT_SERVER_DATETIME_FORMAT)
             return delta.seconds / 60.0  # return minutes
         pdb.set_trace()
         not_consider_value = 60  # sec.
