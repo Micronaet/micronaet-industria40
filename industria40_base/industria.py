@@ -1941,7 +1941,6 @@ class IndustriaJobInherit(orm.Model):
                 datetime.strptime(to_date, DEFAULT_SERVER_DATETIME_FORMAT) - \
                 datetime.strptime(from_date, DEFAULT_SERVER_DATETIME_FORMAT)
             return delta.seconds / 60.0  # return minutes
-        pdb.set_trace()
         not_consider_value = 60  # sec.
         res = {}
         for job in self.browse(cr, uid, ids, context=context):
