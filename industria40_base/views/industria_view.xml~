@@ -1,0 +1,942 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!--industria.production-->
+        <record model="ir.ui.view" id="view_industria_production_tree">
+            <field name="name">industria.production.tree</field>
+            <field name="model">industria.production</field>
+            <field name="arch" type="xml">
+                <tree string="Commesse" editable="bottom" colors="red:name == ''">
+                    <field name="ref" readonly="1"/>
+                    <field name="name" readonly="1"/>
+                    <field name="source_id" readonly="1"/>
+                    <field name="job_id" /> <!--readonly="1"-->
+                    <field name="temperature" readonly="1"/>
+                    <field name="speed" /><!--readonly="1"-->
+                    <field name="color" readonly="1"/>
+                    <field name="start" readonly="1"/>
+                    <field name="stop" readonly="1"/>
+                    <field name="duration" readonly="1"/>
+                    <field name="stop_duration" readonly="1"/>
+                    <field name="change_duration" readonly="1"/>
+                    <field name="is_working" readonly="1"/>
+                    <field name="is_completed" readonly="1"/>
+                    <field name="is_live" readonly="1"/>
+                    <button name="button_load_production_from_robot" type="object" string="Ricarica commessa" icon="gtk-refresh"/>
+                    <button name="button_check_status_production_from_robot" type="object" string="Controlla stato" icon="gtk-execute" attrs="{'invisible': [('job_id', '=', False)]}"/>
+                    <button name="button_clean_production" type="object" string="Elimina commessa" icon="gtk-delete" attrs="{'invisible': [('job_id', '!=', False)]}"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_production">
+            <field name="name">Commesse in lavorazione</field>
+            <field name="res_model">industria.production</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_industria_production_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <!--product.product-->
+        <record model="ir.ui.view" id="view_product_product_tree">
+            <field name="name">product.product.opcua.tree</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <tree string="OPCUA Prodotti" editable="bottom">
+                    <field name="name" readonly="1"/>
+                    <field name="default_code" readonly="1"/>
+                    <field name="uom_id" readonly="1"/>
+                    <field name="industria_in_id" />
+                    <field name="industria_out_id" />
+                    <field name="state" invisible="1" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_product_product_search">
+            <field name="name">product.product.opcua.search</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <search string="OPCUA Prodotti">
+                    <field name="default_code"/>
+                    <field name="name"/>
+                    <field name="industria_in_id"/>
+                    <field name="industria_out_id"/>
+                    <filter name="industria_in_yes" string="I 4.0 in" domain="[('industria_in_id','!=',False')]"/>
+                    <filter name="industria_out_yes" string="I 4.0 out" domain="[('industria_out_id','!=',False')]"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="group_uom_id" string="UM" context="{'group_by': 'uom_id'}"/>
+                        <filter name="group_industria_in_id" string="I 4.0 in" context="{'group_by': 'industria_in_id'}"/>
+                        <filter name="group_industria_out_id" string="I 4.0 out" context="{'group_by': 'industria_out_id'}"/>
+                    </group>
+                </search>
+           </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_product_product_opcua">
+            <field name="name">Prodotti OPCUA</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_product_tree"/>
+            <field name="search_view_id" ref="view_product_product_search"/>
+            <field name="context">{'search_default_industria_in_yes': True}</field>
+            <field name="domain">[('default_code', '!=', False), ('relative_type', '=', 'half')]</field>
+        </record>
+
+        <!--stock.picking-->
+        <record model="ir.ui.view" id="view_stock_picking_cl_form">
+            <field name="name">stock.picking.cl.mrp.lavoration.form</field>
+            <field name="model">stock.picking</field>
+            <field name="priority" eval="50" />
+            <field name="inherit_id" ref="lavoration_cl_sl.view_stock_picking_cl_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page" position="after">
+                    <page string="Industria 4.0: Job" attrs="{'invisible': [('job_ids', '=', [])]}">
+                        <group col="4" colspan="4">
+                            <separator string="Job" colspan="4"/>
+                            <field name="job_ids"  colspan="4" nolabel="1" readonly="1" editable="bottom">
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!--industria.database-->
+        <record model="ir.ui.view" id="view_industria_database_form">
+            <field name="name">industria.database.form</field>
+            <field name="model">industria.database</field>
+            <field name="arch" type="xml">
+                <form string="Database" version="7.0">
+                    <header>
+                        <button name="test_database_connection" type="object" string="Test" icon="gtk-refresh" attrs="{'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
+                        <button name="import_program" type="object" string="Import program" icon="terp-calendar" attrs="{'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
+                        <button name="import_robot" type="object" string="Import robot" icon="gtk-network" attrs="{'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
+                        <button name="import_job" type="object" string="Import jobs" icon="gtk-justify-fill" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
+                        <button name="update_medium_program_job" type="object" string="Generate picking" icon="terp-graph" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
+                        <button name="generate_picking_from_job" type="object" string="Generate picking di tutti i DB" icon="STOCK_EXECUTE" confirm="Crea i picking per tutti i database presenti, confermi?"/>
+                        <button name="generate_this_picking_from_job" type="object" string="Generate picking questo DB" icon="STOCK_EXECUTE"/>
+                    </header>
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="name" />
+                            <field name="partner_id" required="1"/>
+
+                            <field name="mode" />
+
+                            <notebook colspan="4">
+                                <page name="robot_page" string="Robot">
+                                    <group col="4" colspan="4">
+                                        <separator string="Robot" colspan="4"/>
+                                        <field name="robot_ids" colspan="4" nolabel="1">
+                                            <tree string="Robot" editable="bottom">
+                                                <field name="name"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </page>
+                                <page name="setup_page" string="Setup" attrs="{'invisible': [('mode', 'in', ('file', ))]}">
+                                    <group col="4" colspan="4">
+                                        <field name="ip" attrs="{'invisible': [('mode', 'not in', ('file', ))], 'invisible': [('mode', 'in', ('file', ))]}"/>
+                                        <field name="username" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}"/>
+                                        <field name="password" password="True" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}"/>
+
+                                        <field name="database" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('file', 'ftp', 'opcua'))]}"/>
+                                        <field name="port" attrs="{'required': [('mode', 'not in', ('file', 'ftp'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}" />
+
+                                        <!--FTP-->
+                                        <separator string="Modo file:" colspan="4" attrs="{'invisible': [('mode', '!=', 'ftp')]}"/>
+                                        <field name="ftp_command" colspan="4"  attrs="{'required': [('mode', '=', 'ftp')], 'invisible': [('mode', '!=', 'ftp')]}"/>
+                                        <field name="ftp_fullname" colspan="4"  attrs="{'required': [('mode', '=', 'ftp')], 'invisible': [('mode', '!=', 'ftp')]}"/>
+                                    </group>
+                                </page>
+                                <page name="note_page" string="Note">
+                                    <group col="4" colspan="4">
+                                        <separator string="Note" colspan="4"/>
+                                        <field name="note" colspan="4" nolabel="1"/>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_database_tree">
+            <field name="name">industria.database.tree</field>
+            <field name="model">industria.database</field>
+            <field name="arch" type="xml">
+                <tree string="Database">
+                    <field name="name" />
+                    <field name="ip" />
+                    <field name="mode" />
+
+                    <field name="username" />
+
+                    <field name="database" />
+                    <field name="port" />
+                    <button name="test_database_connection" type="object" string="Test" icon="gtk-refresh" attrs="{'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
+                    <button name="import_program" type="object" string="Import program" icon="terp-calendar" attrs="{'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
+                    <button name="import_robot" type="object" string="Import robot" icon="gtk-network" attrs="{'invisible': [('mode', 'in', ('ftp', 'opcua'))]}"/>
+                    <button name="import_job" type="object" string="Import jobs" icon="gtk-justify-fill" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
+                    <button name="update_medium_program_job" type="object" string="Generate picking" icon="terp-graph" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
+                    <button name="generate_picking_from_job" type="object" string="Generate picking" icon="STOCK_EXECUTE"/>
+                    <button name="generate_this_picking_from_job" type="object" string="Generate picking questo DB" icon="STOCK_EXECUTE"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_database">
+            <field name="name">Database</field>
+            <field name="res_model">industria.database</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_industria_database_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <!--industria.robot-->
+        <record model="ir.ui.view" id="view_industria_robot_form">
+            <field name="name">industria.robot.form</field>
+            <field name="model">industria.robot</field>
+            <field name="arch" type="xml">
+                <form string="Robot" version="7.0">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="ip" />
+                            <newline/>
+                            <field name="name" />
+                            <field name="code" />
+
+                            <field name="partner_id" />
+                            <field name="database_id" />
+
+                            <field name="industria_ref" />
+                            <field name="opcua_mask" />
+
+                            <notebook colspan="4">
+                                <page name="robot_setup" string="Setup">
+                                    <group colspan="4" col="4">
+                                    </group>
+                                </page>
+                                <page name="program_page" string="Program">
+                                    <group colspan="4" col="4">
+                                        <separator string="Program" colspan="1"/>
+                                        <button name="load_fabric_program" type="object" string="Carica programmi CAD" icon="STOCK_DND_MULTIPLE" colspan="1"/>
+
+                                        <field name="program_ids" colspan="4" nolabel="1"/>
+                                    </group>
+                                </page>
+                                <page name="fabric_page" string="Tessuti">
+                                    <group colspan="4" col="4">
+                                        <separator string="Modo file:" colspan="3" />
+                                        <button name="load_all_stat_file" type="object" string="Importa file stats" icon="gtk-justify-fill" attrs="{'invisible': [('file_stat_path', '=', False)]}"/>
+
+                                        <!-- attrs="{'required': [('database_id.mode', '=', 'file')], 'invisible': [('database_id.mode', '!=', 'file')]}"-->
+                                        <field name="file_mode" colspan="2" />
+                                        <newline/>
+
+                                        <!--<field name="file_execute_path" colspan="2" />-->
+                                        <separator string="Parametri setup invio job" colspan="4"/>
+                                        <field name="fabric_tender_name" />
+                                        <field name="fabric_prefix_cad" />
+                                        <field name="fabric_cad_path" />
+                                        <field name="fabric_tender_path" />
+
+                                        <field name="file_stat_path" colspan="2" /> <!--todo not used for now-->
+                                    </group>
+                                </page>
+
+                                <!--<page name="state_page" string="Status">
+                                    <group colspan="4" col="4">
+                                        <separator string="Today status" colspan="4"/>
+                                        <field name="today_state" colspan="4" nolabel="1" widget="html"/>
+                                    </group>
+                                </page>-->
+                                <page name="note_page" string="Note">
+                                    <group colspan="4" col="4">
+                                        <separator string="Note" colspan="4"/>
+                                        <field name="note" colspan="4" nolabel="1"/>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_robot_tree">
+            <field name="name">industria.robot.tree</field>
+            <field name="model">industria.robot</field>
+            <field name="arch" type="xml">
+                <tree string="Database">
+                    <field name="ip" />
+                    <field name="name" />
+                    <field name="partner_id" />
+                    <field name="database_id" />
+                    <button name="button_load_production_from_robot" type="object" string="Carica commesse da robot" icon="gtk-refresh"/>
+                    <button name="load_fabric_program" type="object" string="Carica programmi CAD" icon="STOCK_DND_MULTIPLE"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_robot">
+            <field name="name">Robot</field>
+            <field name="res_model">industria.robot</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_industria_robot_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <!--industria.program-->
+        <record model="ir.ui.view" id="view_industria_program_search">
+            <field name="name">industria.program.search</field>
+            <field name="model">industria.program</field>
+            <field name="arch" type="xml">
+                <search string="Jobs" version="7.0">
+                    <field name="database_id" />
+                    <field name="name" />
+                    <field name="fabric_filename" />
+                    <field name="code" />
+                    <field name="mode" />
+                    <field name="source_id" filter_domain="[('source_id.name','ilike',self)]"/>
+                    <field name="partner_id" filter_domain="[('partner_id.name','ilike',self)]"/>
+
+                    <!--<filter name="state_draft" string="Stato Bozza" domain="[('state','=','DRAFT')]"/>-->
+                    <group expand="0" string="Group By...">
+                        <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Database" context="{'group_by': 'database_id'}" />
+                        <filter string="Robot" context="{'group_by': 'source_id'}" />
+                        <filter string="Modalità" context="{'group_by': 'mode'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_program_form">
+            <field name="name">industria.program.form</field>
+            <field name="model">industria.program</field>
+            <field name="arch" type="xml">
+                <form string="Program" version="7.0">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="code" />
+                            <field name="name" />
+
+                            <field name="industria_ref" attrs="{'invisible': [('mode', 'in', ('opcua', 'ftp'))]}"/>
+                            <field name="timeout" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
+
+                            <field name="piece" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
+                            <button name="update_all_job_piece" type="object" string="Forza sui job" colspan="2" icon="gtk-refresh" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
+
+                            <field name="database_id" />
+                            <field name="source_id" domain="[('database_id', '=', database_id)]"/>
+
+                            <field name="medium" widget="float_time" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
+                            <field name="over_alarm" widget="float_time" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>
+
+                            <field name="partner_id" readonly="1"/>
+                            <field name="mode" /> <!--invisible="1" -->
+
+                            <!--<field name="in_product_id" attrs="{'invisible': [('mode', '!=', 'file')], 'required': [('mode', '=', 'file')]}" />/>--><!--attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
+                            <field name="product_id" attrs="{'invisible': [('mode', 'in', ('opcua', ))]}"/>/><!-- 'required': [('mode', '=', 'file')],  attrs="{'required': [('mode', 'not in', ('opcua', ))], 'invisible': [('mode', 'in', ('opcua', ))]}"/>-->
+
+                            <notebook colspan="4">
+                                <page name="parameter_page" string="Parametri" attrs="{'invisible': [('mode', 'not in', ('opcua', ))]}">
+                                        <group colspan="4" col="4">
+                                        <separator string="Parametri OPCUA" colspan="4" />
+                                        <field name="parameter_ids" colspan="4" nolabel="1">
+                                            <tree string="Parametri" editable="bottom">
+                                                <field name="opcua_id" />
+                                                <field name="value" />
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </page>
+                                <page name="fabric_page" string="Tessuti" attrs="{'invisible': [('mode', '!=', 'file')]}">
+                                    <group colspan="4" col="4">
+                                        <field name="fabric_filename" />
+                                        <field name="fabric_length" />
+                                        <separator string="Strati:" colspan="4" />
+                                        <field name="fabric_ids" colspan="4" nolabel="1" >
+                                            <tree string="Tessuti utilizzati">
+                                                <field name="fabric_id" />
+                                                <!--<field name="length" />-->
+                                            </tree>
+                                            <form string="Tessuti utilizzati">
+                                                <group colspan="4" col="4">
+                                                    <field name="fabric_id" />
+                                                    <!--<field name="length" />-->
+                                                    <separator string="Parti" colspan="4"/>
+                                                    <field name="part_ids" colspan="4" nolabel="1">
+                                                        <tree string="Parti" editable="bottom">
+                                                            <field name="product_id"/>
+                                                            <field name="total"/>
+                                                        </tree>
+                                                    </field>
+                                                </group>
+                                            </form>
+                                        </field>
+                                    </group>
+                                </page>
+
+                                <page name="note_page" string="Note">
+                                    <group>
+                                        <separator string="Note" colspan="4"/>
+                                        <field name="note" colspan="4" nolabel="1"/>
+                                    </group>
+                                </page>
+                            </notebook>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_program_tree">
+            <field name="name">industria.program.tree</field>
+            <field name="model">industria.program</field>
+            <field name="arch" type="xml">
+                <tree string="Database" colors="red:product_id == False or source_id == False">
+                    <field name="code" />
+                    <field name="name" />
+
+                    <field name="industria_ref" />
+                    <field name="timeout" />
+
+                    <field name="piece" />
+                    <field name="source_id" />
+                    <field name="product_id" />
+
+                    <field name="partner_id" />
+                    <field name="database_id" />
+
+                    <field name="medium" widget="float_time"/>
+                    <field name="over_alarm" widget="float_time"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_program">
+            <field name="name">Program</field>
+            <field name="res_model">industria.program</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_industria_program_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <!--industria.program.parameter.opcua-->
+        <record model="ir.ui.view" id="view_industria_program_parameter_opcua_form">
+            <field name="name">industria.program.parameter.opcua.form</field>
+            <field name="model">industria.program.parameter.opcua</field>
+            <field name="arch" type="xml">
+                <form string="Database" version="7.0">
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="name" />
+                            <field name="type" />
+                            <!--<field name="opcua_variable" />-->
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_program_parameter_opcua_tree">
+            <field name="name">industria.program.parameter.opcua.tree</field>
+            <field name="model">industria.program.parameter.opcua</field>
+            <field name="arch" type="xml">
+                <tree string="Database" editable="bottom">
+                     <field name="name" />
+                     <field name="type" />
+                     <!--<field name="opcua_variable" />-->
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_program_parameter_opcua">
+            <field name="name">OPCUA Param.</field>
+            <field name="res_model">industria.program.parameter.opcua</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_industria_program_parameter_opcua_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <!--industria.job-->
+        <record model="ir.ui.view" id="view_industria_job_graph">
+            <field name="name">industria.job.graph</field>
+            <field name="model">industria.job</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Industria" type="bar">
+                    <field name="source_id"/>
+                    <field name="job_duration" operator="+"/>
+                </graph>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_job_search">
+            <field name="name">industria.job.search</field>
+            <field name="model">industria.job</field>
+            <field name="arch" type="xml">
+                <search string="Jobs" version="7.0">
+                    <field name="database_id" />
+                    <field name="program_id" />
+                    <field name="source_id" filter_domain="[('source_id.name','ilike',self)]"/>
+                    <field name="production_id" />
+
+                    <field name="partner_id" filter_domain="[('partner_id.name','ilike',self)]"/>
+
+                    <filter name="state_draft" string="Stato Bozza" domain="[('state','=','DRAFT')]"/>
+                    <filter name="state_error" string="Stato Errore" domain="[('state','=','ERROR')]"/>
+                    <filter name="state_running" string="Stato esecuzione" domain="[('state','=','RUNNING')]"/>
+                    <filter name="state_completed" string="State completato" domain="[('state','=','COMPLETED')]"/>
+
+                    <filter name="state_anomaly" string="Anomalia" domain="['|',('state','=','ERROR'),('job_duration', '&gt;', 10)]"/>
+
+                    <filter name="out_of_statistic" string="Fuori statistica" domain="[('out_statistic', '=', True)]"/>
+
+                    <group expand="0" string="Group By...">
+                        <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Create" context="{'group_by': 'created_at:day'}" />
+                        <filter string="Ended" context="{'group_by': 'ended_at:day'}" />
+                        <filter string="Update" context="{'group_by': 'updated_at:day'}" />
+
+                        <!--<filter string="Create" context="{'group_by': 'created_at'}" />
+                        <filter string="Ended" context="{'group_by': 'ended_at'}" />
+                        <filter string="Update" context="{'group_by': 'updated_at'}" />-->
+
+                        <filter string="Database" context="{'group_by': 'database_id'}" />
+                        <filter string="Program" context="{'group_by': 'program_id'}" />
+                        <filter string="Robot" context="{'group_by': 'source_id'}" />
+                        <filter string="Commessa" context="{'group_by': 'production_id'}" />
+                        <filter string="Status" context="{'group_by': 'state'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_job_form">
+            <field name="name">industria.job.form</field>
+            <field name="model">industria.job</field>
+            <field name="arch" type="xml">
+                <form string="Job" version="7.0">
+                    <header>
+                         <button name="open_file_stat_row" type="object" string="Righe "/>
+                    </header>
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <!--<field name="dismiss" />-->
+                            <field name="state" />
+                            <field name="created_at" />
+
+                            <field name="updated_at" />
+                            <field name="ended_at" />
+
+                            <field name="piece" />
+                            <field name="bar" />
+
+                            <field name="job_duration" widget="float_time"/>
+                            <field name="out_statistic" />
+
+                            <field name="database_id" />
+                            <field name="industria_ref" />
+
+                            <field name="program_id" />
+                            <field name="source_id" />
+
+                            <field name="partner_id" />
+                            <field name="production_id" />
+
+                            <field name="picking_id" readonly="1" />
+                            <field name="unused" attrs="{'invisible': [('picking_id', '!=', False)]}"/>
+
+                            <separator string="Note" colspan="4"/>
+                            <field name="notes" colspan="4" nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_job_tree">
+            <field name="name">industria.job.tree</field>
+            <field name="model">industria.job</field>
+            <field name="arch" type="xml">
+                <tree string="Job" colors="red:state=='ERROR' OR unused==True;blue:state=='RUNNING'">
+                    <!--<field name="dismiss" />-->
+                    <field name="created_at" />
+                    <field name="ended_at" />
+                    <field name="updated_at" />
+                    <field name="job_duration" widget="float_time" sum="total_time"/>
+                    <field name="piece" sum="total_piece"/>
+                    <field name="out_statistic" />
+
+                    <field name="database_id" />
+                    <field name="industria_ref" />
+
+                    <field name="program_id" />
+                    <field name="source_id" />
+
+                    <field name="partner_id" />
+                    <field name="picking_id" />
+                    <field name="unused" />
+
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+        <!--OPCUA-->
+        <record model="ir.ui.view" id="view_industria_job_opcua_tree">
+            <field name="name">industria.job.opcua.tree</field>
+            <field name="model">industria.job</field>
+            <field name="priority" eval="40"/>
+            <field name="arch" type="xml">
+                <tree string="Job" colors="grey:state=='DRAFT';red:state=='ERROR' OR unused==True;blue:state=='RUNNING'">
+                    <field name="created_at" string="Pianificato"/>
+                    <!--<field name="dismiss" />-->
+                    <!--
+                    -->
+                    <!--<field name="job_duration" widget="float_time" sum="total_time"/>-->
+                    <field name="database_id" domain="[('mode', '=', 'opcua')]" required="1"/>
+                    <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
+                    <field name="force_product_id" required="1"/>
+                    <field name="piece" sum="total_piece" required="1"/>
+                    <field name="program_id" domain="[('source_id', '=', source_id)]" required="1"/>
+                    <field name="production_id" />
+                    <field name="state" />
+                    <button name="send_opcua_job" type="object" string="Invia lavoro" attrs="{'invisible': [('state', '!=', 'DRAFT')]}"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_job_opcua_form">
+            <field name="name">industria.job.opcua.form</field>
+            <field name="model">industria.job</field>
+            <field name="priority" eval="40"/>
+            <field name="arch" type="xml">
+                <form string="Job">
+                    <header>
+                        <button name="send_opcua_job" type="object" string="Invia lavoro" attrs="{'invisible': [('state', '!=', 'DRAFT')]}"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+
+                    <sheet>
+                        <group col="4">
+                            <field name="created_at" string="Pianificato"/>
+                            <field name="ended_at" string="Terminato"/>
+                            <field name="database_id" domain="[('mode', '=', 'opcua')]" required="1"/>
+
+                            <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
+                            <!--<field name="piece" sum="total_piece" required="1"/>-->
+                            <field name="program_id" domain="[('source_id', '=', source_id)]" required="1"/>
+
+                            <field name="force_name" />
+                            <field name="color" />
+
+                            <field name="label" />
+                            <button name="button_print_job_report" string="Stampa" type="object" colspan="2"/>
+                            <field name="state" />
+                            <field name="picking_id" />
+                            <!--<field name="production_id" readonly="1"/>-->
+
+                            <separator string="Prodotti:" colspan="4" />
+                            <field name="product_ids" colspan="4" nolabel="1" >
+                                <tree string="Prodotti" editable="bottom">
+                                    <field name="product_id" domain="[('industria_in_id', '!=', False)]"/>
+                                    <field name="piece" sum="total"/>
+                                    <!--<field name="source_id" />
+                                    <field name="job_id" />-->
+                                </tree>
+                            </field>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Fabric management -->
+        <record model="ir.ui.view" id="view_industria_job_fabric_tree">
+            <field name="name">industria.job.fabric.tree</field>
+            <field name="model">industria.job</field>
+            <field name="priority" eval="40"/>
+            <field name="arch" type="xml">
+                <tree string="Job" colors="grey:state=='DRAFT';red:state=='ERROR' OR unused==True;blue:state=='RUNNING'">
+                    <field name="created_at" string="Pianificato"/>
+                    <field name="previous_id" readonly="1"/>
+                    <!--<field name="dismiss" />-->
+                    <!--
+                    <field name="ended_at" />-->
+                    <!--<field name="job_duration" widget="float_time" sum="total_time"/>-->
+                    <field name="database_id" domain="[('mode', '=', 'file')]" required="1"/>
+                    <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
+                    <field name="program_id" domain="[('source_id', '=', source_id)]" required="1"/>
+                    <!--<field name="production_id" />-->
+                    <field name="state" />
+                    <button name="send_fabric_job" type="object" string="Invia lavoro" attrs="{'invisible': [('state', '!=', 'DRAFT')]}"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_industria_job_fabric_form">
+            <field name="name">industria.job.fabric.form</field>
+            <field name="model">industria.job</field>
+            <field name="priority" eval="40"/>
+            <field name="arch" type="xml">
+                <form string="Job">
+                    <header>
+                        <button name="realign_previous_state" type="object" string="Riallinea i precedenti" />
+                        <button name="send_fabric_job" type="object" string="Invia lavoro" attrs="{'invisible': [('state', '!=', 'DRAFT')]}"/>
+                        <button name="restart_fabric_job" type="object" string="Riavvia" attrs="{'invisible': [('state', '=', 'DRAFT')]}"/>
+                        <button name="error_fabric_job" type="object" string="Errato" attrs="{'invisible': [('state', 'not in', ('DRAFT', 'RUNNING'))]}"/>
+                        <button name="completed_fabric_job" type="object" string="Completato" attrs="{'invisible': [('state', '!=', 'RUNNING')]}"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="created_at" string="Pianificato"/>
+                            <field name="ended_at" string="Terminato"/>
+                            <field name="database_id" domain="[('mode', '=', 'file')]" required="1"/>
+
+                            <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
+                            <field name="program_id" domain="[('source_id', '=', source_id)]" invisible="1"/>
+
+                            <field name="previous_id" readonly="1"/>
+                            <notebook colspan="4">
+                                <page name="page_composition" string="Strati Materasso">
+                                    <group col="4" colspan="4">
+                                        <separator string="Gradini" colspan="4"/>
+                                        <field name="step_ids" colspan="4" nolabel="1">
+                                            <tree string="Gradini">
+                                                <field name="sequence" widget="handle"/>
+                                                <field name="program_id" />
+                                            </tree>
+                                            <form>
+                                                <sheet>
+                                                    <group col="4" colspan="4">
+                                                        <field name="sequence" />
+                                                        <field name="program_id" />
+                                                        <separator string="Strati tessuto" colspan="4"/>
+                                                        <field name="fabric_ids" colspan="4" nolabel="1">
+                                                            <tree string="Tessuti" editable="bottom">
+                                                                <field name="fabric_id"/>
+                                                                 <field name="total" />
+                                                            </tree>
+                                                        </field>
+                                                    </group>
+                                                </sheet>
+                                            </form>
+                                        </field>
+                                    </group>
+                                </page>
+                                <page name="page_production" string="Produzione">
+                                    <group col="4" colspan="4">
+                                        <field name="label" />
+                                        <button name="button_print_job_fabric_report" string="Stampa" type="object" colspan="2"/>
+                                        <field name="picking_id" />
+                                    </group>
+                                </page>
+                                <page name="page_extra_data" string="Tempi extra" attrs="{'invisible': [('previous_id', '=', False)]}">
+                                    <group col="4" colspan="4">
+                                        <field name="duration_change_total" widget="float_time" />
+                                        <field name="duration_change_gap" widget="float_time"/>
+                                        <field name="duration_setup" widget="float_time" />
+                                        <field name="duration_not_considered" />
+                                    </group>
+                                </page>
+                            </notebook>
+                            <!--<field name="production_id" readonly="1"/>-->
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_industria_job">
+            <field name="name">Job</field>
+            <field name="res_model">industria.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="view_id" ref="view_industria_job_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[('unused', '=', False)]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_job_anomaly">
+            <field name="name">Job anomali</field>
+            <field name="res_model">industria.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="view_id" ref="view_industria_job_tree"/>
+            <field name="context">{'search_default_state_anomaly': True}</field>
+            <field name="domain">[]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_job_unused">
+            <field name="name">Job non usati</field>
+            <field name="res_model">industria.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="view_id" ref="view_industria_job_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[('unused', '=', True)]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_job_out_statistic">
+            <field name="name">Job fuori statistica</field>
+            <field name="res_model">industria.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="view_id" ref="view_industria_job_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[('out_statistic', '=', True)]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_job_opcua_statistic">
+            <field name="name">Job OPCUA</field>
+            <field name="res_model">industria.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_id" ref="view_industria_job_opcua_tree"/>
+            <field name="context">{'search_default_state_draft': True, 'form_view_ref': 'industria40_base.view_industria_job_opcua_form', 'default_state': 'DRAFT'}</field>
+            <field name="domain">[('database_id.mode', '=', 'opcua')]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_job_fabric">
+            <field name="name">Job Tessuti</field>
+            <field name="res_model">industria.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_id" ref="view_industria_job_fabric_tree"/>
+            <field name="context">{'form_view_ref': 'industria40_base.view_industria_job_fabric_form', 'default_state': 'DRAFT'}</field>
+            <field name="domain">[('database_id.mode', '=', 'file'), ('source_id.file_mode', '=', 'fabric')]</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_stock_picking_industria_job">
+            <field name="name">Picking industria</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_id" ref="lavoration_cl_sl.view_stock_picking_cl_tree"/>
+            <field name="context">{'form_view_ref': 'lavoration_cl_sl.view_stock_picking_cl_form'}</field>
+            <field name="domain">[('job_ids', '!=', [])]</field>
+        </record>
+
+        <!--res.partner-->
+        <record model="ir.ui.view" id="view_res_partner_industria_form">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[1]" position="after">
+                    <page string="Industria 4.0" attrs="{'invisible': [('source_ids','!=',False)]}" groups="industria40_base.group_industria_manager,industria40_base.group_industria_user">
+                        <separator string="Robots:" colspan="4"/>
+                        <field name="source_ids" />
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_industria_root"
+            name="Industria 4.0"
+            groups="industria40_base.group_industria_manager,industria40_base.group_industria_user"
+            sequence="50"
+            />
+            <menuitem
+                parent="menu_industria_root"
+                id="menu_industria_master_single"
+                name="Macchinari"
+                sequence="5"
+                />
+
+            <menuitem
+                parent="menu_industria_root"
+                id="menu_industria_master_data"
+                name="Master data"
+                sequence="10"
+                />
+                <menuitem
+                    parent="menu_industria_master_data"
+                    id="menu_industria_job"
+                    action="action_industria_job"
+                    sequence="10"
+                    />
+                <menuitem
+                    parent="menu_industria_job"
+                    id="menu_industria_job_unused"
+                    action="action_industria_job_unused"
+                    sequence="20"
+                    />
+                <menuitem
+                    parent="menu_industria_job"
+                    id="menu_industria_job_out_statistic"
+                    action="action_industria_job_out_statistic"
+                    sequence="30"
+                    />
+
+                <menuitem
+                    parent="menu_industria_master_data"
+                    id="menu_industria_job_anomaly"
+                    action="action_industria_job_anomaly"
+                    sequence="20"
+                    />
+
+                <menuitem
+                    parent="menu_industria_master_data"
+                    id="menu_industria_job_opcua"
+                    action="action_industria_job_opcua_statistic"
+                    sequence="30"
+                    />
+                <menuitem
+                    parent="menu_industria_master_data"
+                    id="menu_industria_job_fabric_list"
+                    action="action_industria_job_fabric"
+                    sequence="35"
+                    />
+                <menuitem
+                    parent="menu_industria_master_data"
+                    id="menu_industria_production"
+                    action="action_industria_production"
+                    sequence="40"
+                    />
+                <menuitem
+                    parent="menu_industria_master_data"
+                    id="menu_industria_picking_industria"
+                    action="action_stock_picking_industria_job"
+                    sequence="50"
+                    />
+
+            <menuitem
+                parent="menu_industria_root"
+                id="menu_industria_configuration"
+                name="Configuration"
+                sequence="99"
+                />
+                <menuitem
+                    parent="menu_industria_configuration"
+                    id="menu_industria_robot"
+                    action="action_industria_robot"
+                    sequence="10"
+                    />
+                <menuitem
+                    parent="menu_industria_configuration"
+                    id="menu_industria_program"
+                    action="action_industria_program"
+                    sequence="20"
+                    />
+                <menuitem
+                    parent="menu_industria_configuration"
+                    id="menu_industria_program_parameter_opcua"
+                    action="action_industria_program_parameter_opcua"
+                    sequence="30"
+                    />
+                <menuitem
+                    parent="menu_industria_configuration"
+                    id="menu_industria_database"
+                    action="action_industria_database"
+                    sequence="40"
+                    />
+                <menuitem
+                    parent="menu_industria_configuration"
+                    id="menu_product_product_opcua"
+                    action="action_product_product_opcua"
+                    sequence="50"
+                    />
+    </data>
+</openerp>
+

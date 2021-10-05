@@ -1968,7 +1968,7 @@ class IndustriaJobInherit(orm.Model):
                     previous_to, current_from)
 
                 # New work job (setup needed)
-                if job.program_id.id not in last_program:
+                if job.program_id.id not in last_program.id:
                     duration_setup = duration_change_gap
                     # Not considered change when setup:
                     duration_change_total = 0.0
