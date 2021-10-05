@@ -1967,6 +1967,10 @@ class IndustriaJobInherit(orm.Model):
                 duration_change_gap = date_difference(
                     previous_to, current_from)
 
+                # Duration very long
+                if duration_change_gap > not_consider_value:
+                    duration_not_considered = True
+
                 # New work job (setup needed only first change!)
                 # todo and not previous.duration_need_setup (loop error)
                 if job.program_id not in last_program:
@@ -1977,10 +1981,6 @@ class IndustriaJobInherit(orm.Model):
                     duration_need_setup = True
                 else:
                     duration_setup = 0.0
-
-                # Duration very long
-                if duration_change_gap > not_consider_value:
-                    duration_not_considered = True
             else:
                 duration_change_total = duration_change_gap = \
                     duration_setup = 0.0
