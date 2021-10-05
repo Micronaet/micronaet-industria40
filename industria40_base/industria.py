@@ -1946,17 +1946,22 @@ class IndustriaJobInherit(orm.Model):
                 datetime.strptime(to_date, DEFAULT_SERVER_DATETIME_FORMAT) - \
                 datetime.strptime(from_date, DEFAULT_SERVER_DATETIME_FORMAT)
             return delta.seconds / 60.0  # return minutes
+
+        block_job = 2  # 2 Job will be maked once
         not_consider_value = 60  # sec.
+        consider_change_total = True
+
         res = {}
         for job in self.browse(cr, uid, ids, context=context):
             previous = job.previous_id
             duration_not_considered = duration_need_setup = False
             if previous:
                 # Check days jump
-                last_program = [
-                    previous.program_id,
-                    previous.previous_id.program_id,
-                ]
+                last_program = [previous.program_id]
+                if block_job == 2:
+                    last_program.append(previous.previous_id.program_id)
+
+                # Read extra data parameters:
                 previous_from = previous.created_at
                 previous_to = previous.ended_at
                 current_from = job.created_at
@@ -1984,6 +1989,10 @@ class IndustriaJobInherit(orm.Model):
             else:
                 duration_change_total = duration_change_gap = \
                     duration_setup = 0.0
+
+            # Used when job has 2 block:
+            if not consider_change_total:
+                duration_change_total = 0.0
 
             res[job.id] = {
                 'duration_change_total': duration_change_total,
