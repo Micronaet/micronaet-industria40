@@ -284,7 +284,7 @@ class IndustriaJob(orm.Model):
         """ Generate job detail for product items in preproduction lines
         """
         pdb.set_trace()
-        detail_pool = self.pool.get('industria.program.parameter')
+        job_product_pool = self.pool.get('industria.job.product')
 
         job_id = ids[0]
         job = \
@@ -307,7 +307,7 @@ class IndustriaJob(orm.Model):
                     component_total = total * bom.product_qty
                     component = bom.product_id
                     # Generate line for every component:
-                    detail_pool.create(cr, uid, {
+                    job_product_pool.create(cr, uid, {
                         'job_id': job_id,
                         'product_id': component.id,
                         'value': component_total,

@@ -41,7 +41,7 @@ _logger = logging.getLogger(__name__)
 
 
 class IndustriaProduction(orm.Model):
-    """ Model name: Industria Program Parameter
+    """ Model name: Industria Program
     """
 
     _name = 'industria.production'
