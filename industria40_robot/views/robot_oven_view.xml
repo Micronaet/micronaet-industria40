@@ -23,7 +23,7 @@
             <field name="model">mrp.production.oven.selected</field>
             <field name="arch" type="xml">
                 <tree string="MRP selezione per forno" editable="bottom" colors="blue:send==True">
-                    <field name="send" />
+                    <field name="send" invisible="1"/>
                     <field name="parent_code" />
                     <field name="color_code" />
                     <button name="generate_oven_job" type="object" string="Crea job per questo colore" icon="gtk-execute"/>
@@ -31,6 +31,7 @@
                     <field name="partial" />
                     <field name="from_date" />
                     <field name="to_date" />
+                    <field name="product_id" />
                     <field name="mrp_id" />
                 </tree>
             </field>
@@ -41,7 +42,7 @@
             <field name="arch" type="xml">
                 <form string="MRP selezione per forno">
                     <field name="mrp_id" />
-                    <field name="send" />
+                    <field name="send" invisible="1"/>
 
                     <field name="parent_code" />
                     <field name="color_code" />
@@ -88,6 +89,7 @@
                         <filter name="group_color" string="Colore" context="{'group_by': 'color_code'}"/>
                         <filter name="group_from_date" string="Dalla data" context="{'group_by': 'from_date'}"/>
                         <filter name="group_to_date" string="Alla data" context="{'group_by': 'to_date'}"/>
+                        <filter name="group_product" string="Product" context="{'group_by': 'product_id'}"/>
                         <filter name="group_mrp" string="MRP" context="{'group_by': 'mrp_id'}"/>
                     </group>
                 </search>
