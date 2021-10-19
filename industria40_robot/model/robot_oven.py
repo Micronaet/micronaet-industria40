@@ -172,6 +172,7 @@ class MrpProductionOvenSelected(orm.Model):
     def generate_oven_job(self, cr, uid, ids, context=None):
         """ Generate Oven job
         """
+        pdb.set_trace()
         job_pool = self.pool.get('industria.job')
         robot_pool = self.pool.get('industria.robot')
         program_pool = self.pool.get('industria.program')

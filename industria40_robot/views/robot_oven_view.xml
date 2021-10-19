@@ -9,6 +9,7 @@
                     <field name="send" />
                     <field name="parent_code" />
                     <field name="color_code" />
+                    <button name="generate_oven_job" type="object" string="Crea job per questo colore" icon="gtk-execute"/>
                     <field name="total" />
                     <field name="partial" />
                     <field name="from_date" />
