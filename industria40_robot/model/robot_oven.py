@@ -58,12 +58,12 @@ class MrpProductionOven(orm.Model):
 
         # Search selected items
         mrp_ids = self.search(cr, uid, [
-            ('industria_oven_pending', '=', True),
+            ('industria_oven_state', '=', 'pending'),
         ], context=context)
 
         # Collect data:
-        explode = {}
         for mrp in self.browse(cr, uid, mrp_ids, context=context):
+            date_planned = mrp.date_planned[:10]
             for line in mrp.order_line_ids:
                 default_code = line.product_id.default_code
                 parent_code = default_code[:3].strip()
@@ -76,60 +76,33 @@ class MrpProductionOven(orm.Model):
                         line.product_uom_qty - line.mx_assigned_qty -
                         line.product_uom_maked_sync_qty)
                 remain_delivery = line.product_uom_qty - line.delivered_qty
+                # todo consider also job yet forked!!
                 if remain_delivery > remain_mrp:  # Use minor
                     remain = remain_mrp
                 else:
                     remain = remain_delivery
-                if remain:
-                    key = (parent_code, color_code)
-                    if key not in explode:
-                        explode[key] = [0, []]
+                pre_oven_pool.create(cr, uid, {
+                    'send': False,
+                    'parent_code': parent_code,
+                    'color_code': color_code,
+                    'total': remain,
+                    'partial': 0,
+                    'from_date': date_planned,
+                    'to_date': date_planned,
+                    'mrp_id': mrp.id,
+                }, context=context)
 
-                    explode[key][0] += remain
-                    explode[key][1].append(mrp)
-
-        # ---------------------------------------------------------------------
-        # Generate wizard procedure:
-        # ---------------------------------------------------------------------
-        # Clean previous:
-        pre_ids = pre_oven_pool.search(cr, uid, [], context=context)
-        if pre_ids:
-            pre_oven_pool.unlink(cr, uid, pre_ids, context=context)
-
-        # Generate new:
-        for key in explode:
-            parent_code, color_code = key
-            total, mrps = explode[key]
-            date = [False, False]
-            mrp_ids = []
-            for mrp in mrps:
-                date_planned = mrp.date_planned[:10]
-                if not date[0] or date_planned < date[0]:
-                    date[0] = date_planned
-                if not date[1] or date_planned > date[1]:
-                    date[1] = date_planned
-                mrp_ids.append(mrp.id)
-
-            pre_oven_pool.create(cr, uid, {
-                'send': False,
-                'parent_code': parent_code,
-                'color_code': color_code,
-                'total': total,
-                'partial': 0,
-                'from_date': date[0],
-                'to_date': date[1],
-                # 'mrp_ids': [(6, 0, mrp_ids)],
-            }, context=context)
         tree_id = model_pool.get_object_reference(
             cr, uid,
             'industria40_robot', 'view_mrp_production_oven_selected_tree')[1]
         graph_id = model_pool.get_object_reference(
             cr, uid,
             'industria40_robot', 'view_mrp_production_oven_selected_graph')[1]
-        form_id = False
 
         # todo clean selection industria_oven_pending selected?
-
+        self.write(cr, uid, mrp_ids, {
+            'industria_oven_state': 'done',
+        }, context=context)
         return {
             'type': 'ir.actions.act_window',
             'name': _('Pre forno'),
@@ -146,9 +119,13 @@ class MrpProductionOven(orm.Model):
             }
 
     _columns = {
-        'industria_oven_pending': fields.boolean(
-            'Da verniciare',
-            help='Marcare la produzione per essere verniciata'),
+        'industria_oven_state': fields.selection([
+            ('none', 'Non impostato'),
+            ('pending', 'Pendente da fare'),
+            ('done', 'Fatto'),
+            ],
+            'Stato forno',
+            help='Indica se il lavoro è stato girato al forno o fatto'),
     }
 
 
@@ -178,8 +155,18 @@ class MrpProductionOvenSelected(orm.Model):
             'Parziali', help='Pezzi parziali da mandare in lavorazione'),
         'from_date': fields.date('Dalla data'),
         'to_date': fields.date('Alla data'),
-        # 'mrp_ids': fields.many2many(
-        #    'mrp.production', 'i40_oven_mrp_rel',
-        #    'oven_id', 'mrp_id',
-        #    'Produzioni'),
+        'mrp_id': fields.many2one('mrp.production', 'Produzione'),
+    }
+
+
+class MrpProductionOven(orm.Model):
+    """ Model name: MrpProductionOven
+    """
+
+    _inherit = 'mrp.production'
+
+    _columns = {
+        'oven_pre_job_ids': fields.one2many(
+            'mrp.production.oven.selected', 'mrp_id',
+            'Pre-Job forno'),
     }

@@ -13,7 +13,7 @@
                     <field name="partial" />
                     <field name="from_date" />
                     <field name="to_date" />
-                    <!--<field name="mrp_ids" widget="many2many_tags" />-->
+                    <field name="mrp_id" />
                 </tree>
             </field>
         </record>
@@ -22,8 +22,9 @@
             <field name="model">mrp.production.oven.selected</field>
             <field name="arch" type="xml">
                 <form string="MRP selezione per forno">
+                    <field name="mrp_id" />
                     <field name="send" />
-                    <newline/>
+
                     <field name="parent_code" />
                     <field name="color_code" />
 
@@ -59,6 +60,7 @@
                     <field name="color_code" />
                     <field name="from_date" />
                     <field name="to_date" />
+                    <field name="mrp_id" />
                     <!--<field name="partner_id" filter_domain="[('partner_id','=',self)]"/>-->
                     <filter name="send_true" string="Da inviare" domain="[('send','=',True)]"/>
                     <filter name="send_false" string="Non da inviare" domain="[('send','=',False)]"/>
@@ -67,6 +69,7 @@
                         <filter name="group_color" string="Colore" context="{'group_by': 'color_code'}"/>
                         <filter name="group_from_date" string="Dalla data" context="{'group_by': 'from_date'}"/>
                         <filter name="group_to_date" string="Alla data" context="{'group_by': 'to_date'}"/>
+                        <filter name="group_mrp" string="MRP" context="{'group_by': 'mrp_id'}"/>
                     </group>
                 </search>
             </field>
@@ -86,19 +89,20 @@
             <field name="model">mrp.production</field>
             <field name="priority" eval="40"/>
             <field name="arch" type="xml">
-                <tree string="MRP" editable="bottom" colors="blue:industria_oven_pending==True">
-                    <field name="industria_oven_pending" />
-                    <field name="name" readonly="1" />
-                    <field name="date_planned" readonly="1" />
-                    <field name="product_id" readonly="1" />
-                    <field name="product_qty" readonly="1" /> <!--sum="Total Qty"/>-->
-                    <field name="product_uom" groups="product.group_uom" readonly="1" />
-                    <field name="routing_id" groups="mrp.group_mrp_routings" readonly="1" />
-                    <field name="hour_total" readonly="1" /><!--sum="Total Hours"/>-->
-                    <field name="cycle_total" readonly="1" /><!--sum="Total Cycles"/>-->
-                    <field name="origin" readonly="1" />
-                    <field name="state" readonly="1" />
-                    <button name="explode_oven_job_per_color" string="Esplodi lavori" type="object" alert="Generare le nuove prelavorazioni cancella le precedenti, confermi?"/>
+                <tree string="MRP" editable="bottom" colors="blue:industria_oven_state == 'pending'; green:industria_oven_state == 'done'">
+                    <field name="name" />
+                    <field name="date_planned" />
+                    <field name="product_id" />
+                    <field name="product_qty"  />
+                    <field name="product_uom" groups="product.group_uom" />
+                    <field name="routing_id" groups="mrp.group_mrp_routings" />
+                    <field name="hour_total" />
+                    <field name="cycle_total" />
+                    <field name="origin" />
+                    <field name="state" />
+                    <field name="industria_oven_state" />
+                    <button name="industria_oven_state_pending" string="Da fare" type="object" attrs="{'invisible': [('industria_oven_state', '!=', 'none')]}" />
+                    <button name="explode_oven_job_per_color" string="Esplodi lavori" type="object" />
                 </tree>
             </field>
         </record>
