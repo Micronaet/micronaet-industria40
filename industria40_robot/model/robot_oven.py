@@ -50,6 +50,13 @@ class MrpProductionOven(orm.Model):
 
     _inherit = 'mrp.production'
 
+    def industria_oven_state_pending(self, cr, uid, ids, context=None):
+        """ Update state pending
+        """
+        return self.write(cr, uid, ids, {
+            'industria_oven_state': 'pending',
+        }, context=context)
+
     def explode_oven_job_per_color(self, cr, uid, ids, context=None):
         """ Generate Oven job
         """
@@ -126,6 +133,10 @@ class MrpProductionOven(orm.Model):
             ],
             'Stato forno',
             help='Indica se il lavoro è stato girato al forno o fatto'),
+    }
+
+    _defaults = {
+        'industria_oven_state': lambda *x: 'none',
     }
 
 
