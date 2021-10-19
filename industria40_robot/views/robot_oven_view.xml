@@ -102,6 +102,7 @@
                     <field name="state" />
                     <field name="industria_oven_state" />
                     <button name="industria_oven_state_pending" string="Da fare" type="object" attrs="{'invisible': [('industria_oven_state', '!=', 'none')]}" />
+                    <button name="industria_oven_state_none" string="Non fare" type="object" attrs="{'invisible': [('industria_oven_state', '!=', 'pending')]}" />
                     <button name="explode_oven_job_per_color" string="Esplodi lavori" type="object" />
                 </tree>
             </field>

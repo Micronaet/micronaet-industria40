@@ -57,6 +57,13 @@ class MrpProductionOven(orm.Model):
             'industria_oven_state': 'pending',
         }, context=context)
 
+    def industria_oven_state_none(self, cr, uid, ids, context=None):
+        """ Update state pending
+        """
+        return self.write(cr, uid, ids, {
+            'industria_oven_state': 'none',
+        }, context=context)
+
     def explode_oven_job_per_color(self, cr, uid, ids, context=None):
         """ Generate Oven job
         """
