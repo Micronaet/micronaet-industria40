@@ -123,16 +123,17 @@ class MrpProductionOven(orm.Model):
         tree_id = model_pool.get_object_reference(
             cr, uid,
             'industria40_robot', 'view_mrp_production_oven_selected_tree')[1]
+        graph_id = form_id = False
 
         return {
             'type': 'ir.actions.act_window',
             'name': _('Pre forno'),
             'view_type': 'form',
-            'view_mode': 'tree',
+            'view_mode': 'tree,graph',
             # 'res_id': false,
             'res_model': 'mrp.production.oven.selected',
             'view_id': tree_id,
-            'views': [(tree_id, 'tree')],
+            'views': [(tree_id, 'tree'), (graph_id, 'graph')],
             'domain': [],
             'context': context,
             'target': 'current',
