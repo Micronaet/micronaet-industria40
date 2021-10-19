@@ -228,7 +228,7 @@ class MrpProductionOvenSelected(orm.Model):
                     'database_id': database_id,
                     'source_id': robot_id,
                     'program_id': program_id,
-                    'color:': color,
+                    'color': color,
                     # 'created_at':
                     # 'force_name': ,
                     # 'label': 1,
