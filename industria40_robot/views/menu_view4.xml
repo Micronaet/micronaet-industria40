@@ -7,8 +7,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="view_id" ref="industria40_base.view_industria_job_fabric_tree"/>
-            <field name="context">{'form_view_ref': 'industria40_base.view_industria_job_fabric_form', 'default_state': 'DRAFT'}</field>
-            <field name="domain">[('source_id.code', '=', 'FORN01')]</field>
+            <field name="context">{'search_default_state_draft': True, 'form_view_ref': 'industria40_base.view_industria_job_opcua_form', 'default_state': 'DRAFT'}</field>
+            <field name="domain">[('source_id.code', '=', 'FORN01'), ('database_id.mode', '=', 'opcua')]</field>
         </record>
         <menuitem
             parent="industria40_base.menu_industria_master_single"
