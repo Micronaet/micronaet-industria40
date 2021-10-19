@@ -55,8 +55,14 @@ class MrpProductionOven(orm.Model):
         pre_oven_pool = self.pool.get('mrp.production.oven.selected')
         model_pool = self.pool.get('ir.model.data')
 
+        # Search selected items
+        mrp_ids = self.search(cr, uid, [
+            ('industria_oven_pending', '=', True),
+        ], context=context)
+
+        # Collect data:
         explode = {}
-        for mrp in self.browse(cr, uid, ids, context=context):
+        for mrp in self.browse(cr, uid, mrp_ids, context=context):
             for line in mrp.order_line_ids:
                 default_code = line.product_id.default_code
                 parent_code = default_code[:3].strip()
@@ -112,7 +118,8 @@ class MrpProductionOven(orm.Model):
                 'mrp_ids': [(6, 0, mrp_ids)],
             })
         tree_id = model_pool.get_object_reference(
-            cr, uid, 'industria40_robot', 'view_mrp_production_oven_selected_tree')[1]
+            cr, uid,
+            'industria40_robot', 'view_mrp_production_oven_selected_tree')[1]
 
         return {
             'type': 'ir.actions.act_window',
