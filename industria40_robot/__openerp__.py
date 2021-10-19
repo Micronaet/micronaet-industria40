@@ -39,6 +39,8 @@
     'demo': [],
     'data': [
         # 'security/ir.model.access.csv',
+        'views/robot_oven_view.xml',
+
         'views/menu_view1.xml',
         'views/menu_view2.xml',
         'views/menu_view3.xml',

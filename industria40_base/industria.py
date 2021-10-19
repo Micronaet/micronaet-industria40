@@ -372,8 +372,9 @@ class IndustriaDatabase(orm.Model):
         picking_pool = self.pool.get('stock.picking')
         move_pool = self.pool.get('stock.move')
         job_pool = self.pool.get('industria.job')
+        company_pool = self.pool.get('res.company')
 
-        company_proxy = self.pool.get('res.company')._get_company_browse(
+        company_proxy = company_pool._get_company_browse(
             cr, uid, context=context)
 
         cl_type = company_proxy.cl_mrp_lavoration_id

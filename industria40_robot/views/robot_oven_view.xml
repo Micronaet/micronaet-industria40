@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_mrp_production_oven_selected_wizard_tree">
+            <field name="name">mrp.production.oven.selected.wizard.tree</field>
+            <field name="model">mrp.production.oven.selected.wizard</field>
+            <field name="arch" type="xml">
+                <tree string="MRP selezione per forno" editable="bottom" colors="blue:send==True">
+                    <field name="send" />
+                    <field name="parent_code" />
+                    <field name="color_code" />
+                    <field name="total" />
+                    <field name="partial" />
+                    <field name="from_date" />
+                    <field name="to_date" />
+                    <field name="mrp_ids" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_mrp_production_oven_selected_wizard_form">
+            <field name="name">mrp.production.oven.selected.wizard.form</field>
+            <field name="model">mrp.production.oven.selected.wizard</field>
+            <field name="arch" type="xml">
+                <form string="MRP selezione per forno">
+                    <field name="send" />
+                    <newline/>
+                    <field name="parent_code" />
+                    <field name="color_code" />
+
+                    <field name="total" />
+                    <field name="partial" />
+
+                    <field name="from_date" />
+                    <field name="to_date" />
+
+                    <separator string="Produzioni toccate" colspan="4"/>
+                    <field name="mrp_ids" colspan="4" nolabel="4"/>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_mrp_production_oven_selected_wizard">
+            <field name="name">Selezione lavori per forno</field>
+            <field name="res_model">mrp.production.oven.selected.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_mrp_production_oven_selected_wizard_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+    </data>
+</odoo>

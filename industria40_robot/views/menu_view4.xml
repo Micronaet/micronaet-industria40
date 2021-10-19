@@ -16,11 +16,19 @@
             name="Forno (Elettrofrigo)"
             sequence="40"
             />
+            <!-- todo mrp.production pre selection-->
+            <menuitem
+                parent="menu_industria_robot4"
+                id="menu_mrp_production_oven_selected_wizard"
+                action="action_mrp_production_oven_selected_wizard"
+                sequence="10"
+            />
+
             <menuitem
                 parent="menu_industria_robot4"
                 id="menu_industria_job4"
                 action="action_industria_job_robot4"
-                sequence="10"
+                sequence="30"
                 />
     </data>
 </openerp>
