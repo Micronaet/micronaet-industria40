@@ -128,6 +128,8 @@ class MrpProductionOven(orm.Model):
             'industria40_robot', 'view_mrp_production_oven_selected_graph')[1]
         form_id = False
 
+        # todo clean selection industria_oven_pending selected?
+
         return {
             'type': 'ir.actions.act_window',
             'name': _('Pre forno'),
