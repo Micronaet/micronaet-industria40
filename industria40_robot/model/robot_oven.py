@@ -183,7 +183,6 @@ class MrpProductionOvenSelected(orm.Model):
         """ Generate Oven job
             Parameter for single color: force_color
         """
-        pdb.set_trace()
         job_pool = self.pool.get('industria.job')
         robot_pool = self.pool.get('industria.robot')
         program_pool = self.pool.get('industria.program')
@@ -216,7 +215,7 @@ class MrpProductionOvenSelected(orm.Model):
         if context is None:
             context = {}
         force_color = context.get('force_color')
-        domain = [('industria_oven_state', '=', 'pending')]
+        domain = [('job_id', '=', False)]  # pending not linked
         if force_color:
             domain.append(('color_code', '=', force_color))
         record_ids = self.search(cr, uid, domain, context=context)
@@ -244,6 +243,7 @@ class MrpProductionOvenSelected(orm.Model):
             }, context=context)
 
         # Explode lines in job detail (simulate button press):
+        pdb.set_trace()
         for job_id in jobs_created:
             job_pool.explode_oven_preload_detail(
                 cr, uid, [job_id], context=context)
@@ -288,6 +288,7 @@ class IndustriaJob(orm.Model):
     def explode_oven_preload_detail(self, cr, uid, ids, context=None):
         """ Generate job detail for product items in preproduction lines
         """
+        pdb.set_trace()
         detail_pool = self.pool.get('industria.program.parameter')
 
         job_id = ids[0]
