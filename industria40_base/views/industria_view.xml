@@ -638,7 +638,7 @@
                             <field name="picking_id" />
                             <!--<field name="production_id" readonly="1"/>-->
 
-                            <notebook>
+                            <notebook colspan="4">
                                 <page name="product_page" string="Prodotti">
                                     <group>
                                         <separator string="Prodotti:" colspan="4" />
