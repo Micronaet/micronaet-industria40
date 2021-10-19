@@ -70,9 +70,6 @@ class MrpProductionOven(orm.Model):
                 color_code = default_code[6:8].strip()
                 if not color_code:
                     continue  # neutral color
-                key = (parent_code, color_code)
-                if key not in explode:
-                    explode[key] = [0, []]
 
                 # Get remain:
                 remain_mrp = (
@@ -84,6 +81,10 @@ class MrpProductionOven(orm.Model):
                 else:
                     remain = remain_delivery
                 if remain:
+                    key = (parent_code, color_code)
+                    if key not in explode:
+                        explode[key] = [0, []]
+
                     explode[key][0] += remain
                     explode[key][1].append(mrp)
 
@@ -96,7 +97,6 @@ class MrpProductionOven(orm.Model):
             pre_oven_pool.unlink(cr, uid, pre_ids, context=context)
 
         # Generate new:
-        pdb.set_trace()
         for key in explode:
             parent_code, color_code = key
             total, mrps = explode[key]
@@ -110,7 +110,7 @@ class MrpProductionOven(orm.Model):
                     date[1] = date_planned
                 mrp_ids.append(mrp.id)
 
-            pre_oven_pool.create({
+            pre_oven_pool.create(cr, uid, {
                 'send': False,
                 'parent_code': parent_code,
                 'color_code': color_code,
@@ -118,8 +118,8 @@ class MrpProductionOven(orm.Model):
                 'partial': 0,
                 'from_date': date[0],
                 'to_date': date[1],
-                'mrp_ids': [(6, 0, mrp_ids)],
-            })
+                # 'mrp_ids': [(6, 0, mrp_ids)],
+            }, context=context)
         tree_id = model_pool.get_object_reference(
             cr, uid,
             'industria40_robot', 'view_mrp_production_oven_selected_tree')[1]
@@ -174,6 +174,6 @@ class MrpProductionOvenSelected(orm.Model):
         'to_date': fields.date('Alla data'),
         'mrp_ids': fields.many2many(
             'mrp.production', 'i40_oven_mrp_rel',
-            'wizard_id', 'mrp_id',
+            'oven_id', 'mrp_id',
             'Produzioni'),
     }
