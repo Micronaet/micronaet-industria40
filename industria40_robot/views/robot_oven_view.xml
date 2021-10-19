@@ -43,7 +43,7 @@
             <field name="model">mrp.production.oven.selected</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Pre forno" type="bar/pie">
+                <graph string="Pre forno" type="bar">
                     <field name="color_code"/>
                     <field name="total" operator="+"/>
                 </graph>
