@@ -37,6 +37,7 @@
         'mrp',
         'production_accounting_external',
         'mx_close_order',
+        'bom_dynamic_structured',
         ],
     'init_xml': [],
     'demo': [],

@@ -172,6 +172,60 @@ class MrpProductionOvenSelected(orm.Model):
     def generate_oven_job(self, cr, uid, ids, context=None):
         """ Generate Oven job
         """
+        job_pool = self.pool.get('industria.job')
+        robot_pool = self.pool.get('industria.robot')
+        program_pool = self.pool.get('industria.program')
+        detail_pool = self.pool.get('industria.program.parameter')
+
+        robot_ids = robot_pool.search(cr, uid, [
+            ('code', '=', 'FORN01'),
+        ], context=context)
+        if not robot_ids:
+            raise
+
+        robot = robot_pool.browse(cr, uid, robot_ids[0], context=context)
+        robot_id = robot.id
+        database_id = robot.database_id.id
+
+        program_ids = robot_pool.search(cr, uid, [], context=context)
+        if not program_ids:
+            raise
+        program_id = program_ids[0]  # todo Take the first for now
+
+        if context is None:
+            context = {}
+        force_color = context.get('force_color')
+        domain = [('industria_oven_state', '=', 'pending')]
+        if force_color:
+            domain.append(('color_code', '=', force_color))
+        record_ids = self.browse(cr, uid, domain, context=context)
+        jobs_created = {}
+        for record in self.browse(cr, uid, record_ids, context=context):
+            color = record.color_code
+            if color in jobs_created:
+                job_id = jobs_created[color]
+            else:
+                job_id = job_pool.create(cr, uid, {
+                    'database_id': database_id,
+                    'source_id': robot_id,
+                    'program_id': program_id,
+                    'color:': color,
+                    # 'created_at':
+                    # 'force_name': ,
+                    # 'label': 1,
+                    # 'state': 'draft',
+                }, context=context)
+                jobs_created[color] = job_id
+
+            # Link pre-line to job:
+            self.write(cr, uid, [record.id], {
+                'job_id': job_id,
+            }, context=context)
+
+        # Explode lines in job detail (simulate button press):
+        for job_id in jobs_created:
+            job_pool.explode_oven_preload_detail(
+                cr, uid, [job_id], context=context)
 
         return True
 
@@ -187,10 +241,12 @@ class MrpProductionOvenSelected(orm.Model):
         'from_date': fields.date('Dalla data'),
         'to_date': fields.date('Alla data'),
         'mrp_id': fields.many2one('mrp.production', 'Produzione'),
+        'job_id': fields.many2one('industria.job', 'Job'),
+        'product_id': fields.many2one('product.product', 'Prodotto'),
     }
 
 
-class MrpProductionOven(orm.Model):
+class MrpProductionOvenInherit(orm.Model):
     """ Model name: MrpProductionOven
     """
 
@@ -200,4 +256,59 @@ class MrpProductionOven(orm.Model):
         'oven_pre_job_ids': fields.one2many(
             'mrp.production.oven.selected', 'mrp_id',
             'Pre-Job forno'),
+    }
+
+
+class IndustriaJob(orm.Model):
+    """ Model name: Job relation
+    """
+    _inherit = 'industria.job'
+
+    def explode_oven_preload_detail(self, cr, uid, ids, context=None):
+        """ Generate job detail for product items in preproduction lines
+        """
+        detail_pool = self.pool.get('industria.program.parameter')
+
+        job_id = ids[0]
+        job = \
+            self.browse(cr, uid, job_id, context=context)
+        product_detail = {}
+        for preline in job.oven_pre_job_ids:
+            product = preline.product_id
+            total = preline.total   # todo use partial?
+
+            if product in product_detail:
+                product_detail[product] += total
+            else:
+                product_detail[product] = total
+
+        for product in product_detail:
+            total = product_detail[product]
+            # Search component to oven:
+            for bom in product.dynamic_bom_line_ids:
+                if bom.category_id.need_oven:
+                    component_total = total * bom.product_qty
+                    component = bom.product_id
+                    # Generate line for every component:
+                    detail_pool.create(cr, uid, {
+                        'job_id': job_id,
+                        'product_id': component.id,
+                        'value': component_total,
+                    }, context=context)
+        return True
+
+    _columns = {
+        'oven_pre_job_ids': fields.one2many(
+            'mrp.production.oven.selected', 'job_id',
+            'Pre-Job forno'),
+    }
+
+
+class MrpBomStructureCategory(orm.Model):
+    """ Model name: BOM Category
+    """
+    _inherit = 'mrp.bom.structure.category'
+
+    _columns = {
+        'need_oven': fields.boolean('Necessita verniciatura')
     }

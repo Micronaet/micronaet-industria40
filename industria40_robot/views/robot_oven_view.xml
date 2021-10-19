@@ -58,6 +58,7 @@
                 <search string="MRP Forno" version="7.0">
                     <field name="parent_code" />
                     <field name="color_code" />
+                    <field name="product_id" />
                     <field name="from_date" />
                     <field name="to_date" />
                     <field name="mrp_id" />
@@ -115,6 +116,28 @@
             <field name="view_id" ref="view_mrp_production_tree"/>
             <field name="context">{}</field>
             <field name="domain">[('state','not in', ('cancel', 'done')), ('industria_oven_state', '!=', 'done')]</field>
+        </record>
+
+        <!--mrp.bom.structure.category-->
+        <record model="ir.ui.view" id="view_mrp_bom_structure_category_oven_tree">
+            <field name="name">mrp.bom.structure.category.oven.tree</field>
+            <field name="model">mrp.bom.structure.category</field>
+            <field name="inherit_id" ref="bom_dynamic_structured.view_mrp_bom_structure_category_tree"/>
+            <field name="arch" type="xml">
+                <field name="department" position="after">
+                    <field name="need_oven"/>
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_mrp_bom_structure_category_oven_form">
+            <field name="name">mrp.bom.structure.category.oven.tree</field>
+            <field name="model">mrp.bom.structure.category</field>
+            <field name="inherit_id" ref="bom_dynamic_structured.view_mrp_bom_structure_category_form"/>
+            <field name="arch" type="xml">
+                    <field name="department" position="after">
+                        <field name="need_oven"/>
+                    </field>
+            </field>
         </record>
     </data>
 </openerp>
