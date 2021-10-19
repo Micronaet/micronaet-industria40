@@ -107,7 +107,7 @@
                 </tree>
             </field>
         </record>
-        <record model="ir.actions.act_window" id="action_mrp_production_form">
+        <record model="ir.actions.act_window" id="action_mrp_production">
             <field name="name">Produzioni per vernicatura</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
