@@ -91,7 +91,9 @@ class MrpProductionOven(orm.Model):
             counter = 0
             for line in lines:
                 counter += 1
-                _logger.info('MRP %s: %s on %s' % (mrp_name, counter, total))
+                if not counter % 10:
+                    _logger.info(
+                        'MRP %s: %s on %s' % (mrp_name, counter, total))
                 default_code = line.product_id.default_code
                 parent_code = default_code[:3].strip()
                 color_code = default_code[6:8].strip()
