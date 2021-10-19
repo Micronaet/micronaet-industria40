@@ -22,6 +22,7 @@
 ###############################################################################
 
 import os
+import pdb
 import sys
 import logging
 import openerp
@@ -71,7 +72,7 @@ class MrpProductionOven(orm.Model):
                     continue  # neutral color
                 key = (parent_code, color_code)
                 if key not in explode:
-                    explode[key] = (0, [])
+                    explode[key] = [0, []]
 
                 # Get remain:
                 remain_mrp = (
@@ -82,8 +83,9 @@ class MrpProductionOven(orm.Model):
                     remain = remain_mrp
                 else:
                     remain = remain_delivery
-                explode[key][0] += remain
-                explode[key][1].append(mrp)
+                if remain:
+                    explode[key][0] += remain
+                    explode[key][1].append(mrp)
 
         # ---------------------------------------------------------------------
         # Generate wizard procedure:
@@ -94,6 +96,7 @@ class MrpProductionOven(orm.Model):
             pre_oven_pool.unlink(cr, uid, pre_ids, context=context)
 
         # Generate new:
+        pdb.set_trace()
         for key in explode:
             parent_code, color_code = key
             total, mrps = explode[key]
@@ -128,7 +131,7 @@ class MrpProductionOven(orm.Model):
             'view_mode': 'tree',
             # 'res_id': false,
             'res_model': 'mrp.production.oven.selected',
-            'view_id': tree_id, # False
+            'view_id': tree_id,
             'views': [(tree_id, 'tree')],
             'domain': [],
             'context': context,
