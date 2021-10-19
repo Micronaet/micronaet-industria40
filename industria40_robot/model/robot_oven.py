@@ -175,7 +175,6 @@ class MrpProductionOvenSelected(orm.Model):
         job_pool = self.pool.get('industria.job')
         robot_pool = self.pool.get('industria.robot')
         program_pool = self.pool.get('industria.program')
-        detail_pool = self.pool.get('industria.program.parameter')
 
         robot_ids = robot_pool.search(cr, uid, [
             ('code', '=', 'FORN01'),
@@ -187,7 +186,7 @@ class MrpProductionOvenSelected(orm.Model):
         robot_id = robot.id
         database_id = robot.database_id.id
 
-        program_ids = robot_pool.search(cr, uid, [], context=context)
+        program_ids = program_pool.search(cr, uid, [], context=context)
         if not program_ids:
             raise
         program_id = program_ids[0]  # todo Take the first for now
