@@ -172,6 +172,17 @@ class MrpProductionOvenSelected(orm.Model):
     def generate_oven_job(self, cr, uid, ids, context=None):
         """ Generate Oven job
         """
+        if context is None:
+            context = {}
+        record = self.browse(cr, uid, ids[0], context=context)
+        ctx = context.copy()
+        ctx['force_color'] = record.color_code
+        return self.generate_oven_job_all(cr, uid, ids, context=ctx)
+
+    def generate_oven_job_all(self, cr, uid, ids, context=None):
+        """ Generate Oven job
+            Parameter for single color: force_color
+        """
         pdb.set_trace()
         job_pool = self.pool.get('industria.job')
         robot_pool = self.pool.get('industria.robot')
@@ -181,15 +192,25 @@ class MrpProductionOvenSelected(orm.Model):
             ('code', '=', 'FORN01'),
         ], context=context)
         if not robot_ids:
-            raise
+            raise osv.except_osv(
+                _('Errore recupero forno'),
+                _('Non trovato robot - forno codice FORN01'),
+                )
 
         robot = robot_pool.browse(cr, uid, robot_ids[0], context=context)
         robot_id = robot.id
         database_id = robot.database_id.id
 
-        program_ids = program_pool.search(cr, uid, [], context=context)
+        program_ids = program_pool.search(cr, uid, [
+            ('source_id.code', '=', 'FORN01'),
+            ('code', '=', 'FORNBASE'),
+        ], context=context)
         if not program_ids:
-            raise
+            raise osv.except_osv(
+                _('Errore programma forno'),
+                _('Non trovato il porogramma unico per i robot tipo forno '
+                  '(o non esiste il codice FORNBASE nel programma)'),
+                )
         program_id = program_ids[0]  # todo Take the first for now
 
         if context is None:
@@ -198,7 +219,7 @@ class MrpProductionOvenSelected(orm.Model):
         domain = [('industria_oven_state', '=', 'pending')]
         if force_color:
             domain.append(('color_code', '=', force_color))
-        record_ids = self.browse(cr, uid, domain, context=context)
+        record_ids = self.search(cr, uid, domain, context=context)
         jobs_created = {}
         for record in self.browse(cr, uid, record_ids, context=context):
             color = record.color_code
