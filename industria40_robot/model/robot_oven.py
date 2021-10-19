@@ -120,6 +120,7 @@ class MrpProductionOven(orm.Model):
                         'from_date': date_planned,
                         'to_date': date_planned,
                         'mrp_id': mrp.id,
+                        'product_id': line.product_id.id,
                     }, context=context)
 
         tree_id = model_pool.get_object_reference(
@@ -220,7 +221,6 @@ class MrpProductionOvenSelected(orm.Model):
             domain.append(('color_code', '=', force_color))
         record_ids = self.search(cr, uid, domain, context=context)
         jobs_created = {}
-        pdb.set_trace()
         for record in self.browse(cr, uid, record_ids, context=context):
             color = record.color_code
             if color not in jobs_created:
@@ -241,8 +241,8 @@ class MrpProductionOvenSelected(orm.Model):
             }, context=context)
 
         # Explode lines in job detail (simulate button press):
-        pdb.set_trace()
-        for job_id in jobs_created:
+        for color in jobs_created:
+            job_id = jobs_created[color]
             job_pool.explode_oven_preload_detail(
                 cr, uid, [job_id], context=context)
         return True
