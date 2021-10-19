@@ -52,6 +52,9 @@ class MrpProductionOven(orm.Model):
     def explode_oven_job_per_color(self, cr, uid, ids, context=None):
         """ Generate Oven job
         """
+        pre_oven_pool = self.pool.get('mrp.production.oven.selected')
+        model_pool = self.pool.get('ir.model.data')
+
         explode = {}
         for mrp in self.browse(cr, uid, ids, context=context):
             for line in mrp.order_line_ids:
@@ -60,10 +63,9 @@ class MrpProductionOven(orm.Model):
                 color_code = default_code[6:8].strip()
                 if not color_code:
                     continue  # neutral color
-                if color_code not in explode:
-                    explode[color_code] = {}
-                if parent_code not in explode[color_code]:
-                    explode[color_code][parent_code] = 0
+                key = (parent_code, color_code)
+                if key not in explode:
+                    explode[key] = (0, [])
 
                 # Get remain:
                 remain_mrp = (
@@ -74,11 +76,58 @@ class MrpProductionOven(orm.Model):
                     remain = remain_mrp
                 else:
                     remain = remain_delivery
-                explode[color_code][parent_code] += remain
+                explode[key][0] += remain
+                explode[key][1].append(mrp)
 
+        # ---------------------------------------------------------------------
         # Generate wizard procedure:
+        # ---------------------------------------------------------------------
+        # Clean previous:
+        pre_ids = pre_oven_pool.search(cr, uid, [], context=context)
+        if pre_ids:
+            pre_oven_pool.unlink(cr, uid, pre_ids, context=context)
 
-        return True
+        # Generate new:
+        for key in explode:
+            parent_code, color_code = key
+            total, mrps = explode[key]
+            date = [False, False]
+            mrp_ids = []
+            for mrp in mrps:
+                date_planned = mrp.date_planned[:10]
+                if not date[0] or date_planned < date[0]:
+                    date[0] = date_planned
+                if not date[1] or date_planned > date[1]:
+                    date[1] = date_planned
+                mrp_ids.append(mrp.id)
+
+            pre_oven_pool.create({
+                'send': False,
+                'parent_code': parent_code,
+                'color_code': color_code,
+                'total': total,
+                'partial': 0,
+                'from_date': date[0],
+                'to_date': date[1],
+                'mrp_ids': [(6, 0, mrp_ids)],
+            })
+        tree_id = model_pool.get_object_reference(
+            cr, uid, 'industria40_robot', 'view_mrp_production_oven_selected_tree')[1]
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Pre forno'),
+            'view_type': 'form',
+            'view_mode': 'tree',
+            # 'res_id': false,
+            'res_model': 'mrp.production.oven.selected',
+            'view_id': tree_id, # False
+            'views': [(tree_id, 'tree')],
+            'domain': [],
+            'context': context,
+            'target': 'current',
+            'nodestroy': False,
+            }
 
     _columns = {
         'industria_oven_pending': fields.boolean(

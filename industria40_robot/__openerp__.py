@@ -38,7 +38,7 @@
     'init_xml': [],
     'demo': [],
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/robot_oven_view.xml',
 
         'views/menu_view1.xml',
