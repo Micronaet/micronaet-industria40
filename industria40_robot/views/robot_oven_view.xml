@@ -13,7 +13,7 @@
                     <field name="partial" />
                     <field name="from_date" />
                     <field name="to_date" />
-                    <field name="mrp_ids" />
+                    <!--<field name="mrp_ids" widget="many2many_tags" />-->
                 </tree>
             </field>
         </record>
@@ -33,8 +33,8 @@
                     <field name="from_date" />
                     <field name="to_date" />
 
-                    <separator string="Produzioni toccate" colspan="4"/>
-                    <field name="mrp_ids" colspan="4" nolabel="4"/>
+                    <!--<separator string="Produzioni toccate" colspan="4"/>
+                    <field name="mrp_ids" colspan="4" nolabel="4"/>-->
                 </form>
             </field>
         </record>

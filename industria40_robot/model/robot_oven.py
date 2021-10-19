@@ -172,8 +172,8 @@ class MrpProductionOvenSelected(orm.Model):
             'Parziali', help='Pezzi parziali da mandare in lavorazione'),
         'from_date': fields.date('Dalla data'),
         'to_date': fields.date('Alla data'),
-        'mrp_ids': fields.many2many(
-            'mrp.production', 'i40_oven_mrp_rel',
-            'oven_id', 'mrp_id',
-            'Produzioni'),
+        # 'mrp_ids': fields.many2many(
+        #    'mrp.production', 'i40_oven_mrp_rel',
+        #    'oven_id', 'mrp_id',
+        #    'Produzioni'),
     }
