@@ -638,15 +638,21 @@
                             <field name="picking_id" />
                             <!--<field name="production_id" readonly="1"/>-->
 
-                            <separator string="Prodotti:" colspan="4" />
-                            <field name="product_ids" colspan="4" nolabel="1" >
-                                <tree string="Prodotti" editable="bottom">
-                                    <field name="product_id" domain="[('industria_in_id', '!=', False)]"/>
-                                    <field name="piece" sum="total"/>
-                                    <!--<field name="source_id" />
-                                    <field name="job_id" />-->
-                                </tree>
-                            </field>
+                            <notebook>
+                                <page name="product_page" string="Prodotti">
+                                    <group>
+                                        <separator string="Prodotti:" colspan="4" />
+                                        <field name="product_ids" colspan="4" nolabel="1" >
+                                            <tree string="Prodotti" editable="bottom">
+                                                <field name="product_id" domain="[('industria_in_id', '!=', False)]"/>
+                                                <field name="piece" sum="total"/>
+                                                <!--<field name="source_id" />
+                                                <field name="job_id" />-->
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </page>
+                            </notebook>
 
                         </group>
                     </sheet>
