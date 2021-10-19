@@ -123,7 +123,10 @@ class MrpProductionOven(orm.Model):
         tree_id = model_pool.get_object_reference(
             cr, uid,
             'industria40_robot', 'view_mrp_production_oven_selected_tree')[1]
-        graph_id = form_id = False
+        graph_id = model_pool.get_object_reference(
+            cr, uid,
+            'industria40_robot', 'view_mrp_production_oven_selected_graph')[1]
+        form_id = False
 
         return {
             'type': 'ir.actions.act_window',

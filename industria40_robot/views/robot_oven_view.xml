@@ -45,6 +45,7 @@
             <field name="arch" type="xml">
                 <graph string="Pre forno" type="bar">
                     <field name="color_code"/>
+                    <field name="parent_code"/>
                     <field name="total" operator="+"/>
                 </graph>
             </field>
