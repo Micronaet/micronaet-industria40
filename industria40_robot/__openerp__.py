@@ -34,6 +34,8 @@
     'depends': [
         'base',
         'industria40_base',
+        'mrp',
+        'production_accounting_external',
         ],
     'init_xml': [],
     'demo': [],
