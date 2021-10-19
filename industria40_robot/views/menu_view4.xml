@@ -19,9 +19,15 @@
             <!-- todo mrp.production pre selection-->
             <menuitem
                 parent="menu_industria_robot4"
+                id="menu_mrp_production_pre_selection"
+                action="action_mrp_production_form"
+                sequence="10"
+            />
+            <menuitem
+                parent="menu_industria_robot4"
                 id="menu_mrp_production_oven_selected_wizard"
                 action="action_mrp_production_oven_selected_wizard"
-                sequence="10"
+                sequence="20"
             />
 
             <menuitem
