@@ -114,7 +114,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_mrp_production_tree"/>
             <field name="context">{}</field>
-            <field name="domain">[('state','not in', ('cancel', 'done')), ('industria_oven_state', '!=', 'done')]</field>
+            <field name="domain">[('state','not in', ('cancel', 'done'))]</field>
         </record>
     </data>
 </openerp>

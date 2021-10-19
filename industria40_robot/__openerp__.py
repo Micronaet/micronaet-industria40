@@ -36,6 +36,7 @@
         'industria40_base',
         'mrp',
         'production_accounting_external',
+        'mx_close_order',
         ],
     'init_xml': [],
     'demo': [],

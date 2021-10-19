@@ -64,6 +64,13 @@ class MrpProductionOven(orm.Model):
             'industria_oven_state': 'none',
         }, context=context)
 
+    def industria_oven_state_done(self, cr, uid, ids, context=None):
+        """ Update state done
+        """
+        return self.write(cr, uid, ids, {
+            'industria_oven_state': 'done',
+        }, context=context)
+
     def explode_oven_job_per_color(self, cr, uid, ids, context=None):
         """ Generate Oven job
         """
@@ -78,12 +85,18 @@ class MrpProductionOven(orm.Model):
         # Collect data:
         for mrp in self.browse(cr, uid, mrp_ids, context=context):
             date_planned = mrp.date_planned[:10]
-            for line in mrp.order_line_ids:
+            mrp_name = mrp.name
+            lines = mrp.order_line_ids
+            total = len(lines)
+            counter = 0
+            for line in lines:
+                counter += 1
+                _logger.info('MRP %s: %s on %s' % (mrp_name, counter, total))
                 default_code = line.product_id.default_code
                 parent_code = default_code[:3].strip()
                 color_code = default_code[6:8].strip()
-                if not color_code:
-                    continue  # neutral color
+                if not color_code or line.mx_closed:
+                    continue  # neutral color or closed line (jump)
 
                 # Get remain:
                 remain_mrp = (
@@ -95,16 +108,17 @@ class MrpProductionOven(orm.Model):
                     remain = remain_mrp
                 else:
                     remain = remain_delivery
-                pre_oven_pool.create(cr, uid, {
-                    'send': False,
-                    'parent_code': parent_code,
-                    'color_code': color_code,
-                    'total': remain,
-                    'partial': 0,
-                    'from_date': date_planned,
-                    'to_date': date_planned,
-                    'mrp_id': mrp.id,
-                }, context=context)
+                if remain:
+                    pre_oven_pool.create(cr, uid, {
+                        'send': False,
+                        'parent_code': parent_code,
+                        'color_code': color_code,
+                        'total': remain,
+                        'partial': 0,
+                        'from_date': date_planned,
+                        'to_date': date_planned,
+                        'mrp_id': mrp.id,
+                    }, context=context)
 
         tree_id = model_pool.get_object_reference(
             cr, uid,
@@ -112,11 +126,8 @@ class MrpProductionOven(orm.Model):
         graph_id = model_pool.get_object_reference(
             cr, uid,
             'industria40_robot', 'view_mrp_production_oven_selected_graph')[1]
+        self.industria_oven_state_done(cr, uid, mrp_ids, context=context)
 
-        # todo clean selection industria_oven_pending selected?
-        self.write(cr, uid, mrp_ids, {
-            'industria_oven_state': 'done',
-        }, context=context)
         return {
             'type': 'ir.actions.act_window',
             'name': _('Pre forno'),
