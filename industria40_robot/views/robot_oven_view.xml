@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="view_mrp_production_oven_selected_wizard_tree">
-            <field name="name">mrp.production.oven.selected.wizard.tree</field>
-            <field name="model">mrp.production.oven.selected.wizard</field>
+        <record model="ir.ui.view" id="view_mrp_production_oven_selected_tree">
+            <field name="name">mrp.production.oven.selected.tree</field>
+            <field name="model">mrp.production.oven.selected</field>
             <field name="arch" type="xml">
                 <tree string="MRP selezione per forno" editable="bottom" colors="blue:send==True">
                     <field name="send" />
@@ -17,9 +17,9 @@
                 </tree>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_mrp_production_oven_selected_wizard_form">
-            <field name="name">mrp.production.oven.selected.wizard.form</field>
-            <field name="model">mrp.production.oven.selected.wizard</field>
+        <record model="ir.ui.view" id="view_mrp_production_oven_selected_form">
+            <field name="name">mrp.production.oven.selected.form</field>
+            <field name="model">mrp.production.oven.selected</field>
             <field name="arch" type="xml">
                 <form string="MRP selezione per forno">
                     <field name="send" />
@@ -38,12 +38,12 @@
                 </form>
             </field>
         </record>
-        <record model="ir.actions.act_window" id="action_mrp_production_oven_selected_wizard">
+        <record model="ir.actions.act_window" id="action_mrp_production_oven_selected">
             <field name="name">Preselezione forno</field>
-            <field name="res_model">mrp.production.oven.selected.wizard</field>
+            <field name="res_model">mrp.production.oven.selected</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_mrp_production_oven_selected_wizard_tree"/>
+            <field name="view_id" ref="view_mrp_production_oven_selected_tree"/>
             <field name="context">{}</field>
             <field name="domain">[]</field>
         </record>
@@ -65,6 +65,7 @@
                     <field name="cycle_total" readonly="1" /><!--sum="Total Cycles"/>-->
                     <field name="origin" readonly="1" />
                     <field name="state" readonly="1" />
+                    <button name="explode_oven_job_per_color" string="Esplodi lavori" type="object" />
                 </tree>
             </field>
         </record>
@@ -75,7 +76,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_mrp_production_tree"/>
             <field name="context">{}</field>
-            <field name="domain">[]</field>
+            <field name="domain">[('state','not in', ('cancel', 'done'))]</field>
         </record>
     </data>
 </openerp>

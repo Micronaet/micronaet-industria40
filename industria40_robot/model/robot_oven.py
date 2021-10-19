@@ -49,6 +49,37 @@ class MrpProductionOven(orm.Model):
 
     _inherit = 'mrp.production'
 
+    def explode_oven_job_per_color(self, cr, uid, ids, context=None):
+        """ Generate Oven job
+        """
+        explode = {}
+        for mrp in self.browse(cr, uid, ids, context=context):
+            for line in mrp.order_line_ids:
+                default_code = line.product_id.default_code
+                parent_code = default_code[:3].strip()
+                color_code = default_code[6:8].strip()
+                if not color_code:
+                    continue  # neutral color
+                if color_code not in explode:
+                    explode[color_code] = {}
+                if parent_code not in explode[color_code]:
+                    explode[color_code][parent_code] = 0
+
+                # Get remain:
+                remain_mrp = (
+                        line.product_uom_qty - line.mx_assigned_qty -
+                        line.product_uom_maked_sync_qty)
+                remain_delivery = line.product_uom_qty - line.delivered_qty
+                if remain_delivery > remain_mrp:  # Use minor
+                    remain = remain_mrp
+                else:
+                    remain = remain_delivery
+                explode[color_code][parent_code] += remain
+
+        # Generate wizard procedure:
+
+        return True
+
     _columns = {
         'industria_oven_pending': fields.boolean(
             'Da verniciare',
@@ -56,12 +87,14 @@ class MrpProductionOven(orm.Model):
     }
 
 
-class MrpProductionOvenSelectedWizard(orm.TransientModel):
-    """ Wizard name: class Mrp Production Oven Selected Wizard
+class MrpProductionOvenSelected(orm.Model):
+    """ Wizard name: class Mrp Production Oven Selected
     """
 
-    _name = 'mrp.production.oven.selected.wizard'
+    _name = 'mrp.production.oven.selected'
     _description = 'Pre selection wizard'
+    _order = 'parent_code, color_code'
+    _rec_name = 'parent_code'
 
     def generate_oven_job(self, cr, uid, ids, context=None):
         """ Generate Oven job
