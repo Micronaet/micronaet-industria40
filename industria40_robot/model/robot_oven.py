@@ -220,12 +220,11 @@ class MrpProductionOvenSelected(orm.Model):
             domain.append(('color_code', '=', force_color))
         record_ids = self.search(cr, uid, domain, context=context)
         jobs_created = {}
+        pdb.set_trace()
         for record in self.browse(cr, uid, record_ids, context=context):
             color = record.color_code
-            if color in jobs_created:
-                job_id = jobs_created[color]
-            else:
-                job_id = job_pool.create(cr, uid, {
+            if color not in jobs_created:
+                jobs_created[color] = job_pool.create(cr, uid, {
                     'database_id': database_id,
                     'source_id': robot_id,
                     'program_id': program_id,
@@ -235,11 +234,10 @@ class MrpProductionOvenSelected(orm.Model):
                     # 'label': 1,
                     # 'state': 'draft',
                 }, context=context)
-                jobs_created[color] = job_id
 
             # Link pre-line to job:
             self.write(cr, uid, [record.id], {
-                'job_id': job_id,
+                'job_id': jobs_created[color],
             }, context=context)
 
         # Explode lines in job detail (simulate button press):
@@ -247,7 +245,6 @@ class MrpProductionOvenSelected(orm.Model):
         for job_id in jobs_created:
             job_pool.explode_oven_preload_detail(
                 cr, uid, [job_id], context=context)
-
         return True
 
     _columns = {
