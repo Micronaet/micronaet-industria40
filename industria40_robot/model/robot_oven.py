@@ -252,10 +252,8 @@ class MrpProductionOvenSelected(orm.Model):
 
     _columns = {
         'send': fields.boolean('Da spedire'),
-        'parent_code': fields.char(
-            'Codice padre', size=5, required=True),
-        'color_code': fields.char(
-            'Codice colore', size=5, required=True),
+        'parent_code': fields.char('Codice padre', size=5, required=True),
+        'color_code': fields.char('Codice colore', size=5, required=True),
         'total': fields.integer('Totali'),
         'partial': fields.integer(
             'Parziali', help='Pezzi parziali da mandare in lavorazione'),
