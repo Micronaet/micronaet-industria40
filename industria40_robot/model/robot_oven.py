@@ -310,7 +310,7 @@ class IndustriaJob(orm.Model):
                     job_product_pool.create(cr, uid, {
                         'job_id': job_id,
                         'product_id': component.id,
-                        'value': component_total,
+                        'piece': component_total,
                     }, context=context)
         return True
 
