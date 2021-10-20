@@ -293,6 +293,12 @@ class IndustriaJob(orm.Model):
         product_pool = self.pool.get('product.product')
 
         job_id = ids[0]
+
+        # Clean previous items:
+        self.write(cr, uid, [job_id], {
+            'product_ids': [(6, 0, [])]
+        }, context=context)
+
         job = \
             self.browse(cr, uid, job_id, context=context)
         product_detail = {}

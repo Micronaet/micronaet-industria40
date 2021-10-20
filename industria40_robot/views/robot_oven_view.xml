@@ -9,7 +9,8 @@
                 <page name="product_page" position="after">
                     <page name="prejob_page" string="Lavori pre produzione">
                         <group>
-                            <separator string="Lavori pre produzione:" colspan="4" />
+                            <separator string="Lavori pre produzione:" colspan="3" />
+                            <button name="explode_oven_preload_detail"  colspan="1" type="object" string="Aggiorna lavorazione" confirm="Vuoi ricaricare i prodotti da verniciare? (quelli precedenti verranno eliminati)" icon="gtk-refresh"/>
                             <field name="oven_pre_job_ids" colspan="4" nolabel="1" />
                         </group>
                     </page>
