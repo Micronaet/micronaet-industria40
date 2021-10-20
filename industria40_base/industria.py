@@ -1885,6 +1885,7 @@ class ProductProduct(orm.Model):
                 'bom_id': new.half_bom_id.id,
                 'product_id': origin_id,
                 'product_qty': 1.0,  # Take original
+                'half_work_id': new_id,
                 # todo add extra component for powder
             }, context=context)
         return new_id
