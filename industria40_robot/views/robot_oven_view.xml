@@ -126,7 +126,7 @@
                     <button name="industria_oven_state_pending" string="Da fare" type="object" attrs="{'invisible': [('industria_oven_state', '!=', 'none')]}" icon="stock_calendar"/>
                     <button name="industria_oven_state_none" string="Non fare" type="object" attrs="{'invisible': [('industria_oven_state', '!=', 'pending')]}" icon="gtk-undo"/>
                     <button name="industria_oven_state_none" string="Riattiva" type="object" attrs="{'invisible': [('industria_oven_state', '!=', 'done')]}" icon="gtk-undo" confirm="Vuoi riattivare la produzione già completata per rigenerare i lavori di verniciatura?"/>
-                    <button name="explode_oven_job_per_color" string="Esplodi lavori" type="object" icon="gtk-execute" attrs="{'invisible': [('industria_oven_state', '!=', 'done')]}" confirm="Vuoi esplodere tutti i lavori di verniciatura per gestire poi il passaggio al forno?"/>
+                    <button name="explode_oven_job_per_color" string="Esplodi lavori" type="object" icon="gtk-execute" attrs="{'invisible': [('industria_oven_state', '=', 'done')]}" confirm="Vuoi esplodere tutti i lavori di verniciatura per gestire poi il passaggio al forno?"/>
                 </tree>
             </field>
         </record>
