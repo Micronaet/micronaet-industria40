@@ -1860,16 +1860,19 @@ class ProductProduct(orm.Model):
         origin_id = origin.id
         new_code = '%s.%s' % (origin.default_code, color)
 
-        self.search(cr, uid, [
+        new_ids = self.search(cr, uid, [
             ('default_code', '=', new_code),
             # todo search also extra fields industria_semiproduct? robot_id?
         ], context=context)
-        new_id = self.copy(cr, uid, origin_id, defaults={
-            'default_code': new_code,
-            'relative_type': 'half',
-            'industria_in_id': robot_id,  # Default input for this robot
-            'industria_semiproduct': True,  # todo needed?
-        }, context=context)
+        if new_ids:
+            new_id = new_ids[0]
+        else:
+            new_id = self.copy(cr, uid, origin_id, defaults={
+                'default_code': new_code,
+                'relative_type': 'half',
+                'industria_in_id': robot_id,  # Default input for this robot
+                'industria_semiproduct': True,  # todo needed?
+            }, context=context)
 
         # Generate BOM for half product:
         self.create_product_half_bom(cr, uid, [new_id], context=context)
