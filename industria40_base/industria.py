@@ -1854,11 +1854,11 @@ class ProductProduct(orm.Model):
             self, cr, uid, origin, color, robot_id, context=None):
         """ Duplicate product passed with new format
         """
-        pdb.set_trace()
         if type(origin) == int:
             origin = self.browse(cr, uid, origin, context=context)
         origin_id = origin.id
         new_code = '%s.%s' % (origin.default_code, color)
+        new_name = '%s Colore %s' % (origin.name, color)
 
         new_ids = self.search(cr, uid, [
             ('default_code', '=', new_code),
@@ -1867,24 +1867,27 @@ class ProductProduct(orm.Model):
         if new_ids:
             new_id = new_ids[0]
         else:
-            new_id = self.copy(cr, uid, origin_id, defaults={
+            pdb.set_trace()
+            new_id = self.copy(cr, uid, origin_id, default={
                 'default_code': new_code,
+                'name': new_name,
                 'relative_type': 'half',
                 'industria_in_id': robot_id,  # Default input for this robot
                 'industria_semiproduct': True,  # todo needed?
             }, context=context)
 
-        # Generate BOM for half product:
-        self.create_product_half_bom(cr, uid, [new_id], context=context)
+            # Generate BOM for half product:
+            self.create_product_half_bom(cr, uid, [new_id], context=context)
+            new = self.browse(cr, uid, new_id, context=context)
 
-        # Add component in BOM:
-        self.write(cr, uid, [new_id], {
-            'half_bom_ids': [(6, 0, {
+            # Add component in BOM:
+            bom_pool = self.pool.get('mrp.bom.line')
+            bom_pool.create(cr, uid, {
+                'bom_id': new.half_bom_id.id,
                 'product_id': origin_id,
                 'product_qty': 1.0,  # Take original
                 # todo add extra component for powder
-            })]
-        }, context=context)
+            }, context=context)
         return new_id
 
     _columns = {
