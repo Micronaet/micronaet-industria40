@@ -290,11 +290,14 @@ class IndustriaJob(orm.Model):
         """ Generate job detail for product items in preproduction lines
         """
         job_product_pool = self.pool.get('industria.job.product')
+        product_pool = self.pool.get('product.product')
 
         job_id = ids[0]
         job = \
             self.browse(cr, uid, job_id, context=context)
         product_detail = {}
+        color = job.color
+        robot_id = job.source_id.id
         for preline in job.oven_pre_job_ids:
             product = preline.product_id
             total = preline.total   # todo use partial?
@@ -312,18 +315,23 @@ class IndustriaJob(orm.Model):
             for bom in product.dynamic_bom_line_ids:
                 if bom.category_id.need_oven:
                     component_total = total * bom.product_qty
-                    component = bom.product_id
-                    if component not in compact_product:
-                        compact_product[component] = 0
-                    compact_product[component] += component_total
+                    raw_component = bom.product_id
+                    if raw_component not in compact_product:
+                        compact_product[raw_component] = 0
+                    compact_product[raw_component] += component_total
 
-        for component in compact_product:
-            component_total = compact_product[component]
+        for raw_component in compact_product:
+            component_total = compact_product[raw_component]
+
+            color_component_id = product_pool.get_oven_component_colored(
+                cr, uid, raw_component, color, robot_id, context=context)
+            # todo component colored 1-1 relation (if more than one need loop)
+            # ex. with color powder
 
             # Generate line for every component:
             job_product_pool.create(cr, uid, {
                 'job_id': job_id,
-                'product_id': component.id,
+                'product_id': color_component_id,
                 'piece': component_total,
             }, context=context)
         return True

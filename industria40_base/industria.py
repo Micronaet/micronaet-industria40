@@ -1850,11 +1850,53 @@ class ProductProduct(orm.Model):
 
     _inherit = 'product.product'
 
+    def get_oven_component_colored(
+            self, cr, uid, origin, color, robot_id, context=None):
+        """ Duplicate product passed with new format
+        """
+        pdb.set_trace()
+        if type(origin) == int:
+            origin = self.browse(cr, uid, origin, context=context)
+        origin_id = origin.id
+        new_code = '%s.%s' % (origin.default_code, color)
+
+        self.search(cr, uid, [
+            ('default_code', '=', new_code),
+            # todo search also extra fields industria_semiproduct? robot_id?
+        ], context=context)
+        new_id = self.copy(cr, uid, origin_id, defaults={
+            'default_code': new_code,
+            'relative_type': 'half',
+            'industria_in_id': robot_id,  # Default input for this robot
+            'industria_semiproduct': True,  # todo needed?
+        }, context=context)
+
+        # Generate BOM for half product:
+        self.create_product_half_bom(cr, uid, [new_id], context=context)
+
+        # Add component in BOM:
+        self.write(cr, uid, [new_id], {
+            'half_bom_ids': [(6, 0, {
+                'product_id': origin_id,
+                'product_qty': 1.0,  # Take original
+                # todo add extra component for powder
+            })]
+        }, context=context)
+        return new_id
+
     _columns = {
+        'industria_semiproduct': fields.boolean(
+            'Semilavorato I40',
+            help='Indica che il prodotto è un semilavorato dei processi di '
+                 'Industria 4.0'),
+
+        # todo needed?
         'industria_in_id': fields.many2one(
-            'industria.robot', 'Ingresso', help='Semilavorato in ingresso'),
+            'industria.robot', 'Ingresso',
+            help='Semilavorato in ingresso di questo robot'),
         'industria_out_id': fields.many2one(
-            'industria.robot', 'Uscita', help='Semilavorato in uscita'),
+            'industria.robot', 'Uscita',
+            help='Semilavorato in uscita di questo robot'),
         }
 
 
