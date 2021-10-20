@@ -33,6 +33,7 @@
                     <field name="to_date" />
                     <field name="product_id" />
                     <field name="mrp_id" />
+                    <button name="generate_oven_job_all" type="object" string="Crea job per tutti quelli aperti" icon="gtk-refresh"/>
                 </tree>
             </field>
         </record>
@@ -124,18 +125,28 @@
                     <field name="industria_oven_state" />
                     <button name="industria_oven_state_pending" string="Da fare" type="object" attrs="{'invisible': [('industria_oven_state', '!=', 'none')]}" icon="stock_calendar"/>
                     <button name="industria_oven_state_none" string="Non fare" type="object" attrs="{'invisible': [('industria_oven_state', '!=', 'pending')]}" icon="gtk-undo"/>
+                    <button name="industria_oven_state_none" string="Riattiva" type="object" attrs="{'invisible': [('industria_oven_state', '!=', 'done')]}" icon="gtk-undo" confirm="Vuoi riattivare la produzione già completata per rigenerare i lavori di verniciatura?"/>
                     <button name="explode_oven_job_per_color" string="Esplodi lavori" type="object" icon="gtk-execute"/>
                 </tree>
             </field>
         </record>
         <record model="ir.actions.act_window" id="action_mrp_production">
-            <field name="name">Produzioni per vernicatura</field>
+            <field name="name">Vernicatura da fare</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_mrp_production_tree"/>
             <field name="context">{}</field>
             <field name="domain">[('state','not in', ('cancel', 'done')), ('industria_oven_state', '!=', 'done')]</field>
+        </record>
+        <record model="ir.actions.act_window" id="action_mrp_production_done">
+            <field name="name">Vernicature fatte</field>
+            <field name="res_model">mrp.production</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_mrp_production_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[('industria_oven_state', '=', 'done')]</field>
         </record>
 
         <!--mrp.bom.structure.category-->

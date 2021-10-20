@@ -167,7 +167,7 @@ class MrpProductionOvenSelected(orm.Model):
 
     _name = 'mrp.production.oven.selected'
     _description = 'Pre selection wizard'
-    _order = 'parent_code, color_code'
+    _order = 'color_code, parent_code'
     _rec_name = 'parent_code'
 
     def generate_oven_job(self, cr, uid, ids, context=None):

@@ -24,6 +24,12 @@
                 sequence="10"
             />
             <menuitem
+                parent="menu_mrp_production_pre_selection"
+                id="menu_mrp_production_pre_selection_done"
+                action="action_mrp_production_done"
+                sequence="10"
+            />
+            <menuitem
                 parent="menu_industria_robot4"
                 id="menu_mrp_production_oven_selected"
                 action="action_mrp_production_oven_selected"
