@@ -1412,9 +1412,10 @@ class IndustriaJobProduct(orm.Model):
     _name = 'industria.job.product'
     _description = 'Job program'
     _rec_name = 'product_id'
-    _order = 'product_id'
+    _order = 'sequence, product_id'
 
     _columns = {
+        'sequence': fields.integer('Seq.'),
         'job_id': fields.many2one('industria.job', 'Job'),
         # 'source_id': fields.related(
         #    'job_id', 'source_id', type='many2one',
