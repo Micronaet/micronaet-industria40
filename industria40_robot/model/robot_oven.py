@@ -213,6 +213,7 @@ class MrpProductionOvenSelected(orm.Model):
                 )
         program_id = program_ids[0]  # todo Take the first for now
 
+        # Select with dynamic domain:
         if context is None:
             context = {}
         force_color = context.get('force_color')
@@ -220,6 +221,8 @@ class MrpProductionOvenSelected(orm.Model):
         if force_color:
             domain.append(('color_code', '=', force_color))
         record_ids = self.search(cr, uid, domain, context=context)
+
+        # Collect data x color:
         jobs_created = {}
         for record in self.browse(cr, uid, record_ids, context=context):
             color = record.color_code
@@ -286,7 +289,6 @@ class IndustriaJob(orm.Model):
     def explode_oven_preload_detail(self, cr, uid, ids, context=None):
         """ Generate job detail for product items in preproduction lines
         """
-        pdb.set_trace()
         job_product_pool = self.pool.get('industria.job.product')
 
         job_id = ids[0]
@@ -302,6 +304,8 @@ class IndustriaJob(orm.Model):
             else:
                 product_detail[product] = total
 
+        compact_product = {}
+        # todo manage compact mode on job?
         for product in product_detail:
             total = product_detail[product]
             # Search component to oven:
@@ -309,12 +313,19 @@ class IndustriaJob(orm.Model):
                 if bom.category_id.need_oven:
                     component_total = total * bom.product_qty
                     component = bom.product_id
-                    # Generate line for every component:
-                    job_product_pool.create(cr, uid, {
-                        'job_id': job_id,
-                        'product_id': component.id,
-                        'piece': component_total,
-                    }, context=context)
+                    if component not in compact_product:
+                        compact_product[component] = 0
+                    compact_product[component] += component_total
+
+        for component in compact_product:
+            component_total = compact_product[component]
+
+            # Generate line for every component:
+            job_product_pool.create(cr, uid, {
+                'job_id': job_id,
+                'product_id': component.id,
+                'piece': component_total,
+            }, context=context)
         return True
 
     _columns = {
