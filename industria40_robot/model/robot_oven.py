@@ -256,9 +256,12 @@ class MrpProductionOvenSelected(orm.Model):
             'Parziali', help='Pezzi parziali da mandare in lavorazione'),
         'from_date': fields.date('Dalla data'),
         'to_date': fields.date('Alla data'),
-        'mrp_id': fields.many2one('mrp.production', 'Produzione'),
-        'job_id': fields.many2one('industria.job', 'Job'),
-        'product_id': fields.many2one('product.product', 'Prodotto'),
+        'mrp_id': fields.many2one(
+            'mrp.production', 'Produzione', ondelete='set null'),
+        'job_id': fields.many2one(
+            'industria.job', 'Job', ondelete='set null'),
+        'product_id': fields.many2one(
+            'product.product', 'Prodotto', ondelete='set null'),
     }
 
 
