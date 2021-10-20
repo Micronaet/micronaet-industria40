@@ -1416,7 +1416,7 @@ class IndustriaJobProduct(orm.Model):
 
     _columns = {
         'sequence': fields.integer('Seq.'),
-        'job_id': fields.many2one('industria.job', 'Job'),
+        'job_id': fields.many2one('industria.job', 'Job', ondelete='cascade'),
         # 'source_id': fields.related(
         #    'job_id', 'source_id', type='many2one',
         #    relation='industria.robot',
@@ -1867,7 +1867,6 @@ class ProductProduct(orm.Model):
         if new_ids:
             new_id = new_ids[0]
         else:
-            pdb.set_trace()
             new_id = self.copy(cr, uid, origin_id, default={
                 'default_code': new_code,
                 'name': new_name,
