@@ -306,6 +306,7 @@ class IndustriaJob(orm.Model):
 
         compact_product = {}
         # todo manage compact mode on job?
+        pdb.set_trace()
         for product in product_detail:
             total = product_detail[product]
             # Search component to oven:
