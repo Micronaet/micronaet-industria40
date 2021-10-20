@@ -1865,29 +1865,28 @@ class ProductProduct(orm.Model):
             # todo search also extra fields industria_semiproduct? robot_id?
         ], context=context)
         if new_ids:
-            new_id = new_ids[0]
-        else:
-            new_id = self.copy(cr, uid, origin_id, default={
-                'default_code': new_code,
-                'name': new_name,
-                'relative_type': 'half',
-                'industria_in_id': robot_id,  # Default input for this robot
-                'industria_semiproduct': True,  # todo needed?
-            }, context=context)
+            return new_ids[0]  # yet created
+        new_id = self.copy(cr, uid, origin_id, default={
+            'default_code': new_code,
+            'name': new_name,
+            'relative_type': 'half',
+            'industria_in_id': robot_id,  # Default input for this robot
+            'industria_semiproduct': True,  # todo needed?
+        }, context=context)
 
-            # Generate BOM for half product:
-            self.create_product_half_bom(cr, uid, [new_id], context=context)
-            new = self.browse(cr, uid, new_id, context=context)
+        # Generate BOM for half product:
+        self.create_product_half_bom(cr, uid, [new_id], context=context)
+        new = self.browse(cr, uid, new_id, context=context)
 
-            # Add component in BOM:
-            bom_pool = self.pool.get('mrp.bom.line')
-            bom_pool.create(cr, uid, {
-                'bom_id': new.half_bom_id.id,
-                'product_id': origin_id,
-                'product_qty': 1.0,  # Take original
-                'half_work_id': new_id,
-                # todo add extra component for powder
-            }, context=context)
+        # Add component in BOM:
+        bom_pool = self.pool.get('mrp.bom.line')
+        bom_pool.create(cr, uid, {
+            'bom_id': new.half_bom_id.id,
+            'product_id': origin_id,
+            'product_qty': 1.0,  # Take original
+            'halfwork_id': new_id,
+            # todo add extra component for powder
+        }, context=context)
         return new_id
 
     _columns = {
