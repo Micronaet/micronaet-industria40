@@ -296,7 +296,7 @@ class IndustriaJob(orm.Model):
 
         # Clean previous items:
         self.write(cr, uid, [job_id], {
-            'product_ids': [(6, 0, [])]
+            'product_ids': [(6, 0, [])],
         }, context=context)
 
         job = \
