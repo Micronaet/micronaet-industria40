@@ -26,14 +26,15 @@
                     <field name="send" invisible="1"/>
                     <field name="color_code" />
                     <field name="parent_code" />
-                    <button name="generate_oven_job" type="object" string="Crea job per questo colore" icon="gtk-execute" confirm="Prepara i job del forno per tutti i lavori pendendi con questo colore, confermi?"/>
+                    <button name="generate_oven_job" type="object" attrs="{'invisible': [('job_id', '!=', False)]}" string="Crea job per questo colore" icon="gtk-execute" confirm="Prepara i job del forno per tutti i lavori pendendi con questo colore, confermi?"/>
                     <field name="total" />
                     <field name="partial" />
                     <field name="from_date" />
                     <field name="to_date" />
                     <field name="product_id" />
                     <field name="mrp_id" />
-                    <button name="generate_oven_job_all" type="object" string="Crea job per tutti quelli aperti" icon="gtk-refresh" confirm="Prepara i job del forno per tutti i lavori pendenti, confermi?"/>
+                    <field name="job_id" invisible="1"/>
+                    <button name="generate_oven_job_all" type="object"  attrs="{'invisible': [('job_id', '!=', False)]}" string="Crea job per tutti quelli aperti" icon="gtk-refresh" confirm="Prepara i job del forno per tutti i lavori pendenti, confermi?"/>
                 </tree>
             </field>
         </record>
