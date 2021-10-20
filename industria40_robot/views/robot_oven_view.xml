@@ -24,16 +24,16 @@
             <field name="arch" type="xml">
                 <tree string="MRP selezione per forno" editable="bottom" colors="blue:send==True">
                     <field name="send" invisible="1"/>
-                    <field name="parent_code" />
                     <field name="color_code" />
-                    <button name="generate_oven_job" type="object" string="Crea job per questo colore" icon="gtk-execute"/>
+                    <field name="parent_code" />
+                    <button name="generate_oven_job" type="object" string="Crea job per questo colore" icon="gtk-execute" confirm="Prepara i job del forno per tutti i lavori pendendi con questo colore, confermi?"/>
                     <field name="total" />
                     <field name="partial" />
                     <field name="from_date" />
                     <field name="to_date" />
                     <field name="product_id" />
                     <field name="mrp_id" />
-                    <button name="generate_oven_job_all" type="object" string="Crea job per tutti quelli aperti" icon="gtk-refresh"/>
+                    <button name="generate_oven_job_all" type="object" string="Crea job per tutti quelli aperti" icon="gtk-refresh" confirm="Prepara i job del forno per tutti i lavori pendenti, confermi?"/>
                 </tree>
             </field>
         </record>
@@ -45,8 +45,8 @@
                     <field name="mrp_id" />
                     <field name="send" invisible="1"/>
 
-                    <field name="parent_code" />
                     <field name="color_code" />
+                    <field name="parent_code" />
 
                     <field name="total" />
                     <field name="partial" />
@@ -103,7 +103,7 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_mrp_production_oven_selected_tree"/>
             <field name="context">{}</field>
-            <field name="domain">[]</field>
+            <field name="domain">[('mrp_id', '=', False)]</field>
         </record>
 
         <record model="ir.ui.view" id="view_mrp_production_tree">
