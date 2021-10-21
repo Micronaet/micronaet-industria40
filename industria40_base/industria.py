@@ -1890,10 +1890,15 @@ class ProductProduct(orm.Model):
         return new_id
 
     _columns = {
+        'oven_lot': fields.integer(
+            'Lotto verniciatura',
+            help='Lotto della rastrelliera di quando il prodotto va in '
+                 'verniciatura (usato per calcolare il numero etichette '
+                 'durante la stampa lavorazione)'),
         'industria_semiproduct': fields.boolean(
             'Semilavorato I40',
             help='Indica che il prodotto è un semilavorato dei processi di '
-                 'Industria 4.0'),
+                 'Industria 4.0 (creato automaticamente)'),
 
         # todo needed?
         'industria_in_id': fields.many2one(

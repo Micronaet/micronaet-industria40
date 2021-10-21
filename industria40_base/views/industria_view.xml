@@ -47,8 +47,10 @@
                     <field name="name" readonly="1"/>
                     <field name="default_code" readonly="1"/>
                     <field name="uom_id" readonly="1"/>
+                    <field name="oven_lot" />
                     <field name="industria_in_id" />
                     <field name="industria_out_id" />
+                    <field name="industria_semiproduct" readonly="1" />
                     <field name="state" invisible="1" />
                 </tree>
             </field>
