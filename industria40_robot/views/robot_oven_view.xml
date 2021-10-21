@@ -23,7 +23,7 @@
             <field name="name">mrp.production.oven.selected.tree</field>
             <field name="model">mrp.production.oven.selected</field>
             <field name="arch" type="xml">
-                <tree string="MRP selezione per forno" colors="blue:send==True">
+                <tree string="MRP selezione per forno" editable="bottom" colors="blue:send==True">
                     <field name="send" invisible="1"/>
                     <field name="color_code" />
                     <field name="parent_code" />
@@ -114,7 +114,7 @@
             <field name="model">mrp.production</field>
             <field name="priority" eval="40"/>
             <field name="arch" type="xml">
-                <tree string="MRP" editable="bottom" colors="blue:industria_oven_state == 'pending'; green:industria_oven_state == 'done'">
+                <tree string="MRP" colors="blue:industria_oven_state == 'pending'; green:industria_oven_state == 'done'">
                     <field name="name" />
                     <field name="date_planned" />
                     <field name="product_id" />
