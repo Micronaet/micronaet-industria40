@@ -38,13 +38,13 @@
 
             <menuitem
                 parent="menu_industria_robot4"
-                id="menu_industria_job4"
+                id="menu_industria_job4_oven"
                 action="action_industria_job_robot4"
                 sequence="30"
                 />
             <menuitem
                 parent="menu_industria_robot4"
-                id="menu_industria_job4"
+                id="menu_industria_job_list_oven"
                 action="industria40_base.action_industria_production"
                 sequence="40"
                 />
