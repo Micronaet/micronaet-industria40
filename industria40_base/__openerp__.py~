@@ -47,8 +47,6 @@
         'views/industria_view.xml',
         'views/mode_file_view.xml',
         'report/job_report.xml',
-        
-        'wizard/search_job_view.xml',
         ],
     'active': False,
     'installable': True,

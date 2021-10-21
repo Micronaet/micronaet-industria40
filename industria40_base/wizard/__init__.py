@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-# ODOO (ex OpenERP)
+# ODOO (ex OpenERP) 
 # Open Source Management Solution
 # Copyright (C) 2001-2015 Micronaet S.r.l. (<https://micronaet.com>)
 # Developer: Nicola Riolini @thebrush (<https://it.linkedin.com/in/thebrush>)
@@ -13,7 +13,7 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
 # See the GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
@@ -21,37 +21,5 @@
 #
 ###############################################################################
 
-{
-    'name': 'Industria 4.0',
-    'version': '0.1',
-    'category': 'Industria',
-    'description': '''     
-        Base module to manage Industria 4.0   
-        ''',
-    'author': 'Micronaet S.r.l. - Nicola Riolini',
-    'website': 'http://www.micronaet.it',
-    'license': 'AGPL-3',
-    'depends': [
-        'base',
-        'stock',
-        'product',
-        'report_aeroo',
-        'lavoration_cl_sl',
-        'bom_type',  # For BOM relative type filter
-        ],
-    'init_xml': [],
-    'demo': [],
-    'data': [
-        'security/industria_group.xml',
-        'security/ir.model.access.csv',
-        'views/industria_view.xml',
-        'views/mode_file_view.xml',
-        'report/job_report.xml',
-        
-        'wizard/search_job_view.xml',
-        ],
-    'active': False,
-    'installable': True,
-    'auto_install': False,
-    'application': True,
-    }
+from . import search_job_wizard
+
