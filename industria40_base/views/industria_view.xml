@@ -634,7 +634,7 @@
                             <field name="force_name" />
                             <field name="color" />
 
-                            <field name="label" />
+                            <field name="has_label" />
                             <button name="button_print_job_report" string="Stampa" type="object" colspan="2"/>
                             <field name="state" />
                             <field name="picking_id" />

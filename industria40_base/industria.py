@@ -1721,8 +1721,9 @@ class IndustriaJob(orm.Model):
         'color': fields.char('Colore', size=20),
         'industria_ref': fields.integer('ID rif.'),
         'label': fields.integer(
-            'Etichette', help='Totale etichette da stampare'),
-
+            'Etichette',
+            help='Usate per generare l\'elenco etichette in stampa'),
+        'has_label': fields.boolean('Con stampa etichette'),
         'program_id': fields.many2one(
             'industria.program', 'Programma'),
         'database_id': fields.many2one(
@@ -1774,7 +1775,6 @@ class IndustriaJob(orm.Model):
     _defaults = {
         'state': lambda *x: 'DRAFT',
         'piece': lambda *x: 1,
-        'label': lambda *x: 1,
         'created_at': lambda *d: ('%s' % datetime.now())[:19],
     }
 
