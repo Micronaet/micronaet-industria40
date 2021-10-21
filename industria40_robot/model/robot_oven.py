@@ -170,6 +170,13 @@ class MrpProductionOvenSelected(orm.Model):
     _order = 'color_code, parent_code'
     _rec_name = 'parent_code'
 
+    def unlink_line(self, cr, uid, ids, context=None):
+        """ Unlink line from job
+        """
+        return self.write(cr, uid, ids, {
+            'job_id': False,
+        }, context=context)
+
     def generate_oven_job(self, cr, uid, ids, context=None):
         """ Generate Oven job
         """
