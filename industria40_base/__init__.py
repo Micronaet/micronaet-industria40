@@ -24,3 +24,4 @@
 from . import industria
 from . import mode_file
 from . import report
+from . import wizard

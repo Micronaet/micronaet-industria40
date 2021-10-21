@@ -48,6 +48,12 @@
                 action="industria40_base.action_industria_production"
                 sequence="40"
                 />
+            <menuitem
+                parent="menu_industria_robot4"
+                id="menu_industria_job_search_wizard"
+                action="industria40_base.action_view_industria_job_barcode_search_wizard"
+                sequence="50"
+                />
     </data>
 </openerp>
 

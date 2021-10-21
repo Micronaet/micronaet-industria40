@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <!-- industria.job.barcode.search.wizard -->
-        <record id="view_industria_job_barcode_search_wizard_wizard_form" model="ir.ui.view">
+        <record id="view_industria_job_barcode_search_wizard_form" model="ir.ui.view">
             <field name="name">industria.job.barcode.search.wizard.form</field>
             <field name="model">industria.job.barcode.search.wizard</field>
             <field name="arch" type="xml">
@@ -17,13 +17,13 @@
                 </form>
             </field>
         </record>
-        <record model="ir.actions.act_window" id="action_view_industria_job_barcode_search_wizard_wizard">
+        <record model="ir.actions.act_window" id="action_view_industria_job_barcode_search_wizard">
             <field name="name">Cerca barcode</field>
             <field name="res_model">industria.job.barcode.search.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="view_id" ref="view_industria_job_barcode_search_wizard_wizard"/>
+            <field name="view_id" ref="view_industria_job_barcode_search_wizard_form"/>
         </record>
         <!--todo menu-->
 
