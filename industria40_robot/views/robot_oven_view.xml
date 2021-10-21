@@ -23,7 +23,7 @@
             <field name="name">mrp.production.oven.selected.tree</field>
             <field name="model">mrp.production.oven.selected</field>
             <field name="arch" type="xml">
-                <tree string="MRP selezione per forno" editable="bottom" colors="blue:send==True">
+                <tree string="MRP selezione per forno" colors="blue:send==True">
                     <field name="send" invisible="1"/>
                     <field name="color_code" />
                     <field name="parent_code" />
