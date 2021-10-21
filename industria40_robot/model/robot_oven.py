@@ -71,9 +71,22 @@ class MrpProductionOven(orm.Model):
             'industria_oven_state': 'done',
         }, context=context)
 
+    def explode_oven_job_per_color_forced(self, cr, uid, ids, context=None):
+        """ Force all order
+        """
+        ctx = context.copy()
+        ctx['force_all'] = True
+        return self.explode_oven_job_per_color(cr, uid, ids, context=ctx)
+
     def explode_oven_job_per_color(self, cr, uid, ids, context=None):
         """ Generate Oven job
+            context parameter: force_all >> Use all ordered not remain
         """
+        if context is None:
+            context = {}
+        force_all = context.get('force_all')
+
+        # Pool used:
         pre_oven_pool = self.pool.get('mrp.production.oven.selected')
         model_pool = self.pool.get('ir.model.data')
 
@@ -100,16 +113,23 @@ class MrpProductionOven(orm.Model):
                 if not color_code or line.mx_closed:
                     continue  # neutral color or closed line (jump)
 
-                # Get remain:
-                remain_mrp = (
-                        line.product_uom_qty - line.mx_assigned_qty -
-                        line.product_uom_maked_sync_qty)
-                remain_delivery = line.product_uom_qty - line.delivered_qty
-                # todo consider also job yet forked!!
-                if remain_delivery > remain_mrp:  # Use minor
-                    remain = remain_mrp
+                # -------------------------------------------------------------
+                # Get remain (2 cases):
+                # -------------------------------------------------------------
+                # 1. Case force:
+                if force_all:
+                    remain = line.product_uom_qty
                 else:
-                    remain = remain_delivery
+                    remain_mrp = (
+                            line.product_uom_qty - line.mx_assigned_qty -
+                            line.product_uom_maked_sync_qty)
+                    remain_delivery = line.product_uom_qty - line.delivered_qty
+                    # todo consider also job yet forked!!
+                    if remain_delivery > remain_mrp:  # Use minor
+                        remain = remain_mrp
+                    else:
+                        remain = remain_delivery
+
                 if remain:
                     pre_oven_pool.create(cr, uid, {
                         'send': False,

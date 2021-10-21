@@ -9,10 +9,10 @@
                 <form string="Cerca job" version="7.0">
                     <header>
                        <button string="Cancel" special="cancel" />
-                       <button name="action_search" string="Ricerca job" type="object" icon="gtk-search" class="oe_highlight" />
                     </header>
                     <group colspan="4" col="4">
                         <field name="barcode" />
+                       <button name="action_search" string="Ricerca job" type="object" icon="gtk-search" class="oe_highlight" />
                     </group>
                 </form>
             </field>
