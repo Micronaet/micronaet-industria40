@@ -64,10 +64,11 @@ class IndustriaJobBarcodeSearchWizard(orm.TransientModel):
         job_id = int(barcode.strip().split()[0])
 
         model_pool = self.pool.get('ir.model.data')
-        form_view_id = model_pool.get_object_reference(
-            cr, uid,
-            'industria40_base',
-            'action_view_industria_job_barcode_search_wizard')[1]
+        form_view_id = False
+        # model_pool.get_object_reference(
+        # cr, uid,
+        # 'industria40_base',
+        # 'action_view_industria_job_barcode_search_wizard')[1]
 
         return {
             'type': 'ir.actions.act_window',
