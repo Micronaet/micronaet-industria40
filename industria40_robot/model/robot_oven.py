@@ -140,6 +140,7 @@ class MrpProductionOven(orm.Model):
                         'from_date': date_planned,
                         'to_date': date_planned,
                         'mrp_id': mrp.id,
+                        'line_id': line.id,
                         'product_id': line.product_id.id,
                     }, context=context)
 
