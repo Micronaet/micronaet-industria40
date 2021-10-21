@@ -289,6 +289,8 @@ class MrpProductionOvenSelected(orm.Model):
         'to_date': fields.date('Alla data'),
         'mrp_id': fields.many2one(
             'mrp.production', 'Produzione', ondelete='set null'),
+        'line_id': fields.many2one(
+            'sale.order.line', 'Riga OC', ondelete='set null'),
         'job_id': fields.many2one(
             'industria.job', 'Job', ondelete='set null'),
         'product_id': fields.many2one(
