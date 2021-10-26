@@ -84,7 +84,6 @@ class MrpProductionOven(orm.Model):
         """ Generate Oven job
             context parameter: force_all >> Use all ordered not remain
         """
-        pdb.set_trace()
         if context is None:
             context = {}
         force_all = context.get('force_all')
