@@ -22,6 +22,7 @@
 import os
 import pdb
 import sys
+import time
 import erppeek
 import ConfigParser
 from datetime import datetime, timedelta
@@ -65,6 +66,7 @@ mrp_ids = mrp_pool.search([
     ])
 pdb.set_trace()
 for mrp in mrp_pool.browse(mrp_ids):
+    print('Generazione produzione %s' % mrp.name)
     mrp_date = mrp.date_planned[:10]
     mrp_date_dt = datetime.strptime(mrp_date, time_format)
     job_date_dt = mrp_date_dt - timedelta(days=15)
@@ -77,18 +79,23 @@ for mrp in mrp_pool.browse(mrp_ids):
 
     this_ids = [mrp.id]
     mrp_pool.industria_oven_state_pending(this_ids)
+    print('...Selezione produzione %s' % mrp.name)
     mrp_pool.explode_oven_job_per_color_forced(this_ids)
-    pdb.set_trace()
+    print('...Generazione lavori dettagliati %s' % mrp.name)
 
     # Generate new job:
     job = selection_pool.generate_oven_job_all([])
+    print('...Generazione job')
     job_id = job.get('res_id')
     if job_id:
         job_ids = [job_id]
     else:
         job_ids = job['domain'][0][2]
+    print('...Riassegnazione data')
     if job_ids:
         job_pool.write(job_ids, {
             'created_at': '%s 08:00:00' % job_date,
             'endend_at': '%s 12:00:00' % job_date,
         })
+    print('Completata %s' % mrp.name)
+    time.sleep(2)
