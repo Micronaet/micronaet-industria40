@@ -55,6 +55,7 @@ odoo = erppeek.Client(
 time_format = '%Y-%m-%d'
 mrp_pool = odoo.model('mrp.production')
 job_pool = odoo.model('industria.job')
+selection_pool = odoo.model('mrp.production.oven.selected')
 
 # Select production:
 mrp_ids = mrp_pool.search([
@@ -80,7 +81,7 @@ for mrp in mrp_pool.browse(mrp_ids):
     pdb.set_trace()
 
     # Generate new job:
-    job = job_pool.generate_oven_job_all([])
+    job = selection_pool.generate_oven_job_all([])
     job_id = job['res_id']
     job_pool.write([job_id], {
         'created_at': '%s 08:15:00' % job_date,
