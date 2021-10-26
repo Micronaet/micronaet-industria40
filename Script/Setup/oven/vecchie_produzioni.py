@@ -80,7 +80,7 @@ for mrp in mrp_pool.browse(mrp_ids):
     pdb.set_trace()
 
     # Generate new job:
-    job = job_pool.generate_oven_all([])
+    job = job_pool.generate_oven_job_all([])
     job_id = job['res_id']
     job_pool.write([job_id], {
         'created_at': '%s 08:15:00' % job_date,
