@@ -240,7 +240,7 @@ class MrpProductionOvenSelected(orm.Model):
         if not program_ids:
             raise osv.except_osv(
                 _('Errore programma forno'),
-                _('Non trovato il porogramma unico per i robot tipo forno '
+                _('Non trovato il programma unico per i robot tipo forno '
                   '(o non esiste il codice FORNBASE nel programma)'),
                 )
         program_id = program_ids[0]  # todo Take the first for now
