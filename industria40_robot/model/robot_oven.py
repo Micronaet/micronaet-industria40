@@ -298,7 +298,7 @@ class MrpProductionOvenSelected(orm.Model):
         if len(job_ids) == 1:
             return {
                 'type': 'ir.actions.act_window',
-                'name': _('Jobe generati'),
+                'name': _('Job generati'),
                 'view_type': 'form',
                 'view_mode': 'form,tree',
                 'res_id': job_ids[0],
@@ -313,7 +313,7 @@ class MrpProductionOvenSelected(orm.Model):
         else:
             return {
                 'type': 'ir.actions.act_window',
-                'name': _('Jobe generati'),
+                'name': _('Job generati'),
                 'view_type': 'form',
                 'view_mode': 'tree,form',
                 # 'res_id': 1,
