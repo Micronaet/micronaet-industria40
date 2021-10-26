@@ -82,7 +82,7 @@ for mrp in mrp_pool.browse(mrp_ids):
 
     # Generate new job:
     job = selection_pool.generate_oven_job_all([])
-    job_id = job['res_id']
+    job_id = job.get('res_id')
     if job_id:
         job_ids = [job_id]
     else:
