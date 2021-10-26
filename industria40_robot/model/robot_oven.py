@@ -272,11 +272,44 @@ class MrpProductionOvenSelected(orm.Model):
             }, context=context)
 
         # Explode lines in job detail (simulate button press):
+        job_ids = []
         for color in jobs_created:
             job_id = jobs_created[color]
+            job_ids.append(job_id)
             job_pool.explode_oven_preload_detail(
                 cr, uid, [job_id], context=context)
-        return True
+
+        model_pool = self.pool.get('ir.model.data')
+        form_view_id = model_pool.get_object_reference(
+            cr, uid, 'industria40_base', 'view_industria_job_opcua_form',
+        )[1]
+        tree_view_id = False
+        ctx = context.copy()
+        ctx.update({
+            'search_default_state_draft': True,
+            'default_state': 'DRAFT',
+        })
+
+        if len(job_ids) == 1:
+            view_id = form_view_id
+            views = [(form_view_id, 'form'), (tree_view_id, 'tree')]
+        else:
+            view_id = tree_view_id
+            views = [(tree_view_id, 'tree'), (form_view_id, 'form')]
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Jobe generati'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            # 'res_id': 1,
+            'res_model': 'industria.job',
+            'view_id': view_id,
+            'views': views,
+            'domain': [('id', 'in', job_ids)],
+            'context': ctx,
+            'target': 'current',
+            'nodestroy': False,
+            }
 
     _columns = {
         'send': fields.boolean('Da spedire'),
