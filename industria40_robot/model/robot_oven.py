@@ -279,6 +279,7 @@ class MrpProductionOvenSelected(orm.Model):
             job_pool.explode_oven_preload_detail(
                 cr, uid, [job_id], context=context)
 
+        # Return view:
         model_pool = self.pool.get('ir.model.data')
         form_view_id = model_pool.get_object_reference(
             cr, uid, 'industria40_base', 'view_industria_job_opcua_form',
@@ -296,11 +297,11 @@ class MrpProductionOvenSelected(orm.Model):
                 'name': _('Jobe generati'),
                 'view_type': 'form',
                 'view_mode': 'form,tree',
-                # 'res_id': 1,
+                'res_id': job_ids[0],
                 'res_model': 'industria.job',
                 'view_id': form_view_id,
                 'views': [(form_view_id, 'form'), (tree_view_id, 'tree')],
-                'domain': [('id', 'in', job_ids)],
+                'domain': [],
                 'context': ctx,
                 'target': 'current',
                 'nodestroy': False,
