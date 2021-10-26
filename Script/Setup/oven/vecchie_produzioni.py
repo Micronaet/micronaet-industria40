@@ -83,7 +83,12 @@ for mrp in mrp_pool.browse(mrp_ids):
     # Generate new job:
     job = selection_pool.generate_oven_job_all([])
     job_id = job['res_id']
-    job_pool.write([job_id], {
+    if job_id:
+        job_ids = [job_id]
+    else:
+        job_ids = job['domain'][2]
+
+    job_pool.write(job_ids, {
         'created_at': '%s 08:15:00' % job_date,
         'endend_at': '%s 11:59:00' % job_date,
     })
