@@ -31,7 +31,8 @@ from datetime import datetime, timedelta
 # Read configuration parameter:
 # -----------------------------------------------------------------------------
 # From config file:
-cfg_file = os.path.expanduser('../openerp.cfg')
+cfg_file = os.path.expanduser('../local.cfg')
+# cfg_file = os.path.expanduser('../openerp.cfg')
 
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
@@ -75,7 +76,7 @@ for mrp in mrp_pool.browse(mrp_ids):
 
     this_ids = [mrp.id]
     mrp_pool.industria_oven_state_pending(this_ids)
-    mrp_pool.explode_oven_job_per_color(this_ids)
+    mrp_pool.explode_oven_job_per_color_forced(this_ids)
 
     # Generate new job:
     job = job_pool.generate_oven_all([])

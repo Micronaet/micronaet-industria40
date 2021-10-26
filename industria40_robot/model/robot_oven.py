@@ -74,6 +74,8 @@ class MrpProductionOven(orm.Model):
     def explode_oven_job_per_color_forced(self, cr, uid, ids, context=None):
         """ Force all order
         """
+        if context is None:
+            context = {}
         ctx = context.copy()
         ctx['force_all'] = True
         return self.explode_oven_job_per_color(cr, uid, ids, context=ctx)
