@@ -1,0 +1,16 @@
+[Telegram]
+token: xx
+group: xx
+
+[robot]
+name: Robot Piegatubi
+address: 192.168.1.186
+port: 4840
+check_from: 192.168.1.247
+
+[command]
+alarm_mask: ns=6;s=::AsGlobalPV:Allarmi.N[%s].Dati.Attivo
+version_check: ns=6;s=::AsGlobalPV:VersionePLC
+
+[alarm]
+file: ./flecte.csv
