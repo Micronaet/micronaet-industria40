@@ -84,6 +84,7 @@ class MrpProductionOven(orm.Model):
         """ Generate Oven job
             context parameter: force_all >> Use all ordered not remain
         """
+        pdb.set_trace()
         if context is None:
             context = {}
         force_all = context.get('force_all')
@@ -112,8 +113,6 @@ class MrpProductionOven(orm.Model):
                 default_code = line.product_id.default_code
                 parent_code = default_code[:3].strip()
                 color_code = default_code[6:8].strip()
-                if not color_code or line.mx_closed:
-                    continue  # neutral color or closed line (jump)
 
                 # -------------------------------------------------------------
                 # Get remain (2 cases):
@@ -122,6 +121,8 @@ class MrpProductionOven(orm.Model):
                 if force_all:
                     remain = line.product_uom_qty
                 else:
+                    if not color_code or line.mx_closed:
+                        continue  # neutral color or closed line (jump)
                     remain_mrp = (
                             line.product_uom_qty - line.mx_assigned_qty -
                             line.product_uom_maked_sync_qty)

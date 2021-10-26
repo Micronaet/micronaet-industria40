@@ -77,6 +77,7 @@ for mrp in mrp_pool.browse(mrp_ids):
     this_ids = [mrp.id]
     mrp_pool.industria_oven_state_pending(this_ids)
     mrp_pool.explode_oven_job_per_color_forced(this_ids)
+    pdb.set_trace()
 
     # Generate new job:
     job = job_pool.generate_oven_all([])
