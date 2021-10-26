@@ -98,4 +98,4 @@ for mrp in mrp_pool.browse(mrp_ids):
             'endend_at': '%s 12:00:00' % job_date,
         })
     print('Completata %s' % mrp.name)
-    time.sleep(2)
+    # time.sleep(2)
