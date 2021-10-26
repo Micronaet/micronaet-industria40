@@ -291,24 +291,34 @@ class MrpProductionOvenSelected(orm.Model):
         })
 
         if len(job_ids) == 1:
-            view_id = form_view_id
-            views = [(form_view_id, 'form'), (tree_view_id, 'tree')]
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Jobe generati'),
+                'view_type': 'form',
+                'view_mode': 'form,tree',
+                # 'res_id': 1,
+                'res_model': 'industria.job',
+                'view_id': form_view_id,
+                'views': [(form_view_id, 'form'), (tree_view_id, 'tree')],
+                'domain': [('id', 'in', job_ids)],
+                'context': ctx,
+                'target': 'current',
+                'nodestroy': False,
+                }
         else:
-            view_id = tree_view_id
-            views = [(tree_view_id, 'tree'), (form_view_id, 'form')]
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Jobe generati'),
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            # 'res_id': 1,
-            'res_model': 'industria.job',
-            'view_id': view_id,
-            'views': views,
-            'domain': [('id', 'in', job_ids)],
-            'context': ctx,
-            'target': 'current',
-            'nodestroy': False,
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Jobe generati'),
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                # 'res_id': 1,
+                'res_model': 'industria.job',
+                'view_id': tree_view_id,
+                'views': [(tree_view_id, 'tree'), (form_view_id, 'form')],
+                'domain': [('id', 'in', job_ids)],
+                'context': ctx,
+                'target': 'current',
+                'nodestroy': False,
             }
 
     _columns = {
