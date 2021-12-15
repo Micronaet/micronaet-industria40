@@ -258,9 +258,9 @@ class MrpProductionOvenSelected(orm.Model):
         jobs_created = {}
         for record in self.browse(cr, uid, record_ids, context=context):
             color = record.color_code
-            if not color:
-                _logger.error('Color not present, jumped')
-                continue
+            # if not color:
+            #    _logger.error('Color not present, jumped')
+            #    continue
             if color not in jobs_created:
                 jobs_created[color] = job_pool.create(cr, uid, {
                     'database_id': database_id,
