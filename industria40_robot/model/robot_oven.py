@@ -393,11 +393,18 @@ class IndustriaJob(orm.Model):
 
         compact_product = {}
         # todo manage compact mode on job?
+        pdb.set_trace()
         for product in product_detail:
             total = product_detail[product]
             # Search component to oven:
+            default_code = product.default_code or ''
+            has_color = product[6:8].strip()
+            if not has_color:
+                _logger.error('Product %s no need oven' % default_code)
+                continue
             for bom in product.dynamic_bom_line_ids:
-                if bom.category_id.need_oven:
+                # if bom.category_id.need_oven:
+                if bom.has_oven:
                     component_total = total * bom.product_qty
                     raw_component = bom.product_id
                     if raw_component not in compact_product:

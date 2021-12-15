@@ -62,7 +62,7 @@ selection_pool = odoo.model('mrp.production.oven.selected')
 mrp_ids = mrp_pool.search([
     ('state', '=', 'done'),
     ('industria_oven_state', '!=', 'done'),
-    ('date_planned', '>=', '2020-01-16'),
+    ('date_planned', '>=', '2020-01-12'),
     ])
 pdb.set_trace()
 for mrp in mrp_pool.browse(mrp_ids):
