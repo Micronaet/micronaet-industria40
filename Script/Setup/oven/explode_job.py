@@ -62,5 +62,9 @@ job_ids = job_pool.search([
 ])
 pdb.set_trace()
 for job_id in job_ids:
-    print('Esplosione semilavorati nel job: %s' % job_id)
-    job_pool.explode_oven_preload_detail([job_id])
+    try:
+        job_pool.explode_oven_preload_detail([job_id])
+        print('[INFO] Esplosione semilavorati nel job: %s' % job_id)
+    except:
+        print('[ERR] Errore semilavorati nel job: %s' % job_id)
+
