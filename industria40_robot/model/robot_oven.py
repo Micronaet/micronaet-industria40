@@ -246,7 +246,6 @@ class MrpProductionOvenSelected(orm.Model):
         program_id = program_ids[0]  # todo Take the first for now
 
         # Select with dynamic domain:
-        pdb.set_trace()
         if context is None:
             context = {}
         force_color = context.get('force_color')
