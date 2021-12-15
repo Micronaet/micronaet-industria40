@@ -22,6 +22,19 @@
                 action="action_industria_job_robot3"
                 sequence="10"
                 />
+            <menuitem
+                parent="menu_industria_robot3"
+                id="menu_industria_stats_file"
+                action="industria40_base.action_industria_stats_file"
+                sequence="20"
+                />
+            <menuitem
+                parent="menu_industria_robot3"
+                id="menu_industria_stats_record_file"
+                action="industria40_base.action_industria_stats_records"
+                sequence="30"
+                />
+
     </data>
 </openerp>
 
