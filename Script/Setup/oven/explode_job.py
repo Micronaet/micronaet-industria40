@@ -61,7 +61,7 @@ job_ids = job_pool.search([
     ('database_id.mode', '=', 'opcua'),
 ])
 pdb.set_trace()
-for job_id in job_ids:
+for job_id in sorted(job_ids):
     try:
         job_pool.explode_oven_preload_detail([job_id])
         print('[INFO] Esplosione semilavorati nel job: %s' % job_id)
