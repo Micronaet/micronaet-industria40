@@ -398,7 +398,7 @@ class IndustriaJob(orm.Model):
             total = product_detail[product]
             # Search component to oven:
             default_code = product.default_code or ''
-            has_color = product[6:8].strip()
+            has_color = default_code[6:8].strip()
             if not has_color:
                 _logger.error('Product %s no need oven' % default_code)
                 continue
