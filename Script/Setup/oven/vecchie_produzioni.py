@@ -63,6 +63,7 @@ mrp_ids = mrp_pool.search([
     ('state', '=', 'done'),
     ('industria_oven_state', '!=', 'done'),
     ('date_planned', '>=', '2020-01-12'),
+    # todo filter per color?
     ])
 pdb.set_trace()
 for mrp in mrp_pool.browse(mrp_ids):
