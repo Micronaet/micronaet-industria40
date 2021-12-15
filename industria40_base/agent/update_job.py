@@ -55,6 +55,21 @@ odoo = erppeek.Client(
     password=pwd,
     )
 
+# Update cut job from file:
+robot_pool = odoo.model('industria.robot')
+
+# For all database present:
+robot_ids = robot_pool.search([
+    ('code', '=', 'TAGL01'),
+])
+if robot_ids:
+    for robot in robot_pool.browse(robot_ids):
+        robot.load_all_stat_file()
+        print('Update robot: %s' % robot.name)
+else:
+    print('No TAGL01 robot found')
+
+# Update other:
 database_pool = odoo.model('industria.database')
 
 # For all database present:
@@ -64,7 +79,7 @@ for database in database_pool.browse(database_ids):
     if not host_up(ip):
         print('\n[ERR] Host %s is down <<<<' % ip)
         continue
-        
+
     print('\n[INFO] Host %s is up, updating database %s ...' % (
         ip, database.name))
     if database.mode != 'ftp':
@@ -76,4 +91,3 @@ for database in database_pool.browse(database_ids):
 
     print('[INFO] Import job')
     database_pool.import_job([database.id])
-

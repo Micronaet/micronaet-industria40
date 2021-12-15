@@ -59,13 +59,12 @@ job_pool = odoo.model('industria.job')
 job_ids = job_pool.search([
     ('source_id.code', '=', 'FORN01'),
     ('database_id.mode', '=', 'opcua'),
-    ('id', '>', 33373),
+    ('id', '>', 33373),  # todo remove
 ])
-pdb.set_trace()
 for job_id in sorted(job_ids):
     try:
-        print('[INFO] Esplosione semilavorati nel job: %s' % job_id)
+        print('[INFO] Esplosione in corso job: %s' % job_id)
         job_pool.explode_oven_preload_detail([job_id])
     except:
-        print('[ERR] Errore semilavorati nel job: %s' % job_id)
+        print('[ERR] Errore esplosione job: %s' % job_id)
 
