@@ -29,104 +29,123 @@ from datetime import datetime
 # -----------------------------------------------------------------------------
 # Read configuration parameter:
 # -----------------------------------------------------------------------------
-cfg_file = os.path.expanduser('../openerp.cfg')  # openerp_gpb.cfg
+company_list = ('fia', 'gpb')
 
-config = ConfigParser.ConfigParser()
-config.read([cfg_file])
-dbname = config.get('dbaccess', 'dbname')
-user = config.get('dbaccess', 'user')
-pwd = config.get('dbaccess', 'pwd')
-server = config.get('dbaccess', 'server')
-port = config.get('dbaccess', 'port')   # verify if it's necessary: getint
+database = {
+    'fia': {
+        'attachment': {
+            0: [
+                'Extra_sconti.xlsx',
+                'commercializzati.xlsx',
+                'Statistiche_Produzioni_',
+                'controllo.xlsx',
+                'Semilavorati_disponibili_',
+                'Order_OC\/',  # residuo minimo
+            ],
+            1: [
+                'Componenti_20',
+                'Stato_tessuti_',
+                'Tubi.odt',
+            ],
+        },
+        'mail': {
+            0: [
+                'Invio automatico stato disponibilità materiali',
+                'Invio automatico stato extra sconto',
+                'Invio automatico statistiche di produzione:',
+                'NESSUNA VARIAZIONE EXTRA SCONTO',
+                'Ordini senza la scadenza',
+                'Fiam S.r.l new product',
+                'Check invoice mail database Fiam',
+                'Distinte non controllate negli ordini',
+                'Fiam S.r.l: Ordine con prodotti nuovi',
+                ' ha residuo minimo',  # finale dell'oggetto
+            ],
+            1: [
+                'Invio automatico stato componenti',
+                'Invio automatico stato tessuto',
+                'Invio automatico stato telai',
+            ],
+        },
+    },
 
-# -----------------------------------------------------------------------------
-# Connect to ODOO:
-# -----------------------------------------------------------------------------
-print('Connect to ODOO [%s]' % cfg_file)
-odoo = erppeek.Client(
-    'http://%s:%s' % (
-        server, port),
-    db=dbname,
-    user=user,
-    password=pwd,
-    )
-attachment_pool = odoo.model('ir.attachment')
-mail_pool = odoo.model('mail.message')
+    'gpb': {
+        'attachment': {
 
-names = {
-    0: [
-        'Extra_sconti.xlsx',
-        'commercializzati.xlsx',
-        'Statistiche_Produzioni_',
-        'controllo.xlsx',
-        'Semilavorati_disponibili_',
-        'Order_OC\/',  # residuo minimo
-        ],
-    1: [
-        'Componenti_20',
-        'Stato_tessuti_',
-        'Tubi.odt',
-        ],
-    }
-year = datetime.now().year
-rest_date = str(datetime.now())[4:19]
-for date in names:
-    to_date = '%s%s' % (
-        year - date,
-        rest_date,
-    )
-    for name in names[date]:
-        attachment_ids = attachment_pool.search([
-            ('create_date', '<=', to_date),
-            ('name', '=ilike', '%s%%' % name),
-            ])
-        total = len(attachment_ids)
-        counter = 0
+        },
+        'mail': {
 
-        print('Removing: %s...' % total)
-        pdb.set_trace()
-        for attachment_id in attachment_ids:
-            counter += 1
-            attachment_pool.unlink([attachment_id])
-            print('%s di %s. Deleted [%s]' % (counter, total, name))
-
-names = {
-    0: [
-    'Invio automatico stato disponibilità materiali',
-    'Invio automatico stato extra sconto',
-    'Invio automatico statistiche di produzione:',
-    'NESSUNA VARIAZIONE EXTRA SCONTO',
-    'Ordini senza la scadenza',
-    'Fiam S.r.l new product',
-    'Check invoice mail database Fiam',
-    'Distinte non controllate negli ordini',
-    'Fiam S.r.l: Ordine con prodotti nuovi',
-    ' ha residuo minimo',  # finale dell'oggetto
-    ],
-    1: [
-        'Invio automatico stato componenti',
-        'Invio automatico stato tessuto',
-        'Invio automatico stato telai',
-    ],
+        },
+    },
 }
-pdb.set_trace()
-for date in names:
-    to_date = '%s%s' % (
-        year - date,
-        rest_date,
-    )
-    for name in names[date]:
-        mail_ids = mail_pool.search([
-            ('create_date', '<=', to_date),
-            ('subject', 'ilike', '%s' % name),
-            ])
-        total = len(mail_ids)
-        counter = 0
 
-        print('Removing: %s...' % total)
-        pdb.set_trace()
-        for mail_id in mail_ids:
-            counter += 1
-            mail_pool.unlink([mail_id])
-            print('%s di %s. Mail Deleted [%s]' % (counter, total, name))
+for company in company_list:
+    cfg_filename = '../openerp.%s.cfg' % company
+    cfg_file = os.path.expanduser(cfg_filename)
+
+    config = ConfigParser.ConfigParser()
+    config.read([cfg_file])
+    dbname = config.get('dbaccess', 'dbname')
+    user = config.get('dbaccess', 'user')
+    pwd = config.get('dbaccess', 'pwd')
+    server = config.get('dbaccess', 'server')
+    port = config.get('dbaccess', 'port')   # verify if it's necessary: getint
+
+    # -------------------------------------------------------------------------
+    # Connect to ODOO:
+    # -------------------------------------------------------------------------
+    print('Connect to ODOO [%s] Company: %s' % (cfg_file, company))
+    odoo = erppeek.Client(
+        'http://%s:%s' % (
+            server, port),
+        db=dbname,
+        user=user,
+        password=pwd,
+        )
+    attachment_pool = odoo.model('ir.attachment')
+    mail_pool = odoo.model('mail.message')
+
+    year = datetime.now().year
+    rest_date = str(datetime.now())[4:19]
+    for date in database[company]['attachment']:
+        to_date = '%s%s' % (
+            year - date,
+            rest_date,
+        )
+        for name in database[company]['attachment'][date]:
+            attachment_ids = attachment_pool.search([
+                ('create_date', '<=', to_date),
+                ('name', '=ilike', '%s%%' % name),
+                ])
+            total = len(attachment_ids)
+            counter = 0
+
+            print('%s. Removing: %s...' % (company, total))
+            pdb.set_trace()
+            for attachment_id in attachment_ids:
+                counter += 1
+                attachment_pool.unlink([attachment_id])
+                print('%s. %s di %s. Deleted [%s]' % (
+                    database, counter, total, name))
+
+    for date in database[company]['mail']:
+        to_date = '%s%s' % (
+            year - date,
+            rest_date,
+        )
+        for name in database[company]['mail'][date]:
+            mail_ids = mail_pool.search([
+                ('create_date', '<=', to_date),
+                ('subject', 'ilike', '%s' % name),
+                ])
+            total = len(mail_ids)
+            counter = 0
+
+            print('%s. Removing: %s...' % (company, total))
+            pdb.set_trace()
+            for mail_id in mail_ids:
+                counter += 1
+                mail_pool.unlink([mail_id])
+                print('%s. %s di %s. Mail Deleted [%s]' % (
+                    company, counter, total, name))
 
