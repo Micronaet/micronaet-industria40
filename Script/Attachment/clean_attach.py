@@ -67,7 +67,6 @@ names = {
         'Stato_tessuti_',
         ],
     }
-pdb.set_trace()
 year = datetime.now().year
 rest_date = str(datetime.now())[4:19]
 for date in names:
@@ -82,6 +81,9 @@ for date in names:
             ])
         total = len(attachment_ids)
         counter = 0
+
+        print('Removing: %s...' % total)
+        pdb.set_trace()
         for attachment_id in attachment_ids:
             counter += 1
             attachment_pool.unlink([attachment_id])
@@ -118,6 +120,9 @@ for date in names:
             ])
         total = len(mail_ids)
         counter = 0
+
+        print('Removing: %s...' % total)
+        pdb.set_trace()
         for mail_id in mail_ids:
             counter += 1
             mail_pool.unlink([mail_id])
