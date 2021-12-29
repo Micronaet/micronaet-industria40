@@ -129,7 +129,6 @@ for company in company_list:
             counter = 0
 
             print('%s. Removing: %s...' % (company, total))
-            pdb.set_trace()
             for attachment_id in attachment_ids:
                 counter += 1
                 attachment_pool.unlink([attachment_id])
@@ -150,7 +149,6 @@ for company in company_list:
             counter = 0
 
             print('%s. Removing: %s...' % (company, total))
-            pdb.set_trace()
             for mail_id in mail_ids:
                 counter += 1
                 mail_pool.unlink([mail_id])
