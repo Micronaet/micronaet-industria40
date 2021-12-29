@@ -65,6 +65,7 @@ names = {
     1: [
         'Componenti_20',
         'Stato_tessuti_',
+        'Tubi.odt',
         ],
     }
 year = datetime.now().year
@@ -105,6 +106,7 @@ names = {
     1: [
         'Invio automatico stato componenti',
         'Invio automatico stato tessuto',
+        'Invio automatico stato telai',
     ],
 }
 pdb.set_trace()
