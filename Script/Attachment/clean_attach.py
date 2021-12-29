@@ -131,7 +131,7 @@ for company in company_list:
                 counter += 1
                 attachment_pool.unlink([attachment_id])
                 print('%s. %s di %s. Deleted [%s]' % (
-                    database, counter, total, name))
+                    company, counter, total, name))
 
     for date in database[company]['mail']:
         to_date = '%s%s' % (
