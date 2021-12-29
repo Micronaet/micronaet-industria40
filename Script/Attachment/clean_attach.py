@@ -20,6 +20,8 @@
 #
 ###############################################################################
 import os
+import pdb
+
 import erppeek
 import ConfigParser
 from datetime import datetime
@@ -64,6 +66,7 @@ names = {
         'Stato_tessuti_',
         ],
     }
+pdb.set_trace()
 year = datetime.now().year
 rest_date = str(datetime.now())[4:19]
 for date in names:
@@ -83,7 +86,8 @@ for date in names:
             attachment_pool.unlink([attachment_id])
             print('%s di %s. Deleted [%s]' % (counter, total, name))
 
-names = [
+names = {
+    0: [
     'Invio automatico stato disponibilità materiali',
     'Invio automatico stato extra sconto',
     'Invio automatico statistiche di produzione:',
@@ -93,16 +97,26 @@ names = [
     'Check invoice mail database Fiam',
     'Distinte non controllate negli ordini',
     'Fiam S.r.l: Ordine con prodotti nuovi',
-]
-
-for name in names:
-    mail_ids = mail_pool.search([
-        ('subject', '=ilike', '%s%%' % name),
-        ])
-    total = len(mail_ids)
-    counter = 0
-    for mail_id in mail_ids:
-        counter += 1
-        mail_pool.unlink([mail_id])
-        print('%s di %s. Mail Deleted [%s]' % (counter, total, name))
+    ],
+    1: [
+        'Invio automatico stato componenti',
+    ],
+}
+pdb.set_trace()
+for date in names:
+    to_date = '%s%s' % (
+        year - date,
+        rest_date,
+    )
+    for name in names[date]:
+        mail_ids = mail_pool.search([
+            ('create_date', '<=', to_date),
+            ('subject', '=ilike', '%s%%' % name),
+            ])
+        total = len(mail_ids)
+        counter = 0
+        for mail_id in mail_ids:
+            counter += 1
+            mail_pool.unlink([mail_id])
+            print('%s di %s. Mail Deleted [%s]' % (counter, total, name))
 
