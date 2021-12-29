@@ -82,6 +82,7 @@ database = {
                 ': Ordine con prodotti nuovi',
                 'G.P.B. S.r.l. new product: ',
                 'GPB: Partner senza mail per invio fattura',
+                'Ordini in Prestashop dalla data',
             ],
         },
     },
