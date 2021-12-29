@@ -78,6 +78,7 @@ database = {
         'mail': {
             0: [
                 ' ha residuo minimo',  # finale dell'oggetto
+                'Check invoice mail database',
             ],
 
         },
