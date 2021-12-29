@@ -71,9 +71,14 @@ database = {
 
     'gpb': {
         'attachment': {
-
+            0: [
+                'Order_OC\/',  # residuo minimo
+            ],
         },
         'mail': {
+            0: [
+                ' ha residuo minimo',  # finale dell'oggetto
+            ],
 
         },
     },
