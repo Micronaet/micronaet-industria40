@@ -20,20 +20,14 @@
 #
 ###############################################################################
 import os
-import pdb
-import sys
-import time
 import erppeek
 import ConfigParser
-from datetime import datetime, timedelta
-
+from datetime import datetime
 
 # -----------------------------------------------------------------------------
 # Read configuration parameter:
 # -----------------------------------------------------------------------------
-# From config file:
-# cfg_file = os.path.expanduser('../local.cfg')
-cfg_file = os.path.expanduser('../openerp.cfg')
+cfg_file = os.path.expanduser('../openerp.cfg')  # openerp_gpb.cfg
 
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
@@ -46,6 +40,7 @@ port = config.get('dbaccess', 'port')   # verify if it's necessary: getint
 # -----------------------------------------------------------------------------
 # Connect to ODOO:
 # -----------------------------------------------------------------------------
+print('Connect to ODOO [%s]' % cfg_file)
 odoo = erppeek.Client(
     'http://%s:%s' % (
         server, port),
@@ -53,49 +48,48 @@ odoo = erppeek.Client(
     user=user,
     password=pwd,
     )
-time_format = '%Y-%m-%d'
-mrp_pool = odoo.model('mrp.production')
-job_pool = odoo.model('industria.job')
-selection_pool = odoo.model('mrp.production.oven.selected')
+attachment_pool = odoo.model('ir.attachment')
+mail_pool = odoo.model('mail.message')
 
-# Select production:
-mrp_ids = mrp_pool.search([
-    ('state', '=', 'done'),
-    ('industria_oven_state', '!=', 'done'),
-    ('date_planned', '>=', '2021-11-30'),
-    # todo filter per color?
-    ])
-pdb.set_trace()
-for mrp in mrp_pool.browse(mrp_ids):
-    print('Generazione produzione %s' % mrp.name)
-    mrp_date = mrp.date_planned[:10]
-    mrp_date_dt = datetime.strptime(mrp_date, time_format)
-    job_date_dt = mrp_date_dt - timedelta(days=15)
-    dow = job_date_dt.isoweekday()
-    if dow == 6:  # Saturday
-        job_date_dt -= timedelta(days=1)
-    elif dow in (0, 7):  # Sunday
-        job_date_dt -= timedelta(days=2)
-    job_date = job_date_dt.strftime(time_format)
+names = [
+    'Extra_sconti.xlsx',
+    'commercializzati.xlsx',
+    'Statistiche_Produzioni_',
+    'controllo.xlsx',
+    'Semilavorati_disponibili_',
+]
 
-    this_ids = [mrp.id]
-    mrp_pool.industria_oven_state_pending(this_ids)
-    print('...Selezione produzione %s' % mrp.name)
-    mrp_pool.explode_oven_job_per_color_forced(this_ids)
-    print('...Generazione lavori dettagliati %s' % mrp.name)
+for name in names:
+    attachment_ids = attachment_pool.search([
+        ('name', '=ilike', '%s%%' % name),
+        ])
+    total = len(attachment_ids)
+    counter = 0
+    for attachment_id in attachment_ids:
+        counter += 1
+        attachment_pool.unlink([attachment_id])
+        print('%s di %s. Deleted [%s]' % (counter, total, name))
 
-    # Generate new job:
-    job = selection_pool.generate_oven_job_all([])
-    print('...Generazione job')
-    job_id = job.get('res_id')
-    if job_id:
-        job_ids = [job_id]
-    else:
-        job_ids = job['domain'][0][2]
-    print('...Riassegnazione data')
-    if job_ids:
-        job_pool.write(job_ids, {
-            'created_at': '%s 08:00:00' % job_date,
-            'endend_at': '%s 12:00:00' % job_date,
-        })
-    print('Completata %s' % mrp.name)
+names = [
+    'Invio automatico stato disponibilità materiali',
+    'Invio automatico stato extra sconto',
+    'Invio automatico statistiche di produzione:',
+    'NESSUNA VARIAZIONE EXTRA SCONTO',
+    'Ordini senza la scadenza',
+    'Fiam S.r.l new product',
+    'Check invoice mail database Fiam',
+    'Distinte non controllate negli ordini',
+    'Fiam S.r.l: Ordine con prodotti nuovi',
+]
+
+for name in names:
+    mail_ids = mail_pool.search([
+        ('subject', '=ilike', '%s%%' % name),
+        ])
+    total = len(mail_ids)
+    counter = 0
+    for mail_id in mail_ids:
+        counter += 1
+        mail_pool.unlink([mail_id])
+        print('%s di %s. Mail Deleted [%s]' % (counter, total, name))
+
