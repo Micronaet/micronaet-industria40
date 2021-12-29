@@ -100,6 +100,7 @@ names = {
     ],
     1: [
         'Invio automatico stato componenti',
+        'Invio automatico stato tessuto',
     ],
 }
 pdb.set_trace()
