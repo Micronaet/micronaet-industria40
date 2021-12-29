@@ -85,6 +85,7 @@ database = {
                 'GPB: Partner senza mail per invio fattura',
                 'Ordini in Prestashop dalla data',
                 'Prestashop order',
+                'Check invoice mail',
             ],
         },
     },
