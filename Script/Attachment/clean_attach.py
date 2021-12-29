@@ -148,4 +148,3 @@ for company in company_list:
                 mail_pool.unlink([mail_id])
                 print('%s. %s di %s. Mail Deleted [%s]' % (
                     company, counter, total, name))
-
