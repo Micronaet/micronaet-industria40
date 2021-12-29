@@ -51,24 +51,37 @@ odoo = erppeek.Client(
 attachment_pool = odoo.model('ir.attachment')
 mail_pool = odoo.model('mail.message')
 
-names = [
-    'Extra_sconti.xlsx',
-    'commercializzati.xlsx',
-    'Statistiche_Produzioni_',
-    'controllo.xlsx',
-    'Semilavorati_disponibili_',
-]
-
-for name in names:
-    attachment_ids = attachment_pool.search([
-        ('name', '=ilike', '%s%%' % name),
-        ])
-    total = len(attachment_ids)
-    counter = 0
-    for attachment_id in attachment_ids:
-        counter += 1
-        attachment_pool.unlink([attachment_id])
-        print('%s di %s. Deleted [%s]' % (counter, total, name))
+names = {
+    0: [
+        'Extra_sconti.xlsx',
+        'commercializzati.xlsx',
+        'Statistiche_Produzioni_',
+        'controllo.xlsx',
+        'Semilavorati_disponibili_',
+        ],
+    1: [
+        'Componenti_20',
+        'Stato_tessuti_',
+        ],
+    }
+year = datetime.now().year
+rest_date = str(datetime.now())[4:19]
+for date in names:
+    to_date = '%s%s' % (
+        year - date,
+        rest_date,
+    )
+    for name in names[date]:
+        attachment_ids = attachment_pool.search([
+            ('create_date', '<=', to_date),
+            ('name', '=ilike', '%s%%' % name),
+            ])
+        total = len(attachment_ids)
+        counter = 0
+        for attachment_id in attachment_ids:
+            counter += 1
+            attachment_pool.unlink([attachment_id])
+            print('%s di %s. Deleted [%s]' % (counter, total, name))
 
 names = [
     'Invio automatico stato disponibilità materiali',
