@@ -60,6 +60,7 @@ names = {
         'Statistiche_Produzioni_',
         'controllo.xlsx',
         'Semilavorati_disponibili_',
+        'Order_OC\/',  # residuo minimo
         ],
     1: [
         'Componenti_20',
@@ -97,6 +98,7 @@ names = {
     'Check invoice mail database Fiam',
     'Distinte non controllate negli ordini',
     'Fiam S.r.l: Ordine con prodotti nuovi',
+    ' ha residuo minimo',  # finale dell'oggetto
     ],
     1: [
         'Invio automatico stato componenti',
@@ -112,7 +114,7 @@ for date in names:
     for name in names[date]:
         mail_ids = mail_pool.search([
             ('create_date', '<=', to_date),
-            ('subject', '=ilike', '%s%%' % name),
+            ('subject', 'ilike', '%s' % name),
             ])
         total = len(mail_ids)
         counter = 0
