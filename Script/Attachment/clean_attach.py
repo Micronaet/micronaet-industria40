@@ -80,9 +80,8 @@ database = {
                 ' ha residuo minimo',  # finale dell'oggetto
                 'Check invoice mail database',
                 ': Ordine con prodotti nuovi',
-
+                'G.P.B. S.r.l. new product: ',
             ],
-
         },
     },
 }
