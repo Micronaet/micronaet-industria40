@@ -73,6 +73,7 @@ database = {
         'attachment': {
             0: [
                 'Order_OC\/',  # residuo minimo
+                'ordinato.xlsx',   # Ordini WP
             ],
         },
         'mail': {
@@ -86,6 +87,7 @@ database = {
                 'Ordini in Prestashop dalla data',
                 'Prestashop order',
                 'Check invoice mail',
+                'Ordini Wordpress',
             ],
         },
     },
