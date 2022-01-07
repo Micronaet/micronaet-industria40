@@ -60,7 +60,7 @@ class IndustriaMrp(orm.Model):
         i40_mrp = self.browse(cr, uid, mrp_id, context=context)
 
         line_pool = self.pool.get('industria.mrp.line')
-        material_start = 'Tessuti'  # todo manage better
+        material_category = 'Tessuti'  # todo manage better
 
         # Clean previous line:
         _logger.warning('Clean previous line')
@@ -83,13 +83,14 @@ class IndustriaMrp(orm.Model):
 
                 for bom_line in product.dynamic_bom_line_ids:
                     # Check if (category) need fabric operation
-                    if bom_line.category_id.need_fabric:
+                    cmpt_category = bom_line.category_id
+                    if cmpt_category.need_fabric:
                         semiproduct = bom_line.product_id
                         component_id = semiproduct.id
                         for cmpt_line in semiproduct.half_bom_ids:
                             material = cmpt_line.product_id
-                            if material.inventory_category_id.name == \
-                                    material_start:
+                            category_name = material.inventory_category_id.name
+                            if category_name == material_category:
                                 key = (component_id, material.id)
                                 if key not in new_lines:
                                     new_lines[key] = [0, '']  # total, detail
@@ -97,8 +98,10 @@ class IndustriaMrp(orm.Model):
                                 new_lines[key][0] += \
                                     todo * bom_line.product_qty
                                 new_lines[key][1] += \
-                                    'MRP: %s, Semilav: %s, Mat. %s\n' % (
+                                    'MRP: %s, Prod: %s Semilav [%s]: %s, Mat. %s\n' % (
                                         mrp.name,
+                                        product.default_code,
+                                        cmpt_category.name,
                                         semiproduct.default_code,
                                         material.default_code,
                                     )
