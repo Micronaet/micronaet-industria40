@@ -53,6 +53,59 @@ class IndustriaMrp(orm.Model):
     _order = 'date desc'
     _rec_name = 'date'
 
+    def generate_industria_mrp_line(self, cr, uid, ids, context=None):
+        """ Generate lined from MRP production linked
+        """
+        pdb.set_trace()
+        mrp_id = ids[0]
+        mrp = self.browse(cr, uid, mrp_id, context=context)
+
+        line_pool = self.pool.get('industria.mrp.line')
+        semiproduct_start = ['TS', 'PO']
+        # Clean previous line:
+        _logger.warning('Clean previous line')
+        self.write(cr, uid, ids, {
+            'line_ids': [(6, 0, [])],
+        }, context=context)
+
+        # Collect new line:
+        new_lines = {}
+        _logger.warning('Generate new lines:')
+        for mrp in mrp.mrp_ids:
+            for line in mrp.order_line_ids:
+                # todo consider also maked?
+                total = (
+                    line.product_uom_qty -
+                    # line.deliverey_qty
+                    # line.product_uom_maked_sync_qty -
+                    line.mx_assigned_qty)
+                product = line.product_id
+
+                for bom_line in product.dynamic_bom_line_ids:
+                    component = bom_line.product_id
+                    component_items = component.half_bom_ids
+                    if component.default_code[:2] in semiproduct_start \
+                            and component_items:
+                        for cmpt in component_items:
+                            material = cmpt.product_id
+                            if material.default_code[:1] == 'T':
+                                key = (component.id, material.id)
+                                if key not in new_lines:
+                                    new_lines[key] = total * bom_line.quantity
+
+        # Generate line:
+        _logger.warning('Generate new lines:')
+        for key in new_lines:
+            total = new_lines[key]
+            product_id, material_id = key
+            line_pool.create({
+                'industria_mrp_id': mrp_id,
+                'product_id': product_id,
+                'material_id': product_id,
+                'todo': total,
+            })
+        return True
+
     _columns = {
         'date': fields.date(
             'Data', help='Data di creazione'),
@@ -65,6 +118,39 @@ class IndustriaMrp(orm.Model):
             ('closed', 'Chiuso'),
             ('paused', 'In pausa'),
         ], 'Stato')
+    }
+
+    _defaults = {
+        'state': lambda *x: 'draft',
+    }
+
+
+class IndustriaMrpLine(orm.Model):
+    """ Model name: Industria 4.0 MRP Line
+    """
+
+    _name = 'industria.mrp.line'
+    _description = 'Industria 4.0 MRP Line'
+    _order = 'program_id'
+    _rec_name = 'material_id'
+
+    _columns = {
+        'industria_mrp_id': fields.many2one(
+            'industria.mrp', 'MRP I4.0'),
+        'material_id': fields.many2one(
+            'product.product', 'Materiale'),
+        'product_id': fields.many2one(
+            'product.product', 'Semilavorato'),
+        'program_id': fields.many2one(
+            'industria.program', 'Programma'),
+
+        'todo': fields.integer('Da fare'),
+        'assigned': fields.integer('Assegnati'),
+        'produced': fields.integer('Prodotti'),
+        'remain': fields.integer(
+            'Residui',
+            help='Residui da produrre (calcolato da quelli da fare puliti da '
+                 'quelli fatti o assegnati'),
     }
 
     _defaults = {

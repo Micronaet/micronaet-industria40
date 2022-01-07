@@ -32,6 +32,13 @@
                             <field name="date"/>
                             <field name="state" />
                             <notebook colspan="4">
+                                <page name="page_line_mrp" string="Semilavorati">
+                                    <group colspan="4" col="4">
+                                        <separator string="Semilavorati:" colspan="3"/>
+                                        <button name="generate_industria_mrp_line" type="object" string="Genera produzione"/>
+                                        <field name="line_ids" nolabel="1" colspan="4" readonly="1"/>
+                                    </group>
+                                </page>
                                 <page name="page_mrp" string="Produzioni">
                                     <group colspan="4" col="4">
                                         <separator string="MRP:" colspan="4"/>
