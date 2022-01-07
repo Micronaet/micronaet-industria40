@@ -109,7 +109,7 @@ class IndustriaMrp(orm.Model):
                                         cmpt_category.name,
                                         semiproduct.default_code,
                                         material.default_code,
-                                        todo * bom_qty,
+                                        int(todo * bom_qty),
                                     )
 
         # Generate line:
