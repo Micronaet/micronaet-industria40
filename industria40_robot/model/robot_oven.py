@@ -442,5 +442,7 @@ class MrpBomStructureCategory(orm.Model):
     _inherit = 'mrp.bom.structure.category'
 
     _columns = {
-        'need_oven': fields.boolean('Necessita verniciatura')
+        # todo no more used:
+        'need_oven': fields.boolean('Necessita verniciatura'),
+        'need_fabric': fields.boolean('Necessita taglio tessuto'),
     }
