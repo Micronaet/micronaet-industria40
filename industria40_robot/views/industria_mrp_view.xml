@@ -33,13 +33,13 @@
                             <field name="state" />
                             <notebook>
                                 <page name="page_mrp" string="Produzioni">
-                                    <group>
+                                    <group colspan="4" col="4">
                                         <separator string="MRP:" colspan="4"/>
                                         <field name="mrp_ids" nolabel="1" colspan="4" readonly="1"/>
                                     </group>
                                 </page>
                                 <page name="page_job" string="Job">
-                                    <group>
+                                    <group colspan="4" col="4">
                                         <separator string="Job:" colspan="4"/>
                                         <field name="job_ids" nolabel="1" colspan="4" readonly="1"/>
                                     </group>
