@@ -83,15 +83,15 @@ class IndustriaMrp(orm.Model):
 
                 for bom_line in product.dynamic_bom_line_ids:
                     component = bom_line.product_id
-                    component_items = component.half_bom_ids
                     if component.default_code[:2] in semiproduct_start \
-                            and component_items:
-                        for cmpt in component_items:
+                            and component.half_bom_ids:
+                        for cmpt in component.half_bom_ids:
                             material = cmpt.product_id
                             if material.default_code[:1] == 'T':
                                 key = (component.id, material.id)
                                 if key not in new_lines:
-                                    new_lines[key] = total * bom_line.quantity
+                                    new_lines[key] = \
+                                        total * bom_line.product_qty
 
         # Generate line:
         _logger.warning('Generate new lines:')
