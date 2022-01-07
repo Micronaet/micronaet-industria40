@@ -36,7 +36,17 @@
                                     <group colspan="4" col="4">
                                         <separator string="Semilavorati:" colspan="3"/>
                                         <button name="generate_industria_mrp_line" type="object" string="Genera produzione"/>
-                                        <field name="line_ids" nolabel="1" colspan="4" readonly="1"/>
+                                        <field name="line_ids" nolabel="1" colspan="4" readonly="1">
+                                            <tree editable="bottom" string="Linee">
+                                                <field name="program_id"/>
+                                                <field name="product_id"/>
+                                                <field name="material_id"/>
+                                                <field name="todo"/>
+                                                <field name="assigned"/>
+                                                <field name="produced"/>
+                                                <field name="remain"/>
+                                            </tree>
+                                        </field>
                                     </group>
                                 </page>
                                 <page name="page_mrp" string="Produzioni">
