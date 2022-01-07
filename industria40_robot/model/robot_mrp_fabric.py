@@ -203,4 +203,9 @@ class IndustriaMrpInherit(orm.Model):
             'industria.job', 'industria_mrp_id', 'Job',
             help='Job generati da questa bolla I4.0 di produzione',
         ),
+        'line_ids': fields.one2many(
+            'industria.mrp', 'industria_mrp_id', 'MRP I4.0',
+            help='Sviluppo produzioni per semilavorati da passare alla '
+                 'macchina',
+        ),
     }
