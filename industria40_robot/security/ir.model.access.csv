@@ -1,3 +1,4 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
 access_mrp_production_oven_selected_user,mrp.production.oven.selected,model_mrp_production_oven_selected,base.group_user,1,1,1,1
+access_industria_mrp_user,industria.mrp,model_industria_mrp,base.group_user,1,1,1,1
 
