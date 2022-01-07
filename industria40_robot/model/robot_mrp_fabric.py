@@ -82,13 +82,14 @@ class IndustriaMrp(orm.Model):
                 product = line.product_id
 
                 for bom_line in product.dynamic_bom_line_ids:
-                    component = bom_line.product_id
                     # Check if (category) need fabric operation
-                    if component.category_id.need_fabric:
+                    if bom_line.category_id.need_fabric:
+                        component = bom_line.product_id
+                        component_id = component.id
                         for cmpt in component.half_bom_ids:
                             material = cmpt.product_id
                             if material.default_code[:1] == material_start:
-                                key = (component.id, material.id)
+                                key = (component_id, material.id)
                                 if key not in new_lines:
                                     new_lines[key] = \
                                         todo * bom_line.product_qty
