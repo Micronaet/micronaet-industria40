@@ -60,7 +60,6 @@ class IndustriaMrp(orm.Model):
         i40_mrp = self.browse(cr, uid, mrp_id, context=context)
 
         line_pool = self.pool.get('industria.mrp.line')
-        semiproduct_start = ['TS', 'PO']  # todo manage better
         material_start = 'T'  # todo manage better
 
         # Clean previous line:
@@ -84,8 +83,8 @@ class IndustriaMrp(orm.Model):
 
                 for bom_line in product.dynamic_bom_line_ids:
                     component = bom_line.product_id
-                    if component.default_code[:2] in semiproduct_start \
-                            and component.half_bom_ids:
+                    # Check if (category) need fabric operation
+                    if component.category_id.need_fabric:
                         for cmpt in component.half_bom_ids:
                             material = cmpt.product_id
                             if material.default_code[:1] == material_start:
