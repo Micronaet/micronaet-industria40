@@ -98,7 +98,8 @@ class IndustriaMrp(orm.Model):
                                 new_lines[key][0] += \
                                     todo * bom_line.product_qty
                                 new_lines[key][1] += \
-                                    'MRP: %s, Prod: %s Semilav [%s]: %s, Mat. %s\n' % (
+                                    'MRP: %s, Prod: %s >> Semilav [%s] %s >>' \
+                                    ' Mat. %s\n' % (
                                         mrp.name,
                                         product.default_code,
                                         cmpt_category.name,
