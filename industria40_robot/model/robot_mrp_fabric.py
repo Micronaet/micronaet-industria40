@@ -60,7 +60,7 @@ class IndustriaMrp(orm.Model):
         i40_mrp = self.browse(cr, uid, mrp_id, context=context)
 
         line_pool = self.pool.get('industria.mrp.line')
-        material_start = 'T'  # todo manage better
+        material_start = 'Tessuti'  # todo manage better
 
         # Clean previous line:
         _logger.warning('Clean previous line')
@@ -88,7 +88,8 @@ class IndustriaMrp(orm.Model):
                         component_id = semiproduct.id
                         for cmpt_line in semiproduct.half_bom_ids:
                             material = cmpt_line.product_id
-                            if material.default_code[:1] == material_start:
+                            if material.inventory_category_id.name == \
+                                    material_start:
                                 key = (component_id, material.id)
                                 if key not in new_lines:
                                     new_lines[key] = \
