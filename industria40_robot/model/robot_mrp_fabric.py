@@ -100,8 +100,8 @@ class IndustriaMrp(orm.Model):
                                 new_lines[key][0] += total_qty
                                 new_lines[key][1] += \
                                     '[MRP: %s] %s x [PR. %s] >> ' \
-                                    '%s x [SL. (%s) %s] = %s ' \
-                                    '>> [MP. %s]\n' % (
+                                    '%s x [SL. (%s) %s] >> ' \
+                                    '[MP. %s] = %s\n' % (
                                         mrp.name,
                                         int(todo),
                                         product.default_code,
