@@ -132,7 +132,7 @@ class IndustriaMrpLine(orm.Model):
 
     _name = 'industria.mrp.line'
     _description = 'Industria 4.0 MRP Line'
-    _order = 'program_id'
+    _order = 'program_id, product_id, material_id'
     _rec_name = 'material_id'
 
     _columns = {
