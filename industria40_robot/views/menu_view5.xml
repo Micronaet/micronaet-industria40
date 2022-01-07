@@ -22,12 +22,18 @@
                 action="action_industria_job_robot5"
                 sequence="10"
                 />
-        <menuitem
-            parent="menu_industria_robot5"
-            id="menu_industria_mrp"
-            action="action_industria_mrp_production"
-            sequence="20"
-            />
+            <menuitem
+                parent="menu_industria_robot5"
+                id="menu_industria_40_mrp"
+                action="action_industria_mrp_production_list"
+                sequence="20"
+                />
+            <menuitem
+                parent="menu_industria_robot5"
+                id="menu_industria_mrp"
+                action="action_industria_mrp_production"
+                sequence="30"
+                />
 
     </data>
 </openerp>

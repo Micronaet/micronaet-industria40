@@ -1,6 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="industria_mrp_view_tree" model="ir.ui.view">
+            <field name="name">Industria MRP tree</field>
+            <field name="model">industria.mrp</field>
+            <field name="arch" type="xml">
+                <tree string="I4.0 Produzioni">
+                    <field name="date"/>
+                    <field name="state" />
+                    <field name="mrp_ids" widget="many2many_tags" />
+                </tree>
+            </field>
+        </record>
+        <record id="industria_mrp_view_form" model="ir.ui.view">
+            <field name="name">Industria MRP form</field>
+            <field name="model">industria.mrp</field>
+            <field name="arch" type="xml">
+                <form string="I4.0 Produzioni">
+                    <sheet>
+                        <group colspan="4" col="4">
+                            <field name="date"/>
+                            <field name="state" />
+                            <notebook>
+                                <page name="page_mrp" string="Produzioni">
+                                    <group>
+                                        <field name="mrp_ids" />
+                                    </group>
+                                </page>
+                                <page name="page_job" string="Job">
+                                    <group>
+                                        <field name="job_ids" />
+                                    </group>
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_industria_mrp_production_list">
+            <field name="name">I 40 Produzioni</field>
+            <field name="res_model">industria.mrp</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="industria_mrp_view_tree"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
+        </record>
+
         <record id="mrp_production_industria_view_tree" model="ir.ui.view">
             <field name="name">MRP per industria</field>
             <field name="model">mrp.production</field>
