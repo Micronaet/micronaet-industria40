@@ -58,7 +58,7 @@ class IndustriaMrp(orm.Model):
         """
         pdb.set_trace()
         mrp_id = ids[0]
-        mrp = self.browse(cr, uid, mrp_id, context=context)
+        i40_mrp = self.browse(cr, uid, mrp_id, context=context)
 
         line_pool = self.pool.get('industria.mrp.line')
         semiproduct_start = ['TS', 'PO']
@@ -71,7 +71,7 @@ class IndustriaMrp(orm.Model):
         # Collect new line:
         new_lines = {}
         _logger.warning('Generate new lines:')
-        for mrp in mrp.mrp_ids:
+        for mrp in i40_mrp.mrp_ids:
             for line in mrp.order_line_ids:
                 # todo consider also maked?
                 total = (
