@@ -84,10 +84,10 @@ class IndustriaMrp(orm.Model):
                 for bom_line in product.dynamic_bom_line_ids:
                     # Check if (category) need fabric operation
                     if bom_line.category_id.need_fabric:
-                        component = bom_line.product_id
-                        component_id = component.id
-                        for cmpt in component.half_bom_ids:
-                            material = cmpt.product_id
+                        semiproduct = bom_line.product_id
+                        component_id = semiproduct.id
+                        for cmpt_line in semiproduct.half_bom_ids:
+                            material = cmpt_line.product_id
                             if material.default_code[:1] == material_start:
                                 key = (component_id, material.id)
                                 if key not in new_lines:
@@ -102,7 +102,7 @@ class IndustriaMrp(orm.Model):
             line_pool.create(cr, uid, {
                 'industria_mrp_id': mrp_id,
                 'product_id': product_id,
-                'material_id': product_id,
+                'material_id': material_id,
                 'todo': todo,
             }, context=context)
         return True
