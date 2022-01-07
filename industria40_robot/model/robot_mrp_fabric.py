@@ -56,7 +56,6 @@ class IndustriaMrp(orm.Model):
     def generate_industria_mrp_line(self, cr, uid, ids, context=None):
         """ Generate lined from MRP production linked
         """
-        pdb.set_trace()
         mrp_id = ids[0]
         i40_mrp = self.browse(cr, uid, mrp_id, context=context)
 
@@ -76,7 +75,7 @@ class IndustriaMrp(orm.Model):
         for mrp in i40_mrp.mrp_ids:
             for line in mrp.order_line_ids:
                 # todo consider also maked?
-                total = (
+                todo = (
                     line.product_uom_qty -
                     # line.deliverey_qty
                     # line.product_uom_maked_sync_qty -
@@ -93,19 +92,19 @@ class IndustriaMrp(orm.Model):
                                 key = (component.id, material.id)
                                 if key not in new_lines:
                                     new_lines[key] = \
-                                        total * bom_line.product_qty
+                                        todo * bom_line.product_qty
 
         # Generate line:
         _logger.warning('Generate new lines:')
         for key in new_lines:
-            total = new_lines[key]
+            todo = new_lines[key]
             product_id, material_id = key
-            line_pool.create({
+            line_pool.create(cr, uid, {
                 'industria_mrp_id': mrp_id,
                 'product_id': product_id,
                 'material_id': product_id,
-                'todo': total,
-            })
+                'todo': todo,
+            }, context=context)
         return True
 
     _columns = {
