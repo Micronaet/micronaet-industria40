@@ -92,19 +92,28 @@ class IndustriaMrp(orm.Model):
                                     material_start:
                                 key = (component_id, material.id)
                                 if key not in new_lines:
-                                    new_lines[key] = \
-                                        todo * bom_line.product_qty
+                                    new_lines[key] = [0, '']  # total, detail
+                                # Updata data:
+                                new_lines[key][0] += \
+                                    todo * bom_line.product_qty
+                                new_lines[key][1] += \
+                                    'MRP: %s, Semilav: %s, Mat. %s\n' % (
+                                        mrp.name,
+                                        semiproduct.default_code,
+                                        material.default_code,
+                                    )
 
         # Generate line:
         _logger.warning('Generate new lines:')
         for key in new_lines:
-            todo = new_lines[key]
+            todo, detail = new_lines[key]
             product_id, material_id = key
             line_pool.create(cr, uid, {
                 'industria_mrp_id': mrp_id,
                 'product_id': product_id,
                 'material_id': material_id,
                 'todo': todo,
+                'detail': detail,
             }, context=context)
         return True
 
@@ -146,6 +155,7 @@ class IndustriaMrpLine(orm.Model):
         'program_id': fields.many2one(
             'industria.program', 'Programma'),
 
+        'detail': fields.text('Dettaglio'),
         'todo': fields.integer('Da fare'),
         'assigned': fields.integer('Assegnati'),
         'produced': fields.integer('Prodotti'),
