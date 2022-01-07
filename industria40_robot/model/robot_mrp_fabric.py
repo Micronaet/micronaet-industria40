@@ -96,10 +96,12 @@ class IndustriaMrp(orm.Model):
                                     new_lines[key] = [0, '']  # total, detail
                                 # Updata data:
                                 bom_qty = bom_line.product_qty
-                                new_lines[key][0] += todo * bom_qty
+                                total_qty =
+                                new_lines[key][0] += total_qty
                                 new_lines[key][1] += \
                                     'MRP: %s, %s x Prod: %s >> ' \
-                                    '%s x Semilav [%s] %s >> Mat. %s\n' % (
+                                    '%s x Semilav [%s] %s = %s ' \
+                                    '>> Mat. %s\n' % (
                                         mrp.name,
                                         todo,
                                         product.default_code,
@@ -107,6 +109,7 @@ class IndustriaMrp(orm.Model):
                                         cmpt_category.name,
                                         semiproduct.default_code,
                                         material.default_code,
+                                        todo * bom_qty,
                                     )
 
         # Generate line:
