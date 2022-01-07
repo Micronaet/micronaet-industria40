@@ -31,7 +31,7 @@
                         <group colspan="4" col="4">
                             <field name="date"/>
                             <field name="state" />
-                            <notebook>
+                            <notebook colspan="4">
                                 <page name="page_mrp" string="Produzioni">
                                     <group colspan="4" col="4">
                                         <separator string="MRP:" colspan="4"/>
