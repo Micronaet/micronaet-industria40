@@ -95,13 +95,15 @@ class IndustriaMrp(orm.Model):
                                 if key not in new_lines:
                                     new_lines[key] = [0, '']  # total, detail
                                 # Updata data:
-                                new_lines[key][0] += \
-                                    todo * bom_line.product_qty
+                                bom_qty = bom_line.product_qty
+                                new_lines[key][0] += todo * bom_qty
                                 new_lines[key][1] += \
-                                    'MRP: %s, Prod: %s >> Semilav [%s] %s >>' \
-                                    ' Mat. %s\n' % (
+                                    'MRP: %s, %s x Prod: %s >> ' \
+                                    '%s x Semilav [%s] %s >> Mat. %s\n' % (
                                         mrp.name,
+                                        todo,
                                         product.default_code,
+                                        bom_qty,
                                         cmpt_category.name,
                                         semiproduct.default_code,
                                         material.default_code,
