@@ -1374,6 +1374,10 @@ class IndustriaProgramFabricInherit(orm.Model):
     _inherit = 'industria.program.fabric'
 
     _columns = {
+        'family_mode': fields.boolean(
+            'Modalità famiglia',
+            help='Se spuntato presenta le dime legate come famiglia e non '
+                 'come elenco prodotti'),
         'part_ids': fields.one2many(
             'industria.program.fabric.part', 'fabric_id', 'Parti')
     }
