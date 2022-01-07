@@ -10,6 +10,15 @@
             <field name="context">{'form_view_ref': 'industria40_base.view_industria_job_fabric_form', 'default_state': 'DRAFT'}</field>
             <field name="domain">[('source_id.code', '=', 'TESS01')]</field>
         </record>
+        <record model="ir.actions.act_window" id="action_industria_mrp_production">
+            <field name="name">Produzioni aperte</field>
+            <field name="res_model">mrp.production</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <!--<field name="view_id" ref="industria40_base.view_industria_job_fabric_tree"/>-->
+            <field name="context">{}</field>
+            <field name="domain">[('state','not in', ('cancel', 'done'))]</field>
+        </record>
         <menuitem
             parent="industria40_base.menu_industria_master_single"
             id="menu_industria_robot5"
@@ -21,6 +30,12 @@
                 id="menu_industria_job5"
                 action="action_industria_job_robot5"
                 sequence="10"
+                />
+            <menuitem
+                parent="menu_industria_robot5"
+                id="menu_industria_mrp"
+                action="action_industria_mrp_production"
+                sequence="20"
                 />
     </data>
 </openerp>

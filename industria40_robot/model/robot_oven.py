@@ -406,7 +406,7 @@ class IndustriaJob(orm.Model):
                 continue
             for bom in product.dynamic_bom_line_ids:
                 # if bom.category_id.need_oven:
-                if bom.has_oven:
+                if bom.has_oven:  # dynamic bom module!
                     component_total = total * bom.product_qty
                     raw_component = bom.product_id
                     if raw_component not in compact_product:
