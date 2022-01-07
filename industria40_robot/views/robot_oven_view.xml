@@ -161,6 +161,7 @@
             <field name="arch" type="xml">
                 <field name="department" position="after">
                     <field name="need_oven"/>
+                    <field name="need_fabric"/>
                 </field>
             </field>
         </record>
@@ -171,6 +172,7 @@
             <field name="arch" type="xml">
                     <field name="department" position="after">
                         <field name="need_oven"/>
+                        <field name="need_fabric"/>
                     </field>
             </field>
         </record>
