@@ -35,6 +35,7 @@
         'base',
         'industria40_base',
         'mrp',
+        'stock',  # For SL Movement
         'production_accounting_external',
         'mx_close_order',
         'bom_dynamic_structured',
@@ -44,6 +45,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/robot_oven_view.xml',
+        'views/industria_mrp_view.xml',
 
         'views/menu_view1.xml',
         'views/menu_view2.xml',

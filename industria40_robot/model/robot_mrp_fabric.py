@@ -56,6 +56,9 @@ class IndustriaMrp(orm.Model):
     _columns = {
         'date': fields.date(
             'Data', help='Data di creazione'),
+        # todo: how assign yet present semi-product?
+        # 'picking': fields.many2one(
+        # 'stock.picking', 'Documento di impegno', '')
         'state': fields.selection([
             ('draft', 'Draft'),
             ('open', 'Aperto'),
