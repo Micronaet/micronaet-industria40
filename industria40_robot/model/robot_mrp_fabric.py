@@ -61,7 +61,9 @@ class IndustriaMrp(orm.Model):
         i40_mrp = self.browse(cr, uid, mrp_id, context=context)
 
         line_pool = self.pool.get('industria.mrp.line')
-        semiproduct_start = ['TS', 'PO']
+        semiproduct_start = ['TS', 'PO']  # todo manage better
+        material_start = 'T'  # todo manage better
+
         # Clean previous line:
         _logger.warning('Clean previous line')
         self.write(cr, uid, ids, {
@@ -87,7 +89,7 @@ class IndustriaMrp(orm.Model):
                             and component.half_bom_ids:
                         for cmpt in component.half_bom_ids:
                             material = cmpt.product_id
-                            if material.default_code[:1] == 'T':
+                            if material.default_code[:1] == material_start:
                                 key = (component.id, material.id)
                                 if key not in new_lines:
                                     new_lines[key] = \
