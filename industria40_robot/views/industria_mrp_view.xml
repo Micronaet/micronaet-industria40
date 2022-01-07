@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="industria_mrp_line_view_form" model="ir.ui.view">
+            <field name="name">Industria MRP line form</field>
+            <field name="model">industria.mrp.line</field>
+            <field name="arch" type="xml">
+                <form string="I4.0 Produzioni dettaglio">
+                    <header>
+                       <button string="Chiudi" special="cancel" />
+                    </header>
+                    <sheet>
+                        <group colspan="4" col="4">
+                            <field name="product_id" readonly="1"/>
+                            <field name="material_id" readonly="1" />
+                            <field name="todo" readonly="1" />
+
+                            <separator string="Dettaglio:" colspan="4"/>
+                            <field name="detail" readonly="1" nolabel="1" colspan="4"/>
+                        </group>
+                    </sheet>
+                    <footer/>
+                </form>
+            </field>
+        </record>
+
         <record id="industria_mrp_view_caelndar" model="ir.ui.view">
             <field name="name">Industria MRP calendar</field>
             <field name="model">industria.mrp</field>
@@ -45,6 +68,7 @@
                                                 <field name="assigned"/>
                                                 <field name="produced"/>
                                                 <field name="remain"/>
+                                                <button name="get_detail" type="object" string="Dettaglio"/>
                                             </tree>
                                         </field>
                                     </group>

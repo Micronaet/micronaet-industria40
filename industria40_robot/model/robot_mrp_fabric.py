@@ -145,6 +145,29 @@ class IndustriaMrpLine(orm.Model):
     _order = 'program_id, product_id, material_id'
     _rec_name = 'material_id'
 
+    def get_detail(self, cr, uid, ids, context=None):
+        """ View for detail
+        """
+        line_id = ids[0]
+        model_pool = self.pool.get('ir.model.data')
+        # view_id = model_pool.get_object_reference(
+        # 'module_name', 'view_name')[1]
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Dettaglio riga'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': line_id,
+            'res_model': 'industria.mrp.line',
+            # 'view_id': view_id,  # False
+            'views': [(False, 'form')],  # (False, 'tree'),
+            'domain': [],
+            'context': context,
+            'target': 'new',
+            'nodestroy': False,
+            }
+
     _columns = {
         'industria_mrp_id': fields.many2one(
             'industria.mrp', 'MRP I4.0'),
