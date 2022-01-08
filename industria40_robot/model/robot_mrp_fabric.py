@@ -44,6 +44,40 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 _logger = logging.getLogger(__name__)
 
 
+class IndustriaRobotColor(orm.Model):
+    """ Model name: Industria 4.0 MRP
+    """
+
+    _name = 'industria.robot.color'
+    _description = 'Industria Robot color'
+    _order = 'sequence'
+    _rec_name = 'name'
+
+    _columns = {
+        'code': fields.char('Colore', size=10, required=True),
+        'replace': fields.char(
+            'Rimpiazza', size=10,
+            help='A volte i codici hanno delle parti non standard questo'
+                 'valore rimpiazzarebbe il codice all\'interno della'
+                 'stessa produzione, vedi: TESTNT/NE'),
+        'sequence': fields.integer('Ord.'),
+        'description': fields.char('Descrizione', size=60, required=True),
+        'robot_id': fields.many2one('industria.robot', 'Robot'),
+    }
+
+
+class IndustriaRobot(orm.Model):
+    """ Model name: Industria 4.0 MRP
+    """
+
+    _inherit = 'industria.robot'
+
+    _columns = {
+        'color_ids': fields.one2many(
+            'industria.robot.color', 'robot_id', 'Colori')
+        }
+
+
 class IndustriaMrp(orm.Model):
     """ Model name: Industria 4.0 MRP
     """
