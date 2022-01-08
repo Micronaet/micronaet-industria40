@@ -315,7 +315,8 @@ class IndustriaMrpLine(orm.Model):
             'industria.program', 'Programma'),
         'program_ids': fields.function(
             _get_product_program, method=True,
-            type='many2many', string='Programmi disponibili',
+            type='many2many', relation='industria.program',
+            string='Programmi disponibili',
             ),
         'sequence': fields.integer('Ord.'),
         'fabric': fields.text('Tessuto', size=20),
