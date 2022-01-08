@@ -177,8 +177,11 @@ class IndustriaMrp(orm.Model):
             # Program part:
             # -----------------------------------------------------------------
             # todo choose the best program here?
-            program_id = \
-                semiproduct.industria_rule_ids[0].fabric_id.program_id.id
+            try:
+                program_id = \
+                    semiproduct.industria_rule_ids[0].fabric_id.program_id.id
+            except:
+                program_id = False
 
             # -----------------------------------------------------------------
             # Color part:
