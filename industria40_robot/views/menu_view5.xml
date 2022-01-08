@@ -34,6 +34,12 @@
                 action="action_industria_mrp_production"
                 sequence="30"
                 />
+            <menuitem
+                parent="menu_industria_robot5"
+                id="menu_industria_product_part"
+                action="industria_product_part_action"
+                sequence="40"
+                />
 
     </data>
 </openerp>
