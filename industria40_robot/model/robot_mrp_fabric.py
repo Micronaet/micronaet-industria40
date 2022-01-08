@@ -44,6 +44,19 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 _logger = logging.getLogger(__name__)
 
 
+class ProductProductIndustriaJob(orm.Model):
+    """ Model name: Product
+    """
+    _inherit = 'product.product'
+
+    _columns = {
+        'industria_program_ids': fields.many2many(
+            'industria.program', 'product_industria_program_rel',
+            'product_id', 'program_id',
+            'Programmi'),
+        }
+
+
 class IndustriaRobotColor(orm.Model):
     """ Model name: Industria 4.0 MRP
     """
@@ -160,8 +173,16 @@ class IndustriaMrp(orm.Model):
             todo, detail = new_lines[key]
             product_id, material = key
 
-            # Color part:
             fabric_code = material.default_code or ''
+            # -----------------------------------------------------------------
+            # Program part:
+            # -----------------------------------------------------------------
+            program_id = False
+            # todo find correct program
+
+            # -----------------------------------------------------------------
+            # Color part:
+            # -----------------------------------------------------------------
             fabric = fabric_code[:6]
             color_part = fabric_code[6:]
             if color_part not in color_db:
@@ -178,6 +199,7 @@ class IndustriaMrp(orm.Model):
                 color = replace
             line_pool.create(cr, uid, {
                 'industria_mrp_id': mrp_id,
+                'program_id': program_id,
                 'product_id': product_id,
                 'material_id': material.id,
                 'fabric': fabric,
@@ -271,6 +293,15 @@ class IndustriaMrpLine(orm.Model):
             'nodestroy': False,
             }
 
+    def _get_product_program(self, cr, uid, ids, fields, args, context=None):
+        """ Fields function for calculate
+        """
+        res = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            res[line.id] = [
+                item.id for item in line.product_id.industria_program_ids]
+        return res
+
     _columns = {
         'industria_mrp_id': fields.many2one(
             'industria.mrp', 'MRP I4.0'),
@@ -280,7 +311,10 @@ class IndustriaMrpLine(orm.Model):
             'product.product', 'Semilavorato'),
         'program_id': fields.many2one(
             'industria.program', 'Programma'),
-
+        'program_ids': fields.function(
+            _get_product_program, method=True,
+            type='many2many', string='Programmi disponibili',
+            ),
         'sequence': fields.integer('Ord.'),
         'fabric': fields.text('Tessuto', size=20),
         'color': fields.text('Colore', size=10),
