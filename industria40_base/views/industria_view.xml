@@ -374,7 +374,7 @@
                                                     <field name="part_ids" colspan="4" nolabel="1">
                                                         <tree string="Parti" editable="bottom">
                                                             <!--<field name="product_id" domain="[('is_family', '=', True)]" string="Famiglia di prodotti"/>-->
-                                                            <field name="product_mask" />
+                                                            <field name="mask" />
                                                             <field name="total"/>
                                                             <button name="button_show_selection" type="object" string="Mostra elenco"/>
                                                         </tree>

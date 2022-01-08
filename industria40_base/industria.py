@@ -1299,7 +1299,7 @@ class IndustriaProgram(orm.Model):
         collect_data = {}
         for part in part_pool.browse(cr, uid, part_ids, context=context):
             for product_id in self.get_selected_product(
-                    cr, uid, part.product_mask, context=context):
+                    cr, uid, part.mask, context=context):
                 if product_id in collect_data:
                     collect_data[product_id].append(part.id)
                 else:
@@ -1405,7 +1405,7 @@ class IndustriaProgramFabricPart(orm.Model):
     _columns = {
         'fabric_id': fields.many2one('industria.program.fabric', 'Tessuto'),
         'product_id': fields.many2one('product.product', 'Semilavorato'),
-        'product_mask': fields.char(
+        'mask': fields.char(
             'Maschera', required=True, size=20,
             help='Maschera prodotto che possono essere creati con questa dima'
                  ', es.: TS?29TX%'),
