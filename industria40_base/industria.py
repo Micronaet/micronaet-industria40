@@ -1275,11 +1275,40 @@ class IndustriaProgram(orm.Model):
     _rec_name = 'name'
     _order = 'name'
 
+    def get_selected_product(self, cr, uid, mask, context=None):
+        """ Utility for get selected product
+        """
+        cr.execute(
+            'SELECT id FROM product_product '
+            'WHERE default_code ilike %s', (mask, ))
+        return [item['id'] for item in cr.fetchall()]
+
     def button_generate_matching_product_program(
             self, cr, uid, ids, context=None):
         """ Show list of product
         """
-        # todo
+        part_pool = self.pool.get('industria.program.fabric')
+        product_pool = self.pool.get('product.product')
+
+        _logger.info('Clean all matching')
+        cr.execute('DELETE FROM product_industria_part_rel;')
+
+        _logger.info('Collect data')
+        part_ids = part_pool.search(cr, uid, [], context=context)
+
+        collect_data = {}
+        for part in part_pool.browse(cr, uid, part_ids, context=context):
+            for product_id in self.get_selected_product(
+                    cr, uid, part.product_mask, context=context):
+                if product_id in collect_data:
+                    collect_data[product_id].append(part.id)
+                else:
+                    collect_data[product_id] = [part.id]
+        _logger.info('Create new matching')
+        for product_id in collect_data:
+            product_pool.write(cr, uid, [product_id], {
+                'industria_rule_ids': [(6, 0, collect_data[product_id])],
+            }, context=context)
         return True
 
     def update_all_job_piece(self, cr, uid, ids, context=None):
