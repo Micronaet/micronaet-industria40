@@ -173,12 +173,17 @@ class IndustriaMrp(orm.Model):
                 color_db[color_part] = color_pool.browse(
                     cr, uid, color_id, context=context)
             color = color_db[color_part]
+            replace = color_db.get(color.replace)
+            if replace:
+                color_code = replace.code
+            else:
+                color_code = color_part
             line_pool.create(cr, uid, {
                 'industria_mrp_id': mrp_id,
                 'product_id': product_id,
                 'material_id': material.id,
                 'fabric': fabric,
-                'color': color.replace or color_part,
+                'color': color_code,
                 'sequence': color.sequence,
                 'todo': todo,
                 'detail': detail,
@@ -199,7 +204,7 @@ class IndustriaMrp(orm.Model):
         """ Set as pause
         """
         return self.write(cr, uid, ids, {
-            'state': 'paused',
+            'state': 'pause',
         }, context=context)
 
     def wfk_done(self, cr, uid, ids, context=None):
@@ -225,8 +230,8 @@ class IndustriaMrp(orm.Model):
         # 'stock.picking', 'Documento di impegno', '')
         'state': fields.selection([
             ('draft', 'Bozza'),
-            ('confimed', 'Confermato'),
-            ('paused', 'In pausa'),
+            ('confirmed', 'Confermato'),
+            ('pause', 'In pausa'),
             ('done', 'Fatto'),
         ], 'Stato')
     }

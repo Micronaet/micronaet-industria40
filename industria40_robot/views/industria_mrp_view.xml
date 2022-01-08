@@ -77,7 +77,7 @@
             <field name="arch" type="xml">
                 <form string="I4.0 Produzioni">
                     <header>
-                        <button name="wfk_confirmed" type="object" string="Confermata" attrs="{'invisible': [('state', 'not in', ('draft', 'paused'))]}"/>
+                        <button name="wfk_confirmed" type="object" string="Confermata" attrs="{'invisible': [('state', 'not in', ('draft', 'pause'))]}"/>
                         <button name="wfk_pause" type="object" string="In pausa" attrs="{'invisible': [('state', 'in', ('draft', 'done'))]}"/>
                         <button name="wfk_done" type="object" string="Completato" attrs="{'invisible': [('state', 'not in', ('done', ))]}"/>
                         <button name="wfk_done" type="object" string="Riattiva" attrs="{'invisible': [('state', 'not in', ('done', ))]}"/>
