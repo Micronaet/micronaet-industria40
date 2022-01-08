@@ -156,6 +156,7 @@ class IndustriaMrp(orm.Model):
 
         # Generate line:
         _logger.warning('Generate new lines:')
+        pdb.set_trace()
         for key in new_lines:
             todo, detail = new_lines[key]
             product_id, material = key
