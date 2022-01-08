@@ -185,6 +185,37 @@ class IndustriaMrp(orm.Model):
             }, context=context)
         return True
 
+    # -------------------------------------------------------------------------
+    # Workflow button:
+    # -------------------------------------------------------------------------
+    def wfk_confirmed(self, cr, uid, ids, context=None):
+        """ Set as confirmed
+        """
+        return self.write(cr, uid, ids, {
+            'state': 'confirmed',
+        }, context=context)
+
+    def wfk_pause(self, cr, uid, ids, context=None):
+        """ Set as pause
+        """
+        return self.write(cr, uid, ids, {
+            'state': 'paused',
+        }, context=context)
+
+    def wfk_done(self, cr, uid, ids, context=None):
+        """ Set as done
+        """
+        return self.write(cr, uid, ids, {
+            'state': 'done',
+        }, context=context)
+
+    def wfk_draft(self, cr, uid, ids, context=None):
+        """ Set as draft
+        """
+        return self.write(cr, uid, ids, {
+            'state': 'draft',
+        }, context=context)
+
     _columns = {
         'date': fields.date(
             'Data', help='Data di creazione'),
@@ -193,10 +224,10 @@ class IndustriaMrp(orm.Model):
         # 'picking': fields.many2one(
         # 'stock.picking', 'Documento di impegno', '')
         'state': fields.selection([
-            ('draft', 'Draft'),
-            ('open', 'Aperto'),
-            ('closed', 'Chiuso'),
+            ('draft', 'Bozza'),
+            ('confimed', 'Confermato'),
             ('paused', 'In pausa'),
+            ('done', 'Fatto'),
         ], 'Stato')
     }
 

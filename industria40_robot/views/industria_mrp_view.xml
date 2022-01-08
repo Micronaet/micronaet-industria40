@@ -54,6 +54,7 @@
             <field name="arch" type="xml">
                 <calendar color="state" date_start="date" string="I4.0 MRP">
                     <field name="date"/>
+                    <field name="robot_id"/>
                     <field name="mrp_ids" widget="many2many_tags" />
                 </calendar>
             </field>
@@ -64,6 +65,7 @@
             <field name="arch" type="xml">
                 <tree string="I4.0 Produzioni">
                     <field name="date"/>
+                    <field name="robot_id"/>
                     <field name="state" />
                     <field name="mrp_ids" widget="many2many_tags" />
                 </tree>
@@ -74,10 +76,17 @@
             <field name="model">industria.mrp</field>
             <field name="arch" type="xml">
                 <form string="I4.0 Produzioni">
+                    <header>
+                        <button name="wfk_confirmed" type="object" string="Confermata" attrs="{'invisible': [('state', 'not in', ('draft', 'paused'))]}"/>
+                        <button name="wfk_pause" type="object" string="In pausa" attrs="{'invisible': [('state', 'in', ('draft', 'done'))]}"/>
+                        <button name="wfk_done" type="object" string="Completato" attrs="{'invisible': [('state', 'not in', ('done', ))]}"/>
+                        <button name="wfk_done" type="object" string="Riattiva" attrs="{'invisible': [('state', 'not in', ('done', ))]}"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
                     <sheet>
                         <group colspan="4" col="4">
+                            <field name="robot_id"/>
                             <field name="date"/>
-                            <field name="state" />
                             <notebook colspan="4">
                                 <page name="page_line_mrp" string="Semilavorati">
                                     <group colspan="4" col="4">
