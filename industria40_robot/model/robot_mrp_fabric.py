@@ -168,7 +168,8 @@ class IndustriaMrp(orm.Model):
                     'code': color_part,
                     'name': color_part,
                 }, context=context)
-                color_db[color_part] = color_pool.browse(color_id)
+                color_db[color_part] = color_pool.browse(
+                    cr, uid, color_id, context=context)
             color = color_db[color_part]
             line_pool.create(cr, uid, {
                 'industria_mrp_id': mrp_id,
