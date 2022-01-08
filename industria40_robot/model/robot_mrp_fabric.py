@@ -156,7 +156,6 @@ class IndustriaMrp(orm.Model):
 
         # Generate line:
         _logger.warning('Generate new lines:')
-        pdb.set_trace()
         for key in new_lines:
             todo, detail = new_lines[key]
             product_id, material = key
@@ -176,15 +175,13 @@ class IndustriaMrp(orm.Model):
             color = color_db[color_part]
             replace = color_db.get(color.replace)
             if replace:
-                color_code = replace.code
-            else:
-                color_code = color_part
+                color = replace
             line_pool.create(cr, uid, {
                 'industria_mrp_id': mrp_id,
                 'product_id': product_id,
                 'material_id': material.id,
                 'fabric': fabric,
-                'color': color_code,
+                'color': color.code,
                 'sequence': color.sequence,
                 'todo': todo,
                 'detail': detail,
