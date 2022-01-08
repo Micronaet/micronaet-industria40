@@ -1279,9 +1279,9 @@ class IndustriaProgram(orm.Model):
         """ Utility for get selected product
         """
         pdb.set_trace()
-        cr.execute(
-            'SELECT id FROM product_product '
-            'WHERE default_code ilike \'%s\';' % mask)
+        query = 'SELECT id FROM product_product ' \
+                'WHERE default_code ilike \'%s\';' % mask
+        cr.execute(query)
         return [item['id'] for item in cr.fetchall()]
 
     def button_generate_matching_product_program(
@@ -1432,7 +1432,7 @@ class IndustriaProgramFabricPart(orm.Model):
         'mask': fields.char(
             'Maschera', required=True, size=20,
             help='Maschera prodotto che possono essere creati con questa dima'
-                 ', es.: TS?29TX%'),
+                 ', es.: TS_29TX%'),
         'total': fields.float('Pezzi'),
     }
 
