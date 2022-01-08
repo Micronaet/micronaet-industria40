@@ -51,7 +51,6 @@ class IndustriaRobotColor(orm.Model):
     _name = 'industria.robot.color'
     _description = 'Industria Robot color'
     _order = 'sequence'
-    _rec_name = 'name'
 
     _columns = {
         'code': fields.char('Colore', size=10, required=True),
@@ -61,7 +60,7 @@ class IndustriaRobotColor(orm.Model):
                  'valore rimpiazzarebbe il codice all\'interno della'
                  'stessa produzione, vedi: TESTNT/NE'),
         'sequence': fields.integer('Ord.'),
-        'description': fields.char('Descrizione', size=60, required=True),
+        'name': fields.char('Descrizione', size=60, required=True),
         'robot_id': fields.many2one('industria.robot', 'Robot'),
     }
 
