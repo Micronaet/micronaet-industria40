@@ -1401,10 +1401,13 @@ class IndustriaProgramFabricPart(orm.Model):
         """
         res = []
         for part in self.browse(cr, uid, ids, context=context):
-            res.append((part.id, '%s: %s [x%s]' % (
-                part.fabric_id.program_id.code,
+            fabric = part.fabric_id
+            parts = len(fabric.part_ids)
+            res.append((part.id, '%s: %s [pz %s]%s' % (
+                fabric.program_id.code,
                 part.mask,
                 int(part.total),
+                '' if parts <= 1 else ' (parti %s)' % parts,
             )))
         return res
 
