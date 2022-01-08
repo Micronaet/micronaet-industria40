@@ -164,7 +164,7 @@ class IndustriaMrp(orm.Model):
             # Color part:
             fabric_code = material.default_code or ''
             fabric = fabric_code[:6]
-            color_part = material[6:]
+            color_part = fabric_code[6:]
             if color_part not in color_db:
                 color_id = color_pool.create(cr, uid, {
                     'code': color_part,
