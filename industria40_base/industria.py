@@ -1401,8 +1401,12 @@ class IndustriaProgramFabricPart(orm.Model):
         """
         res = []
         for part in self.browse(cr, uid, ids, context=context):
-            res.append((part.id, '%s [%s]' % (part.mask, part.total)))
-            # fabric_id.prodct_id.code
+            res.append((part.id, '%s: %s [x%s]' % (
+                part.fabric_id.prodct_id.code
+                part.mask,
+                int(part.total),
+            )))
+
         return res
 
     def button_show_selection(self, cr, uid, ids, context=None):
