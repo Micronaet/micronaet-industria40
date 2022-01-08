@@ -1406,7 +1406,6 @@ class IndustriaProgramFabricPart(orm.Model):
                 part.mask,
                 int(part.total),
             )))
-
         return res
 
     def button_show_selection(self, cr, uid, ids, context=None):

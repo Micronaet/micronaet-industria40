@@ -146,7 +146,7 @@ class IndustriaMrp(orm.Model):
                             material = cmpt_line.product_id
                             category_name = material.inventory_category_id.name
                             if category_name == material_category:
-                                key = (component_id, material)
+                                key = (component, material)
                                 if key not in new_lines:
                                     new_lines[key] = [0, '']  # total, detail
                                 # Updata data:
@@ -171,14 +171,15 @@ class IndustriaMrp(orm.Model):
         _logger.warning('Generate new lines:')
         for key in new_lines:
             todo, detail = new_lines[key]
-            product_id, material = key
+            semiproduct, material = key
 
             fabric_code = material.default_code or ''
             # -----------------------------------------------------------------
             # Program part:
             # -----------------------------------------------------------------
-            program_id = False
-            # todo find correct program
+            # todo choose the best program here?
+            program_id = \
+                semiproduct.industria_rule_ids[0].material_id.program_id.id
 
             # -----------------------------------------------------------------
             # Color part:
@@ -200,7 +201,7 @@ class IndustriaMrp(orm.Model):
             line_pool.create(cr, uid, {
                 'industria_mrp_id': mrp_id,
                 'program_id': program_id,
-                'product_id': product_id,
+                'product_id': semiproduct.id,
                 'material_id': material.id,
                 'fabric': fabric,
                 'color': color.code,
