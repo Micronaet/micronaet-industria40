@@ -1396,6 +1396,15 @@ class IndustriaProgramFabricPart(orm.Model):
     _rec_name = 'product_id'
     # _order = 'product_id'
 
+    def name_get(self, cr, uid, ids, context=None):
+        """ Override for return correct name
+        """
+        res = []
+        for part in self.browse(cr, uid, ids, context=context):
+            res.append((part.id, '%s [%s]' % (part.make, part.total)))
+            # fabric_id.prodct_id.code
+        return res
+
     def button_show_selection(self, cr, uid, ids, context=None):
         """ Show list of product
         """
