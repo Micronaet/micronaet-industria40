@@ -1399,8 +1399,31 @@ class IndustriaProgramFabricPart(orm.Model):
     def button_show_selection(self, cr, uid, ids, context=None):
         """ Show list of product
         """
+        program_pool = self.pool.get('industria.program')
         # todo
-        return True
+        current = self.browse(cr, uid, ids, context=context)[0]
+        mask = current.mask
+        product_ids = program_pool.get_selected_product(
+            cr, uid, mask, context=context)
+
+        model_pool = self.pool.get('ir.model.data')
+        view_id = False
+        # model_pool.get_object_reference('module_name', 'view_name')[1]
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Prodotti toccati'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            # 'res_id': 1,
+            'res_model': 'product.product',
+            'view_id': view_id,  # False
+            'views': [(view_id, 'tree'), (False, 'form')],
+            'domain': [('id', 'in', product_ids)],
+            'context': context,
+            'target': 'current',  # 'new'
+            'nodestroy': False,
+            }
 
     _columns = {
         'fabric_id': fields.many2one('industria.program.fabric', 'Tessuto'),
