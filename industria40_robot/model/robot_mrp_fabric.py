@@ -50,10 +50,10 @@ class ProductProductIndustriaJob(orm.Model):
     _inherit = 'product.product'
 
     _columns = {
-        'industria_program_ids': fields.many2many(
-            'industria.program', 'product_industria_program_rel',
-            'product_id', 'program_id',
-            'Programmi'),
+        'industria_rule_ids': fields.many2many(
+            'industria.program.fabric.part', 'product_industria_part_rel',
+            'product_id', 'part_id',
+            'Regola assegnazione'),
         }
 
 
@@ -299,7 +299,8 @@ class IndustriaMrpLine(orm.Model):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = [
-                item.id for item in line.product_id.industria_program_ids]
+                part.fabric_id.program_id.id for part in
+                line.product_id.industria_rule_ids]
         return res
 
     _columns = {
