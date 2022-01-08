@@ -1401,7 +1401,7 @@ class IndustriaProgramFabricPart(orm.Model):
         """
         res = []
         for part in self.browse(cr, uid, ids, context=context):
-            res.append((part.id, '%s [%s]' % (part.make, part.total)))
+            res.append((part.id, '%s [%s]' % (part.mask, part.total)))
             # fabric_id.prodct_id.code
         return res
 
