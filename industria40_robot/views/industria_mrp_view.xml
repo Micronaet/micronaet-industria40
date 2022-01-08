@@ -17,9 +17,9 @@
             <field name="name">Prodotti abbinati</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
-            <field name="view_ref" ref="industria_product_part_view_tree"/>
+            <field name="view_id" ref="industria_product_part_view_tree"/>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('industria_rule_ids', '!=', [])]</field>
+            <field name="domain">[('industria_rule_ids', '!=', False)]</field>
         </record>
 
         <!-- Inherit Form View to Modify it -->
