@@ -111,8 +111,9 @@
                             <notebook colspan="4">
                                 <page name="page_line_mrp" string="Semilavorati">
                                     <group colspan="4" col="4">
-                                        <separator string="Semilavorati:" colspan="3"/>
+                                        <separator string="Semilavorati:" colspan="2"/>
                                         <button name="generate_industria_mrp_line" type="object" string="Genera produzione"/>
+                                        <button name="generate_industria_job" type="object" string="Genera job"/>
                                         <field name="line_ids" nolabel="1" colspan="4" >
                                             <tree editable="bottom" string="Linee" colors="red: program_id == False">
                                                 <field name="sequence" readonly="1"/>

@@ -99,6 +99,64 @@ class IndustriaMrp(orm.Model):
     _order = 'date desc'
     _rec_name = 'date'
 
+    def generate_industria_job(self, cr, uid, ids, context=None):
+        """ Generate job from exploded component
+        """
+        job_pool = self.pool.get('industria.job')
+        step_pool = self.pool.get('industria.job.step')
+        fabric_pool = self.pool.get('industria.job.fabric')
+
+        # Clean all job if draft:
+        industry_mrp = self.browse(cr, uid, ids, context=context)[0]
+        if industry_mrp.job_ids and \
+                {'DRAFT'} == set([job.state for job in industry_mrp.job_ids]):
+            job_ids = [job.id for job in industry_mrp.job_ids]
+            job_pool.unlink(cr, uid, job_ids, context=context)
+            _logger.warning('Deleted %s jobs' % len(job_ids))
+
+        program_created = {}
+        sequence = 0
+        for line in industry_mrp.line_ids:
+            sequence = 1  # Sequence still progress for all program!
+            program = line.program_id
+            if not program:  # todo raise error?
+                _logger.error('Line without program')
+                continue
+            robot = program.source_id
+            database = robot.database_id
+            part = line.part_id
+            fabric = line.material_id
+            block = part.total
+            total = line.todo  # todo use line.remain
+
+            # todo what to do with waste?
+            total_layers = total // block + (0 if total % block > 0 else 1)
+
+            # todo check max number of layer for create new job!
+            if program not in program_created:
+                job_id = job_pool.create(cr, uid, {
+                    'created_at': datetime.now().strftime(
+                        DEFAULT_SERVER_DATETIME_FORMAT),
+                    'source_id': robot.id,
+                    'database_id': database.id,
+                }, context=context)
+                step_id = step_pool.create(cr, uid, {
+                    'job_id': job_id,
+                    'sequence': 1,
+                    'program_id': program.id,
+                }, context=context)
+                program_created[program] = job_id, step_id
+
+            # Create layer
+            job_id, step_id = program_created[program]
+            fabric_pool.create(cr, uid, {
+                'sequence': sequence,
+                'step_id': step_id,
+                'fabric_id': fabric.id,
+                'total': total_layers,
+            }, context=context)
+        return True
+
     def generate_industria_mrp_line(self, cr, uid, ids, context=None):
         """ Generate lined from MRP production linked
         """

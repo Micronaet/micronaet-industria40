@@ -1881,7 +1881,7 @@ class IndustriaJobStep(orm.Model):
     _columns = {
         'name': fields.integer('Nome'),
         'sequence': fields.integer('Sequenza'),
-        'job_id': fields.many2one('industria.job', 'Job'),
+        'job_id': fields.many2one('industria.job', 'Job', ondelete='cascade'),
         'program_id': fields.many2one('industria.program', 'Programma'),
     }
 
@@ -1899,7 +1899,7 @@ class IndustriaJobFabric(orm.Model):
     _columns = {
         'sequence': fields.integer('Seq.'),
         'step_id': fields.many2one(
-            'industria.job.step', 'Step'),
+            'industria.job.step', 'Step', ondelete='cascade'),
         'fabric_id': fields.many2one(
             'product.product', 'Tessuto', required=True),
         'total': fields.integer('Totale', required=True),
