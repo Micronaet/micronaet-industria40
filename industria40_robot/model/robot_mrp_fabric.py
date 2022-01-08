@@ -141,12 +141,11 @@ class IndustriaMrp(orm.Model):
                     cmpt_category = bom_line.category_id
                     if cmpt_category.need_fabric:
                         semiproduct = bom_line.product_id
-                        component_id = semiproduct.id
                         for cmpt_line in semiproduct.half_bom_ids:
                             material = cmpt_line.product_id
                             category_name = material.inventory_category_id.name
                             if category_name == material_category:
-                                key = (component, material)
+                                key = (semiproduct, material)
                                 if key not in new_lines:
                                     new_lines[key] = [0, '']  # total, detail
                                 # Updata data:
@@ -179,7 +178,7 @@ class IndustriaMrp(orm.Model):
             # -----------------------------------------------------------------
             # todo choose the best program here?
             program_id = \
-                semiproduct.industria_rule_ids[0].material_id.program_id.id
+                semiproduct.industria_rule_ids[0].fabric_id.program_id.id
 
             # -----------------------------------------------------------------
             # Color part:
