@@ -85,9 +85,12 @@
                                         <button name="generate_industria_mrp_line" type="object" string="Genera produzione"/>
                                         <field name="line_ids" nolabel="1" colspan="4" >
                                             <tree editable="bottom" string="Linee" colors="red: program_id == False">
+                                                <field name="sequence" readonly="1"/>
                                                 <field name="program_id" readonly="1"/> <!--todo changeable?-->
                                                 <field name="product_id" readonly="1"/>
                                                 <field name="material_id" readonly="1"/>
+                                                <field name="fabric" readonly="1"/>
+                                                <field name="color" readonly="1"/>
                                                 <field name="todo" readonly="1"/>
                                                 <field name="assigned" readonly="1"/>
                                                 <field name="produced" readonly="1"/>

@@ -89,6 +89,14 @@ class IndustriaMrp(orm.Model):
     def generate_industria_mrp_line(self, cr, uid, ids, context=None):
         """ Generate lined from MRP production linked
         """
+        color_pool = self.pool.get('industria.robot.color')
+
+        # Load color
+        color_db = {}
+        color_ids = color_pool.search(cr, uid, [], context=context)
+        for color in color_pool.browse(color_ids):
+            color_db[color.code] = color
+
         mrp_id = ids[0]
         i40_mrp = self.browse(cr, uid, mrp_id, context=context)
 
@@ -124,7 +132,7 @@ class IndustriaMrp(orm.Model):
                             material = cmpt_line.product_id
                             category_name = material.inventory_category_id.name
                             if category_name == material_category:
-                                key = (component_id, material.id)
+                                key = (component_id, material)
                                 if key not in new_lines:
                                     new_lines[key] = [0, '']  # total, detail
                                 # Updata data:
@@ -149,11 +157,26 @@ class IndustriaMrp(orm.Model):
         _logger.warning('Generate new lines:')
         for key in new_lines:
             todo, detail = new_lines[key]
-            product_id, material_id = key
+            product_id, material = key
+
+            # Color part:
+            fabric_code = material.default_code or ''
+            fabric = fabric_code[:6]
+            color_part = material[6:]
+            if color_part not in color_db:
+                color_id = color_pool.create(cr, uid, {
+                    'code': color_part,
+                    'name': color_part,
+                }, context=context)
+                color_db[color_part] = color_pool.browse(color_id)
+            color = color_db[color_part]
             line_pool.create(cr, uid, {
                 'industria_mrp_id': mrp_id,
                 'product_id': product_id,
-                'material_id': material_id,
+                'material_id': material.id,
+                'fabric': fabric,
+                'color': color.replace or color_part,
+                'sequence': color.sequence,
                 'todo': todo,
                 'detail': detail,
             }, context=context)
@@ -184,7 +207,7 @@ class IndustriaMrpLine(orm.Model):
 
     _name = 'industria.mrp.line'
     _description = 'Industria 4.0 MRP Line'
-    _order = 'program_id, product_id, material_id'
+    _order = 'program_id, sequence, fabric'
     _rec_name = 'material_id'
 
     def get_detail(self, cr, uid, ids, context=None):
@@ -219,6 +242,10 @@ class IndustriaMrpLine(orm.Model):
             'product.product', 'Semilavorato'),
         'program_id': fields.many2one(
             'industria.program', 'Programma'),
+
+        'sequence': fields.integer('Ord.'),
+        'fabric': fields.text('Tessuto', size=20),
+        'color': fields.text('Colore', size=10),
 
         'detail': fields.text('Dettaglio'),
         'todo': fields.integer('Da fare'),
