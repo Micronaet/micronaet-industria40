@@ -99,6 +99,7 @@ class IndustriaMrp(orm.Model):
 
         mrp_id = ids[0]
         i40_mrp = self.browse(cr, uid, mrp_id, context=context)
+        robot_id = i40_mrp.robot_id.id
 
         line_pool = self.pool.get('industria.mrp.line')
         material_category = 'Tessuti'  # todo manage better
@@ -167,6 +168,7 @@ class IndustriaMrp(orm.Model):
                 color_id = color_pool.create(cr, uid, {
                     'code': color_part,
                     'name': color_part,
+                    'robot_id': robot_id,
                 }, context=context)
                 color_db[color_part] = color_pool.browse(
                     cr, uid, color_id, context=context)
@@ -186,6 +188,7 @@ class IndustriaMrp(orm.Model):
     _columns = {
         'date': fields.date(
             'Data', help='Data di creazione'),
+        'robot_id': fields.many2one('industria.robot', 'Robot', required=True),
         # todo: how assign yet present semi-product?
         # 'picking': fields.many2one(
         # 'stock.picking', 'Documento di impegno', '')
