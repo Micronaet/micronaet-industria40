@@ -1281,7 +1281,7 @@ class IndustriaProgram(orm.Model):
         pdb.set_trace()
         cr.execute(
             'SELECT id FROM product_product '
-            'WHERE default_code ilike %s', (mask, ))
+            'WHERE default_code ilike \'%s\'' % mask)
         return [item['id'] for item in cr.fetchall()]
 
     def button_generate_matching_product_program(
