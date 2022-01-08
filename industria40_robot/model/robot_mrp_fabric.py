@@ -178,9 +178,11 @@ class IndustriaMrp(orm.Model):
             # -----------------------------------------------------------------
             # todo choose the best program here?
             try:
-                program_id = \
-                    semiproduct.industria_rule_ids[0].fabric_id.program_id.id
+                part = semiproduct.industria_rule_ids[0]
+                part_id = part.id
+                program_id = part.fabric_id.program_id.id
             except:
+                part_id = False
                 program_id = False
 
             # -----------------------------------------------------------------
@@ -202,6 +204,7 @@ class IndustriaMrp(orm.Model):
                 color = replace
             line_pool.create(cr, uid, {
                 'industria_mrp_id': mrp_id,
+                'part_id': part_id,
                 'program_id': program_id,
                 'product_id': semiproduct.id,
                 'material_id': material.id,
@@ -313,6 +316,8 @@ class IndustriaMrpLine(orm.Model):
             'product.product', 'Materiale'),
         'product_id': fields.many2one(
             'product.product', 'Semilavorato'),
+        'part_id': fields.many2one(
+            'industria.program.fabric.part', 'Regola'),
         'program_id': fields.many2one(
             'industria.program', 'Programma'),
         'program_ids': fields.function(
