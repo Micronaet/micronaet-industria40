@@ -94,7 +94,7 @@ class IndustriaMrp(orm.Model):
         # Load color
         color_db = {}
         color_ids = color_pool.search(cr, uid, [], context=context)
-        for color in color_pool.browse(color_ids):
+        for color in color_pool.browse(cr, uid, color_ids, context=context):
             color_db[color.code] = color
 
         mrp_id = ids[0]
