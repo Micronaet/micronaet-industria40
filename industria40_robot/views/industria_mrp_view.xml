@@ -19,7 +19,7 @@
             <field name="res_model">product.product</field>
             <field name="view_ref" ref="industria_product_part_view_tree"/>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('industria_rule_ids', 'is not', [])]</field>
+            <field name="domain">[('industria_rule_ids', '!=', [])]</field>
         </record>
 
         <!-- Inherit Form View to Modify it -->
