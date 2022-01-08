@@ -1287,7 +1287,7 @@ class IndustriaProgram(orm.Model):
             self, cr, uid, ids, context=None):
         """ Show list of product
         """
-        part_pool = self.pool.get('industria.program.fabric')
+        part_pool = self.pool.get('industria.program.fabric.part')
         product_pool = self.pool.get('product.product')
 
         _logger.info('Clean all matching')
