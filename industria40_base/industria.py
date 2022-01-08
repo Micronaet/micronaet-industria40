@@ -1275,6 +1275,13 @@ class IndustriaProgram(orm.Model):
     _rec_name = 'name'
     _order = 'name'
 
+    def button_generate_matching_product_program(
+            self, cr, uid, ids, context=None):
+        """ Show list of product
+        """
+        # todo
+        return True
+
     def update_all_job_piece(self, cr, uid, ids, context=None):
         """ Force piece as in program on all jobs
         """
@@ -1360,9 +1367,19 @@ class IndustriaProgramFabricPart(orm.Model):
     _rec_name = 'product_id'
     # _order = 'product_id'
 
+    def button_show_selection(self, cr, uid, ids, context=None):
+        """ Show list of product
+        """
+        # todo
+        return True
+
     _columns = {
         'fabric_id': fields.many2one('industria.program.fabric', 'Tessuto'),
         'product_id': fields.many2one('product.product', 'Semilavorato'),
+        'product_mask': fields.float(
+            'Maschera',
+            help='Maschera prodotto che possono essere creati con questa dima'
+                 ', es.: TS?29TX%'),
         'total': fields.float('Pezzi'),
     }
 
