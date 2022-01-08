@@ -79,7 +79,7 @@
                     <header>
                         <button name="wfk_confirmed" type="object" string="Confermata" attrs="{'invisible': [('state', 'not in', ('draft', 'pause'))]}"/>
                         <button name="wfk_pause" type="object" string="In pausa" attrs="{'invisible': [('state', 'not in', ('confirmed', ))]}"/>
-                        <button name="wfk_done" type="object" string="Completato" attrs="{'invisible': [('state', 'not in', ('done', ))]}"/>
+                        <button name="wfk_done" type="object" string="Completato" attrs="{'invisible': [('state', 'in', ('done', ))]}"/>
                         <button name="wfk_done" type="object" string="Riattiva" attrs="{'invisible': [('state', 'not in', ('done', ))]}"/>
                         <field name="state" widget="statusbar"/>
                     </header>
