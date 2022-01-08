@@ -1278,6 +1278,7 @@ class IndustriaProgram(orm.Model):
     def get_selected_product(self, cr, uid, mask, context=None):
         """ Utility for get selected product
         """
+        pdb.set_trace()
         cr.execute(
             'SELECT id FROM product_product '
             'WHERE default_code ilike %s', (mask, ))
