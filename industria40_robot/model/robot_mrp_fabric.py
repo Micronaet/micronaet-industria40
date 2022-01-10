@@ -172,6 +172,7 @@ class IndustriaMrp(orm.Model):
         """ Generate lined from MRP production linked
         """
         color_pool = self.pool.get('industria.robot.color')
+        line_pool = self.pool.get('industria.mrp.line')
 
         # Load color
         color_db = {}
@@ -188,9 +189,8 @@ class IndustriaMrp(orm.Model):
 
         # Clean previous line:
         _logger.warning('Clean previous line')
-        self.write(cr, uid, ids, {
-            'line_ids': [(6, 0, [])],
-        }, context=context)
+        line_ids = [l.id for l in self.line_ids]
+        line_pool.unlink(cr, uid, line_ids, context=context)
 
         # Collect new line:
         new_lines = {}
@@ -435,7 +435,7 @@ class MrpProductionOven(orm.Model):
 
     _columns = {
         'industria_mrp_id': fields.many2one(
-            'industria.mrp', 'Produzione I40',
+            'industria.mrp', 'Produzione I40', ondelete='set null',
             help='Collegamento alla bolla di produzione, es. nei tessuti'
                  'è il macro lavoro che genera poi tutti i job unitari'
                  'è possibile collegare più produzioni alla stessa bolla'
@@ -460,6 +460,7 @@ class IndustriaMrpInherit(orm.Model):
         ),
         'line_ids': fields.one2many(
             'industria.mrp.line', 'industria_mrp_id', 'MRP I4.0',
+            ondelete='cascade',
             help='Sviluppo produzioni per semilavorati da passare alla '
                  'macchina',
         ),
