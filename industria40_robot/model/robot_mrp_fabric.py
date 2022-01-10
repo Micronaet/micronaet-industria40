@@ -107,6 +107,7 @@ class IndustriaMrp(orm.Model):
         fabric_pool = self.pool.get('industria.job.fabric')
 
         # Clean all job if draft:
+        pdb.set_trace()
         industria_mrp_id = ids[0]
         industria_mrp = self.browse(cr, uid, industria_mrp_id, context=context)
 
