@@ -1344,8 +1344,13 @@ class IndustriaProgram(orm.Model):
             type='many2one', relation='res.partner',
             string='Supplier', store=True),
         'fabric_length': fields.float(
-            'Lunghezza tesssuto mm.', digits=(10, 2),
+            'Lunghezza tessuto mm.', digits=(10, 2),
             help='Utilizzato come default per gli strati di tessuto'),
+        'fabric_gap': fields.char(
+            'Elenco gap sagome', size=180,
+            help='Utilizzato per il calcolo dei gradino, è la lista dei '
+                 'salti tra una saboma e l\'altra, es per uno schema con 4'
+                 'sagome di larghezza 500mm: 500|1000|1500|2000'),
         'fabric_filename': fields.char('Nome file ISO', size=60),
 
         'mode': fields.related(
