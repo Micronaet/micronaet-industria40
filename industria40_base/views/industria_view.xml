@@ -235,6 +235,9 @@
                                         <button name="load_all_stat_file" type="object" string="Importa file stats" icon="gtk-justify-fill" attrs="{'invisible': [('file_stat_path', '=', False)]}"/>
 
                                         <!-- attrs="{'required': [('database_id.mode', '=', 'file')], 'invisible': [('database_id.mode', '!=', 'file')]}"-->
+                                        <field name="max_layer" />
+                                        <field name="max_gap" />
+
                                         <field name="file_mode" colspan="2" />
                                         <newline/>
 
