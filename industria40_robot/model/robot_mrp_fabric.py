@@ -381,7 +381,7 @@ class IndustriaMrpLine(orm.Model):
 
     _columns = {
         'industria_mrp_id': fields.many2one(
-            'industria.mrp', 'MRP I4.0'),
+            'industria.mrp', 'MRP I4.0', ondelete='cascade'),
         'material_id': fields.many2one(
             'product.product', 'Materiale'),
         'product_id': fields.many2one(
