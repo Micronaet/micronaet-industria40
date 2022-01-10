@@ -133,7 +133,8 @@ class IndustriaMrp(orm.Model):
             total = line.todo  # todo use line.remain
 
             # todo what to do with waste?
-            total_layers = total // block + (0 if total % block > 0 else 1)
+            extra_block = total % block > 0
+            total_layers = int(total / block) + (1 if extra_block else 0)
 
             # todo check max number of layer for create new job!
             if program not in program_created:
