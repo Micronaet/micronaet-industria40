@@ -9,8 +9,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='source_id']" position="after">
                     <field name="industria_mrp_id" attrs="{'invisible': [('industria_mrp_id', '=', False)]}"/>
-                    <field name="max_layer" />
-                    <field name="max_gap" />
                 </xpath>
             </field>
         </record>
