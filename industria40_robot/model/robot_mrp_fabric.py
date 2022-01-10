@@ -189,7 +189,8 @@ class IndustriaMrp(orm.Model):
 
         # Clean previous line:
         _logger.warning('Clean previous line')
-        line_ids = [l.id for l in self.line_ids]
+        # todo clean line:
+        line_ids = [l.id for l in i40_mrp.line_ids]
         line_pool.unlink(cr, uid, line_ids, context=context)
 
         # Collect new line:
