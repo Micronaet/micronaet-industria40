@@ -78,6 +78,24 @@ class IndustriaRobotColor(orm.Model):
     }
 
 
+class IndustriaProgram(orm.Model):
+    """ Model name: Industria Program
+    """
+
+    _inherit = 'industria.program'
+
+    _columns = {
+        'max_layer': fields.integer(
+            'Massimo numero strati',
+            help='Totale teorico degli strati di questo programma, notare che'
+                 'potrebbero dipendere anche dal tipo di tessuto scelto!'),
+        'max_gap': fields.integer(
+            'Massimo gap',
+            help='Massimo numero di gap che possono esserci tra un gradino'
+                 'e l\'altro'),
+    }
+
+
 class IndustriaRobot(orm.Model):
     """ Model name: Industria 4.0 MRP
     """

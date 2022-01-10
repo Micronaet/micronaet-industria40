@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- Inherit Form View to Modify it -->
+        <record id="view_industria_job_fabric_i40_mrp_form" model="ir.ui.view">
+            <field name="name">Job for MRP</field>
+            <field name="model">industria.job</field>
+            <field name="inherit_id" ref="industria40_base.view_industria_job_fabric_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='source_id']" position="after">
+                    <field name="industria_mrp_id" attrs="{'invisible': [('industria_mrp_id', '=', False)]}"/>
+                    <field name="max_layer" />
+                    <field name="max_gap" />
+                </xpath>
+            </field>
+        </record>
         <record id="industria_product_part_view_tree" model="ir.ui.view">
             <field name="name">industria_product_part_view_tree</field>
             <field name="model">product.product</field>
