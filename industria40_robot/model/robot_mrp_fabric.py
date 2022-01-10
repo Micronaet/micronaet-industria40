@@ -129,6 +129,12 @@ class IndustriaMrp(orm.Model):
             part = line.part_id
             fabric = line.material_id
             block = part.total
+            if not block:
+                raise osv.except_osv(
+                    _('Errore setup'),
+                    _('Nel programma sono stati inseriti dei semilavorati'
+                      'senza indicare il numero totale di pezzi generati'))
+
             total = line.todo  # todo use line.remain
 
             # todo what to do with waste?
