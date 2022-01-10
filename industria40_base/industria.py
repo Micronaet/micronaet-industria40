@@ -1343,9 +1343,21 @@ class IndustriaProgram(orm.Model):
             'source_id', 'partner_id',
             type='many2one', relation='res.partner',
             string='Supplier', store=True),
+
+        # Fabric:
         'fabric_length': fields.float(
             'Lunghezza tessuto mm.', digits=(10, 2),
             help='Utilizzato come default per gli strati di tessuto'),
+        'max_layer': fields.integer(
+            'Massimo numero strati',
+            help='Totale teorico degli strati di questo programma, notare che'
+                 'potrebbero dipendere anche dal tipo di tessuto scelto!'
+                 'Note: Force the one present in Robot'),
+        'max_gap': fields.integer(
+            'Massimo gap',
+            help='Massimo numero di gap che possono esserci tra un gradino'
+                 'e l\'altro'
+                 'Note: Force the one present in Robot'),
         'fabric_gap': fields.char(
             'Elenco gap sagome', size=180,
             help='Utilizzato per il calcolo dei gradino, è la lista dei '
