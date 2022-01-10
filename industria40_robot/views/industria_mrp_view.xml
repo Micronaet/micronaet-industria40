@@ -188,7 +188,7 @@
                     <field name="hour_total" invisible="1"/>
                     <field name="cycle_total" invisible="1"/>
                     <field name="origin" invisible="1"/>
-                    <field name="industria_mrp_id" domain="[('state', '!=', 'closed')]"/>
+                    <field name="industria_mrp_id" domain="[('state', '!=', 'closed')]" />
                     <field name="state" readonly="1"/>
                 </tree>
             </field>
