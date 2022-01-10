@@ -235,8 +235,8 @@
                                         <button name="load_all_stat_file" type="object" string="Importa file stats" icon="gtk-justify-fill" attrs="{'invisible': [('file_stat_path', '=', False)]}"/>
 
                                         <!-- attrs="{'required': [('database_id.mode', '=', 'file')], 'invisible': [('database_id.mode', '!=', 'file')]}"-->
-                                        <field name="max_layer" />
-                                        <field name="max_gap" />
+                                        <!--<field name="max_layer" />
+                                        <field name="max_gap" />-->
 
                                         <field name="file_mode" colspan="2" />
                                         <newline/>
@@ -362,8 +362,8 @@
                                     <group colspan="4" col="4">
                                         <field name="fabric_filename" />
                                         <field name="fabric_length" />
-                                        <field name="max_layer" />
-                                        <field name="max_gap" />
+                                        <!--<field name="max_layer" />
+                                        <field name="max_gap" />-->
                                         <field name="fabric_gap" colspan="4" />
                                         <separator string="Strati:" colspan="3" />
                                         <button name="button_generate_matching_product_program" type="object" string="Associa programmi ai prodotti" confirm="Attenzione l'operazione pulisce e riassocia tutti i programmi ai relativi prodotti, confermi?"/>

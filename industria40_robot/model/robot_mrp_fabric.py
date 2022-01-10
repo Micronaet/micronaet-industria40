@@ -106,7 +106,7 @@ class IndustriaRobot(orm.Model):
 
     _columns = {
         'color_ids': fields.one2many(
-            'industria.robot.color', 'robot_id', 'Colori')
+            'industria.robot.color', 'robot_id', 'Colori'),
         'max_layer': fields.integer(
             'Massimo numero strati',
             help='Totale teorico degli strati di questo programma, notare che'
