@@ -87,14 +87,6 @@ class IndustriaRobot(orm.Model):
     _columns = {
         'color_ids': fields.one2many(
             'industria.robot.color', 'robot_id', 'Colori'),
-        'max_layer': fields.integer(
-            'Massimo numero strati',
-            help='Totale teorico degli strati di questo programma, notare che'
-                 'potrebbero dipendere anche dal tipo di tessuto scelto!'),
-        'max_gap': fields.integer(
-            'Massimo gap',
-            help='Massimo numero di gap che possono esserci tra un gradino'
-                 'e l\'altro'),
         }
 
 

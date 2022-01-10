@@ -1260,6 +1260,14 @@ class IndustriaRobot(orm.Model):
         'fabric_prefix_cad': fields.char('Prefisso disegni CAD (Robot)'),
         'fabric_cad_path': fields.char('ISO path (ODOO)'),
         'fabric_tender_path': fields.char('Stenditore path'),
+        'max_layer': fields.integer(
+            'Massimo numero strati',
+            help='Totale teorico degli strati di questo programma, notare che'
+                 'potrebbero dipendere anche dal tipo di tessuto scelto!'),
+        'max_gap': fields.integer(
+            'Massimo gap',
+            help='Massimo numero di gap che possono esserci tra un gradino'
+                 'e l\'altro'),
 
         'today_state': fields.function(
             get_today_state, 'Status', type='text', method=True),
