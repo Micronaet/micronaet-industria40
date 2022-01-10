@@ -107,17 +107,20 @@ class IndustriaMrp(orm.Model):
         fabric_pool = self.pool.get('industria.job.fabric')
 
         # Clean all job if draft:
-        industry_mrp = self.browse(cr, uid, ids, context=context)[0]
-        if industry_mrp.job_ids and \
-                {'DRAFT'} == set([job.state for job in industry_mrp.job_ids]):
-            job_ids = [job.id for job in industry_mrp.job_ids]
+        pdb.set_trace()
+        industria_mrp_id = ids[0]
+        industria_mrp = self.browse(cr, uid, industria_mrp_id, context=context)
+
+        if industria_mrp.job_ids and \
+                {'DRAFT'} == set([job.state for job in industria_mrp.job_ids]):
+            job_ids = [job.id for job in industria_mrp.job_ids]
             job_pool.unlink(cr, uid, job_ids, context=context)
             _logger.warning('Deleted %s jobs' % len(job_ids))
 
         program_created = {}
         sequence = 0
-        for line in industry_mrp.line_ids:
-            sequence = 1  # Sequence still progress for all program!
+        for line in industria_mrp.line_ids:
+            sequence += 1  # Sequence still progress for all program!
             program = line.program_id
             if not program:  # todo raise error?
                 _logger.error('Line without program')
@@ -139,6 +142,7 @@ class IndustriaMrp(orm.Model):
                         DEFAULT_SERVER_DATETIME_FORMAT),
                     'source_id': robot.id,
                     'database_id': database.id,
+                    'industria_mrp_id': industria_mrp_id,
                 }, context=context)
                 step_id = step_pool.create(cr, uid, {
                     'job_id': job_id,
