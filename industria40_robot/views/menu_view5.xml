@@ -27,14 +27,14 @@
             />
             <menuitem
                 parent="menu_industria_robot5"
-                id="menu_industria_job5"
-                action="action_industria_job_robot5"
+                id="menu_industria_40_mrp"
+                action="action_industria_mrp_production_list"
                 sequence="10"
                 />
             <menuitem
                 parent="menu_industria_robot5"
-                id="menu_industria_40_mrp"
-                action="action_industria_mrp_production_list"
+                id="menu_industria_job5"
+                action="action_industria_job_robot5"
                 sequence="20"
                 />
             <menuitem
