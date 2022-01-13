@@ -417,7 +417,6 @@ class IndustriaMrpLine(orm.Model):
                 'picking_id': picking_id,
             }, context=context)
 
-        pdb.set_trace()
         stock_move_id = i40_line.stock_move_id
         if stock_move_id:
             move_pool.write(cr, uid, [stock_move_id], {
