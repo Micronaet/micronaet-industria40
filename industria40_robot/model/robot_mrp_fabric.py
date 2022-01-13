@@ -99,6 +99,7 @@ class IndustriaMrp(orm.Model):
     _order = 'date desc'
     _rec_name = 'date'
 
+
     def generate_industria_job(self, cr, uid, ids, context=None):
         """ Generate job from exploded component
         """
@@ -350,6 +351,76 @@ class IndustriaMrpLine(orm.Model):
     _description = 'Industria 4.0 MRP Line'
     _order = 'program_id, sequence, fabric'
     _rec_name = 'material_id'
+
+    # Stock operation:
+    def industria_get_movement(self, cr, uid, ids, qty, context=None):
+        """ Create or return picking
+        """
+        company_pool = self.pool.get('res.company')
+        picking_pool = self.pool.get('stock.picking')
+        move_pool = self.pool.get('stock.move')
+        i40_mrp_pool = self.pool.get('industria.mrp')
+
+        company_proxy = company_pool._get_company_browse(
+            cr, uid, context=context)
+
+        # ---------------------------------------------------------------------
+        # Picking:
+        # ---------------------------------------------------------------------
+        i40_line_id = ids[0]
+        i40_line = self.browse(cr, uid, i40_line_id, context=context)
+        i40_mrp = i40_line.industria_mrp_id
+        i40_mrp_id = i40_mrp.id
+
+        product = i40_line.product_id
+        sl_type = company_proxy.sl_mrp_lavoration_id
+        sl_type_id = sl_type.id
+        location_src_id = sl_type.default_location_src_id.id
+        location_dest_id = sl_type.default_location_dest_id.id
+
+        if i40_mrp.picking_id:
+            picking_id = i40_mrp.picking_id
+        else:
+            date = i40_mrp.date
+            origin = 'I40 MRP del %s' % date
+            picking_id = picking_pool.create(cr, uid, {
+                # 'dep_mode': 'workshop',  # Always
+                'origin': origin,
+                # 'partner_id':
+                'date': date,
+                'min_date': date,
+                'note': 'Abbinata in automatico a I4.0 MRP',
+                'state': 'done',  # todo yet complete
+                'picking_type_id': sl_type_id,
+                # 'is_mrp_lavoration': True,
+                # 'location_id': location_id,
+            }, context=context)
+            i40_mrp_pool.write(cr, uid, [i40_mrp_id], {
+                'picking_id': picking_id,
+            }, context=context)
+
+        move_id = i40_line.move_id
+        if move_id:
+            move_pool.write(cr, uid, [move_id], {
+                'product_qty': qty,  # todo check
+            }, context=context)
+        else:
+            onchange = move_pool.onchange_product_id(
+                cr, uid, False, product.id, location_src_id,
+                location_dest_id, False)  # no partner
+            move_data = onchange.get('value', {})
+            move_data.update({
+                'picking_id': picking_id,
+                'product_id': product.id,
+                'product_uom_qty': qty,
+                'location_id': location_src_id,
+                'location_dest_id': location_dest_id,
+            })
+            move_id = move_pool.create(cr, uid, move_data, context=context)
+            i40_line.write(cr, uid, [i40_line_id], {
+                'move_id': move_id,
+            }, context=context)
+        return True
 
     def assign_stock_quantity(self, cr, uid, ids, context=None):
         """ Assign document wizard

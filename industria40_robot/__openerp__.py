@@ -39,6 +39,7 @@
         'production_accounting_external',
         'mx_close_order',
         'bom_dynamic_structured',
+        'lavoration_cl_sl',  # For stock unload
         ],
     'init_xml': [],
     'demo': [],
@@ -52,7 +53,7 @@
         'views/menu_view3.xml',
         'views/menu_view4.xml',
         'views/menu_view5.xml',
-        
+
         'wizard/assign_stock_wizard_view.xml',
         ],
     'active': False,
