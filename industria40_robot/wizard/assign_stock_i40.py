@@ -23,6 +23,7 @@
 
 
 import os
+import pdb
 import sys
 import logging
 import openerp
@@ -62,49 +63,24 @@ class IndustriaAssignStockWizard(orm.TransientModel):
             'type': 'ir.actions.act_window_close'
             }
 
-    def _get_wizard_information(
-            self, cr, uid, ids, fields, args, context=None):
-        """ Fields function for calculate
-        """
-        res = {}
-
-        wizard_id = ids[0]
-        wizard = self.browse(cr, uid, wizard_id, context=context)
-        line = wizard.industria_line_id
-        product = line.product_id
-
-        total_qty = line.todo
-        available_qty = product.mx_net_mrp_qty
-        current_qty = wizard.stock_move_id.product_uom_qty
-        remain_qty = total_qty - current_qty
-
-        res[wizard_id] = {
-            'available_qty': available_qty,
-            'current_qty': current_qty,
-            'remain_qty': remain_qty,
-            'total_qty': total_qty,
-        }
-        return res
-
     _columns = {
         'industria_line_id': fields.many2one(
             'industria.mrp.line', 'Linea', readonly=True,
             help='Semilavorato selezionato nella riga'),
-        'available_qty': fields.function(
-            _get_wizard_information, method=True, readonly=True,
-            type='float', string='Disponibile a magazzino', multi=True,
+        'available_qty': fields.float(
+            'Disponibile a magazzino', digits=(16, 2), required=True
             ),
-        'current_qty': fields.function(
-            _get_wizard_information, method=True, readonly=True,
-            type='float', string='Attuali assegnati', multi=True,
+        'current_qty': fields.float(
+            'Attuali assegnati', digits=(16, 2), required=True
             ),
-        'total_qty': fields.function(
-            _get_wizard_information, method=True, readonly=True,
-            type='float', string='Fabbisogno totale', multi=True,
+        'produced_qty': fields.float(
+            'Già lavorati', digits=(16, 2), required=True
             ),
-        'remain_qty': fields.function(
-            _get_wizard_information, method=True, readonly=True,
-            type='float', string='Fabbisogno rimanente', multi=True,
+        'total_qty': fields.float(
+            'Fabbisogno totale', digits=(16, 2), required=True
+            ),
+        'remain_qty': fields.float(
+            'Fabbisogno rimanente', digits=(16, 2), required=True
             ),
         'new_qty': fields.float(
             'Nuova', digits=(16, 2), required=True),

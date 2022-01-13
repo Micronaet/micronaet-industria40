@@ -354,25 +354,46 @@ class IndustriaMrpLine(orm.Model):
     def assign_stock_quantity(self, cr, uid, ids, context=None):
         """ Assign document wizard
         """
-        if context is None:
-            context = {}
+        wizard_pool = self.pool.get('industria.assign.stock.wizard')
         line_id = ids[0]
-
+        line = self.browse(cr, uid, line_id, context=context)
         view_id = False
 
-        ctx = context.copy()
-        ctx['default_industria_line_id'] = line_id
+        product = line.product_id
+        total_qty = line.todo
+        # todo:
+        produced_qty = 0
+        available_qty = product.mx_net_mrp_qty
+        current_qty = line.stock_move_id.product_uom_qty
+        remain_qty = total_qty - current_qty
+        new_qty = max(0, remain_qty)
+
+        if not new_qty:
+            raise osv.except_osv(
+                _('Attenzione'),
+                _('Non ci sono le disponibilità per assegnare il magazzino'
+                  'oppure è già tutto assegnato / prodotto'))
+        data = {
+            'industria_line_id': line_id,
+            'available_qty': available_qty,
+            'current_qty': current_qty,
+            'remain_qty': remain_qty,
+            'total_qty': total_qty,
+            'new_ty': new_qty,
+        }
+        wizard_id = wizard_pool.create(cr, uid, data, context=context)
+
         return {
             'type': 'ir.actions.act_window',
             'name': _('Dettaglio assegnazione magazzino'),
             'view_type': 'form',
             'view_mode': 'form',
-            'res_id': False,
+            'res_id': wizard_id,
             'res_model': 'industria.assign.stock.wizard',
             'view_id': view_id,
             'views': [(view_id, 'form')],
             'domain': [],
-            'context': ctx,
+            'context': context,
             'target': 'new',
             'nodestroy': False,
             }

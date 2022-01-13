@@ -12,12 +12,17 @@
                        <button name="action_assign" string="Conferma" type="object" icon="gtk-jump-to" class="oe_highlight" />
                    </header>
                    <group colspan="4" col="4">
-                        <field name="industria_line_id" />
-                        <field name="total_qty" />
-                        <field name="available_qty" />
-                        <field name="current_qty" />
-                        <field name="remain_qty" />
-                        <field name="new_qty" />
+                       <field name="industria_line_id" />
+                       <newline />
+
+                       <field name="total_qty" />
+                       <field name="produced_qty" />
+
+                       <field name="available_qty" />
+                       <field name="current_qty" />
+
+                       <field name="remain_qty" />
+                       <field name="new_qty" />
                    </group>
                 </form>
             </field>
