@@ -54,13 +54,14 @@ class IndustriaAssignStockWizard(orm.TransientModel):
     def action_assign(self, cr, uid, ids, context=None):
         """ Event for button done
         """
-        i40_line_pool = self.pool.get('industria.mrp')
+        i40_line_pool = self.pool.get('industria.mrp.line')
 
         wizard = self.browse(cr, uid, ids, context=context)[0]
+        industria_line_id = wizard.industria_line_id.id
         new_qty = wizard.new_qty
 
         i40_line_pool.industria_get_movement(
-            cr, uid, ids, new_qty, context=context)
+            cr, uid, [industria_line_id], new_qty, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
     _columns = {

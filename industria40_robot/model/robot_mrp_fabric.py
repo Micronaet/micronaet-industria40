@@ -367,6 +367,7 @@ class IndustriaMrpLine(orm.Model):
         # ---------------------------------------------------------------------
         # Picking:
         # ---------------------------------------------------------------------
+        pdb.set_trace()
         i40_line_id = ids[0]
         i40_line = self.browse(cr, uid, i40_line_id, context=context)
         i40_mrp = i40_line.industria_mrp_id
