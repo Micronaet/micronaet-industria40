@@ -379,7 +379,7 @@ class IndustriaMrpLine(orm.Model):
             'locked_qty': locked_qty,
             'remain_qty': remain_qty,
             'total_qty': total_qty,
-            'new_ty': new_qty,
+            'new_qty': new_qty,
         }
         wizard_id = wizard_pool.create(cr, uid, data, context=context)
 
