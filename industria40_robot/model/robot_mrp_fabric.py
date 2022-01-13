@@ -320,6 +320,11 @@ class IndustriaMrp(orm.Model):
     _columns = {
         'date': fields.date(
             'Data', help='Data di creazione'),
+        'picking_id': fields.many2one(
+            'stock.picking', 'Documento scarico',
+            help='Documento per scaricare subito i materiali assegnati alla '
+                 'produzione attuale',
+        ),
         'robot_id': fields.many2one('industria.robot', 'Robot', required=True),
         # todo: how assign yet present semi-product?
         # 'picking': fields.many2one(
@@ -345,6 +350,37 @@ class IndustriaMrpLine(orm.Model):
     _description = 'Industria 4.0 MRP Line'
     _order = 'program_id, sequence, fabric'
     _rec_name = 'material_id'
+
+    def assign_stock_quantity(self, cr, uid, ids, context=None):
+        """ Assign document wizard
+        """
+        if context is None:
+            context = {}
+        line_id = ids[0]
+
+        # wizard_pool = self.pool.get('industria.assign.stock.wizard')
+        model_pool = self.pool.get('ir.model.data')
+        view_id = model_pool.get_object_reference(
+            cr, uid,
+            'industria_40_robot',
+            'industria_assign_stock_wizard_wizard_view')[1]
+
+        ctx = context.copy()
+        ctx['default_line_id'] = line_id
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Result for view_name'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_id': False,
+            'res_model': 'industria.assign.stock.wizard',
+            'view_id': view_id,
+            'views': [(view_id, 'form')],
+            'domain': [],
+            'context': ctx,
+            'target': 'new',
+            'nodestroy': False,
+            }
 
     def get_detail(self, cr, uid, ids, context=None):
         """ View for detail
@@ -382,6 +418,10 @@ class IndustriaMrpLine(orm.Model):
     _columns = {
         'industria_mrp_id': fields.many2one(
             'industria.mrp', 'MRP I4.0', ondelete='cascade'),
+        'stock_move_id': fields.many2one(
+            'stock.move', 'Movimenti assegnati',
+            help='Collegamento al movimento che scarica gli impegni per questo'
+                 'semilavorato'),
         'material_id': fields.many2one(
             'product.product', 'Materiale'),
         'product_id': fields.many2one(

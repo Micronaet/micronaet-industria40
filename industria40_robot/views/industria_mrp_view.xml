@@ -138,6 +138,8 @@
                                                 <field name="color" readonly="1"/>
                                                 <field name="todo" readonly="1"/>
                                                 <field name="assigned" readonly="1"/>
+                                                <button name="assign_stock_quantity" type="object" string="Assegna magazzino" icon="stock"/>
+
                                                 <field name="produced" readonly="1"/>
                                                 <field name="remain" readonly="1"/>
                                                 <button name="get_detail" type="object" string="Dettaglio"/>

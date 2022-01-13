@@ -21,41 +21,5 @@
 #
 ###############################################################################
 
-{
-    'name': 'Industria 4.0 - Menu Robot',
-    'version': '0.1',
-    'category': 'Menu',
-    'description': ''' 
-        Menu Robot 1       
-        ''',
-    'author': 'Micronaet S.r.l. - Nicola Riolini',
-    'website': 'http://www.micronaet.it',
-    'license': 'AGPL-3',
-    'depends': [
-        'base',
-        'industria40_base',
-        'mrp',
-        'stock',  # For SL Movement
-        'production_accounting_external',
-        'mx_close_order',
-        'bom_dynamic_structured',
-        ],
-    'init_xml': [],
-    'demo': [],
-    'data': [
-        'security/ir.model.access.csv',
-        'views/robot_oven_view.xml',
-        'views/industria_mrp_view.xml',
+from . import assign_stock_i40
 
-        'views/menu_view1.xml',
-        'views/menu_view2.xml',
-        'views/menu_view3.xml',
-        'views/menu_view4.xml',
-        'views/menu_view5.xml',
-        
-        'wizard/assign_stock_wizard_view.xml',
-        ],
-    'active': False,
-    'installable': True,
-    'auto_install': False,
-    }
