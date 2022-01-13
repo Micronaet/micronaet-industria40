@@ -84,11 +84,15 @@ class IndustriaAssignStockWizard(orm.TransientModel):
             help='Semilavorato selezionato nella riga'),
         'available_qty': fields.function(
             _get_wizard_information, method=True, readonly=True,
-            type='float', string='Attuali', multi=True,
+            type='float', string='Disponibile a magazzino', multi=True,
             ),
         'current_qty': fields.function(
             _get_wizard_information, method=True, readonly=True,
-            type='float', string='Attuali', multi=True,
+            type='float', string='Attuali assegnati', multi=True,
+            ),
+        'total_qty': fields.function(
+            _get_wizard_information, method=True, readonly=True,
+            type='float', string='Fabbisogno', multi=True,
             ),
         'new_qty': fields.float(
             'Nuova', digits=(16, 2), required=True),

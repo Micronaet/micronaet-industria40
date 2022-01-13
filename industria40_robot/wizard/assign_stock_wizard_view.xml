@@ -13,6 +13,7 @@
                    </header>
                    <group colspan="4" col="4">
                         <field name="industria_line_id" />
+                        <field name="total_qty" />
                         <field name="available_qty" />
                         <field name="current_qty" />
                         <field name="new_qty" />
