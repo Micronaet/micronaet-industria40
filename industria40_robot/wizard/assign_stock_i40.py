@@ -75,6 +75,8 @@ class IndustriaAssignStockWizard(orm.TransientModel):
         res[wizard_id] = {
             'available_qty': product.mx_net_mrp_qty,
             'current_qty': wizard.stock_move_id.product_uom_qty,  # todo check
+            'remain_qty': 0.0,
+            'total_qty': 0.0,
         }
         return res
 
@@ -92,7 +94,11 @@ class IndustriaAssignStockWizard(orm.TransientModel):
             ),
         'total_qty': fields.function(
             _get_wizard_information, method=True, readonly=True,
-            type='float', string='Fabbisogno', multi=True,
+            type='float', string='Fabbisogno totale', multi=True,
+            ),
+        'remain_qty': fields.function(
+            _get_wizard_information, method=True, readonly=True,
+            type='float', string='Fabbisogno rimanente', multi=True,
             ),
         'new_qty': fields.float(
             'Nuova', digits=(16, 2), required=True),
