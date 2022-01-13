@@ -68,19 +68,19 @@ class IndustriaAssignStockWizard(orm.TransientModel):
             'industria.mrp.line', 'Linea', readonly=True,
             help='Semilavorato selezionato nella riga'),
         'available_qty': fields.float(
-            'Disponibile a magazzino', digits=(16, 2)
+            'Disponibile a magazzino', digits=(16, 2), readonly=True,
             ),
         'current_qty': fields.float(
-            'Attuali assegnati', digits=(16, 2)
+            'Attuali assegnati', digits=(16, 2), readonly=True,
             ),
         'produced_qty': fields.float(
-            'Già lavorati', digits=(16, 2)
+            'Già lavorati', digits=(16, 2), readonly=True,
             ),
         'total_qty': fields.float(
-            'Fabbisogno totale', digits=(16, 2)
+            'Fabbisogno totale', digits=(16, 2), readonly=True,
             ),
         'remain_qty': fields.float(
-            'Fabbisogno rimanente', digits=(16, 2)
+            'Fabbisogno rimanente', digits=(16, 2), readonly=True,
             ),
         'new_qty': fields.float(
             'Nuova', digits=(16, 2)),
