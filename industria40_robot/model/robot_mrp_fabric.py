@@ -366,7 +366,7 @@ class IndustriaMrpLine(orm.Model):
         # 'industria_assign_stock_wizard_wizard_view')[1]
 
         ctx = context.copy()
-        ctx['default_line_id'] = line_id
+        ctx['default_industria_line_id'] = line_id
         return {
             'type': 'ir.actions.act_window',
             'name': _('Result for view_name'),
