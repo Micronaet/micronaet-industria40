@@ -19,7 +19,7 @@
                        <field name="produced_qty" />
 
                        <field name="available_qty" />
-                       <field name="current_qty" />
+                       <field name="locked_qty" />
 
                        <field name="remain_qty" />
                        <field name="new_qty" />

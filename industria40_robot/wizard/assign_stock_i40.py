@@ -70,7 +70,7 @@ class IndustriaAssignStockWizard(orm.TransientModel):
         'available_qty': fields.float(
             'Disponibile a magazzino', digits=(16, 2), readonly=True,
             ),
-        'current_qty': fields.float(
+        'locked_qty': fields.float(
             'Attuali assegnati', digits=(16, 2), readonly=True,
             ),
         'produced_qty': fields.float(

@@ -376,7 +376,7 @@ class IndustriaMrpLine(orm.Model):
             'industria_line_id': line_id,
             'available_qty': available_qty,
             'produced_qty': produced_qty,
-            'current_qty': locked_qty,
+            'locked_qty': locked_qty,
             'remain_qty': remain_qty,
             'total_qty': total_qty,
             'new_ty': new_qty,
