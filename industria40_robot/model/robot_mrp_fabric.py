@@ -408,7 +408,7 @@ class IndustriaMrpLine(orm.Model):
                 'date': date,
                 'min_date': date,
                 'note': 'Abbinata in automatico a I4.0 MRP',
-                'state': 'done',  # todo yet complete
+                'state': 'done',  # yet complete!
                 'picking_type_id': sl_type_id,
                 # 'is_mrp_lavoration': True,
                 # 'location_id': location_id,
@@ -420,7 +420,7 @@ class IndustriaMrpLine(orm.Model):
         stock_move_id = i40_line.stock_move_id
         if stock_move_id:
             move_pool.write(cr, uid, [stock_move_id], {
-                'product_qty': qty,  # todo check
+                'product_uom_qty': qty,
             }, context=context)
         else:
             onchange = move_pool.onchange_product_id(
