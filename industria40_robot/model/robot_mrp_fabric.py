@@ -358,20 +358,15 @@ class IndustriaMrpLine(orm.Model):
             context = {}
         line_id = ids[0]
 
-        # wizard_pool = self.pool.get('industria.assign.stock.wizard')
-        model_pool = self.pool.get('ir.model.data')
         view_id = False
-        #  model_pool.get_object_reference(cr, uid,
-        # 'industria_40_robot',
-        # 'industria_assign_stock_wizard_wizard_view')[1]
 
         ctx = context.copy()
         ctx['default_industria_line_id'] = line_id
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Result for view_name'),
+            'name': _('Dettaglio assegnazione magazzino'),
             'view_type': 'form',
-            'view_mode': 'tree,form',
+            'view_mode': 'form',
             'res_id': False,
             'res_model': 'industria.assign.stock.wizard',
             'view_id': view_id,
