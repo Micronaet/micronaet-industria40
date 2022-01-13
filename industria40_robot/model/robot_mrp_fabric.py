@@ -360,10 +360,10 @@ class IndustriaMrpLine(orm.Model):
 
         # wizard_pool = self.pool.get('industria.assign.stock.wizard')
         model_pool = self.pool.get('ir.model.data')
-        view_id = model_pool.get_object_reference(
-            cr, uid,
-            'industria_40_robot',
-            'industria_assign_stock_wizard_wizard_view')[1]
+        view_id = False
+        #  model_pool.get_object_reference(cr, uid,
+        # 'industria_40_robot',
+        # 'industria_assign_stock_wizard_wizard_view')[1]
 
         ctx = context.copy()
         ctx['default_line_id'] = line_id
