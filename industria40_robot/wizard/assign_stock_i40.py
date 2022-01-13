@@ -70,13 +70,19 @@ class IndustriaAssignStockWizard(orm.TransientModel):
 
         wizard_id = ids[0]
         wizard = self.browse(cr, uid, wizard_id, context=context)
-        product = wizard.industria_line_id.product_id
+        line = wizard.industria_line_id
+        product = line.product_id
+
+        total_qty = line.todo
+        available_qty = product.mx_net_mrp_qty
+        current_qty = wizard.stock_move_id.product_uom_qty
+        remain_qty = total_qty - current_qty
 
         res[wizard_id] = {
-            'available_qty': product.mx_net_mrp_qty,
-            'current_qty': wizard.stock_move_id.product_uom_qty,  # todo check
-            'remain_qty': 0.0,
-            'total_qty': 0.0,
+            'available_qty': available_qty,
+            'current_qty': current_qty,
+            'remain_qty': remain_qty,
+            'total_qty': total_qty,
         }
         return res
 
