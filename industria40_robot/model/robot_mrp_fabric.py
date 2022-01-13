@@ -526,6 +526,22 @@ class IndustriaMrpLine(orm.Model):
                 line.product_id.industria_rule_ids]
         return res
 
+    def get_total_field_data(self, cr, uid, ids, fields, args, context=None):
+        """ Calculate all total fields
+        """
+        res = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            total = line.todo
+            assigned = line.stock_move_id.product_uom_qty
+            produced = 0  # todo
+            remain = total - assigned - produced
+            res[line.id] = {
+                'assigned': assigned,
+                'produced': produced,
+                'remain': remain,
+            }
+        return res
+
     _columns = {
         'industria_mrp_id': fields.many2one(
             'industria.mrp', 'MRP I4.0', ondelete='cascade'),
@@ -551,11 +567,28 @@ class IndustriaMrpLine(orm.Model):
         'color': fields.text('Colore', size=10),
 
         'detail': fields.text('Dettaglio'),
-        'todo': fields.integer('Da fare'),
-        'assigned': fields.integer('Assegnati'),
-        'produced': fields.integer('Prodotti'),
+
+        'program_ids': fields.function(
+            get_total_field_data, method=True,
+            type='many2many', relation='industria.program',
+            string='Programmi disponibili',
+        ),
+
+        'todo': fields.integer(
+            string='Nominali', help='Totale come da produzioni collegate'),
+        'assigned': fields.integer(
+            get_total_field_data, method=True,
+            type='many2many', relation='industria.program',
+            string='Assegnati', help='Assegnati da magazzino'),
+        'produced': fields.integer(
+            get_total_field_data, method=True,
+            type='many2many', relation='industria.program',
+            string=
+            'Prodotti', help='Fatti con i job di lavoro '),
         'remain': fields.integer(
-            'Residui',
+            get_total_field_data, method=True,
+            type='many2many', relation='industria.program',
+            string='Residui',
             help='Residui da produrre (calcolato da quelli da fare puliti da '
                  'quelli fatti o assegnati'),
     }
