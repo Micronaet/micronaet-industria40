@@ -367,7 +367,6 @@ class IndustriaMrpLine(orm.Model):
         # ---------------------------------------------------------------------
         # Picking:
         # ---------------------------------------------------------------------
-        pdb.set_trace()
         i40_line_id = ids[0]
         i40_line = self.browse(cr, uid, i40_line_id, context=context)
         i40_mrp = i40_line.industria_mrp_id
@@ -400,9 +399,10 @@ class IndustriaMrpLine(orm.Model):
                 'picking_id': picking_id,
             }, context=context)
 
-        move_id = i40_line.move_id
-        if move_id:
-            move_pool.write(cr, uid, [move_id], {
+        pdb.set_trace()
+        stock_move_id = i40_line.stock_move_id
+        if stock_move_id:
+            move_pool.write(cr, uid, [stock_move_id], {
                 'product_qty': qty,  # todo check
             }, context=context)
         else:
@@ -419,7 +419,7 @@ class IndustriaMrpLine(orm.Model):
             })
             move_id = move_pool.create(cr, uid, move_data, context=context)
             i40_line.write(cr, uid, [i40_line_id], {
-                'move_id': move_id,
+                'stock_move_id': move_id,
             }, context=context)
         return True
 
