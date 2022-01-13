@@ -80,7 +80,7 @@ class IndustriaAssignStockWizard(orm.TransientModel):
             'Fabbisogno totale', digits=(16, 2), readonly=True,
             ),
         'remain_qty': fields.float(
-            'Fabbisogno rimanente', digits=(16, 2), readonly=True,
+            'Magazzino usabile (max)', digits=(16, 2), readonly=True,
             ),
         'new_qty': fields.float(
             'Nuova', digits=(16, 2)),

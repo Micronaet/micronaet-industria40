@@ -361,12 +361,11 @@ class IndustriaMrpLine(orm.Model):
 
         product = line.product_id
         total_qty = line.todo
-        # todo:
-        produced_qty = 0
+        produced_qty = 0  # todo:
         available_qty = product.mx_net_mrp_qty
-        current_qty = line.stock_move_id.product_uom_qty
-        remain_qty = total_qty - current_qty
-        new_qty = max(0, remain_qty)
+        locked_qty = line.stock_move_id.product_uom_qty
+        remain_qty = max(0, total_qty - produced_qty - locked_qty)
+        new_qty = max(available_qty, remain_qty)
 
         if not new_qty:
             raise osv.except_osv(
@@ -376,7 +375,8 @@ class IndustriaMrpLine(orm.Model):
         data = {
             'industria_line_id': line_id,
             'available_qty': available_qty,
-            'current_qty': current_qty,
+            'produced_qty': produced_qty,
+            'current_qty': locked_qty,
             'remain_qty': remain_qty,
             'total_qty': total_qty,
             'new_ty': new_qty,
