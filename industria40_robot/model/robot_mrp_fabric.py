@@ -366,12 +366,15 @@ class IndustriaMrpLine(orm.Model):
         locked_qty = line.stock_move_id.product_uom_qty
         remain_qty = max(0, total_qty - produced_qty - locked_qty)
         new_qty = min(available_qty, remain_qty)
-
+        comment = ''
         if not new_qty:
-            raise osv.except_osv(
-                _('Attenzione'),
-                _('Non ci sono le disponibilità per assegnare il magazzino'
-                  'oppure è già tutto assegnato / prodotto'))
+            comment = _(
+                'Non ci sono le disponibilità per assegnare il magazzino'
+                'oppure è già tutto assegnato / prodotto')
+        elif new_qty < locked_qty:
+            comment = _(
+                'E\' già assegnata la massima quantità disponibile per '
+                'questo prodotto')
         data = {
             'industria_line_id': line_id,
             'available_qty': available_qty,
@@ -380,6 +383,7 @@ class IndustriaMrpLine(orm.Model):
             'remain_qty': remain_qty,
             'total_qty': total_qty,
             'new_qty': new_qty,
+            'comment': comment,
         }
         wizard_id = wizard_pool.create(cr, uid, data, context=context)
 

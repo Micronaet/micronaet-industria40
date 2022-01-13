@@ -58,6 +58,7 @@ class IndustriaAssignStockWizard(orm.TransientModel):
             context = {}
 
         wizard = self.browse(cr, uid, ids, context=context)[0]
+        new_qty = wizard.new_qty
 
         return {
             'type': 'ir.actions.act_window_close'
@@ -84,4 +85,5 @@ class IndustriaAssignStockWizard(orm.TransientModel):
             ),
         'new_qty': fields.float(
             'Nuova', digits=(16, 2)),
+        'comment': fields.text('Commento'),
         }
