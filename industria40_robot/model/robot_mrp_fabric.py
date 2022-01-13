@@ -416,6 +416,7 @@ class IndustriaMrpLine(orm.Model):
                 'product_uom_qty': qty,
                 'location_id': location_src_id,
                 'location_dest_id': location_dest_id,
+                'state': 'done',
             })
             stock_move_id = move_pool.create(
                 cr, uid, move_data, context=context)
