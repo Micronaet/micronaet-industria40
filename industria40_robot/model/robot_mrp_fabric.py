@@ -365,7 +365,7 @@ class IndustriaMrpLine(orm.Model):
         available_qty = product.mx_net_mrp_qty
         locked_qty = line.stock_move_id.product_uom_qty
         remain_qty = max(0, total_qty - produced_qty - locked_qty)
-        new_qty = max(available_qty, remain_qty)
+        new_qty = min(available_qty, remain_qty)
 
         if not new_qty:
             raise osv.except_osv(
