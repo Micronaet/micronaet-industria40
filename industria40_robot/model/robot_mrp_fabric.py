@@ -438,7 +438,7 @@ class IndustriaMrpLine(orm.Model):
             })
             stock_move_id = move_pool.create(
                 cr, uid, move_data, context=context)
-            move_pool.write(cr, uid, [i40_line_id], {
+            self.write(cr, uid, [i40_line_id], {
                 'stock_move_id': stock_move_id,
             }, context=context)
         return True
