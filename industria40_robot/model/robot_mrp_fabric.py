@@ -318,6 +318,15 @@ class IndustriaMrp(orm.Model):
             'state': 'draft',
         }, context=context)
 
+    def _get_stock_move_ids(self, cr, uid, ids, fields, args, context=None):
+        """ Fields function for calculate
+        """
+        res = {}
+        for mrp in self.browse(cr, uid, ids, context=context):
+            res[mrp.id] = [
+                move.id for move in mrp.picking_id.move_lines]
+        return res
+
     _columns = {
         'date': fields.date(
             'Data', help='Data di creazione'),
@@ -326,6 +335,14 @@ class IndustriaMrp(orm.Model):
             help='Documento per scaricare subito i materiali assegnati alla '
                  'produzione attuale',
         ),
+        'stock_move_ids': fields.function(
+            _get_stock_move_ids, method=True,
+            type='many2many', relation='stock.move',
+            string='Assegnati da magazzino',
+            help='Elenco movimenti di scarico assegnati a magazzino a questa'
+                 'produzione'
+        ),
+
         'robot_id': fields.many2one('industria.robot', 'Robot', required=True),
         # todo: how assign yet present semi-product?
         # 'picking': fields.many2one(
