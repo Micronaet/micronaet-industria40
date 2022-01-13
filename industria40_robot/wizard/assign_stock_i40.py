@@ -84,6 +84,6 @@ class IndustriaAssignStockWizard(orm.TransientModel):
             'Magazzino usabile (max)', digits=(16, 2), readonly=True,
             ),
         'new_qty': fields.float(
-            'Nuova', digits=(16, 2)),
-        'comment': fields.text('Commento'),
+            'Nuova', digits=(16, 2))
+        'comment': fields.text('Commento', readonly=True),
         }

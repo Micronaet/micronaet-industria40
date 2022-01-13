@@ -23,6 +23,9 @@
 
                        <field name="remain_qty" />
                        <field name="new_qty" />
+
+                       <separator string="Commento" colspan="4"/>
+                       <field name="comment" colspan="4" nolabel="1"/>
                    </group>
                 </form>
             </field>
