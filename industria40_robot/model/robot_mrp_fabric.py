@@ -417,9 +417,10 @@ class IndustriaMrpLine(orm.Model):
                 'location_id': location_src_id,
                 'location_dest_id': location_dest_id,
             })
-            move_id = move_pool.create(cr, uid, move_data, context=context)
+            stock_move_id = move_pool.create(
+                cr, uid, move_data, context=context)
             i40_line.write(cr, uid, [i40_line_id], {
-                'stock_move_id': move_id,
+                'stock_move_id': stock_move_id,
             }, context=context)
         return True
 
