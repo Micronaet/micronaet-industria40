@@ -332,6 +332,7 @@ class IndustriaMrp(orm.Model):
             'Data', help='Data di creazione'),
         'picking_id': fields.many2one(
             'stock.picking', 'Documento scarico',
+            ondelete='set null',
             help='Documento per scaricare subito i materiali assegnati alla '
                  'produzione attuale',
         ),
@@ -546,7 +547,7 @@ class IndustriaMrpLine(orm.Model):
         'industria_mrp_id': fields.many2one(
             'industria.mrp', 'MRP I4.0', ondelete='cascade'),
         'stock_move_id': fields.many2one(
-            'stock.move', 'Movimenti assegnati',
+            'stock.move', 'Movimenti assegnati', ondelete='set null',
             help='Collegamento al movimento che scarica gli impegni per questo'
                  'semilavorato'),
         'material_id': fields.many2one(
@@ -576,18 +577,17 @@ class IndustriaMrpLine(orm.Model):
 
         'todo': fields.integer(
             string='Nominali', help='Totale come da produzioni collegate'),
-        'assigned': fields.integer(
+        'assigned': fields.function(
             get_total_field_data, method=True,
-            type='many2many', relation='industria.program',
+            type='float', multi=True,
             string='Assegnati', help='Assegnati da magazzino'),
-        'produced': fields.integer(
+        'produced': fields.function(
             get_total_field_data, method=True,
-            type='many2many', relation='industria.program',
-            string=
-            'Prodotti', help='Fatti con i job di lavoro '),
-        'remain': fields.integer(
+            type='float', multi=True,
+            string='Prodotti', help='Fatti con i job di lavoro '),
+        'remain': fields.function(
             get_total_field_data, method=True,
-            type='many2many', relation='industria.program',
+            type='float', multi=True,
             string='Residui',
             help='Residui da produrre (calcolato da quelli da fare puliti da '
                  'quelli fatti o assegnati'),
