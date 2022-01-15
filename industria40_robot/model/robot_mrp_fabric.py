@@ -568,11 +568,12 @@ class IndustriaMrpLine(orm.Model):
 
         'detail': fields.text('Dettaglio'),
 
-        'program_ids': fields.function(
-            get_total_field_data, method=True,
-            type='many2many', relation='industria.program',
-            string='Programmi disponibili',
-        ),
+        # todo remove?
+        # 'program_ids': fields.function(
+        #    get_total_field_data, method=True,
+        #    type='many2many', relation='industria.program',
+        #    string='Programmi disponibili',
+        #),
 
         'todo': fields.integer(
             string='Nominali', help='Totale come da produzioni collegate'),

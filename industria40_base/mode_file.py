@@ -429,8 +429,10 @@ class IndustriaRobotFile(orm.Model):
         # Convert function:
         def clean_float(value):
             return float(value)
+
         def clean_integer(value):
             return int(value)
+
         def get_datetime(date, time):
             return date + ' ' + time
 
@@ -439,6 +441,7 @@ class IndustriaRobotFile(orm.Model):
         file_pool = self.pool.get('industria.pipe.file.stat')
 
         extension = 'xml'
+        separator = ';'  # todo correct?
 
         file_id = ids[0]
         file = self.browse(cr, uid, file_id, context=context)

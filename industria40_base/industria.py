@@ -366,6 +366,7 @@ class IndustriaDatabase(orm.Model):
         """
         if context is None:
             context = {}
+        force_job_id = context.get('force_job_id')
         force_database_id = context.get('force_database_id')
 
         model_pool = self.pool.get('ir.model.data')
@@ -382,20 +383,24 @@ class IndustriaDatabase(orm.Model):
         location_src_id = cl_type.default_location_src_id.id
         location_dest_id = cl_type.default_location_dest_id.id
 
-        domain = [
-            ('picking_id', '=', False),
-            ('unused', '=', False),
+        if force_job_id:
+            domain = [
+                ('picking_id', '=', False),
+                ('unused', '=', False),
 
-            ('created_at', '!=', False),
-            ('ended_at', '!=', False),
+                ('created_at', '!=', False),
+                ('ended_at', '!=', False),
 
-            ('state', '=', 'COMPLETED'),
+                ('state', '=', 'COMPLETED'),
 
-            # ('program_id.product_id', '!=', False),  # With semi product
-        ]
-        if force_database_id:
-            domain.append(('database_id', '=', force_database_id))
-        job_ids = job_pool.search(cr, uid, domain, context=context)
+                # ('program_id.product_id', '!=', False),  # With semi product
+            ]
+            if force_database_id:
+                domain.append(('database_id', '=', force_database_id))
+            job_ids = job_pool.search(cr, uid, domain, context=context)
+        else:
+            job_ids = [force_job_id]
+
         daily_job = {}
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             products = []
@@ -1675,12 +1680,23 @@ class IndustriaJob(orm.Model):
     def completed_fabric_job(self, cr, uid, ids, context=None):
         """ Send job to tender
         """
-        # todo generate picking
+        job_id = ids[0]
+        database_pool = self.pool.get('industria.database')
+
+        if context is None:
+            context = {}
+
         self.write(cr, uid, ids, {
             'ended_at': datetime.now().strftime(
                 DEFAULT_SERVER_DATETIME_FORMAT),
             'state': 'COMPLETED',
         }, context=context)
+
+        # Generate pickings for load and unload materials:
+        ctx = context.copy()
+        ctx['force_job_id'] = job_id
+        return database_pool.generate_picking_from_job(
+            cr, uid, False, context=ctx)
 
     def error_fabric_job(self, cr, uid, ids, context=None):
         """ Send job to tender
