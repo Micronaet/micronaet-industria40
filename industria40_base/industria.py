@@ -1941,7 +1941,7 @@ class IndustriaJobFabricProduct(orm.Model):
 
     _columns = {
         'fabric_id': fields.many2one(
-            'product.product', 'Tessuto', ondelete='cascade'),
+            'industria.job.fabric', 'Strato', ondelete='cascade'),
         'product_id': fields.many2one(
             'product.product', 'Semilavorato', required=True),
         'total': fields.integer('Totale', required=True),
