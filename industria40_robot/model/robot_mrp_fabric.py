@@ -541,7 +541,7 @@ class IndustriaMrpLine(orm.Model):
             # Produced:
             produced = 0  # C. todo
             job_fabric_ids = job_fabric_pool.search(cr, uid, [
-                ('industria_mrp_id', '=', industria_mrp_id),
+                # ('industria_mrp_id', '=', industria_mrp_id),
                 ('product_id', '=', product_id),
             ], context=context)
             for jf in job_fabric_pool.browse(
@@ -631,12 +631,12 @@ class IndustriaJobFabric(orm.Model):
     """
     _inherit = 'industria.job.fabric'
 
-    _columns = {
-        'industria_mrp_id': fields.related(
-            'step_id', 'industria_mrp_id',
-            type='many2one', relation='industria.mrp',
-            string='MRP Industria 4.0', store=True),
-    }
+    #_columns = {
+    #    'industria_mrp_id': fields.related(
+    #        'step_id', 'industria_mrp_id',
+    #        type='many2one', relation='industria.mrp',
+    #        string='MRP Industria 4.0', store=True),
+    #}
 
 
 class IndustriaJob(orm.Model):
