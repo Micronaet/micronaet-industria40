@@ -1481,22 +1481,6 @@ class IndustriaProgramFabricPart(orm.Model):
     }
 
 
-class IndustriaProgramFabricInherit(orm.Model):
-    """ Model name: Industria Program fabric
-    """
-
-    _inherit = 'industria.program.fabric'
-
-    _columns = {
-        'family_mode': fields.boolean(
-            'Modalità famiglia',
-            help='Se spuntato presenta le dime legate come famiglia e non '
-                 'come elenco prodotti'),
-        'part_ids': fields.one2many(
-            'industria.program.fabric.part', 'fabric_id', 'Parti')
-    }
-
-
 class IndustriaProgramParameterOpcua(orm.Model):
     """ Model name: Industria Program Parameter OPCUA
     """
@@ -1947,14 +1931,13 @@ class IndustriaJobFabric(orm.Model):
     }
 
 
-class IndustriaJobFabric(orm.Model):
+class IndustriaJobFabricProduct(orm.Model):
     """ Model name: Industria Job fabric product
     """
 
     _name = 'industria.job.fabric.product'
     _description = 'Job product under fabric'
-    _rec_name = 'sequence'
-    _order = 'sequence'
+    _rec_name = 'product_id'
 
     _columns = {
         'fabric_id': fields.many2one(
@@ -2248,6 +2231,22 @@ class IndustriaJobInherit(orm.Model):
 
         'step_ids': fields.one2many(
             'industria.job.step', 'job_id', 'Gradini')
+    }
+
+
+class IndustriaProgramFabricInherit(orm.Model):
+    """ Model name: Industria Program fabric
+    """
+
+    _inherit = 'industria.program.fabric'
+
+    _columns = {
+        'family_mode': fields.boolean(
+            'Modalità famiglia',
+            help='Se spuntato presenta le dime legate come famiglia e non '
+                 'come elenco prodotti'),
+        'part_ids': fields.one2many(
+            'industria.program.fabric.part', 'fabric_id', 'Parti')
     }
 
 
