@@ -741,13 +741,15 @@
                                                             </tree>
                                                             <form string="Tessuti" version="7.0">
                                                                 <sheet>
-                                                                    <field name="fabric_id"/>
-                                                                    <field name="total" />
-                                                                    <separator string="Prodotti" colspan="4"/>
-                                                                    <field name="product_ids" colspan="4" nolabel="1">
-                                                                        <field name="product_id"/>
+                                                                    <group colspan="4" col="4">
+                                                                        <field name="fabric_id"/>
                                                                         <field name="total" />
-                                                                    </field>
+                                                                        <separator string="Prodotti" colspan="4"/>
+                                                                        <field name="product_ids" colspan="4" nolabel="1">
+                                                                            <field name="product_id"/>
+                                                                            <field name="total" />
+                                                                        </field>
+                                                                    </group>
                                                                 </sheet>
                                                             </form>
                                                         </field>
