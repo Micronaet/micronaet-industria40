@@ -529,16 +529,38 @@ class IndustriaMrpLine(orm.Model):
     def get_total_field_data(self, cr, uid, ids, fields, args, context=None):
         """ Calculate all total fields
         """
+        job_fabric_pool = self.pool.get('industria.job.fabric')
+
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
-            total = line.todo
-            assigned = line.stock_move_id.product_uom_qty
-            produced = 0  # todo
-            remain = total - assigned - produced
+            industria_mrp_id = line.industria_mrp_id.id
+            product_id = line.product_id.id  # Semi product
+            total = line.todo  # A.
+            assigned = line.stock_move_id.product_uom_qty  # B.
+
+            # Produced:
+            produced = 0  # C. todo
+            job_fabric_ids = job_fabric_pool.search(cr, uid, [
+                ('industria_mrp_id', '=', industria_mrp_id),
+                ('product_id', '=', product_id),
+            ], context=context)
+            for jf in job_fabric_pool.browse(
+                    cr, uid, job_fabric_ids, context=context):
+                produced += jf.total  # todo check
+
+            # Total:
+            bounded = assigned + produced  # E
+            remain = total - bounded  # D (A-(B+C))  >> B+C=E
+            # Bounded quantity:
+            if remain < 0:
+                bounded -= remain  # Extra production goes in stock
+
             res[line.id] = {
                 'assigned': assigned,
                 'produced': produced,
                 'remain': remain,
+                'bounded': bounded,
+                # todo add line list m2m here?
             }
         return res
 
@@ -591,6 +613,12 @@ class IndustriaMrpLine(orm.Model):
             string='Residui',
             help='Residui da produrre (calcolato da quelli da fare puliti da '
                  'quelli fatti o assegnati'),
+        'bounded': fields.function(
+            get_total_field_data, method=True,
+            type='float', multi=True,
+            string='Collegati',
+            help='Calcolo dei semilavorati assegnati da magazzino o prodotti '
+                 'per una determinata produzione'),
     }
 
     _defaults = {

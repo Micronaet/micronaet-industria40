@@ -1941,6 +1941,10 @@ class IndustriaJobFabric(orm.Model):
         'sequence': fields.integer('Seq.'),
         'step_id': fields.many2one(
             'industria.job.step', 'Step', ondelete='cascade'),
+        'industria_mrp_id': fields.related(
+            'step_id', 'industria_mrp_id',
+            type='many2one', relation='industria.mrp',
+            string='MRP Industria 4.0', store=True),
         'fabric_id': fields.many2one(
             'product.product', 'Tessuto', required=True),
         'total': fields.integer('Totale', required=True),
