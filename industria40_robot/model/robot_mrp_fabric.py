@@ -626,6 +626,19 @@ class IndustriaMrpLine(orm.Model):
     }
 
 
+class IndustriaJobFabric(orm.Model):
+    """ Model name: Job Fabric relation
+    """
+    _inherit = 'industria.job.fabric'
+
+    _columns = {
+        'industria_mrp_id': fields.related(
+            'step_id', 'industria_mrp_id',
+            type='many2one', relation='industria.mrp',
+            string='MRP Industria 4.0', store=True),
+    }
+
+
 class IndustriaJob(orm.Model):
     """ Model name: Job relation
     """

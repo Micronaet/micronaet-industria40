@@ -1474,7 +1474,7 @@ class IndustriaProgramFabricPart(orm.Model):
         'fabric_id': fields.many2one('industria.program.fabric', 'Tessuto'),
         'product_id': fields.many2one('product.product', 'Semilavorato'),
         'mask': fields.char(
-            'Maschera', size=20, # required=True,
+            'Maschera', size=20, required=True,
             help='Maschera prodotto che possono essere creati con questa dima'
                  ', es.: TS_29TX%'),
         'total': fields.float('Pezzi'),
@@ -1941,10 +1941,6 @@ class IndustriaJobFabric(orm.Model):
         'sequence': fields.integer('Seq.'),
         'step_id': fields.many2one(
             'industria.job.step', 'Step', ondelete='cascade'),
-        'industria_mrp_id': fields.related(
-            'step_id', 'industria_mrp_id',
-            type='many2one', relation='industria.mrp',
-            string='MRP Industria 4.0', store=True),
         'fabric_id': fields.many2one(
             'product.product', 'Tessuto', required=True),
         'total': fields.integer('Totale', required=True),
@@ -2221,9 +2217,9 @@ class IndustriaJobInherit(orm.Model):
             _get_duration_extra_data, method=True,
             type='boolean', string='Non considerare la lavorazione',
             store=False, multi=True,
-            help='Indica che è difficile capire i tempi dedotti automaticamente'
-                 'perchè risultano gap troppo alti e non è possibile fare '
-                 'ipotesi corrette sul perchè'),
+            help='Indica che è difficile capire i tempi dedotti '
+                 'automaticamente perchè risultano gap troppo alti e non è '
+                 'possibile fare ipotesi corrette sul perchè'),
         'duration_need_setup': fields.function(
             _get_duration_extra_data, method=True,
             type='boolean', string='Cambio lavorazione',
