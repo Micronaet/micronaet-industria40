@@ -735,10 +735,21 @@
                                                         <field name="program_id" />
                                                         <separator string="Strati tessuto" colspan="4"/>
                                                         <field name="fabric_ids" colspan="4" nolabel="1">
-                                                            <tree string="Tessuti" editable="bottom">
+                                                            <tree string="Tessuti">
                                                                 <field name="fabric_id"/>
-                                                                 <field name="total" />
+                                                                <field name="total" />
                                                             </tree>
+                                                            <form string="Tessuti" version="7.0">
+                                                                <sheet>
+                                                                    <field name="fabric_id"/>
+                                                                    <field name="total" />
+                                                                    <separator string="Prodotti" colspan="4"/>
+                                                                    <field name="product_ids" colspan="4" nolabel="1">
+                                                                        <field name="product_id"/>
+                                                                        <field name="total" />
+                                                                    </field>
+                                                                </sheet>
+                                                            </form>
                                                         </field>
                                                     </group>
                                                 </sheet>
