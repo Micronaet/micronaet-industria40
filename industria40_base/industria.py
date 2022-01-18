@@ -1474,7 +1474,7 @@ class IndustriaProgramFabricPart(orm.Model):
         'fabric_id': fields.many2one('industria.program.fabric', 'Tessuto'),
         'product_id': fields.many2one('product.product', 'Semilavorato'),
         'mask': fields.char(
-            'Maschera', required=True, size=20,
+            'Maschera', size=20, # required=True,
             help='Maschera prodotto che possono essere creati con questa dima'
                  ', es.: TS_29TX%'),
         'total': fields.float('Pezzi'),
