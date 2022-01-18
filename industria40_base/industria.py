@@ -384,6 +384,8 @@ class IndustriaDatabase(orm.Model):
         location_dest_id = cl_type.default_location_dest_id.id
 
         if force_job_id:
+            job_ids = [force_job_id]
+        else:
             domain = [
                 ('picking_id', '=', False),
                 ('unused', '=', False),
@@ -398,8 +400,6 @@ class IndustriaDatabase(orm.Model):
             if force_database_id:
                 domain.append(('database_id', '=', force_database_id))
             job_ids = job_pool.search(cr, uid, domain, context=context)
-        else:
-            job_ids = [force_job_id]
 
         daily_job = {}
         for job in job_pool.browse(cr, uid, job_ids, context=context):
@@ -1947,6 +1947,24 @@ class IndustriaJobFabric(orm.Model):
     }
 
 
+class IndustriaJobFabric(orm.Model):
+    """ Model name: Industria Job fabric product
+    """
+
+    _name = 'industria.job.fabric.product'
+    _description = 'Job product under fabric'
+    _rec_name = 'sequence'
+    _order = 'sequence'
+
+    _columns = {
+        'fabric_id': fields.many2one(
+            'product.product', 'Tessuto', ondelete='cascade'),
+        'product_id': fields.many2one(
+            'product.product', 'Semilavorato', required=True),
+        'total': fields.integer('Totale', required=True),
+    }
+
+
 class IndustriaJobStepInherit(orm.Model):
     """ Model name: Industria Job fabric
         Field name keep as in MySQL for fast import
@@ -2230,4 +2248,17 @@ class IndustriaJobInherit(orm.Model):
 
         'step_ids': fields.one2many(
             'industria.job.step', 'job_id', 'Gradini')
+    }
+
+
+class IndustriaJobFabricInherit(orm.Model):
+    """ Model name: Industria Job Fabric
+        Field name keep as in MySQL for fast import
+    """
+
+    _inherit = 'industria.job.fabric'
+
+    _columns = {
+        'product_ids': fields.one2many(
+            'industria.job.fabric.product', 'fabric_id', 'Semilavorati')
     }

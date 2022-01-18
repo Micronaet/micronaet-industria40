@@ -129,6 +129,7 @@ class IndustriaMrp(orm.Model):
             database = robot.database_id
             part = line.part_id
             fabric = line.material_id
+            product = line.product_id
             block = part.total
             if not block:
                 raise osv.except_osv(
@@ -152,6 +153,7 @@ class IndustriaMrp(orm.Model):
                     'industria_mrp_id': industria_mrp_id,
                     'program_id': program.id,  # Always one so put in header!
                 }, context=context)
+                # todo create more step?
                 step_id = step_pool.create(cr, uid, {
                     'job_id': job_id,
                     'sequence': 1,
@@ -167,6 +169,8 @@ class IndustriaMrp(orm.Model):
                 'fabric_id': fabric.id,
                 'total': total_layers,
             }, context=context)
+
+            # todo create product under fabric:
         return True
 
     def generate_industria_mrp_line(self, cr, uid, ids, context=None):
@@ -542,7 +546,7 @@ class IndustriaMrpLine(orm.Model):
             produced = 0  # C. todo
             job_fabric_ids = job_fabric_pool.search(cr, uid, [
                 # ('industria_mrp_id', '=', industria_mrp_id),
-                ('product_id', '=', product_id),
+                # ('product_id', '=', product_id),
             ], context=context)
             for jf in job_fabric_pool.browse(
                     cr, uid, job_fabric_ids, context=context):
