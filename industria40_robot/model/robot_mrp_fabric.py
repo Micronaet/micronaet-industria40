@@ -106,6 +106,7 @@ class IndustriaMrp(orm.Model):
         job_pool = self.pool.get('industria.job')
         step_pool = self.pool.get('industria.job.step')
         fabric_pool = self.pool.get('industria.job.fabric')
+        fabric_product_pool = self.pool.get('industria.job.fabric.product')
 
         # Clean all job if draft:
         industria_mrp_id = ids[0]
@@ -128,8 +129,8 @@ class IndustriaMrp(orm.Model):
             robot = program.source_id
             database = robot.database_id
             part = line.part_id
-            fabric = line.material_id
-            product = line.product_id
+            fabric_id = line.material_id.id
+            product_id = line.product_id.id
             block = part.total
             if not block:
                 raise osv.except_osv(
@@ -142,6 +143,7 @@ class IndustriaMrp(orm.Model):
             # todo what to do with waste?
             extra_block = total % block > 0
             total_layers = int(total / block) + (1 if extra_block else 0)
+            total_product = total + (block if extra_block else 0)
 
             # todo check max number of layer for create new job!
             if program not in program_created:
@@ -161,16 +163,27 @@ class IndustriaMrp(orm.Model):
                 }, context=context)
                 program_created[program] = job_id, step_id
 
-            # Create layer
+            # -----------------------------------------------------------------
+            # Create layer (used for unload fabric)
+            # -----------------------------------------------------------------
             job_id, step_id = program_created[program]
             fabric_pool.create(cr, uid, {
                 'sequence': sequence,
                 'step_id': step_id,
-                'fabric_id': fabric.id,
+                'fabric_id': fabric_id,
                 'total': total_layers,
             }, context=context)
 
-            # todo create product under fabric:
+            # -----------------------------------------------------------------
+            # Link product from program to fabric step:
+            # -----------------------------------------------------------------
+            fabric_product_pool.create(cr, uid, {
+                'fabric_id': fabric_id,
+                'product_id': product_id,
+                'total': total_product,
+            }, context=context)
+            # todo add also extra semi product not used here (from program)!
+
         return True
 
     def generate_industria_mrp_line(self, cr, uid, ids, context=None):
