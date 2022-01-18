@@ -167,7 +167,7 @@ class IndustriaMrp(orm.Model):
             # Create layer (used for unload fabric)
             # -----------------------------------------------------------------
             job_id, step_id = program_created[program]
-            fabric_pool.create(cr, uid, {
+            fabric_line_id = fabric_pool.create(cr, uid, {
                 'sequence': sequence,
                 'step_id': step_id,
                 'fabric_id': fabric_id,
@@ -178,7 +178,7 @@ class IndustriaMrp(orm.Model):
             # Link product from program to fabric step:
             # -----------------------------------------------------------------
             fabric_product_pool.create(cr, uid, {
-                'fabric_id': fabric_id,
+                'fabric_id': fabric_line_id,
                 'product_id': product_id,
                 'total': total_product,
             }, context=context)
