@@ -166,7 +166,36 @@
                                 <page name="page_job" string="Job">
                                     <group colspan="4" col="4">
                                         <separator string="Job:" colspan="4"/>
-                                        <field name="job_ids" nolabel="1" colspan="4" readonly="1" context="{'form_view_ref': 'industria40_base.view_industria_job_fabric_form'}"/>
+                                        <field name="job_ids" nolabel="1" colspan="4" readonly="1" context="{'form_view_ref': 'industria40_base.view_industria_job_fabric_form'}">
+                                            <tree string="Job">
+                                                <field name="created_at" />
+                                                <field name="updated_at" />
+                                                <field name="ended_at" />
+                                                <!--
+                                                <field name="piece" />
+                                                <field name="bar" />
+                                                <field name="out_statistic" />
+                                                <field name="database_id" />
+                                                <field name="industria_ref" />
+                                                <field name="partner_id" />
+                                                <field name="production_id" />
+                                                <field name="unused" attrs="{'invisible': [('picking_id', '!=', False)]}"/>
+                                                <field name="notes" colspan="4" nolabel="1"/>
+                                                -->
+                                                <field name="job_duration" widget="float_time"/>
+                                                <field name="program_id" />
+                                                <field name="source_id" />
+                                                <field name="picking_id" readonly="1" />
+
+                                                <!--<button name="realign_previous_state" type="object" string="Riallinea i precedenti" />-->
+                                                <button name="send_fabric_job" type="object" string="Invia lavoro" attrs="{'invisible': [('state', '!=', 'DRAFT')]}"/>
+                                                <button name="restart_fabric_job" type="object" string="Riavvia" attrs="{'invisible': [('state', '=', 'DRAFT')]}"/>
+                                                <!--<button name="error_fabric_job" type="object" string="Errato" attrs="{'invisible': [('state', 'not in', ('DRAFT', 'RUNNING'))]}"/>-->
+                                                <button name="completed_fabric_job" type="object" string="Completato" attrs="{'invisible': [('state', '!=', 'RUNNING')]}"/>
+                                                <field name="state" widget="statusbar"/>
+                                            </tree>
+
+                                        </field>
                                     </group>
                                 </page>
                                 <page name="page_picking" string="Picking">
