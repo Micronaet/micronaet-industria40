@@ -362,11 +362,11 @@ class IndustriaDatabase(orm.Model):
         return self.generate_picking_from_job(cr, uid, ids, context=ctx)
 
     def generate_picking_from_job(self, cr, uid, ids, context=None):
-        """ Generate picking from jobs
+        """ Generate picking from jobs (all job except fabric job that need
+            different management
         """
         if context is None:
             context = {}
-        force_job_id = context.get('force_job_id')
         force_database_id = context.get('force_database_id')
 
         model_pool = self.pool.get('ir.model.data')
@@ -383,23 +383,20 @@ class IndustriaDatabase(orm.Model):
         location_src_id = cl_type.default_location_src_id.id
         location_dest_id = cl_type.default_location_dest_id.id
 
-        if force_job_id:
-            job_ids = [force_job_id]
-        else:
-            domain = [
-                ('picking_id', '=', False),
-                ('unused', '=', False),
+        domain = [
+            ('picking_id', '=', False),
+            ('unused', '=', False),
 
-                ('created_at', '!=', False),
-                ('ended_at', '!=', False),
+            ('created_at', '!=', False),
+            ('ended_at', '!=', False),
 
-                ('state', '=', 'COMPLETED'),
+            ('state', '=', 'COMPLETED'),
 
-                # ('program_id.product_id', '!=', False),  # With semi product
-            ]
-            if force_database_id:
-                domain.append(('database_id', '=', force_database_id))
-            job_ids = job_pool.search(cr, uid, domain, context=context)
+            # ('program_id.product_id', '!=', False),  # With semi product
+        ]
+        if force_database_id:
+            domain.append(('database_id', '=', force_database_id))
+        job_ids = job_pool.search(cr, uid, domain, context=context)
 
         daily_job = {}
         for job in job_pool.browse(cr, uid, job_ids, context=context):
@@ -421,7 +418,8 @@ class IndustriaDatabase(orm.Model):
                 for line in step.fabric_ids:  # fabric in job
                     fabric = line.fabric_id
                     flat_total = line.total
-                    # check fabric in program
+
+                    # Check fabric in program  todo remove?
                     for program_fabric in program.fabric_ids:
                         if fabric == program_fabric.fabric_id:
                             for part in program_fabric.part_ids:
@@ -437,6 +435,9 @@ class IndustriaDatabase(orm.Model):
                 _logger.error('Jump job, no half worked!')
                 continue  # Not used
 
+            # -----------------------------------------------------------------
+            # Collect job in daily block:
+            # -----------------------------------------------------------------
             database = job.database_id
             origin = '%s [%s]' % (database.name, database.ip)
             if origin not in daily_job:
@@ -546,6 +547,188 @@ class IndustriaDatabase(orm.Model):
             'target': 'current',
             'nodestroy': False,
             }
+
+    def generate_fabric_picking_from_job(self, cr, uid, ids, context=None):
+        """ Generate picking from jobs Used only for fabric (others use:
+            generate_picking_from_job
+            force_job_id: all fabric job use this parameter for select job
+        """
+        if context is None:
+            context = {}
+        force_job_id = context.get('force_job_id')
+        if not force_job_id:
+            _logger.error('No job fabric passed (parameter force_job_id)')
+            return False
+        force_database_id = context.get('force_database_id')
+
+        model_pool = self.pool.get('ir.model.data')
+        picking_pool = self.pool.get('stock.picking')
+        move_pool = self.pool.get('stock.move')
+        job_pool = self.pool.get('industria.job')
+        company_pool = self.pool.get('res.company')
+
+        # ---------------------------------------------------------------------
+        # Read company parameters:
+        # ---------------------------------------------------------------------
+        company_proxy = company_pool._get_company_browse(
+            cr, uid, context=context)
+
+        cl_type = company_proxy.cl_mrp_lavoration_id
+        cl_type_id = cl_type.id if cl_type else False
+        location_src_id = cl_type.default_location_src_id.id
+        location_dest_id = cl_type.default_location_dest_id.id
+
+        # No loop only one job closed:
+        daily_job = {}
+        job = job_pool.browse(cr, uid, force_job_id, context=context)
+        products = []
+        materials = []
+
+        # ---------------------------------------------------------------------
+        # Fabric and semi product:
+        # ---------------------------------------------------------------------
+        for step in job.step_ids:
+            program = step.program_id
+            # todo manage extra semiproduct from this program
+
+            for line in step.fabric_ids:  # fabric in job
+                fabric = line.fabric_id
+                flat_total = line.total
+                # todo manage extra fabric
+                materials.append((fabric, flat_total))  # fabric, mt used
+
+                # Check fabric in program  todo remove?
+                for semiproduct in line.product_ids:
+                    # todo manage semiproduct removed?
+                    products.append(
+                        (semiproduct.product_id, semiproduct.total))
+
+
+                # Old management for fabric:
+                # for program_fabric in program.fabric_ids:
+                #    if fabric == program_fabric.fabric_id:
+                #        for part in program_fabric.part_ids:
+                #            product = part.product_id
+                #            products.append(
+                #                (product, flat_total * part.total))
+
+        if not products and not materials:
+            _logger.error('No semiproduct / raw material found to be loaded!')
+            return False
+
+        # -----------------------------------------------------------------
+        # Collect job in daily block:
+        # -----------------------------------------------------------------
+        database = job.database_id
+        origin = '%s [%s]' % (database.name, database.ip)
+        if origin not in daily_job:
+            daily_job[origin] = {}
+
+        date = '%s 08:00:00' % job.created_at[:10]  # Always at 8 o'clock
+        if date not in daily_job[origin]:
+            daily_job[origin][date] = {}
+
+        multi_duration = \
+            job.duration + job.duration_stop + job.duration_change
+        duration = multi_duration or job.job_duration
+        linked_job_id = job.id
+        for product, piece in products:
+            if product not in daily_job[origin][date]:
+                # Total, duration, job:
+                daily_job[origin][date][product] = [0, 0, []]
+            daily_job[origin][date][product][0] += piece
+            daily_job[origin][date][product][1] += duration
+            if linked_job_id:
+                daily_job[origin][date][product][2].append(linked_job_id)
+
+            # Multi product mode clean data:
+            duration = 0  # only fist for multi product
+            linked_job_id = False
+
+        # Generate picking form collected data:
+        new_picking_ids = []
+        for origin in daily_job:
+            for date in daily_job[origin]:
+                # Create picking:
+                picking_id = picking_pool.create(cr, uid, {
+                    'dep_mode': 'workshop',  # Always
+                    'origin': origin,
+                    # 'partner_id':
+                    'date': date,
+                    'min_date': date,
+                    'total_work': 0.0,
+                    'total_prepare': 0.0,
+                    'total_stop': 0.0,
+                    'note': '',
+                    'state': 'draft',
+                    'picking_type_id': cl_type_id,
+                    'is_mrp_lavoration': True,
+                    # 'location_id': location_id,
+                }, context=context)
+
+                new_picking_ids.append(picking_id)
+                total_work = 0.0
+                for product in daily_job[origin][date]:
+                    # Create stock move:
+                    qty, duration, job_ids = daily_job[origin][date][product]
+                    total_work += duration
+                    onchange = move_pool.onchange_product_id(
+                        cr, uid, False, product.id, location_src_id,
+                        location_dest_id, False)  # no partner
+                    move_data = onchange.get('value', {})
+                    if qty > 0:
+                        move_data.update({
+                            'picking_id': picking_id,
+                            'product_id': product.id,
+                            'product_uom_qty': qty,
+                            'location_id': location_src_id,
+                            'location_dest_id': location_dest_id,
+                            })
+                    else:
+                        move_data.update({
+                            'picking_id': picking_id,
+                            'product_id': product.id,
+                            'product_uom_qty': qty,
+                            'location_id': location_dest_id,
+                            'location_dest_id': location_src_id,
+                        })
+
+                    move_pool.create(cr, uid, move_data, context=context)
+                    # todo unload raw material?
+
+                    # Link job to picking:
+                    job_pool.write(cr, uid, job_ids, {
+                        'picking_id': picking_id,
+                    }, context=context)
+                picking_pool.write(cr, uid, [picking_id], {
+                    'total_work': total_work / 60.0,
+                }, context=context)
+
+            # Return list of picking
+            form_view_id = model_pool.get_object_reference(
+                cr, uid, 'lavoration_cl_sl', 'view_stock_picking_cl_form'
+            )[1]
+            tree_view_id = model_pool.get_object_reference(
+                cr, uid, 'lavoration_cl_sl', 'view_stock_picking_cl_tree',
+            )[1]
+
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Lavorazioni pendenti da approvare'),
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                # 'res_id': 1,
+                'res_model': 'stock.picking',
+                'view_id': tree_view_id,
+                'views': [(tree_view_id, 'tree'), (form_view_id, 'form')],
+                'domain': [('id', 'in', new_picking_ids)],
+                'context': {
+                    'default_dep_mode': 'workshop',
+                    'open_mrp_lavoration': True,
+                },
+                'target': 'current',
+                'nodestroy': False,
+                }
 
     def mssql_connect(self, cr, uid, ids, context=None):
         """ Connection with database return cursor
@@ -1679,7 +1862,7 @@ class IndustriaJob(orm.Model):
         # Generate pickings for load and unload materials:
         ctx = context.copy()
         ctx['force_job_id'] = job_id
-        return database_pool.generate_picking_from_job(
+        return database_pool.generate_fabric_picking_from_job(
             cr, uid, False, context=ctx)
 
     def error_fabric_job(self, cr, uid, ids, context=None):
