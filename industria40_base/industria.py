@@ -716,8 +716,7 @@ class IndustriaDatabase(orm.Model):
             tree_view_id = model_pool.get_object_reference(
                 cr, uid, 'lavoration_cl_sl', 'view_stock_picking_cl_tree',
             )[1]
-
-            return {
+            """return {
                 'type': 'ir.actions.act_window',
                 'name': _('Lavorazioni pendenti da approvare'),
                 'view_type': 'form',
@@ -733,7 +732,9 @@ class IndustriaDatabase(orm.Model):
                 },
                 'target': 'current',
                 'nodestroy': False,
-                }
+                }"""
+            return True
+
 
     def mssql_connect(self, cr, uid, ids, context=None):
         """ Connection with database return cursor
@@ -809,7 +810,7 @@ class IndustriaDatabase(orm.Model):
 
         try:
             query = """
-                SELECT *  
+                SELECT *
                 FROM programs;
                 """
             cursor.execute(query)
@@ -861,7 +862,7 @@ class IndustriaDatabase(orm.Model):
 
         try:
             query = """
-                SELECT *  
+                SELECT *
                 FROM sources
                 """
             cursor.execute(query)
@@ -1327,12 +1328,12 @@ class IndustriaRobot(orm.Model):
         item_id = ids[0]
         res = {}
         css = u"""
-            @chart-height:300px;            
+            @chart-height:300px;
             @grid-color:#aaa;
             @bar-color:#F16335;
             @bar-thickness:50px;
             @bar-rounded: 3px;
-            @bar-spacing:30px;            
+            @bar-spacing:30px;
             .chart-wrap{
                 margin-left:50px;
                 font-family:sans-serif;
@@ -1344,9 +1345,9 @@ class IndustriaRobot(orm.Model):
                     white-space:nowrap;
                   }
                 &.vertical .grid{
-                transform:translateY(@chart-height/2 - @chart-width/2) 
+                transform:translateY(@chart-height/2 - @chart-width/2)
                 translateX(@chart-width/2 - @chart-height/2) rotate(-90deg);
-                                
+
                 .bar::after{
                     transform: translateY(-50%) rotate(45deg);
                     display: block;
@@ -1355,7 +1356,7 @@ class IndustriaRobot(orm.Model):
                     transform:translateX(-0.2em) rotate(90deg);
                     }
                 }
-              
+
             height:@chart-width;
             width:@chart-height;
             .grid{
@@ -1366,7 +1367,7 @@ class IndustriaRobot(orm.Model):
                 border-left:2px solid @grid-color;
                 background:repeating-linear-gradient(
                     90deg,transparent,transparent 19.5%,
-                    fadeout(@grid-color,30%) 20%);                
+                    fadeout(@grid-color,30%) 20%);
                 &::before{
                     font-size:0.8em;
                     font-weight:bold;
@@ -1384,14 +1385,14 @@ class IndustriaRobot(orm.Model):
                     top:-1.5em;
                     }
                 }
-              
+
             .bar {
                 width: var(--bar-value);
                 height:@bar-thickness;
-                margin:@bar-spacing 0;    
+                margin:@bar-spacing 0;
                 background-color:@bar-color;
-                border-radius:0 @bar-rounded @bar-rounded 0;                
-                &:hover{opacity:0.7; }                
+                border-radius:0 @bar-rounded @bar-rounded 0;
+                &:hover{opacity:0.7; }
                 &::after{
                     content:attr(data-name);
                     margin-left:100%;
@@ -1409,24 +1410,24 @@ class IndustriaRobot(orm.Model):
             <h1>Bar Chart HTML</h1>
             <div class="chart-wrap vertical">
                 <h2 class="title">Bar Chart HTML Example: HTML And CSS</h2>
-              
+
                 <div class="grid">
-                    <div class="bar" style="--bar-value:85%;" 
+                    <div class="bar" style="--bar-value:85%;"
                         data-name="Your Blog" title="Your Blog 85%"></div>
-                    <div class="bar" style="--bar-value:23%;" 
+                    <div class="bar" style="--bar-value:23%;"
                         data-name="Medium" title="Medium 23%"></div>
-                    <div class="bar" style="--bar-value:7%;" 
+                    <div class="bar" style="--bar-value:7%;"
                         data-name="Tumblr" title="Tumblr 7%"></div>
-                    <div class="bar" style="--bar-value:38%;" 
+                    <div class="bar" style="--bar-value:38%;"
                         data-name="Facebook" title="Facebook 38%"></div>
-                    <div class="bar" style="--bar-value:35%;" 
+                    <div class="bar" style="--bar-value:35%;"
                         data-name="YouTube" title="YouTube 35%"></div>
-                    <div class="bar" style="--bar-value:30%;" 
+                    <div class="bar" style="--bar-value:30%;"
                         data-name="LinkedIn" title="LinkedIn 30%"></div>
-                    <div class="bar" style="--bar-value:5%;" 
+                    <div class="bar" style="--bar-value:5%;"
                         data-name="Twitter" title="Twitter 5%"></div>
-                    <div class="bar" style="--bar-value:20%;" 
-                        data-name="Other" title="Other 20%"></div>    
+                    <div class="bar" style="--bar-value:20%;"
+                        data-name="Other" title="Other 20%"></div>
               </div>
             </div>
         """
