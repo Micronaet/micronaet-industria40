@@ -582,7 +582,7 @@ class IndustriaDatabase(orm.Model):
         daily_job = {}
         job = job_pool.browse(cr, uid, force_job_id, context=context)
         products = []
-        materials = []
+        # materials = []
 
         # ---------------------------------------------------------------------
         # Fabric and semi product:
@@ -595,14 +595,14 @@ class IndustriaDatabase(orm.Model):
                 fabric = line.fabric_id
                 flat_total = line.total
                 # todo manage extra fabric
-                materials.append((fabric, flat_total))  # fabric, mt used
+                # materials.append((fabric, flat_total))  # fabric, mt used
+                products.append((fabric, -flat_total))  # fabric, mt used
 
                 # Check fabric in program  todo remove?
                 for semiproduct in line.product_ids:
                     # todo manage semi-product removed?
                     products.append(
                         (semiproduct.product_id, semiproduct.total))
-
 
                 # Old management for fabric:
                 # for program_fabric in program.fabric_ids:
@@ -612,7 +612,7 @@ class IndustriaDatabase(orm.Model):
                 #            products.append(
                 #                (product, flat_total * part.total))
 
-        if not products and not materials:
+        if not products:  # and not materials:
             _logger.error('No semiproduct / raw material found to be loaded!')
             return False
 
