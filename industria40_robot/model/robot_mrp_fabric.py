@@ -670,6 +670,20 @@ class IndustriaJob(orm.Model):
     }
 
 
+class StockPickig(orm.Model):
+    """ Model name: Link pickig to Industria MRP
+    """
+    _inherit = 'stock.picking'
+
+    _columns = {
+        'industria_mrp_id': fields.many2one(
+            'industria.mrp', 'Produzione I40',
+            help='Collegamento del picking al suo documento di '
+                 'produzione principale',
+        ),
+    }
+
+
 class MrpProductionOven(orm.Model):
     """ Model name: MrpProductionOven
     """
@@ -703,8 +717,12 @@ class IndustriaMrpInherit(orm.Model):
         ),
         'line_ids': fields.one2many(
             'industria.mrp.line', 'industria_mrp_id', 'MRP I4.0',
-            ondelete='cascade',
             help='Sviluppo produzioni per semilavorati da passare alla '
+                 'macchina',
+        ),
+        'picking_ids': fields.one2many(
+            'stock.picking', 'industria_mrp_id', 'Picking',
+            help='Sviluppo picking per semilavorati da passare alla '
                  'macchina',
         ),
     }

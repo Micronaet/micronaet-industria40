@@ -169,6 +169,12 @@
                                         <field name="job_ids" nolabel="1" colspan="4" readonly="1" context="{'form_view_ref': 'industria40_base.view_industria_job_fabric_form'}"/>
                                     </group>
                                 </page>
+                                <page name="page_picking" string="Picking">
+                                    <group colspan="4" col="4">
+                                        <separator string="Picking:" colspan="4"/>
+                                        <field name="picking_ids" nolabel="1" colspan="4" readonly="1" /><!--context="{'form_view_ref': 'industria40_base.view_industria_job_fabric_form'}"-->
+                                    </group>
+                                </page>
                             </notebook>
                         </group>
                     </sheet>

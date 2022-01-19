@@ -589,7 +589,7 @@ class IndustriaDatabase(orm.Model):
         # ---------------------------------------------------------------------
         for step in job.step_ids:
             program = step.program_id
-            # todo manage extra semiproduct from this program
+            # todo manage extra semi-product from this program
 
             for line in step.fabric_ids:  # fabric in job
                 fabric = line.fabric_id
@@ -599,7 +599,7 @@ class IndustriaDatabase(orm.Model):
 
                 # Check fabric in program  todo remove?
                 for semiproduct in line.product_ids:
-                    # todo manage semiproduct removed?
+                    # todo manage semi-product removed?
                     products.append(
                         (semiproduct.product_id, semiproduct.total))
 
@@ -619,6 +619,7 @@ class IndustriaDatabase(orm.Model):
         # -----------------------------------------------------------------
         # Collect job in daily block:
         # -----------------------------------------------------------------
+        pdb.set_trace()
         database = job.database_id
         origin = '%s [%s]' % (database.name, database.ip)
         if origin not in daily_job:
@@ -651,6 +652,7 @@ class IndustriaDatabase(orm.Model):
             for date in daily_job[origin]:
                 # Create picking:
                 picking_id = picking_pool.create(cr, uid, {
+                    'industria_mrp_id': job.industria_mrp_id.id,
                     'dep_mode': 'workshop',  # Always
                     'origin': origin,
                     # 'partner_id':
