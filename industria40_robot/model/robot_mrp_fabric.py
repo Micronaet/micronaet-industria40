@@ -675,6 +675,21 @@ class StockPickig(orm.Model):
     """
     _inherit = 'stock.picking'
 
+    def delete_picking_i40(self, cr, uid, ids, context=None):
+        """ Delete picking
+        """
+        stock_pool = self.pool.get('stock.move')
+        picking_id = ids[0]
+        stock_ids = stock_pool.search(cr, uid, [
+            ('picking_id', '=', picking_id),
+        ], context=context)
+        stock_pool.write(cr, uid, stock_ids, {
+            'state': 'cancel',
+        }, context=context)
+        stock_pool.unlink(cr, uid, stock_ids, context=context)
+
+        return self.unlink(cr, uid, ids, context=context)
+
     _columns = {
         'industria_mrp_id': fields.many2one(
             'industria.mrp', 'Produzione I40',

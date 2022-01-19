@@ -172,7 +172,16 @@
                                 <page name="page_picking" string="Picking">
                                     <group colspan="4" col="4">
                                         <separator string="Picking:" colspan="4"/>
-                                        <field name="picking_ids" nolabel="1" colspan="4" readonly="1" /><!--context="{'form_view_ref': 'industria40_base.view_industria_job_fabric_form'}"-->
+                                        <field name="picking_ids" nolabel="1" colspan="4" readonly="1">
+                                            <tree string="Picking">
+                                                <field name="name"/>
+                                                <field name="create_date"/>
+                                                <field name="origin"/>
+                                                <field name="state"/>
+                                                <button name="delete_picking_i40" type="object" string="Elimina" icon="gtk-delete"/>
+                                            </tree>
+                                        </field>
+                                        <!--context="{'form_view_ref': 'industria40_base.view_industria_job_fabric_form'}"-->
                                     </group>
                                 </page>
                             </notebook>
