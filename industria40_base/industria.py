@@ -621,7 +621,7 @@ class IndustriaDatabase(orm.Model):
         # -----------------------------------------------------------------
         pdb.set_trace()
         database = job.database_id
-        origin = '%s [%s]' % (database.name, database.ip)
+        origin = '%s [PI %s]' % (database.name, program.name)
         if origin not in daily_job:
             daily_job[origin] = {}
 
@@ -662,7 +662,7 @@ class IndustriaDatabase(orm.Model):
                     'total_prepare': 0.0,
                     'total_stop': 0.0,
                     'note': '',
-                    'state': 'draft',
+                    'state': 'done',
                     'picking_type_id': cl_type_id,
                     'is_mrp_lavoration': True,
                     # 'location_id': location_id,
@@ -685,14 +685,17 @@ class IndustriaDatabase(orm.Model):
                             'product_uom_qty': qty,
                             'location_id': location_src_id,
                             'location_dest_id': location_dest_id,
-                            })
-                    else:
+                            'state': 'done',
+                        })
+                    else:  # todo remove?
+                        pdb.set_trace()
                         move_data.update({
                             'picking_id': picking_id,
                             'product_id': product.id,
                             'product_uom_qty': qty,
                             'location_id': location_dest_id,
                             'location_dest_id': location_src_id,
+                            'state': 'done',
                         })
 
                     move_pool.create(cr, uid, move_data, context=context)
