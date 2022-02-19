@@ -346,11 +346,12 @@ class IndustriaMrp(orm.Model):
     def name_get(self, cr, uid, ids, context=None):
         """ Better description
         """
-        res = {}
+        res = []
         for mrp in self.browse(cr, uid, ids, context=context):
-            res[mrp.id] = mrp.name or 'Job %s (%s)' % (
-                ', '.join([m.name for m in mrp.mrp_ids])
-            ),
+            res.append(()
+                mrp.id,
+                mrp.name or 'Job %s (%s)' % (
+                    mrp.date, ', '.join([m.name for m in mrp.mrp_ids]))
         return res
 
     _columns = {
