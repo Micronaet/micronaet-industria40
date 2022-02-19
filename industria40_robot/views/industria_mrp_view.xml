@@ -117,10 +117,10 @@
                     </header>
                     <sheet>
                         <group colspan="4" col="4">
-                            <field name="robot_id" domain="[('code', '=ilike', 'TESS%')]"/>
+                            <field name="robot_id" domain="[('code', '=ilike', 'TESS%')]" widget="selection"/>
                             <newline/>
-                            <field name="name"/>
                             <field name="date"/>
+                            <field name="name"/>
                             <notebook colspan="4">
                                 <page name="page_line_mrp" string="Semilavorati">
                                     <group colspan="4" col="4">
