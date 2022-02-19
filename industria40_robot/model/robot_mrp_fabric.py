@@ -343,7 +343,7 @@ class IndustriaMrp(orm.Model):
                 move.id for move in mrp.picking_id.move_lines]
         return res
 
-    def rec_name(self, cr, uid, ids, context=None):
+    def name_get(self, cr, uid, ids, context=None):
         """ Better description
         """
         res = {}
