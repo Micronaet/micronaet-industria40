@@ -348,10 +348,11 @@ class IndustriaMrp(orm.Model):
         """
         res = []
         for mrp in self.browse(cr, uid, ids, context=context):
-            res.append(()
+            res.append((
                 mrp.id,
                 mrp.name or 'Job %s (%s)' % (
                     mrp.date, ', '.join([m.name for m in mrp.mrp_ids]))
+            ))
         return res
 
     _columns = {
