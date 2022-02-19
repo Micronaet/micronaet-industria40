@@ -97,8 +97,7 @@ class IndustriaMrp(orm.Model):
     _name = 'industria.mrp'
     _description = 'Industria 4.0 MRP'
     _order = 'date desc'
-    _rec_name = 'date'
-
+    _rec_name = 'name'
 
     def generate_industria_job(self, cr, uid, ids, context=None):
         """ Generate job from exploded component
@@ -344,7 +343,19 @@ class IndustriaMrp(orm.Model):
                 move.id for move in mrp.picking_id.move_lines]
         return res
 
+    def rec_name(self, cr, uid, ids, context=None):
+        """ Better description
+        """
+        res = {}
+        for mrp in self.browse(cr, uid, ids, context=context):
+            res[mrp.id] = mrp.name or 'Job %s (%s)' % (
+                ', '.join([m.name for m in mrp.mrp_ids])
+            ),
+        return res
+
     _columns = {
+        'name': fields.char(
+            'Nome', help='Indicare per riconoscere meglio la lavorazione'),
         'date': fields.date(
             'Data', help='Data di creazione'),
         'picking_id': fields.many2one(

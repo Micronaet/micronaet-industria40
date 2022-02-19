@@ -117,7 +117,9 @@
                     </header>
                     <sheet>
                         <group colspan="4" col="4">
-                            <field name="robot_id"/>
+                            <field name="robot_id" domain="[('code', '=ilike', 'TESS%')]"/>
+                            <newline/>
+                            <field name="name"/>
                             <field name="date"/>
                             <notebook colspan="4">
                                 <page name="page_line_mrp" string="Semilavorati">
@@ -194,7 +196,6 @@
                                                 <button name="completed_fabric_job" type="object" string="Completato" attrs="{'invisible': [('state', '!=', 'RUNNING')]}"/>
                                                 <field name="state" widget="statusbar"/>
                                             </tree>
-
                                         </field>
                                     </group>
                                 </page>
