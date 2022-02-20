@@ -153,7 +153,6 @@ class IndustriaMrp(orm.Model):
             sp_total_layers = int(total / block) + (1 if extra_block else 0)
 
             # Total layers is total layer put in job will turn to 0:
-            pdb.set_trace()
             while sp_total_layers > 0:
                 if program not in program_created:
                     _logger.warning(
