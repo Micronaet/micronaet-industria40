@@ -173,6 +173,7 @@
                                                 <field name="created_at" />
                                                 <field name="updated_at" />
                                                 <field name="ended_at" />
+                                                <field name="fabric_layer" />
                                                 <!--
                                                 <field name="piece" />
                                                 <field name="bar" />

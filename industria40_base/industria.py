@@ -2377,7 +2377,25 @@ class IndustriaJobInherit(orm.Model):
             }
         return res
 
+    def _function_get_fabric_layer(
+            self, cr, uid, ids, fields, args, context=None):
+        """ Fields function for calculate
+        """
+        res = {}
+        for job in self.browse(cr, uid, ids, context=context):
+            total = 0
+            for step in job.step_ids:
+                for fabric_line in step.fabric_ids:
+                    total += fabric_line.total
+            res[job.id] = total
+        return res
+
     _columns = {
+        'fabric_layer': fields.function(
+            _function_get_fabric_layer, method=True,
+            type='integer', string='Strati job',
+            store=False),
+
         'previous_id': fields.many2one(
             'industria.job', 'Precedente'),
 

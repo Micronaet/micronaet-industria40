@@ -165,6 +165,7 @@ class IndustriaMrp(orm.Model):
                         'industria_mrp_id': industria_mrp_id,
                         'program_id': program.id,  # Always one so put in head!
                     }, context=context)
+
                     # todo create more step?
                     step_id = step_pool.create(cr, uid, {
                         'job_id': job_id,
