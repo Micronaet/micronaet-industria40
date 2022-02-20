@@ -121,9 +121,9 @@ class IndustriaMrp(orm.Model):
             job_pool.unlink(cr, uid, job_ids, context=context)
             _logger.warning('Deleted %s jobs' % len(job_ids))
 
-        program_created = {}
+        program_created = {}  # job, step, max layer available
         sequence = 0
-        for line in industria_mrp.line_ids:
+        for line in industria_mrp.line_ids:  # Sorted by program
             sequence += 1  # Sequence still progress for all program!
             program = line.program_id
             if not program:  # todo raise error?
@@ -131,61 +131,90 @@ class IndustriaMrp(orm.Model):
                 continue
             robot = program.source_id
             database = robot.database_id
-            part = line.part_id  # Rule winner
+            part = line.part_id  # winner rule
             fabric_id = line.material_id.id
             product_id = line.product_id.id
-            block = part.total
+            block = part.total  # total semi product in one program
+            max_layer = robot.max_layer
+
             if not block:
                 raise osv.except_osv(
                     _('Errore setup'),
                     _('Nel programma sono stati inseriti dei semilavorati'
                       'senza indicare il numero totale di pezzi generati'))
 
-            total = line.remain  # line.todo  # todo use line.remain!
+            total = line.remain  # Total semi product to do
 
             # todo what to do with waste?
             extra_block = total % block > 0
-            total_layers = int(total / block) + (1 if extra_block else 0)
-            total_product = total + (block if extra_block else 0)
+            sp_total_layers = int(total / block) + (1 if extra_block else 0)
 
-            # todo check max number of layer for create new job!
-            if program not in program_created:
-                job_id = job_pool.create(cr, uid, {
-                    'created_at': datetime.now().strftime(
-                        DEFAULT_SERVER_DATETIME_FORMAT),
-                    'source_id': robot.id,
-                    'database_id': database.id,
-                    'industria_mrp_id': industria_mrp_id,
-                    'program_id': program.id,  # Always one so put in header!
+            # Total layers is total layer put in job will turn to 0:
+            while sp_total_layers > 0:
+                if program not in program_created:
+                    _logger.warning(
+                        'Create new job for cache, program: %s' % program.name)
+                    job_id = job_pool.create(cr, uid, {
+                        'created_at': datetime.now().strftime(
+                            DEFAULT_SERVER_DATETIME_FORMAT),
+                        'source_id': robot.id,
+                        'database_id': database.id,
+                        'industria_mrp_id': industria_mrp_id,
+                        'program_id': program.id,  # Always one so put in head!
+                    }, context=context)
+                    # todo create more step?
+                    step_id = step_pool.create(cr, uid, {
+                        'job_id': job_id,
+                        'sequence': 1,
+                        'program_id': program.id,
+                    }, context=context)
+                    # Save used data:
+                    program_created[program] = [job_id, step_id, max_layer]
+
+                # Check max number of layer for create new job!
+                job_id, step_id, job_remain_layer = program_created[program]
+                if sp_total_layers <= job_remain_layer:  # Available this job:
+                    program_created[program][2] -= sp_total_layers
+                    this_layer = sp_total_layers
+                    sp_total_layers = 0  # Covered all, end loop
+                    job_ended = True
+                    _logger.warning('End layer with new job')
+
+                else:
+                    this_layer = job_remain_layer  # todo change if is small #
+                    sp_total_layers -= job_remain_layer
+                    job_ended = False
+                    _logger.warning('Continue layer in this job')
+
+                # -------------------------------------------------------------
+                # Create layer (used for unload FABRIC)
+                # -------------------------------------------------------------
+                fabric_line_id = fabric_pool.create(cr, uid, {
+                    'sequence': sequence,
+                    'step_id': step_id,
+                    'fabric_id': fabric_id,
+                    'total': this_layer,
                 }, context=context)
-                # todo create more step?
-                step_id = step_pool.create(cr, uid, {
-                    'job_id': job_id,
-                    'sequence': 1,
-                    'program_id': program.id,
+
+                # -------------------------------------------------------------
+                # Link product from program to fabric step:
+                # -------------------------------------------------------------
+                total_product = this_layer * block
+                fabric_product_pool.create(cr, uid, {
+                    'fabric_id': fabric_line_id,
+                    'product_id': product_id,
+                    'total': total_product,
                 }, context=context)
-                program_created[program] = job_id, step_id
 
-            # -----------------------------------------------------------------
-            # Create layer (used for unload fabric)
-            # -----------------------------------------------------------------
-            job_id, step_id = program_created[program]
-            fabric_line_id = fabric_pool.create(cr, uid, {
-                'sequence': sequence,
-                'step_id': step_id,
-                'fabric_id': fabric_id,
-                'total': total_layers,
-            }, context=context)
+                # todo add also extra semi product not used here (from program)
+                # Some program has 2 different semi product maybe one is not
+                # used
 
-            # -----------------------------------------------------------------
-            # Link product from program to fabric step:
-            # -----------------------------------------------------------------
-            fabric_product_pool.create(cr, uid, {
-                'fabric_id': fabric_line_id,
-                'product_id': product_id,
-                'total': total_product,
-            }, context=context)
-            # todo add also extra semi product not used here (from program)!
+                if job_ended:
+                    _logger.warning(
+                        'Delete job from cache, '
+                        'so new will created for program: %s' % program.name)
+                    del(program_created[program])
 
         return True
 
