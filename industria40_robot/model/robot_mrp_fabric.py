@@ -85,6 +85,9 @@ class IndustriaRobot(orm.Model):
     _inherit = 'industria.robot'
 
     _columns = {
+        'max_layer': fields.integer(
+            'Layer massimi',
+            help='Massimo numero di strati che la macchina può tagliare'),
         'color_ids': fields.one2many(
             'industria.robot.color', 'robot_id', 'Colori'),
         }
@@ -111,6 +114,7 @@ class IndustriaMrp(orm.Model):
         industria_mrp_id = ids[0]
         industria_mrp = self.browse(cr, uid, industria_mrp_id, context=context)
 
+        # Cannot delete job if not draft:
         if industria_mrp.job_ids and \
                 {'DRAFT'} == set([job.state for job in industria_mrp.job_ids]):
             job_ids = [job.id for job in industria_mrp.job_ids]
@@ -127,7 +131,7 @@ class IndustriaMrp(orm.Model):
                 continue
             robot = program.source_id
             database = robot.database_id
-            part = line.part_id
+            part = line.part_id  # Rule winner
             fabric_id = line.material_id.id
             product_id = line.product_id.id
             block = part.total
@@ -137,7 +141,7 @@ class IndustriaMrp(orm.Model):
                     _('Nel programma sono stati inseriti dei semilavorati'
                       'senza indicare il numero totale di pezzi generati'))
 
-            total = line.todo  # todo use line.remain
+            total = line.remain  # line.todo  # todo use line.remain!
 
             # todo what to do with waste?
             extra_block = total % block > 0
@@ -334,6 +338,7 @@ class IndustriaMrp(orm.Model):
             'state': 'draft',
         }, context=context)
 
+    # todo remove:
     def _get_stock_move_ids(self, cr, uid, ids, fields, args, context=None):
         """ Fields function for calculate
         """
@@ -360,12 +365,14 @@ class IndustriaMrp(orm.Model):
             'Nome', help='Indicare per riconoscere meglio la lavorazione'),
         'date': fields.date(
             'Data', help='Data di creazione'),
+        # todo remove not used:
         'picking_id': fields.many2one(
             'stock.picking', 'Documento scarico',
             ondelete='set null',
             help='Documento per scaricare subito i materiali assegnati alla '
                  'produzione attuale',
         ),
+        # todo remove no more used:
         'stock_move_ids': fields.function(
             _get_stock_move_ids, method=True,
             type='many2many', relation='stock.move',
@@ -401,6 +408,7 @@ class IndustriaMrpLine(orm.Model):
     _rec_name = 'material_id'
 
     # Stock operation:
+    # todo remove:
     def industria_get_movement(self, cr, uid, ids, qty, context=None):
         """ Create or return picking
         """
@@ -566,7 +574,7 @@ class IndustriaMrpLine(orm.Model):
             industria_mrp_id = line.industria_mrp_id.id
             product_id = line.product_id.id  # Semi product
             total = line.todo  # A.
-            assigned = line.stock_move_id.product_uom_qty  # B.
+            assigned = line.assigned  # B.
 
             # Produced:
             produced = 0  # C. todo
@@ -581,14 +589,19 @@ class IndustriaMrpLine(orm.Model):
             # Total:
             bounded = assigned + produced  # E
             remain = total - bounded  # D (A-(B+C))  >> B+C=E
+
+            # Used in MRP
+            used = 0
             # Bounded quantity:
             if remain < 0:
                 bounded -= remain  # Extra production goes in stock
+            if used:
+                bounded -= used
+                bounded = max(0, bounded)
 
             res[line.id] = {
-                'assigned': assigned,
                 'produced': produced,
-                'remain': remain,
+                'remain': max(0, remain),
                 'bounded': bounded,
                 # todo add line list m2m here?
             }
@@ -597,6 +610,7 @@ class IndustriaMrpLine(orm.Model):
     _columns = {
         'industria_mrp_id': fields.many2one(
             'industria.mrp', 'MRP I4.0', ondelete='cascade'),
+        # todo remove, not used for assigned qty!
         'stock_move_id': fields.many2one(
             'stock.move', 'Movimenti assegnati', ondelete='set null',
             help='Collegamento al movimento che scarica gli impegni per questo'
@@ -625,24 +639,28 @@ class IndustriaMrpLine(orm.Model):
         #    get_total_field_data, method=True,
         #    type='many2many', relation='industria.program',
         #    string='Programmi disponibili',
-        #),
+        # ),
 
         'todo': fields.integer(
             string='Nominali', help='Totale come da produzioni collegate'),
-        'assigned': fields.function(
-            get_total_field_data, method=True,
-            type='float', multi=True,
-            string='Assegnati', help='Assegnati da magazzino'),
+        'assigned': fields.integer(
+            string='Assegnati', help='Assegnati da magazzino manualmente'),
         'produced': fields.function(
             get_total_field_data, method=True,
             type='float', multi=True,
-            string='Prodotti', help='Fatti con i job di lavoro '),
+            string='Prodotti', help='Fatti con i job di lavoro su taglio'),
         'remain': fields.function(
             get_total_field_data, method=True,
             type='float', multi=True,
             string='Residui',
             help='Residui da produrre (calcolato da quelli da fare puliti da '
                  'quelli fatti o assegnati'),
+        'used': fields.function(
+            get_total_field_data, method=True,
+            type='float', multi=True,
+            string='Utilizzati',
+            help='Utilizzati dalle produzioni collegate alla attuale commessa'
+            ),
         'bounded': fields.function(
             get_total_field_data, method=True,
             type='float', multi=True,
@@ -661,12 +679,12 @@ class IndustriaJobFabric(orm.Model):
     """
     _inherit = 'industria.job.fabric'
 
-    #_columns = {
+    # _columns = {
     #    'industria_mrp_id': fields.related(
     #        'step_id', 'industria_mrp_id',
     #        type='many2one', relation='industria.mrp',
     #        string='MRP Industria 4.0', store=True),
-    #}
+    # }
 
 
 class IndustriaJob(orm.Model):
@@ -683,6 +701,7 @@ class IndustriaJob(orm.Model):
     }
 
 
+# todo remove, not used for assigned qty:
 class StockPickig(orm.Model):
     """ Model name: Link pickig to Industria MRP
     """

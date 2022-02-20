@@ -58,10 +58,14 @@ class IndustriaAssignStockWizard(orm.TransientModel):
 
         wizard = self.browse(cr, uid, ids, context=context)[0]
         industria_line_id = wizard.industria_line_id.id
-        new_qty = wizard.new_qty
+        assigned = wizard.new_qty
 
-        i40_line_pool.industria_get_movement(
-            cr, uid, [industria_line_id], new_qty, context=context)
+        # Not created stock.move and picking just save number:
+        i40_line_pool.write(cr, uid, [industria_line_id], {
+            'assigned': assigned
+        }, context=context)
+        # i40_line_pool.industria_get_movement(
+        #    cr, uid, [industria_line_id], assigned, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
     _columns = {
