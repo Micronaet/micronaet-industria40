@@ -307,37 +307,6 @@ class IndustriaDatabase(orm.Model):
             return False
         return True
 
-    def open_job_picking(self, cr, uid, ids, context=None):
-        """ Open picking job
-        """
-        job = self.browse(cr, uid, ids, context=context)[0]
-        picking_id = job.picking_id.id
-        if not picking_id:
-            raise osv.except_osv(
-                _('Errore'),
-                _('Picking non presente!'),
-                )
-
-        # model_pool = self.pool.get('ir.model.data')
-        # view_id = model_pool.get_object_reference(
-        #     cr, uid, 'module_name', 'view_name')[1]
-        view_id = False
-
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Picking'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_id': picking_id,
-            'res_model': 'stock.picking',
-            'view_id': view_id,
-            'views': [(False, 'form')],
-            'domain': [],
-            'context': context,
-            'target': 'current', # 'new'
-            'nodestroy': False,
-            }
-
     def update_medium_program_job(self, cr, uid, ids, context=None):
         """ Update medium
         """
@@ -1781,6 +1750,37 @@ class IndustriaJob(orm.Model):
     _description = 'Jobs'
     _rec_name = 'created_at'
     _order = 'created_at desc'
+
+    def open_job_picking(self, cr, uid, ids, context=None):
+        """ Open picking job
+        """
+        job = self.browse(cr, uid, ids, context=context)[0]
+        picking_id = job.picking_id.id
+        if not picking_id:
+            raise osv.except_osv(
+                _('Errore'),
+                _('Picking non presente!'),
+                )
+
+        # model_pool = self.pool.get('ir.model.data')
+        # view_id = model_pool.get_object_reference(
+        #     cr, uid, 'module_name', 'view_name')[1]
+        view_id = False
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Picking'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': picking_id,
+            'res_model': 'stock.picking',
+            'view_id': view_id,
+            'views': [(False, 'form')],
+            'domain': [],
+            'context': context,
+            'target': 'current', # 'new'
+            'nodestroy': False,
+            }
 
     def send_fabric_job(self, cr, uid, ids, context=None):
         """ Send job to tender

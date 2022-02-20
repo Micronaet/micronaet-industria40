@@ -126,7 +126,7 @@
                                     <group colspan="4" col="4">
                                         <separator string="Semilavorati:" colspan="2"/>
                                         <button name="generate_industria_mrp_line" type="object" string="Genera produzione"/>
-                                        <button name="generate_industria_job" type="object" string="Genera job"/>
+                                        <button name="generate_industria_job" type="object" string="Genera job" />
                                         <field name="line_ids" nolabel="1" colspan="4" >
                                             <tree editable="bottom" string="Linee" colors="red: program_id == False">
                                                 <field name="sequence" readonly="1"/>
@@ -188,7 +188,7 @@
                                                 <field name="job_duration" widget="float_time"/>
                                                 <field name="program_id" />
                                                 <field name="source_id" />
-                                                <button name="open_job_picking" type="object" string="Apri picking" attrs="{'invisible': [('picking_id', '=', False)]}"/>
+                                                <button name="open_job_picking" type="object" string="Apri picking" attrs="{'invisible': [('picking_id', '=', False)]}" icon="gtk-goto-last"/>
                                                 <field name="picking_id" readonly="1" />
 
                                                 <!--<button name="realign_previous_state" type="object" string="Riallinea i precedenti" />-->
