@@ -120,7 +120,6 @@ class IndustriaMrp(orm.Model):
 
         program_created = {}  # job, step, max layer available
         sequence = 0
-        pdb.set_trace()
         for line in industria_mrp.line_ids:  # Sorted by program
             sequence += 1  # Sequence still progress for all program!
             program = line.program_id
@@ -154,6 +153,7 @@ class IndustriaMrp(orm.Model):
             sp_total_layers = int(total / block) + (1 if extra_block else 0)
 
             # Total layers is total layer put in job will turn to 0:
+            pdb.set_trace()
             while sp_total_layers > 0:
                 if program not in program_created:
                     _logger.warning(
@@ -389,8 +389,9 @@ class IndustriaMrp(orm.Model):
         for mrp in self.browse(cr, uid, ids, context=context):
             res.append((
                 mrp.id,
-                mrp.name or 'Job %s (%s)' % (
-                    mrp.date, ', '.join([m.name for m in mrp.mrp_ids]))
+                'Job %s (%s)' % (
+                    mrp.date, mrp.name or ', '.join(
+                        [m.name for m in mrp.mrp_ids]))
             ))
         return res
 
