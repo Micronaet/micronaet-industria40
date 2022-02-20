@@ -608,12 +608,12 @@ class IndustriaMrpLine(orm.Model):
             # Produced:
             produced = 0  # C. todo
             job_fabric_ids = job_fabric_pool.search(cr, uid, [
-                ('step_id.industria_mrp_id', '=', industria_mrp_id),
+                ('industria_mrp_id', '=', industria_mrp_id),
                 # ('product_id', '=', product_id),
             ], context=context)
-            for jf in job_fabric_pool.browse(
+            for fabric_job in job_fabric_pool.browse(
                     cr, uid, job_fabric_ids, context=context):
-                produced += jf.total  # todo check
+                produced += fabric_job.total  # todo check
 
             # Total:
             bounded = assigned + produced  # E
@@ -708,12 +708,13 @@ class IndustriaJobFabric(orm.Model):
     """
     _inherit = 'industria.job.fabric'
 
-    # _columns = {
-    #    'industria_mrp_id': fields.related(
-    #        'step_id', 'industria_mrp_id',
-    #        type='many2one', relation='industria.mrp',
-    #        string='MRP Industria 4.0', store=True),
-    # }
+    _columns = {
+        # todo needed? (if only in one filter could be removed!)
+        'industria_mrp_id': fields.related(
+            'step_id', 'industria_mrp_id',
+            type='many2one', relation='industria.mrp',
+            string='MRP Industria 4.0', store=True),
+    }
 
 
 class IndustriaJob(orm.Model):
