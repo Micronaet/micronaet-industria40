@@ -589,11 +589,12 @@ class IndustriaDatabase(orm.Model):
         # ---------------------------------------------------------------------
         for step in job.step_ids:
             program = step.program_id
+            fabric_length = program.fabric_length / 1000.0  # was mm.
             # todo manage extra semi-product from this program
 
             for line in step.fabric_ids:  # fabric in job
                 fabric = line.fabric_id
-                flat_total = line.total
+                flat_total = line.total * fabric_length  # x length of layer
                 # todo manage extra fabric
                 # materials.append((fabric, flat_total))  # fabric, mt used
                 products.append((fabric, -flat_total))  # fabric, mt used
@@ -1754,6 +1755,7 @@ class IndustriaJob(orm.Model):
     def open_job_picking(self, cr, uid, ids, context=None):
         """ Open picking job
         """
+        # todo raise error!
         job = self.browse(cr, uid, ids, context=context)[0]
         picking_id = job.picking_id.id
         if not picking_id:
