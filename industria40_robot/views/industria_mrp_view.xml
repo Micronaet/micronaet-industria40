@@ -188,6 +188,7 @@
                                                 <field name="job_duration" widget="float_time"/>
                                                 <field name="program_id" />
                                                 <field name="source_id" />
+                                                <button name="open_job_picking" type="object" string="Apri picking" attrs="{'invisible': [('picking_id', '=', False)]}"/>
                                                 <field name="picking_id" readonly="1" />
 
                                                 <!--<button name="realign_previous_state" type="object" string="Riallinea i precedenti" />-->

@@ -307,6 +307,37 @@ class IndustriaDatabase(orm.Model):
             return False
         return True
 
+    def open_job_picking(self, cr, uid, ids, context=None):
+        """ Open picking job
+        """
+        job = self.browse(cr, uid, ids, context=context)[0]
+        picking_id = job.picking_id.id
+        if not picking_id:
+            raise osv.except_osv(
+                _('Errore'),
+                _('Picking non presente!'),
+                )
+
+        # model_pool = self.pool.get('ir.model.data')
+        # view_id = model_pool.get_object_reference(
+        #     cr, uid, 'module_name', 'view_name')[1]
+        view_id = False
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Picking'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': picking_id,
+            'res_model': 'stock.picking',
+            'view_id': view_id,
+            'views': [(False, 'form')],
+            'domain': [],
+            'context': context,
+            'target': 'current', # 'new'
+            'nodestroy': False,
+            }
+
     def update_medium_program_job(self, cr, uid, ids, context=None):
         """ Update medium
         """
@@ -620,6 +651,9 @@ class IndustriaDatabase(orm.Model):
         # Collect job in daily block:
         # -----------------------------------------------------------------
         pdb.set_trace()
+        if not program:  # todo raise error?
+            _logger.error('No program!')
+
         database = job.database_id
         origin = '%s [PI %s]' % (database.name, program.name)
         if origin not in daily_job:
