@@ -181,13 +181,13 @@ class IndustriaMrp(orm.Model):
                     program_created[program][2] -= sp_total_layers
                     this_layer = sp_total_layers
                     sp_total_layers = 0  # Covered all, end loop
-                    job_ended = True
+                    job_ended = False
                     _logger.warning('End layer with new job')
 
                 else:
                     this_layer = job_remain_layer  # todo change if is small #
                     sp_total_layers -= job_remain_layer
-                    job_ended = False
+                    job_ended = True
                     _logger.warning('Continue layer in this job')
 
                 # -------------------------------------------------------------
