@@ -85,9 +85,6 @@ class IndustriaRobot(orm.Model):
     _inherit = 'industria.robot'
 
     _columns = {
-        'max_layer': fields.integer(
-            'Layer massimi',
-            help='Massimo numero di strati che la macchina può tagliare'),
         'color_ids': fields.one2many(
             'industria.robot.color', 'robot_id', 'Colori'),
         }
@@ -123,6 +120,7 @@ class IndustriaMrp(orm.Model):
 
         program_created = {}  # job, step, max layer available
         sequence = 0
+        pdb.set_trace()
         for line in industria_mrp.line_ids:  # Sorted by program
             sequence += 1  # Sequence still progress for all program!
             program = line.program_id
@@ -136,6 +134,12 @@ class IndustriaMrp(orm.Model):
             product_id = line.product_id.id
             block = part.total  # total semi product in one program
             max_layer = robot.max_layer
+
+            if not max_layer:
+                raise osv.except_osv(
+                    _('Errore setup'),
+                    _('Non è stato impostato il numero massimo di strati '
+                      'nel robot di taglio tessuto!'))
 
             if not block:
                 raise osv.except_osv(
@@ -194,6 +198,7 @@ class IndustriaMrp(orm.Model):
                     'step_id': step_id,
                     'fabric_id': fabric_id,
                     'total': this_layer,
+                    # related 'industria_mrp_id': industria_mrp_id,
                 }, context=context)
 
                 # -------------------------------------------------------------
@@ -608,7 +613,8 @@ class IndustriaMrpLine(orm.Model):
             # Produced:
             produced = 0  # C. todo
             job_fabric_ids = job_fabric_pool.search(cr, uid, [
-                ('industria_mrp_id', '=', industria_mrp_id),
+                # todo related if slow procedure:
+                ('step_id.job_id.industria_mrp_id', '=', industria_mrp_id),
                 # ('product_id', '=', product_id),
             ], context=context)
             for fabric_job in job_fabric_pool.browse(
@@ -708,13 +714,13 @@ class IndustriaJobFabric(orm.Model):
     """
     _inherit = 'industria.job.fabric'
 
-    _columns = {
-        # todo needed? (if only in one filter could be removed!)
-        'industria_mrp_id': fields.related(
-            'step_id', 'industria_mrp_id',
-            type='many2one', relation='industria.mrp',
-            string='MRP Industria 4.0', store=True),
-    }
+    #_columns = {
+    #    # todo needed? (if only in one filter could be removed!)
+    #    'industria_mrp_id': fields.related(
+    #        'step_id', 'industria_mrp_id',
+    #        type='many2one', relation='industria.mrp',
+    #        string='MRP Industria 4.0', store=True),
+    #}
 
 
 class IndustriaJob(orm.Model):
