@@ -614,13 +614,12 @@ class IndustriaDatabase(orm.Model):
                 #                (product, flat_total * part.total))
 
         if not products:  # and not materials:
-            _logger.error('No semiproduct / raw material found to be loaded!')
+            _logger.error('No semi-product / raw material found to be loaded!')
             return False
 
-        # -----------------------------------------------------------------
+        # ---------------------------------------------------------------------
         # Collect job in daily block:
-        # -----------------------------------------------------------------
-        pdb.set_trace()
+        # ---------------------------------------------------------------------
         if not program:  # todo raise error?
             _logger.error('No program!')
 
@@ -692,7 +691,6 @@ class IndustriaDatabase(orm.Model):
                             'state': 'done',
                         })
                     else:  # todo remove?
-                        pdb.set_trace()
                         move_data.update({
                             'picking_id': picking_id,
                             'product_id': product.id,
@@ -1780,7 +1778,7 @@ class IndustriaJob(orm.Model):
             'views': [(False, 'form')],
             'domain': [],
             'context': context,
-            'target': 'current', # 'new'
+            'target': 'current',  # 'new'
             'nodestroy': False,
             }
 
@@ -2420,16 +2418,29 @@ class IndustriaJobInherit(orm.Model):
         res = {}
         for job in self.browse(cr, uid, ids, context=context):
             total = 0
+            detail = ''
             for step in job.step_ids:
                 for fabric_line in step.fabric_ids:
-                    total += fabric_line.total
-            res[job.id] = total
+                    layer = fabric_line.total
+                    detail += '%s x %s' % (
+                        fabric_line.fabric_id.default_code,
+                        layer,
+                    )
+                    total += layer
+            res[job.id] = {
+                'fabric_layer': total,
+                'fabric_detail': detail,
+            }
         return res
 
     _columns = {
         'fabric_layer': fields.function(
             _function_get_fabric_layer, method=True,
-            type='integer', string='Strati job',
+            type='integer', string='Strati job', multi=True,
+            store=False),
+        'fabric_detail': fields.function(
+            _function_get_fabric_layer, method=True, multi=True,
+            type='integer', string='Dettaglio',
             store=False),
 
         'previous_id': fields.many2one(

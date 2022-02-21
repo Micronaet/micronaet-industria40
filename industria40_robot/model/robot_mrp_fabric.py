@@ -602,7 +602,7 @@ class IndustriaMrpLine(orm.Model):
     def get_total_field_data(self, cr, uid, ids, fields, args, context=None):
         """ Calculate all total fields
         """
-        job_fabric_pool = self.pool.get('industria.job.fabric')
+        job_product_pool = self.pool.get('industria.job.fabric.product')
 
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
@@ -612,15 +612,18 @@ class IndustriaMrpLine(orm.Model):
             assigned = line.assigned  # B.
 
             # Produced:
-            produced = 0  # C. todo
-            job_fabric_ids = job_fabric_pool.search(cr, uid, [
+            produced = 0  # C. (used job data not stock picking?)
+            job_product_ids = job_product_pool.search(cr, uid, [
                 # todo related if slow procedure:
-                ('step_id.job_id.industria_mrp_id', '=', industria_mrp_id),
-                # ('product_id', '=', product_id),
+                ('fabric_id.step_id.job_id.industria_mrp_id', '=',
+                 industria_mrp_id),
+                ('fabric_id.step_id.job_id.state', '=',
+                 'COMPLETED'),  # only done!
+                ('product_id', '=', product_id),
             ], context=context)
-            for fabric_job in job_fabric_pool.browse(
-                    cr, uid, job_fabric_ids, context=context):
-                produced += fabric_job.total  # todo check
+            for job_product in job_product_pool.browse(
+                    cr, uid, job_product_ids, context=context):
+                produced += job_product.total  # todo check
 
             # Total:
             bounded = assigned + produced  # E
@@ -739,8 +742,8 @@ class IndustriaJob(orm.Model):
 
 
 # todo remove, not used for assigned qty:
-class StockPickig(orm.Model):
-    """ Model name: Link pickig to Industria MRP
+class StockPicking(orm.Model):
+    """ Model name: Link picking to Industria MRP
     """
     _inherit = 'stock.picking'
 
