@@ -572,11 +572,19 @@ class IndustriaDatabase(orm.Model):
         # ---------------------------------------------------------------------
         company_proxy = company_pool._get_company_browse(
             cr, uid, context=context)
+        company_partner_id = company_proxy.partner_id.id
 
+        # CL:
         cl_type = company_proxy.cl_mrp_lavoration_id
         cl_type_id = cl_type.id if cl_type else False
-        location_src_id = cl_type.default_location_src_id.id
-        location_dest_id = cl_type.default_location_dest_id.id
+        cl_location_src_id = cl_type.default_location_src_id.id
+        cl_location_dest_id = cl_type.default_location_dest_id.id
+
+        # CL:
+        sl_type = company_proxy.sl_mrp_lavoration_id
+        sl_type_id = sl_type.id if sl_type else False
+        sl_location_src_id = sl_type.default_location_src_id.id
+        sl_location_dest_id = sl_type.default_location_dest_id.id
 
         # No loop only one job closed:
         daily_job = {}
@@ -653,12 +661,12 @@ class IndustriaDatabase(orm.Model):
         new_picking_ids = []
         for origin in daily_job:
             for date in daily_job[origin]:
-                # Create picking:
-                picking_id = picking_pool.create(cr, uid, {
+                # Create load picking:
+                cl_picking_id = picking_pool.create(cr, uid, {
                     'industria_mrp_id': job.industria_mrp_id.id,
                     'dep_mode': 'workshop',  # Always
                     'origin': origin,
-                    # 'partner_id':
+                    'partner_id': company_partner_id,
                     'date': date,
                     'min_date': date,
                     'total_work': 0.0,
@@ -671,43 +679,69 @@ class IndustriaDatabase(orm.Model):
                     # 'location_id': location_id,
                 }, context=context)
 
-                new_picking_ids.append(picking_id)
+                # Create unload picking:
+                sl_picking_id = picking_pool.create(cr, uid, {
+                    'industria_mrp_id': job.industria_mrp_id.id,
+                    'dep_mode': 'workshop',  # Always
+                    'origin': origin,
+                    'partner_id': company_partner_id,
+                    'date': date,
+                    'min_date': date,
+                    'total_work': 0.0,
+                    'total_prepare': 0.0,
+                    'total_stop': 0.0,
+                    'note': '',
+                    'state': 'done',
+                    'picking_type_id': sl_type_id,
+                    'is_mrp_lavoration': True,
+                    # 'location_id': location_id,
+                }, context=context)
+
+                # Link to I40 MRP:
+                new_picking_ids.append(cl_picking_id)
+                new_picking_ids.append(sl_picking_id)
+
                 total_work = 0.0
                 for product in daily_job[origin][date]:
                     # Create stock move:
                     qty, duration, job_ids = daily_job[origin][date][product]
                     total_work += duration
-                    onchange = move_pool.onchange_product_id(
-                        cr, uid, False, product.id, location_src_id,
-                        location_dest_id, False)  # no partner
-                    move_data = onchange.get('value', {})
-                    if qty > 0:
+                    if qty > 0:  # CL Document:
+                        onchange = move_pool.onchange_product_id(
+                            cr, uid, False, product.id, cl_location_src_id,
+                            cl_location_dest_id, False)  # no partner
+                        move_data = onchange.get('value', {})
                         move_data.update({
-                            'picking_id': picking_id,
+                            'picking_id': cl_picking_id,
                             'product_id': product.id,
                             'product_uom_qty': qty,
-                            'location_id': location_src_id,
-                            'location_dest_id': location_dest_id,
+                            'location_id': cl_location_src_id,
+                            'location_dest_id': cl_location_dest_id,
                             'state': 'done',
                         })
-                    else:  # todo remove?
+                    else:  # SL document:
+                        onchange = move_pool.onchange_product_id(
+                            cr, uid, False, product.id, sl_location_src_id,
+                            sl_location_dest_id, False)  # no partner
+                        move_data = onchange.get('value', {})
                         move_data.update({
-                            'picking_id': picking_id,
+                            'picking_id': sl_picking_id,
                             'product_id': product.id,
                             'product_uom_qty': qty,
-                            'location_id': location_dest_id,
-                            'location_dest_id': location_src_id,
+                            'location_id': sl_location_dest_id,
+                            'location_dest_id': sl_location_src_id,
                             'state': 'done',
                         })
-
                     move_pool.create(cr, uid, move_data, context=context)
-                    # todo unload raw material?
 
                     # Link job to picking:
                     job_pool.write(cr, uid, job_ids, {
-                        'picking_id': picking_id,
+                        'picking_id': cl_picking_id,
+                        # todo no link for SL?
                     }, context=context)
-                picking_pool.write(cr, uid, [picking_id], {
+
+                # Total work written only in CL:
+                picking_pool.write(cr, uid, [cl_picking_id], {
                     'total_work': total_work / 60.0,
                 }, context=context)
 
@@ -718,7 +752,9 @@ class IndustriaDatabase(orm.Model):
             tree_view_id = model_pool.get_object_reference(
                 cr, uid, 'lavoration_cl_sl', 'view_stock_picking_cl_tree',
             )[1]
-            """return {
+            """
+            # Not used for now:
+            return {
                 'type': 'ir.actions.act_window',
                 'name': _('Lavorazioni pendenti da approvare'),
                 'view_type': 'form',

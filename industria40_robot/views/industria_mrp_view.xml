@@ -189,8 +189,9 @@
                                                 <!--<field name="job_duration" widget="float_time"/>-->
                                                 <field name="program_id" />
                                                 <field name="source_id" />
-                                                <button name="open_job_picking" type="object" string="Apri picking" attrs="{'invisible': [('picking_id', '=', False)]}" icon="gtk-goto-last"/>
+                                                <!--<button name="open_job_picking" type="object" string="Apri picking" attrs="{'invisible': [('picking_id', '=', False)]}" icon="gtk-goto-last"/>-->
                                                 <field name="picking_id" readonly="1" />
+                                                <!--<field name="sl_picking_id" readonly="1" />-->
 
                                                 <!--<button name="realign_previous_state" type="object" string="Riallinea i precedenti" />-->
                                                 <button name="send_fabric_job" type="object" string="Invia lavoro" attrs="{'invisible': [('state', '!=', 'DRAFT')]}" icon="gtk-yes" />
