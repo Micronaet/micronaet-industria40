@@ -2423,8 +2423,8 @@ class IndustriaJobInherit(orm.Model):
                 for fabric_line in step.fabric_ids:
                     layer = fabric_line.total
                     detail += '[%s x %s] ' % (
-                        fabric_line.fabric_id.default_code,
                         layer,
+                        fabric_line.fabric_id.default_code,
                     )
                     total += layer
             res[job.id] = {

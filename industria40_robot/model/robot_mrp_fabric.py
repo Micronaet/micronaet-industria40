@@ -120,6 +120,7 @@ class IndustriaMrp(orm.Model):
 
         program_created = {}  # job, step, max layer available
         sequence = 0
+        now = datetime.now()  # note used now manually!!
         for line in industria_mrp.line_ids:  # Sorted by program
             sequence += 1  # Sequence still progress for all program!
             program = line.program_id
@@ -157,8 +158,9 @@ class IndustriaMrp(orm.Model):
                 if program not in program_created:
                     _logger.warning(
                         'Create new job for cache, program: %s' % program.name)
+                    now -= timedelta(seconds=1)
                     job_id = job_pool.create(cr, uid, {
-                        'created_at': datetime.now().strftime(
+                        'created_at': now.strftime(
                             DEFAULT_SERVER_DATETIME_FORMAT),
                         'source_id': robot.id,
                         'database_id': database.id,
