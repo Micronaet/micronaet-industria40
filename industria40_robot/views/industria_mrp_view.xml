@@ -193,10 +193,10 @@
                                                 <field name="picking_id" readonly="1" />
 
                                                 <!--<button name="realign_previous_state" type="object" string="Riallinea i precedenti" />-->
-                                                <button name="send_fabric_job" type="object" string="Invia lavoro" attrs="{'invisible': [('state', '!=', 'DRAFT')]}" icon="gtk-yes"/>
-                                                <button name="restart_fabric_job" type="object" string="Riavvia" attrs="{'invisible': [('state', '=', 'DRAFT')]}" icon="gtk-undo"/>
+                                                <button name="send_fabric_job" type="object" string="Invia lavoro" attrs="{'invisible': [('state', '!=', 'DRAFT')]}" icon="gtk-yes" />
+                                                <button name="restart_fabric_job" type="object" string="Riavvia" attrs="{'invisible': [('state', '=', 'DRAFT')]}" icon="gtk-undo" />
                                                 <!--<button name="error_fabric_job" type="object" string="Errato" attrs="{'invisible': [('state', 'not in', ('DRAFT', 'RUNNING'))]}"/>-->
-                                                <button name="completed_fabric_job" type="object" string="Completato" attrs="{'invisible': [('state', '!=', 'RUNNING')]}" icon="gtk-apply"/>
+                                                <button name="completed_fabric_job" type="object" string="Completato" attrs="{'invisible': [('state', '!=', 'RUNNING')]}" icon="gtk-goto-last" />
                                                 <field name="state" widget="statusbar"/>
                                             </tree>
                                         </field>

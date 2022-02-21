@@ -2422,7 +2422,7 @@ class IndustriaJobInherit(orm.Model):
             for step in job.step_ids:
                 for fabric_line in step.fabric_ids:
                     layer = fabric_line.total
-                    detail += '%s x %s' % (
+                    detail += '[%s x %s] ' % (
                         fabric_line.fabric_id.default_code,
                         layer,
                     )
@@ -2440,7 +2440,7 @@ class IndustriaJobInherit(orm.Model):
             store=False),
         'fabric_detail': fields.function(
             _function_get_fabric_layer, method=True, multi=True,
-            type='integer', string='Dettaglio',
+            type='char', string='Dettaglio',
             store=False),
 
         'previous_id': fields.many2one(
