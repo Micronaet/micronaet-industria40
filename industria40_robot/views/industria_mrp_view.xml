@@ -161,8 +161,10 @@
                                 </page>-->
                                 <page name="page_mrp" string="Produzioni">
                                     <group colspan="4" col="4">
+
                                         <separator string="MRP:" colspan="4"/>
                                         <field name="mrp_ids" nolabel="1" colspan="4" readonly="1"/>
+
                                         <separator string="Scarichi di produzione:" colspan="4"/>
                                         <field name="unload_ids" nolabel="1" colspan="4" readonly="1"/>
                                     </group>

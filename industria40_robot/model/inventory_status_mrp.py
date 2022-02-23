@@ -47,7 +47,9 @@ class MrpProduction(orm.Model):
 
     # Override original function for link unload to Industria MRP:
     def schedule_unload_mrp_material(
-            self, cr, uid, from_date=False, context=None):
+            self, cr, uid, from_date=False,
+            filename='/home/administrator/photo/log/mrp_unload_i40.xlsx',
+            context=None):
         """ Update product field with unloaded elements
             Add also unload move to MRP status
         """
@@ -77,23 +79,25 @@ class MrpProduction(orm.Model):
         # ---------------------------------------------------------------------
         # XLS log export:
         # ---------------------------------------------------------------------
-        filename = '/home/administrator/photo/log/mrp_unload_i40.xlsx'
-        wb = xlsxwriter.Workbook(filename)
-
-        self.ws = wb.add_worksheet('Unload')  # Work Sheet:
-        self.counter = 0  # Row counters:
-        # Write header
-        write_xls_log([
-            'MRP',
-            'Date',
-            'Order',
-            'Product',
-            'Maked',
-            'ID',
-            'Component',
-            'Maked',
-            'State',
-            ])
+        if filename:
+            _logger.warning('Log on file: %s' % filename)
+            wb = xlsxwriter.Workbook(filename)
+            self.ws = wb.add_worksheet('Unload')  # Work Sheet:
+            self.counter = 0  # Row counters:
+            # Write header
+            write_xls_log([
+                'MRP',
+                'Date',
+                'Order',
+                'Product',
+                'Maked',
+                'ID',
+                'Component',
+                'Maked',
+                'State',
+                ])
+        else:
+            _logger.warning('No log on on file')
 
         # After inventory date:
         # todo get_range_inventory_date(self, cr, uid, context=None)
@@ -112,12 +116,12 @@ class MrpProduction(orm.Model):
         # Current assign in product:
         cr.execute('UPDATE product_product set mx_mrp_out=0;')
         # Current I40 load:
-        cr.execute('DELETE FROM industria.mrp.unload;')
+        cr.execute('DELETE FROM industria_mrp_unload;')
 
         # Generate MRP total component report with totals:
         unload_db = {}
         for mrp in self.browse(cr, uid, mrp_ids, context=context):
-            # Collect fabric semiproduct (if needed:
+            # Collect fabric semiproduct (if needed):
             industria_mrp = mrp.industria_mrp_id
             if industria_mrp:
                 fabric_semiproduct = [
@@ -143,16 +147,20 @@ class MrpProduction(orm.Model):
                         unload_pool.create(cr, uid, {
 
                         }, context=context)
-                    write_xls_log([
-                        mrp.name, mrp.date_planned, sol.order_id.name,
-                        # Product
-                        sol.product_id.default_code, maked,
-                        # Component
-                        product_id, product.default_code, cmpt_maked,
-                        mrp.state,
-                        ])
+                    if filename:
+                        write_xls_log([
+                            mrp.name, mrp.date_planned, sol.order_id.name,
+                            # Product
+                            sol.product_id.default_code, maked,
+                            # Component
+                            product_id, product.default_code, cmpt_maked,
+                            mrp.state,
+                            ])
 
-        wb.close()
+        if filename:
+            wb.close()
+
+        # Update product status:
         for product_id, unload in unload_db.iteritems():
             product_pool.write(cr, uid, product_id, {
                 'mx_mrp_out': unload,
