@@ -607,9 +607,18 @@ class IndustriaMrpLine(orm.Model):
         job_product_pool = self.pool.get('industria.job.fabric.product')
 
         res = {}
+        industria_cache = {}
         for line in self.browse(cr, uid, ids, context=context):
             industria_mrp_id = line.industria_mrp_id.id
             product_id = line.product_id.id  # Semi product
+
+            # Cache unload data for production:
+            if industria_mrp_id not in industria_cache:
+                industria_cache[industria_mrp_id] = {}
+                for unload in line.industria_mrp_id.unload_ids:
+                    industria_cache[industria_mrp_id][unload.product_id.id] = \
+                        unload.quantity
+
             total = line.todo  # A.
             assigned = line.assigned  # B.
 
@@ -632,7 +641,8 @@ class IndustriaMrpLine(orm.Model):
             remain = total - bounded  # D (A-(B+C))  >> B+C=E
 
             # Used in MRP
-            used = 0
+            used = industria_cache[industria_mrp_id].get(product_id, 0)
+
             # Bounded quantity:
             if remain < 0:
                 bounded -= remain  # Extra production goes in stock
@@ -699,7 +709,7 @@ class IndustriaMrpLine(orm.Model):
         'used': fields.function(
             get_total_field_data, method=True,
             type='float', multi=True,
-            string='Utilizzati',
+            string='Usato',
             help='Utilizzati dalle produzioni collegate alla attuale commessa'
             ),
         'bounded': fields.function(
