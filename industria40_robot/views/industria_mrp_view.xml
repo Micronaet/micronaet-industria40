@@ -166,7 +166,12 @@
                                         <field name="mrp_ids" nolabel="1" colspan="4" readonly="1"/>
 
                                         <separator string="Scarichi di produzione:" colspan="4"/>
-                                        <field name="unload_ids" nolabel="1" colspan="4" readonly="1"/>
+                                        <field name="unload_ids" nolabel="1" colspan="4" readonly="1">
+                                            <tree editable="bottom" string="Scarichi">
+                                                <field name="product_id" readonly="1"/>
+                                                <field name="quantity" readonly="1"/>
+                                            </tree>
+                                        </field>
                                     </group>
                                 </page>
                                 <page name="page_job" string="Job">

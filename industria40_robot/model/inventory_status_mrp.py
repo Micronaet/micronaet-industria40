@@ -90,15 +90,9 @@ class MrpProduction(orm.Model):
             self.counter = 0  # Row counters:
             # Write header
             write_xls_log([
-                'MRP',
-                'Date',
-                'Order',
-                'Product',
-                'Maked',
-                'ID',
-                'Component',
-                'Maked',
-                'State',
+                'MRP', 'Date',  'Order',
+                'Product', 'Maked', 'ID',
+                'Component', 'Maked', 'State',
                 ])
         else:
             _logger.warning('No log on on file')
@@ -135,7 +129,9 @@ class MrpProduction(orm.Model):
             else:
                 _logger.info('No I4.0 MRP %s' % mrp.name)
                 fabric_semiproduct = []
+                industria_mrp_id = False  # Not used
 
+            mrp_unload = {}
             for sol in mrp.order_line_ids:
                 # Total elements:
                 maked = sol.product_uom_maked_sync_qty
@@ -151,11 +147,10 @@ class MrpProduction(orm.Model):
                     else:
                         unload_db[product_id] = cmpt_maked
                     if industria_mrp and product_id in fabric_semiproduct:
-                        unload_pool.create(cr, uid, {
-                            'industria_mrp_id': industria_mrp_id,
-                            'product_id': product_id,
-                            'quantity': maked,
-                        }, context=context)
+                        if product_id in mrp_unload:
+                            mrp_unload[(industria_mrp_id, product_id)] += maked
+                        else:
+                            mrp_unload[(industria_mrp_id, product_id)] = maked
 
                     if filename:
                         write_xls_log([
@@ -169,6 +164,15 @@ class MrpProduction(orm.Model):
 
         if filename:
             wb.close()
+
+        # Update MRP I4.0
+        for key in mrp_unload:
+            industria_mrp_id, product_id = key
+            unload_pool.create(cr, uid, {
+                'industria_mrp_id': industria_mrp_id,
+                'product_id': product_id,
+                'quantity': mrp_unload[key],
+            }, context=context)
 
         # Update product status:
         for product_id, unload in unload_db.iteritems():
