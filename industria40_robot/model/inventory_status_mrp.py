@@ -118,7 +118,8 @@ class MrpProduction(orm.Model):
         cr.execute('DELETE FROM industria_mrp_unload;')
 
         # Generate MRP total component report with totals:
-        unload_db = {}
+        mrp_unload = {}
+        product_unload = {}
         for mrp in self.browse(cr, uid, mrp_ids, context=context):
             # Collect fabric semiproduct (if needed):
             industria_mrp = mrp.industria_mrp_id
@@ -133,7 +134,6 @@ class MrpProduction(orm.Model):
                 fabric_semiproduct = []
                 industria_mrp_id = False  # Not used
             pdb.set_trace()
-            mrp_unload = {}
             for sol in mrp.order_line_ids:
                 # Total elements:
                 maked = sol.product_uom_maked_sync_qty
@@ -144,10 +144,10 @@ class MrpProduction(orm.Model):
                     product_id = product.id
 
                     cmpt_maked = maked * component.product_qty
-                    if product.id in unload_db:
-                        unload_db[product_id] += cmpt_maked
+                    if product.id in product_unload:
+                        product_unload[product_id] += cmpt_maked
                     else:
-                        unload_db[product_id] = cmpt_maked
+                        product_unload[product_id] = cmpt_maked
                     if industria_mrp and product_id in fabric_semiproduct:
                         if product_id in mrp_unload:
                             mrp_unload[(industria_mrp_id, product_id)] += maked
@@ -178,7 +178,7 @@ class MrpProduction(orm.Model):
             }, context=context)
 
         # Update product status:
-        for product_id, unload in unload_db.iteritems():
+        for product_id, unload in product_unload.iteritems():
             product_pool.write(cr, uid, product_id, {
                 'mx_mrp_out': unload,
                 }, context=context)
