@@ -18,6 +18,7 @@
 #
 ###############################################################################
 import os
+import pdb
 import sys
 import logging
 import openerp
@@ -48,11 +49,14 @@ class MrpProduction(orm.Model):
     # Override original function for link unload to Industria MRP:
     def schedule_unload_mrp_material(
             self, cr, uid, from_date=False,
-            filename='/home/administrator/photo/log/mrp_unload_i40.xlsx',
+            filename=False,
             context=None):
         """ Update product field with unloaded elements
             Add also unload move to MRP status
+            Current lod on file:
+                /home/administrator/photo/log/mrp_unload_i40.xlsx
         """
+
         # ---------------------------------------------------------------------
         # Utility function:
         # ---------------------------------------------------------------------
@@ -121,11 +125,13 @@ class MrpProduction(orm.Model):
         # Generate MRP total component report with totals:
         unload_db = {}
         for mrp in self.browse(cr, uid, mrp_ids, context=context):
+            _logger.info('Checking MRP %s' % mrp.name)
             # Collect fabric semiproduct (if needed):
             industria_mrp = mrp.industria_mrp_id
             if industria_mrp:
                 fabric_semiproduct = [
                     item.product_id.id for item in industria_mrp.line_ids]
+                industria_mrp_id = industria_mrp.id
             else:
                 fabric_semiproduct = []
 
@@ -145,8 +151,11 @@ class MrpProduction(orm.Model):
                         unload_db[product_id] = cmpt_maked
                     if industria_mrp and product_id in fabric_semiproduct:
                         unload_pool.create(cr, uid, {
-
+                            'industria_mrp_id': industria_mrp_id,
+                            'product_id': product_id,
+                            'quantity': maked,
                         }, context=context)
+
                     if filename:
                         write_xls_log([
                             mrp.name, mrp.date_planned, sol.order_id.name,
