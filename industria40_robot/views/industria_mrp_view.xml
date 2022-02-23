@@ -145,7 +145,8 @@
 
                                                 <field name="produced" readonly="1" string="C. Fatti"/>
                                                 <field name="remain" readonly="1" string="D. Da fare (A-B-C)"/>
-                                                <field name="bounded" readonly="1" string="E. Vincolati" />
+                                                <field name="bounded" readonly="1" string="E. Usati" />
+                                                <field name="bounded" readonly="1" string="F. Vincolati" />
                                                 <button name="get_detail" type="object" string="Dettaglio"/>
                                             </tree>
                                         </field>
