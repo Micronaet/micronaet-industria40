@@ -55,7 +55,7 @@
         'views/menu_view4.xml',
         'views/menu_view5.xml',
 
-        'wizard/assign_stock_wizard_view.xml',
+        # 'wizard/assign_stock_wizard_view.xml',
         ],
     'active': False,
     'installable': True,

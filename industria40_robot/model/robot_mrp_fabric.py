@@ -520,46 +520,32 @@ class IndustriaMrpLine(orm.Model):
     def assign_stock_quantity(self, cr, uid, ids, context=None):
         """ Assign document wizard
         """
-        wizard_pool = self.pool.get('industria.assign.stock.wizard')
         line_id = ids[0]
         line = self.browse(cr, uid, line_id, context=context)
-        view_id = False
+
+        model_pool = self.pool.get('ir.model.data')
+        view_id = model_pool.get_object_reference(
+            cr, uid,
+            'industria40_robot', 'industria_mrp_line_view_wizard_form_name')[1]
 
         product = line.product_id
-        total_qty = line.todo
-        produced_qty = 0  # todo:
         available_qty = product.mx_net_mrp_qty
-        locked_qty = line.stock_move_id.product_uom_qty
-        remain_qty = max(0, total_qty - produced_qty - locked_qty)
-        new_qty = min(available_qty, remain_qty)
-        comment = ''
-        if not new_qty:
-            comment = _(
-                'Non ci sono le disponibilità per assegnare il magazzino'
-                'oppure è già tutto assegnato / prodotto')
-        elif new_qty < locked_qty:
-            comment = _(
-                'E\' già assegnata la massima quantità disponibile per '
-                'questo prodotto')
-        data = {
-            'industria_line_id': line_id,
-            'available_qty': available_qty,
-            'produced_qty': produced_qty,
-            'locked_qty': locked_qty,
-            'remain_qty': remain_qty,
-            'total_qty': total_qty,
-            'new_qty': new_qty,
-            'comment': comment,
-        }
-        wizard_id = wizard_pool.create(cr, uid, data, context=context)
+        remain_qty = line.remain
+        # todo clean locked qty!
+
+        new_bounded = min(available_qty, remain_qty)
+
+        self.write(cr, uid, ids, {
+            'new_bounded': new_bounded,
+        }, context=context)
 
         return {
             'type': 'ir.actions.act_window',
             'name': _('Dettaglio assegnazione magazzino'),
             'view_type': 'form',
             'view_mode': 'form',
-            'res_id': wizard_id,
-            'res_model': 'industria.assign.stock.wizard',
+            'res_id': line_id,
+            'res_model': 'industria.mrp.line',
             'view_id': view_id,
             'views': [(view_id, 'form')],
             'domain': [],
@@ -636,16 +622,17 @@ class IndustriaMrpLine(orm.Model):
                     cr, uid, job_product_ids, context=context):
                 produced += job_product.total  # todo check
 
-            # Total:
-            bounded = assigned + produced  # E
-            remain = total - bounded  # D (A-(B+C))  >> B+C=E
-
             # Used in MRP
             used = industria_cache[industria_mrp_id].get(product_id, 0)
 
+            # Total:
+            linked = assigned + produced
+            remain = total - linked
+            bounded = linked # - used  # net bounded
+
             # Bounded quantity:
             if remain < 0:
-                bounded -= remain  # Extra production goes in stock
+                bounded -= remain  # todo check: Extra production goes in stock
             if used:
                 bounded -= used
                 bounded = max(0, bounded)
@@ -658,6 +645,19 @@ class IndustriaMrpLine(orm.Model):
                 # todo add line list m2m here?
             }
         return res
+
+    # -------------------------------------------------------------------------
+    # Wizard button event:
+    # -------------------------------------------------------------------------
+    def action_assign(self, cr, uid, ids, context=None):
+        """ Event for button done
+        """
+        line = self.browse(cr, uid, ids, context=context)[0]
+        assigned = line.new_bounded
+        self.write(cr, uid, ids, {
+            'assigned': assigned,
+        }, context=context)
+        return True  # {'type': 'ir.actions.act_window_close'}
 
     _columns = {
         'industria_mrp_id': fields.many2one(
@@ -719,6 +719,7 @@ class IndustriaMrpLine(orm.Model):
             string='Collegati',
             help='Calcolo dei semilavorati assegnati da magazzino o prodotti '
                  'per una determinata produzione'),
+        'new_bounded': fields.integer('Nuova proposta')
     }
 
     _defaults = {
