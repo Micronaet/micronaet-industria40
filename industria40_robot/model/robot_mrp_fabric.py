@@ -654,6 +654,7 @@ class IndustriaMrpLine(orm.Model):
                 'produced': produced,
                 'remain': max(0, remain),
                 'bounded': bounded,
+                'used': used,
                 # todo add line list m2m here?
             }
         return res
