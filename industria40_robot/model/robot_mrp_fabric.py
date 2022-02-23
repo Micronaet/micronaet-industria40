@@ -720,13 +720,13 @@ class IndustriaJobFabric(orm.Model):
     """
     _inherit = 'industria.job.fabric'
 
-    #_columns = {
+    # _columns = {
     #    # todo needed? (if only in one filter could be removed!)
     #    'industria_mrp_id': fields.related(
     #        'step_id', 'industria_mrp_id',
     #        type='many2one', relation='industria.mrp',
     #        string='MRP Industria 4.0', store=True),
-    #}
+    # }
 
 
 class IndustriaJob(orm.Model):
@@ -744,6 +744,18 @@ class IndustriaJob(orm.Model):
 
 
 # todo remove, not used for assigned qty:
+class StockMove(orm.Model):
+    """ Model name: Link move to Industria MRP
+    """
+    _inherit = 'stock.move'
+
+    _columns = {
+        'generator_job_id': fields.many2one(
+            'industria.job', 'Job generatore',
+            help='Job che ha generato il movimento di magazzino'),
+    }
+
+
 class StockPicking(orm.Model):
     """ Model name: Link picking to Industria MRP
     """
@@ -768,7 +780,10 @@ class StockPicking(orm.Model):
         'industria_mrp_id': fields.many2one(
             'industria.mrp', 'Produzione I40',
             help='Collegamento del picking al suo documento di '
-                 'produzione principale',
+                 'produzione principale'),
+        'generator_job_id': fields.many2one(
+            'industria.job', 'Job generatore',
+            help='Job che ha generato il movimento di magazzino',
         ),
     }
 
@@ -789,6 +804,23 @@ class MrpProductionOven(orm.Model):
     }
 
 
+class IndustriaMrpUnload(orm.Model):
+    """ Model name: Industria 4.0 MRP unload
+    """
+
+    _name = 'industria.mrp.unload'
+    _description = 'Industria 4.0 MRP unload'
+    _rec_name = 'product_id'
+
+    _columns = {
+        'industria_mrp_id': fields.many2one(
+            'industria.mrp', 'Produzione I40', ondelete='cascade'),
+        'product_id': fields.many2one(
+            'industria.mrp.unload', 'Scarichi I40', ondelete='set null'),
+        'quantity': fields.integer('Totale'),
+    }
+
+
 class IndustriaMrpInherit(orm.Model):
     """ Model name: MrpProductionOven
     """
@@ -796,6 +828,12 @@ class IndustriaMrpInherit(orm.Model):
     _inherit = 'industria.mrp'
 
     _columns = {
+        'unload_ids': fields.one2many(
+            'industria.mrp.unload', 'industria_mrp_id', 'Scarichi',
+            help='Scarichi dai bloccaggi di produzione (ricordare che le'
+                 'operazioni di aggiornamento dei dati sono giornaliere,'
+                 'eventualmente forzarle prima di usare il dato)',
+        ),
         'mrp_ids': fields.one2many(
             'mrp.production', 'industria_mrp_id', 'Produzioni',
             help='Produzioni collegate alla bolla I40 MRP'

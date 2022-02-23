@@ -2,5 +2,6 @@
 access_mrp_production_oven_selected_user,mrp.production.oven.selected,model_mrp_production_oven_selected,base.group_user,1,1,1,1
 access_industria_mrp_user,industria.mrp,model_industria_mrp,base.group_user,1,1,1,1
 access_industria_mrp_line_user,industria.mrp.line,model_industria_mrp_line,base.group_user,1,1,1,1
+access_industria_mrp_unload_user,industria.mrp.unload,model_industria_mrp_unload,base.group_user,1,1,1,1
 access_industria_robot_color_user,industria.robot.color,model_industria_robot_color,base.group_user,1,1,1,1
 

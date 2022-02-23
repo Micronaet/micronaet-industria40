@@ -643,19 +643,19 @@ class IndustriaDatabase(orm.Model):
         multi_duration = \
             job.duration + job.duration_stop + job.duration_change
         duration = multi_duration or job.job_duration
-        linked_job_id = job.id
+        generator_job_id = job.id
         for product, piece in products:
             if product not in daily_job[origin][date]:
                 # Total, duration, job:
                 daily_job[origin][date][product] = [0, 0, []]
             daily_job[origin][date][product][0] += piece
             daily_job[origin][date][product][1] += duration
-            if linked_job_id:
-                daily_job[origin][date][product][2].append(linked_job_id)
+            if generator_job_id:
+                daily_job[origin][date][product][2].append(generator_job_id)
 
             # Multi product mode clean data:
             duration = 0  # only fist for multi product
-            linked_job_id = False
+            generator_job_id = False
 
         # Generate picking form collected data:
         new_picking_ids = []
@@ -706,6 +706,8 @@ class IndustriaDatabase(orm.Model):
                     # Create stock move:
                     qty, duration, job_ids = daily_job[origin][date][product]
                     total_work += duration
+                    if len(job_ids) > 1:
+                        _logger.error('More job on this stock move!')
                     if qty > 0:  # CL Document:
                         onchange = move_pool.onchange_product_id(
                             cr, uid, False, product.id, cl_location_src_id,
@@ -718,6 +720,7 @@ class IndustriaDatabase(orm.Model):
                             'location_id': cl_location_src_id,
                             'location_dest_id': cl_location_dest_id,
                             'state': 'done',
+                            'generator_job_id': job_ids[0],
                         })
                     else:  # SL document:
                         onchange = move_pool.onchange_product_id(
@@ -731,6 +734,8 @@ class IndustriaDatabase(orm.Model):
                             'location_id': sl_location_dest_id,
                             'location_dest_id': sl_location_src_id,
                             'state': 'done',
+                            'generator_job_id': job_ids[0],
+
                         })
                     move_pool.create(cr, uid, move_data, context=context)
 
@@ -772,7 +777,6 @@ class IndustriaDatabase(orm.Model):
                 'nodestroy': False,
                 }"""
             return True
-
 
     def mssql_connect(self, cr, uid, ids, context=None):
         """ Connection with database return cursor

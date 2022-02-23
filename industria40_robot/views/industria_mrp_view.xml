@@ -163,6 +163,8 @@
                                     <group colspan="4" col="4">
                                         <separator string="MRP:" colspan="4"/>
                                         <field name="mrp_ids" nolabel="1" colspan="4" readonly="1"/>
+                                        <separator string="Scarichi di produzione:" colspan="4"/>
+                                        <field name="unload_ids" nolabel="1" colspan="4" readonly="1"/>
                                     </group>
                                 </page>
                                 <page name="page_job" string="Job">
@@ -211,6 +213,7 @@
                                                 <field name="name"/>
                                                 <field name="create_date"/>
                                                 <field name="origin"/>
+                                                <field name="picking_type_id"/>
                                                 <field name="state"/>
                                                 <button name="delete_picking_i40" type="object" string="Elimina" icon="gtk-delete"/>
                                             </tree>
