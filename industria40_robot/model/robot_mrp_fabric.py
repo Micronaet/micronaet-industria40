@@ -526,7 +526,7 @@ class IndustriaMrpLine(orm.Model):
         model_pool = self.pool.get('ir.model.data')
         view_id = model_pool.get_object_reference(
             cr, uid,
-            'industria40_robot', 'industria_mrp_line_view_wizard_form_name')[1]
+            'industria40_robot', 'industria_mrp_line_view_wizard_form')[1]
 
         product = line.product_id
         available_qty = product.mx_net_mrp_qty

@@ -63,7 +63,8 @@
             <field name="arch" type="xml">
                 <form string="I4.0 Produzioni Wizard" version="7.0">
                     <header>
-
+                       <button string="Cancel" special="cancel" />
+                       <button name="action_assign" string="Conferma" type="object" icon="gtk-jump-to" class="oe_highlight" />
                     </header>
                     <sheet>
                         <group colspan="4">
