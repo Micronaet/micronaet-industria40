@@ -53,7 +53,12 @@ class MrpProduction(orm.Model):
             context=None):
         """ Update product field with unloaded elements
             Add also unload move to MRP status
+
+            todo add parameter:
+            only_mrp: force only MRP status not product
+
             Current lod on file:
+            filename
                 /home/administrator/photo/log/mrp_unload_i40.xlsx
         """
         # filename = '/home/administrator/photo/log/mrp_unload_i40.xlsx'
