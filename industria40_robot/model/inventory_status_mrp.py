@@ -143,10 +143,10 @@ class MrpProduction(orm.Model):
                 maked = sol.product_uom_maked_sync_qty
                 if not maked:
                     continue
-                pdb.set_trace()
                 for component in sol.product_id.dynamic_bom_line_ids:
                     product = component.product_id
                     product_id = product.id
+                    _logger.info('SL: %s' % product.name)
 
                     cmpt_maked = maked * component.product_qty
                     if product.id in product_unload:
@@ -168,7 +168,6 @@ class MrpProduction(orm.Model):
                             product_id, product.default_code, cmpt_maked,
                             mrp.state,
                             ])
-
         if filename:
             wb.close()
 
