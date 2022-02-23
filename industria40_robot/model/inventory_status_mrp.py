@@ -41,7 +41,7 @@ _logger = logging.getLogger(__name__)
 
 
 class MrpProduction(orm.Model):
-    """ Model name: MRP PRoduction
+    """ Model name: MRP Production
     """
 
     _inherit = 'mrp.production'
@@ -49,14 +49,15 @@ class MrpProduction(orm.Model):
     # Override original function for link unload to Industria MRP:
     def schedule_unload_mrp_material(
             self, cr, uid, from_date=False,
-            filename=False,
+            # filename=False,
             context=None):
         """ Update product field with unloaded elements
             Add also unload move to MRP status
             Current lod on file:
                 /home/administrator/photo/log/mrp_unload_i40.xlsx
         """
-
+        # filename = '/home/administrator/photo/log/mrp_unload_i40.xlsx'
+        filename = False
         # ---------------------------------------------------------------------
         # Utility function:
         # ---------------------------------------------------------------------
@@ -127,6 +128,7 @@ class MrpProduction(orm.Model):
                     item.product_id.id for item in industria_mrp.line_ids]
                 industria_mrp_id = industria_mrp.id
             else:
+                continue  # debug remove!
                 _logger.info('No I4.0 MRP %s' % mrp.name)
                 fabric_semiproduct = []
                 industria_mrp_id = False  # Not used
