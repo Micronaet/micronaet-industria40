@@ -816,7 +816,7 @@ class IndustriaMrpUnload(orm.Model):
         'industria_mrp_id': fields.many2one(
             'industria.mrp', 'Produzione I40', ondelete='cascade'),
         'product_id': fields.many2one(
-            'industria.mrp.unload', 'Scarichi I40', ondelete='set null'),
+            'product.product', 'Semilavorator', ondelete='set null'),
         'quantity': fields.integer('Totale'),
     }
 
