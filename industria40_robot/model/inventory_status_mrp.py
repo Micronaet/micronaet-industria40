@@ -134,7 +134,6 @@ class MrpProduction(orm.Model):
                     item.product_id.id for item in industria_mrp.line_ids]
                 industria_mrp_id = industria_mrp.id
             else:
-                continue  # debug remove!
                 _logger.info('No I4.0 MRP %s' % mrp.name)
                 fabric_semiproduct = []
                 industria_mrp_id = False  # Not used
@@ -172,7 +171,6 @@ class MrpProduction(orm.Model):
             wb.close()
 
         # Update MRP I4.0
-        pdb.set_trace()
         for key in mrp_unload:
             industria_mrp_id, product_id = key
             unload_pool.create(cr, uid, {
