@@ -132,7 +132,7 @@ class MrpProduction(orm.Model):
                 _logger.info('No I4.0 MRP %s' % mrp.name)
                 fabric_semiproduct = []
                 industria_mrp_id = False  # Not used
-
+            pdb.set_trace()
             mrp_unload = {}
             for sol in mrp.order_line_ids:
                 # Total elements:
@@ -168,6 +168,7 @@ class MrpProduction(orm.Model):
             wb.close()
 
         # Update MRP I4.0
+        pdb.set_trace()
         for key in mrp_unload:
             industria_mrp_id, product_id = key
             unload_pool.create(cr, uid, {
