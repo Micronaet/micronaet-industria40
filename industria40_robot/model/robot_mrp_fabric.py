@@ -699,23 +699,23 @@ class IndustriaMrpLine(orm.Model):
             string='Assegnati', help='Assegnati da magazzino manualmente'),
         'produced': fields.function(
             get_total_field_data, method=True,
-            type='float', multi=True,
+            type='integer', multi=True,
             string='Prodotti', help='Fatti con i job di lavoro su taglio'),
         'remain': fields.function(
             get_total_field_data, method=True,
-            type='float', multi=True,
+            type='integer', multi=True,
             string='Residui',
             help='Residui da produrre (calcolato da quelli da fare puliti da '
                  'quelli fatti o assegnati'),
         'used': fields.function(
             get_total_field_data, method=True,
-            type='float', multi=True,
+            type='integer', multi=True,
             string='Usato',
             help='Utilizzati dalle produzioni collegate alla attuale commessa'
             ),
         'bounded': fields.function(
             get_total_field_data, method=True,
-            type='float', multi=True,
+            type='integer', multi=True,
             string='Collegati',
             help='Calcolo dei semilavorati assegnati da magazzino o prodotti '
                  'per una determinata produzione'),
