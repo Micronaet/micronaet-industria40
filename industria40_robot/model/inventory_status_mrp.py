@@ -125,14 +125,15 @@ class MrpProduction(orm.Model):
         # Generate MRP total component report with totals:
         unload_db = {}
         for mrp in self.browse(cr, uid, mrp_ids, context=context):
-            _logger.info('Checking MRP %s' % mrp.name)
             # Collect fabric semiproduct (if needed):
             industria_mrp = mrp.industria_mrp_id
             if industria_mrp:
+                _logger.info('Fount I4.0 MRP %s' % mrp.name)
                 fabric_semiproduct = [
                     item.product_id.id for item in industria_mrp.line_ids]
                 industria_mrp_id = industria_mrp.id
             else:
+                _logger.info('No I4.0 MRP %s' % mrp.name)
                 fabric_semiproduct = []
 
             for sol in mrp.order_line_ids:
