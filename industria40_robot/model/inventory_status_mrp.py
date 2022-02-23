@@ -138,12 +138,12 @@ class MrpProduction(orm.Model):
                 _logger.info('No I4.0 MRP %s' % mrp.name)
                 fabric_semiproduct = []
                 industria_mrp_id = False  # Not used
-            pdb.set_trace()
             for sol in mrp.order_line_ids:
                 # Total elements:
                 maked = sol.product_uom_maked_sync_qty
                 if not maked:
                     continue
+                pdb.set_trace()
                 for component in sol.product_id.dynamic_bom_line_ids:
                     product = component.product_id
                     product_id = product.id
