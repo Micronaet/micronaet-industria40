@@ -89,6 +89,7 @@
                             <field name="stock_bounded_ids" colspan="4" nolabel="1">
                                 <tree editable="bottom" string="Linee" colors="red: program_id == False">
                                     <field name="industria_mrp_id" readonly="1"/>
+                                    <field name="program_id" invisible="1"/>
                                     <field name="material_id" readonly="1"/>
                                     <field name="todo" readonly="1" string="A. Richiesti"/>
                                     <field name="assigned" readonly="1" string="B. Da magaz."/>
