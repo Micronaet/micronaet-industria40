@@ -595,6 +595,7 @@ class IndustriaDatabase(orm.Model):
         # ---------------------------------------------------------------------
         # Fabric and semi product:
         # ---------------------------------------------------------------------
+        pdb.set_trace()
         for step in job.step_ids:
             program = step.program_id
             fabric_length = program.fabric_length / 1000.0  # was mm.
@@ -720,7 +721,7 @@ class IndustriaDatabase(orm.Model):
                             'location_id': cl_location_src_id,
                             'location_dest_id': cl_location_dest_id,
                             'state': 'done',
-                            'generator_job_id': job_ids[0],
+                            'generator_job_id': job_ids[0] or False,
                         })
                     else:  # SL document:
                         onchange = move_pool.onchange_product_id(
@@ -734,8 +735,7 @@ class IndustriaDatabase(orm.Model):
                             'location_id': sl_location_dest_id,
                             'location_dest_id': sl_location_src_id,
                             'state': 'done',
-                            'generator_job_id': job_ids[0],
-
+                            'generator_job_id': job_ids[0] or False,
                         })
                     move_pool.create(cr, uid, move_data, context=context)
 
