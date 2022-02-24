@@ -84,8 +84,9 @@
                                 <field name="new_bounded" string="Nuova proposta" />
                             </group>
                         </group>
-                        <group>
-                            <fields name="stock_bounded_ids"/>
+                        <group colspan="4" col="4">
+                            <separator string="Impegnati:" colspan="4"/>
+                            <fields name="stock_bounded_ids" colspan="4"/>
                         </group>
                     </sheet>
                 </form>
