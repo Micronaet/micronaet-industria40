@@ -595,7 +595,6 @@ class IndustriaDatabase(orm.Model):
         # ---------------------------------------------------------------------
         # Fabric and semi product:
         # ---------------------------------------------------------------------
-        pdb.set_trace()
         for step in job.step_ids:
             program = step.program_id
             fabric_length = program.fabric_length / 1000.0  # was mm.
@@ -644,15 +643,16 @@ class IndustriaDatabase(orm.Model):
         multi_duration = \
             job.duration + job.duration_stop + job.duration_change
         duration = multi_duration or job.job_duration
-        generator_job_id = job.id
+        fabric_generator_job_id = generator_job_id = job.id
         for product, piece in products:
             if product not in daily_job[origin][date]:
                 # Total, duration, job:
                 daily_job[origin][date][product] = [0, 0, []]
             daily_job[origin][date][product][0] += piece
             daily_job[origin][date][product][1] += duration
-            if generator_job_id:
-                daily_job[origin][date][product][2].append(generator_job_id)
+            if fabric_generator_job_id:  # used instead generator for compatib?
+                daily_job[origin][date][product][2].append(
+                    fabric_generator_job_id)
 
             # Multi product mode clean data:
             duration = 0  # only fist for multi product
