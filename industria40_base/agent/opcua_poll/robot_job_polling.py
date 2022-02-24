@@ -47,12 +47,13 @@ def get_data_value(robot, node_description, comment='', verbose=True):
     try:
         data = node.get_data_value().Value._value
     except:
-        print('Cannot read, robot unplugged?')
+        print('Cannot read: %s, robot unplugged?' % node_description)
         return 'ERROR'
     if verbose:
         comment = comment or node_description
         print(comment, data)
     return data
+
 
 def set_data_value(robot, node_description, value):
     """ Save node data
@@ -65,9 +66,12 @@ def set_data_value(robot, node_description, value):
                 node.get_data_type_as_variant_type()
             )))
     except:
-        print('Cannot read, robot unplugged?\n%s' % (sys.exc_info(), ))
+        print('Cannot read: %s, robot unplugged?\n%s' % (
+            node_description,
+            sys.exc_info(), ))
         return False
     return True
+
 
 def host_up(host):
     if os.system('ping -c 2 %s' % host) is 0:

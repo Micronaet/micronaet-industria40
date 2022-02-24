@@ -884,7 +884,6 @@ class ProductProductIndustriaJob(orm.Model):
         line_pool = self.pool.get('industria.mrp.line')
         assert len(ids) == 1, 'Dettagli disponibili solo un prodotto per volta'
 
-        pdb.set_trace()
         product_id = ids[0]
         res = {product_id: []}
 

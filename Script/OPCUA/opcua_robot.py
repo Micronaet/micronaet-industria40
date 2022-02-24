@@ -124,7 +124,8 @@ class RobotOPCUA:
         try:
             data = node.get_data_value().Value._value
         except:
-            raise ValueError('Cannot read, robot unplugged?')
+            raise ValueError(
+                'Cannot read: %s, robot unplugged?' % node_description)
         if verbose:
             comment = comment or node_description
             print(comment, data)
