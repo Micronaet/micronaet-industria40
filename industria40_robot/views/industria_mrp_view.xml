@@ -84,6 +84,9 @@
                                 <field name="new_bounded" string="Nuova proposta" />
                             </group>
                         </group>
+                        <group>
+                            <fields name="stock_bounded_ids"/>
+                        </group>
                     </sheet>
                 </form>
             </field>

@@ -44,19 +44,6 @@ from openerp.tools import (DEFAULT_SERVER_DATE_FORMAT,
 _logger = logging.getLogger(__name__)
 
 
-class ProductProductIndustriaJob(orm.Model):
-    """ Model name: Product
-    """
-    _inherit = 'product.product'
-
-    _columns = {
-        'industria_rule_ids': fields.many2many(
-            'industria.program.fabric.part', 'product_industria_part_rel',
-            'product_id', 'part_id',
-            'Regola assegnazione'),
-        }
-
-
 class IndustriaRobotColor(orm.Model):
     """ Model name: Industria 4.0 MRP
     """
@@ -660,7 +647,26 @@ class IndustriaMrpLine(orm.Model):
         }, context=context)
         return True  # {'type': 'ir.actions.act_window_close'}
 
+    def _get_bounded_lines(self, cr, uid, ids, fields, args, context=None):
+        """ Fields function for calculate
+        """
+        assert len(ids) == 1, 'Dettagli disponibili solo un prodotto per volta'
+
+        line_id = ids[0]
+        line = self.browse(cr, uid, line_id, context=context)
+        product_id = line.product_id.id
+        product_pool = self.pool.get('product.product')
+        bounded_ids = product_pool._get_bounded_lines(
+            cr, uid, [product_id], [], {}, context=context)[product_id]
+
+        res = {line_id: bounded_ids}
+        return res
+
     _columns = {
+        'stock_bounded_ids': fields.function(
+            _get_bounded_lines, method=True, relation='industria.mrp.line',
+            type='many2many', string='Impegni MRP',
+            store=False),
         'industria_mrp_id': fields.many2one(
             'industria.mrp', 'MRP I4.0', ondelete='cascade'),
         # todo remove, not used for assigned qty!
@@ -866,3 +872,41 @@ class IndustriaMrpInherit(orm.Model):
                  'macchina',
         ),
     }
+
+
+class ProductProductIndustriaJob(orm.Model):
+    """ Model name: Product
+    """
+    _inherit = 'product.product'
+
+    def _get_bounded_lines(self, cr, uid, ids, fields, args, context=None):
+        """ Fields function for calculate
+        """
+        line_pool = self.pool.get('industria.mrp.line')
+        assert len(ids) == 1, 'Dettagli disponibili solo un prodotto per volta'
+
+        product_id = ids[0]
+        res = {product_id: []}
+
+        # Extract active linked lines:
+        line_ids = line_pool.browse(cr, uid, [
+            ('product_id', '=', product_id),
+        ], context=context)
+        bounded_ids = res[product_id]
+        for line in line_pool.browse(cr, uid, line_ids, context=context):
+            bounded = line.bounded
+            if bounded > 0:  # Only bounded fields
+                # todo manage with a boolean for fast search when close line?
+                bounded_ids.append(line.id)
+        return res
+
+    _columns = {
+        'stock_bounded_ids': fields.function(
+            _get_bounded_lines, method=True, relation='industria.mrp.line',
+            type='many2many', string='Impegni MRP',
+            store=False),
+        'industria_rule_ids': fields.many2many(
+            'industria.program.fabric.part', 'product_industria_part_rel',
+            'product_id', 'part_id',
+            'Regola assegnazione'),
+        }
