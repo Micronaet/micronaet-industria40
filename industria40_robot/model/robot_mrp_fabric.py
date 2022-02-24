@@ -530,13 +530,14 @@ class IndustriaMrpLine(orm.Model):
 
         product = line.product_id
         available_qty = product.mx_net_mrp_qty
+        current_stock_qty = line.assigned
         remain_qty = line.remain
         # todo clean locked qty!
 
         new_bounded = min(available_qty, remain_qty)
 
         self.write(cr, uid, ids, {
-            'new_bounded': new_bounded,
+            'new_bounded': new_bounded + current_stock_qty,
         }, context=context)
 
         return {
