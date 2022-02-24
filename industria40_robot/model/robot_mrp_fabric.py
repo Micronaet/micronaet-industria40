@@ -650,6 +650,7 @@ class IndustriaMrpLine(orm.Model):
     def _get_bounded_lines(self, cr, uid, ids, fields, args, context=None):
         """ Fields function for calculate
         """
+        pdb.set_trace()
         assert len(ids) == 1, 'Dettagli disponibili solo un prodotto per volta'
 
         line_id = ids[0]
@@ -665,8 +666,7 @@ class IndustriaMrpLine(orm.Model):
     _columns = {
         'stock_bounded_ids': fields.function(
             _get_bounded_lines, method=True, relation='industria.mrp.line',
-            type='many2many', string='Impegni MRP',
-            store=False),
+            type='many2many', string='Impegni MRP'),
         'industria_mrp_id': fields.many2one(
             'industria.mrp', 'MRP I4.0', ondelete='cascade'),
         # todo remove, not used for assigned qty!

@@ -86,7 +86,7 @@
                         </group>
                         <group colspan="4" col="4">
                             <separator string="Impegnati:" colspan="4"/>
-                            <fields name="stock_bounded_ids" colspan="4"/>
+                            <field name="stock_bounded_ids" colspan="4"/>
                         </group>
                     </sheet>
                 </form>
