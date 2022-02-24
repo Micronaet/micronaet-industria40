@@ -650,7 +650,6 @@ class IndustriaMrpLine(orm.Model):
     def _get_bounded_lines(self, cr, uid, ids, fields, args, context=None):
         """ Fields function for calculate
         """
-        pdb.set_trace()
         assert len(ids) == 1, 'Dettagli disponibili solo un prodotto per volta'
 
         line_id = ids[0]
@@ -885,11 +884,12 @@ class ProductProductIndustriaJob(orm.Model):
         line_pool = self.pool.get('industria.mrp.line')
         assert len(ids) == 1, 'Dettagli disponibili solo un prodotto per volta'
 
+        pdb.set_trace()
         product_id = ids[0]
         res = {product_id: []}
 
         # Extract active linked lines:
-        line_ids = line_pool.browse(cr, uid, [
+        line_ids = line_pool.search(cr, uid, [
             ('product_id', '=', product_id),
         ], context=context)
         bounded_ids = res[product_id]
