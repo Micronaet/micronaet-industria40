@@ -99,11 +99,10 @@ class IndustriaMrp(orm.Model):
         industria_mrp = self.browse(cr, uid, industria_mrp_id, context=context)
 
         # Cannot delete job if not draft:
-        if industria_mrp.job_ids and \
-                {'DRAFT'} == set([job.state for job in industria_mrp.job_ids]):
-            job_ids = [job.id for job in industria_mrp.job_ids]
-            job_pool.unlink(cr, uid, job_ids, context=context)
-            _logger.warning('Deleted %s jobs' % len(job_ids))
+        for job in industria_mrp.job_ids:
+            if job.state == 'DRAFT':
+                _logger.warning('Deleted %s job' % job.id)
+                job_pool.unlink(cr, uid, [job.id], context=context)
 
         program_created = {}  # job, step, max layer available
         sequence = 0
