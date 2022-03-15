@@ -145,7 +145,6 @@ while True:
                     print('Cannot raise restart operation')
                     time.sleep(wait['telegram'])
 
-
             elif last_speed > 0 and status['speed'] <= 0:
                 try:
                     bot.sendMessage(
