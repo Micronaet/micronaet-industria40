@@ -43,7 +43,7 @@ wait = {
 # Parameters:
 # -----------------------------------------------------------------------------
 # A. Telegram:
-config_file = './start.cfg'
+config_file = './start_working.cfg'
 config = ConfigParser.ConfigParser()
 config.read([config_file])
 
