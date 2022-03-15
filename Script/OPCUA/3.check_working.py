@@ -115,7 +115,7 @@ while True:
                     verbose=False,
                 )
                 status[call] = result
-                message += 'Parametro: %s valore: %s' % (call, result)
+                message += 'Parametro: %s valore: %s\n' % (call, result)
             except:  # Robot not present:
                 try:
                     print('Robot not responding!')
