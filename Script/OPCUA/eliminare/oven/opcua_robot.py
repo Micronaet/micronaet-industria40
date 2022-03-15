@@ -54,7 +54,7 @@ class RobotOPCUA:
                 # Check 200 alarms:
                 for alarm in self._alarms.keys():  # range(201):
                     if self.get_data_value(
-                            'ns=3;s="DB_ALLARMI"."AL"[%s]' % alarm:
+                            'ns=3;s="DB_ALLARMI"."AL"[%s]' % alarm):
                         if alarm in error_found:
                             print('[WARN] Yet raised: %s' % alarm)
                             continue
