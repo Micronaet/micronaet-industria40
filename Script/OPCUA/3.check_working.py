@@ -21,10 +21,8 @@
 ###############################################################################
 import os
 import sys
-import opcua
 import time
 import telepot
-from opcua import ua
 import erppeek
 import pdb
 
@@ -51,54 +49,6 @@ telegram_token = config.get(u'Telegram', u'token')
 telegram_group = config.get(u'Telegram', u'group')
 check_from = config.get('robot', 'check_from')
 
-# -----------------------------------------------------------------------------
-# Utility (needed or in class?):
-# -----------------------------------------------------------------------------
-def get_robot(address, port):
-    uri = u'opc.tcp://%s:%s' % (address, port)
-
-    # Create and connect as client:
-    robot = opcua.Client(uri)
-    try:
-        robot.connect()
-        return robot
-    except:
-        return False
-
-
-def get_data_value(robot, node_description, comment='', verbose=True):
-    """ Extract node data
-    """
-    node = robot.get_node(node_description)
-    try:
-        data = node.get_data_value().Value._value
-    except:
-        print('Cannot read: %s, robot unplugged?' % node_description)
-        return 'ERROR'
-    if verbose:
-        comment = comment or node_description
-        print(comment, data)
-    return data
-
-
-def set_data_value(robot, node_description, value):
-    """ Save node data
-    """
-    node = robot.get_node(node_description)
-    try:
-        node.set_value(
-            ua.DataValue(ua.Variant(
-                value,
-                node.get_data_type_as_variant_type()
-            )))
-    except:
-        print('Cannot read: %s, robot unplugged?\n%s' % (
-            node_description,
-            sys.exc_info(), ))
-        return False
-    return True
-
-
 def host_up(host):
     if os.system('ping -c 2 %s' % host) is 0:
         return True
@@ -112,7 +62,6 @@ bot.getMe()
 
 # Master loop:
 robot = False
-
 bot.sendMessage(
     telegram_group,
     u'%s\n[INFO] PC: %s Avvio script controllo funzionamento robot...' % (
@@ -162,15 +111,10 @@ while True:
             print('\nChiamata %s' % call)
             call_text = calls[call]
             result = robot.get_data_value(
-                robot,
                 call_text,
                 verbose=False,
             )
             print('Risposta: %s' % result)
-
-        # Loop:
-        robot.alert_alarm_on_telegram(seconds=wait['alarm'], verbose_every=0)
-        # if return restart with new robot
     except:
         pass
 
@@ -198,6 +142,8 @@ del robot
 # From config file:
 # todo Test OPCUA variables
 # todo Update ODOO if done (add time, duration)
+"""
+# Parte per test:
 pdb.set_trace()
 robot = get_robot('10.10.10.1', 4840)
 calls = {
@@ -218,3 +164,4 @@ for call in calls:
     )
     print('Risposta: %s' % result)
 robot.disconnect()
+"""
