@@ -112,31 +112,23 @@ job_ids = job_pool.search([
     ('state', '=', 'RUNNING'),  # Only running job
 ])
 """
-# TODO Test OPCUA variables
-# TODO Update ODOO if done (add time, duration)
-variables = [
-    'Colore', 'Commessa', 'FineAnno', 'FineGiorno',
-    'FineMese', 'FineMinuto', 'FineOra', 'InizioAnno',
-    'InizioGiorno', 'InizioMese', 'InizioMinuto', 'InizioOra',
-    # 'Live',
-    'Spunta_Completata', 'Spunta_In_Corso', 'Temperatura',
-    'TempoCambioColore', 'TempoFermo', 'TempoLavoro', 'Velocità',
-]
+# todo Test OPCUA variables
+# todo Update ODOO if done (add time, duration)
 robot = get_robot('10.10.10.1', 4840)
-mask = 'ns=3;s="DB_1_SCAMBIO_DATI_I4_0"."%s"[%s]'
+calls = {
+    'temp_grease': 'ns=3;s="DB_TERMOREG".NR[1].TEMPERATURA',
+    'temp_dry': 'ns=3;s="DB_TERMOREG".NR[6].TEMPERATURA',
+    'temp_bake': 'ns=3;s="DB_TERMOREG".NR[7].TEMPERATURA',
+    'speed': 'ns=3;s="DB_TRAINO".ACT_VEL_TRAINO[1]',
+    }
 
-set_data_value(robot, mask % ('Colore', 1), 'Nero')
-set_data_value(robot, mask % ('Commessa', 1), 'Commessa numero 1bis')
-set_data_value(robot, mask % ('Temperatura', 1), 200)
-set_data_value(robot, mask % ('Velocità', 1), 1.15)
 
-for item in [1]:  # range(0, 2):
-    print('\nCommessa %s' % item)
-    for variable in variables:
-        result = get_data_value(
-            robot,
-            mask % (variable, item),
-            verbose=False,
-        )
-        print('Variabile: %s [%s]' % (variable, result))
+for call in calls:
+    print('\nChiamata %s' % call)
+    result = get_data_value(
+        robot,
+        call,
+        verbose=False,
+    )
+    print('Risposta: %s' % result)
 robot.disconnect()
