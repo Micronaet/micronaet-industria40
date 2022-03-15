@@ -85,11 +85,7 @@ status = {
 
 while True:
     # -------------------------------------------------------------------------
-    # Phase 0: Load telegram in loop?
-    # -------------------------------------------------------------------------
-
-    # -------------------------------------------------------------------------
-    # Phase 1: Get robot:
+    # Phase 1: Get robot loop:
     # -------------------------------------------------------------------------
     while not robot:
         try:
@@ -101,14 +97,15 @@ while True:
         except:
             # Wait and repeat
             time.sleep(wait['robot'])
+            print('Robot non presente!')
             continue
 
     # -------------------------------------------------------------------------
     # Phase 2: Check working time:
     # -------------------------------------------------------------------------
-    robot_present = True
-    while robot_present:  # Internal loop:
+    while True:  # Internal loop:
         last_speed = status['speed']
+        message = '%s Stato forno:\n' % datetime.now()
         for call in calls:
             try:
                 call_text = calls[call]
@@ -117,16 +114,15 @@ while True:
                     verbose=False,
                 )
                 status[call] = result
-                print('Chiamata: %s risposta: %s' % (call, result))
-            except:
-                # Robot not present:
+                message += 'Parametro: %s valore: %s' % (call, result)
+            except:  # Robot not present:
                 try:
                     print('Robot not responding!')
                     del robot
-                    robot_present = False
+                    break
                 except:
-                    pass
-                break
+                    break
+        print(message)
         time.sleep(wait['working'])
 
         # ---------------------------------------------------------------------
@@ -134,22 +130,23 @@ while True:
         # ---------------------------------------------------------------------
         error_raised = False
         while not error_raised:
-            if last_speed <= 0 and status['speed'] > 0:
+            if last_speed <= 0 < status['speed']:
                 try:
                     bot.sendMessage(
                         telegram_group,
-                        u'[INFO] Ripresa nastro trasportatore',
+                        u'[INFO] Ripresa nastro trasportatore:\n%s' % message,
                     )
                     error_raised = True
                 except:
                     print('Cannot raise restart operation')
                     time.sleep(wait['telegram'])
 
-            elif last_speed > 0 and status['speed'] <= 0:
+            elif last_speed > 0 >= status['speed']:
                 try:
                     bot.sendMessage(
                         telegram_group,
-                        u'[ALLARME] Arresto nastro trasportatore!',
+                        u'[ALLARME] Arresto nastro trasportatore:\n%s' %
+                        message,
                     )
                     error_raised = True
                 except:
