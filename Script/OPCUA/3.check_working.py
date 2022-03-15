@@ -34,7 +34,8 @@ except:
 
 wait = {
     'robot': 1 * 30,  # Test every one minute
-    'alarm': 10,   # Test every 20 seconds
+    'working': 10,   # Test every 30 seconds
+    'telegram': 10,   # Wait for telegram error
 }
 
 # -----------------------------------------------------------------------------
@@ -92,7 +93,6 @@ while True:
     # -------------------------------------------------------------------------
     while not robot:
         try:
-            # robot = get_robot('10.10.10.1', 4840)
             robot = RobotOPCUA()
             bot.sendMessage(
                 telegram_group,
@@ -106,32 +106,65 @@ while True:
     # -------------------------------------------------------------------------
     # Phase 2: Check working time:
     # -------------------------------------------------------------------------
-    try:
+    robot_present = True
+    while robot_present:  # Internal loop:
+        last_speed = status['speed']
         for call in calls:
-            print('\nChiamata %s' % call)
-            call_text = calls[call]
-            result = robot.get_data_value(
-                call_text,
-                verbose=False,
-            )
-            print('Risposta: %s' % result)
-    except:
-        pass
+            try:
+                call_text = calls[call]
+                result = robot.get_data_value(
+                    call_text,
+                    verbose=False,
+                )
+                status[call] = result
+                print('Chiamata: %s risposta: %s' % (call, result))
+                time.sleep(wait['working'])
+            except:
+                # Robot not present:
+                try:
+                    print('Robot not responding!')
+                    del robot
+                    robot_present = False
+                except:
+                    pass
+                break
 
-    try:
-        del robot
-    except:
-        pass
+        # ---------------------------------------------------------------------
+        # Alarm check with raise on telegram:
+        # ---------------------------------------------------------------------
+        error_raised = False
+        while not error_raised:
+            if last_speed <= 0 and status['speed'] > 0:
+                try:
+                    bot.sendMessage(
+                        telegram_group,
+                        u'[INFO] Ripresa nastro trasportatore',
+                    )
+                    error_raised = True
+                except:
+                    print('Cannot raise restart operation')
+                    time.sleep(wait['telegram'])
+
+
+            elif last_speed > 0 and status['speed'] <= 0:
+                try:
+                    bot.sendMessage(
+                        telegram_group,
+                        u'[ALLARME] Arresto nastro trasportatore!',
+                    )
+                    error_raised = True
+                except:
+                    print('Cannot raise stop operation')
+                    time.sleep(wait['telegram'])
+
+            else:  # nothing to raise
+                error_raised = True
 
     robot = False
     bot.sendMessage(
         telegram_group,
         u'[WARNING] Disconnessione robot (fine monitoraggio)\n%s' % ('-' * 80),
     )
-
-# robot.check_is_alarm()
-# robot.check_is_working()
-# robot.check_machine()
 del robot
 
 
