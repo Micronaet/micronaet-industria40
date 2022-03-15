@@ -69,6 +69,12 @@ bot.sendMessage(
     u'%s\n[INFO] PC: %s Avvio script controllo funzionamento robot...' % (
         '-' * 80, check_from),
 )
+parameter = {
+    'temp_grease': 'Termoregolatore sgrassaggio',
+    'temp_dry': 'Termoregolatore asciugatura',
+    'temp_bake': 'Termoregolatore cottura',
+    'speed': u'Velocità trasporto',
+}
 calls = {
     'temp_grease': 'ns=3;s="DB_TERMOREG".NR[1].TEMPERATURA',
     'temp_dry': 'ns=3;s="DB_TERMOREG".NR[6].TEMPERATURA',
@@ -117,7 +123,8 @@ while True:
                     verbose=False,
                 )
                 status[call] = result
-                message += 'Parametro: %s valore: %s\n' % (call, result)
+                message += 'Parametro: %s valore: %s\n' % (
+                    parameter.get(call, ''), result))
             except:  # Robot not present:
                 try:
                     print('Robot not responding!')
