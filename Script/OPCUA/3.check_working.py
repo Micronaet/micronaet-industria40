@@ -118,7 +118,6 @@ while True:
                 )
                 status[call] = result
                 print('Chiamata: %s risposta: %s' % (call, result))
-                time.sleep(wait['working'])
             except:
                 # Robot not present:
                 try:
@@ -128,6 +127,7 @@ while True:
                 except:
                     pass
                 break
+        time.sleep(wait['working'])
 
         # ---------------------------------------------------------------------
         # Alarm check with raise on telegram:
