@@ -34,9 +34,9 @@ except:
     import configparser as ConfigParser
 
 wait = {
-    'robot': 1 * 30,  # Test every one minute
-    'working': 10,   # Test every 30 seconds
-    'telegram': 10,   # Wait for telegram error
+    'robot': 1 * 60,  # Test every one minute
+    'working': 10,   # Test every 10 seconds
+    'telegram': 10,   # Wait for 10 telegram error
 }
 
 # -----------------------------------------------------------------------------
@@ -50,6 +50,7 @@ config.read([config_file])
 telegram_token = config.get(u'Telegram', u'token')
 telegram_group = config.get(u'Telegram', u'group')
 check_from = config.get('robot', 'check_from')
+
 
 def host_up(host):
     if os.system('ping -c 2 %s' % host) is 0:
