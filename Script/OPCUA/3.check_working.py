@@ -124,7 +124,7 @@ try:
                         verbose=False,
                     )
                     status[call] = result
-                    message += 'Parametro: %s valore: %s\n' % (
+                    message += '%s: %s\n' % (
                         parameter.get(call, ''), result)
                 except:  # Robot not present:
                     try:
