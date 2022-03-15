@@ -189,11 +189,10 @@ try:
         )
 finally:
     try:
+        print('Disconnessione per programma fermato!')
         del robot
     except:
         pass
-
-
 
 # -----------------------------------------------------------------------------
 # Read configuration parameter:
