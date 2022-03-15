@@ -92,101 +92,106 @@ status = {
     'total': 1000,
 }
 
-while True:
-    # -------------------------------------------------------------------------
-    # Phase 1: Get robot loop:
-    # -------------------------------------------------------------------------
-    while not robot:
-        try:
-            robot = RobotOPCUA()
-            bot.sendMessage(
-                telegram_group,
-                u'[INFO] Connessione con robot (inizio controllo lavoro)',
-            )
-        except:
-            # Wait and repeat
-            time.sleep(wait['robot'])
-            print('Robot non presente!')
-            continue
-
-    # -------------------------------------------------------------------------
-    # Phase 2: Check working time:
-    # -------------------------------------------------------------------------
-    while True:  # Internal loop:
-        last_speed = status['speed']
-        message = '%s Stato forno:\n' % datetime.now()
-        for call in calls:
+try:
+    while True:
+        # -------------------------------------------------------------------------
+        # Phase 1: Get robot loop:
+        # -------------------------------------------------------------------------
+        while not robot:
             try:
-                call_text = calls[call]
-                result = robot.get_data_value(
-                    call_text,
-                    verbose=False,
+                robot = RobotOPCUA()
+                bot.sendMessage(
+                    telegram_group,
+                    u'[INFO] Connessione con robot (inizio controllo lavoro)',
                 )
-                status[call] = result
-                message += 'Parametro: %s valore: %s\n' % (
-                    parameter.get(call, ''), result)
-            except:  # Robot not present:
-                try:
-                    print('Robot not responding!')
-                    del robot
-                    break
-                except:
-                    break
-        print('%s [counter %s]' % (message, status['counter']))
-        time.sleep(wait['working'])
+            except:
+                # Wait and repeat
+                time.sleep(wait['robot'])
+                print('Robot non presente!')
+                continue
 
-        # ---------------------------------------------------------------------
-        # Alarm check with raise on telegram:
-        # ---------------------------------------------------------------------
-        error_raised = False
-        while not error_raised:
-            if last_speed <= 0 < status['speed']:
+        # -------------------------------------------------------------------------
+        # Phase 2: Check working time:
+        # -------------------------------------------------------------------------
+        while True:  # Internal loop:
+            last_speed = status['speed']
+            message = '%s Stato forno:\n' % datetime.now()
+            for call in calls:
                 try:
-                    bot.sendMessage(
-                        telegram_group,
-                        u'[INFO] Ripresa nastro trasportatore:\n%s' % message,
+                    call_text = calls[call]
+                    result = robot.get_data_value(
+                        call_text,
+                        verbose=False,
                     )
+                    status[call] = result
+                    message += 'Parametro: %s valore: %s\n' % (
+                        parameter.get(call, ''), result)
+                except:  # Robot not present:
+                    try:
+                        print('Robot not responding!')
+                        del robot
+                        break
+                    except:
+                        break
+            print('%s [counter %s]' % (message, status['counter']))
+            time.sleep(wait['working'])
+
+            # ---------------------------------------------------------------------
+            # Alarm check with raise on telegram:
+            # ---------------------------------------------------------------------
+            error_raised = False
+            while not error_raised:
+                if last_speed <= 0 < status['speed']:
+                    try:
+                        bot.sendMessage(
+                            telegram_group,
+                            u'[INFO] Ripresa nastro trasportatore:\n%s' % message,
+                        )
+                        error_raised = True
+                    except:
+                        print('Cannot raise restart operation')
+                        time.sleep(wait['telegram'])
+
+                elif last_speed > 0 >= status['speed']:
+                    try:
+                        bot.sendMessage(
+                            telegram_group,
+                            u'[ALLARME] Arresto nastro trasportatore:\n%s' %
+                            message,
+                        )
+                        error_raised = True
+                    except:
+                        print('Cannot raise stop operation')
+                        time.sleep(wait['telegram'])
+
+                elif status['counter'] <= 0:
+                    try:
+                        bot.sendMessage(
+                            telegram_group,
+                            u'[INFO] Messagio periodico stato forno:\n%s' %
+                            message,
+                        )
+                        error_raised = True
+                        # Restore counter
+                        status['counter'] = status['total']
+                    except:
+                        print('Cannot raise stop operation')
+                        time.sleep(wait['telegram'])
+
+                else:  # nothing to raise
+                    status['counter'] -= 1
                     error_raised = True
-                except:
-                    print('Cannot raise restart operation')
-                    time.sleep(wait['telegram'])
 
-            elif last_speed > 0 >= status['speed']:
-                try:
-                    bot.sendMessage(
-                        telegram_group,
-                        u'[ALLARME] Arresto nastro trasportatore:\n%s' %
-                        message,
-                    )
-                    error_raised = True
-                except:
-                    print('Cannot raise stop operation')
-                    time.sleep(wait['telegram'])
-
-            elif status['counter'] <= 0:
-                try:
-                    bot.sendMessage(
-                        telegram_group,
-                        u'[INFO] Messagio periodico stato forno:\n%s' %
-                        message,
-                    )
-                    error_raised = True
-                    # Restore counter
-                    status['counter'] = status['total']
-                except:
-                    print('Cannot raise stop operation')
-                    time.sleep(wait['telegram'])
-
-            else:  # nothing to raise
-                status['counter'] -= 1
-                error_raised = True
-
-    robot = False
-    bot.sendMessage(
-        telegram_group,
-        u'[WARNING] Disconnessione robot (fine monitoraggio)\n%s' % ('-' * 80),
-    )
-del robot
+        robot = False
+        bot.sendMessage(
+            telegram_group,
+            u'[WARNING] Disconnessione robot (fine monitoraggio)\n%s' % ('-' * 80),
+        )
+finally:
+    try:
+        del robot
+    except:
+        pass
 
 
 
