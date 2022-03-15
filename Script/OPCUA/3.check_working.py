@@ -124,7 +124,7 @@ while True:
                 )
                 status[call] = result
                 message += 'Parametro: %s valore: %s\n' % (
-                    parameter.get(call, ''), result))
+                    parameter.get(call, ''), result)
             except:  # Robot not present:
                 try:
                     print('Robot not responding!')
