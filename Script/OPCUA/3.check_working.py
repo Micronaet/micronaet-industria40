@@ -82,6 +82,8 @@ status = {
     'temp_grease': 0.0,
     'temp_dry': 0.0,
     'speed': 0.1,  # for raise speed 0 first time
+    'counter': 0,
+    'total': 1000,
 }
 
 while True:
@@ -123,7 +125,7 @@ while True:
                     break
                 except:
                     break
-        print(message)
+        print('%s [counter %s]' % (message, status['counter']))
         time.sleep(wait['working'])
 
         # ---------------------------------------------------------------------
@@ -154,7 +156,22 @@ while True:
                     print('Cannot raise stop operation')
                     time.sleep(wait['telegram'])
 
+            elif status['counter'] <= 0:
+                try:
+                    bot.sendMessage(
+                        telegram_group,
+                        u'[INFO] Messagio periodico stato forno:\n%s' %
+                        message,
+                    )
+                    error_raised = True
+                    # Restore counter
+                    status['counter'] = status['total']
+                except:
+                    print('Cannot raise stop operation')
+                    time.sleep(wait['telegram'])
+
             else:  # nothing to raise
+                status['counter'] -= 1
                 error_raised = True
 
     robot = False
