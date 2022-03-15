@@ -97,9 +97,10 @@ calls = {
 
 for call in calls:
     print('\nChiamata %s' % call)
+    call_text = calls[call]
     result = get_data_value(
         robot,
-        call,
+        call_text,
         verbose=False,
     )
     print('Risposta: %s' % result)
