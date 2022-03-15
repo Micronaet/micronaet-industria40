@@ -81,7 +81,7 @@ status = {
     'temp_bake': 0.0,
     'temp_grease': 0.0,
     'temp_dry': 0.0,
-    'speed': 0.0,
+    'speed': 0.1,  # for raise speed 0 first time
 }
 
 while True:
