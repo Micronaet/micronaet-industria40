@@ -83,37 +83,9 @@ def host_up(host):
 # Read configuration parameter:
 # -----------------------------------------------------------------------------
 # From config file:
-"""
-cfg_file = os.path.expanduser('../openerp.cfg')
-
-config = ConfigParser.ConfigParser()
-config.read([cfg_file])
-dbname = config.get('dbaccess', 'dbname')
-user = config.get('dbaccess', 'user')
-pwd = config.get('dbaccess', 'pwd')
-server = config.get('dbaccess', 'server')
-port = config.get('dbaccess', 'port')   # verify if it's necessary: getint
-
-# -----------------------------------------------------------------------------
-# Connect to ODOO:
-# -----------------------------------------------------------------------------
-odoo = erppeek.Client(
-    'http://%s:%s' % (
-        server, port),
-    db=dbname,
-    user=user,
-    password=pwd,
-    )
-
-job_pool = odoo.model('industria.job')
-
-job_ids = job_pool.search([
-    ('database_id.mode', '=', 'opcua'),  # Only opcua database job
-    ('state', '=', 'RUNNING'),  # Only running job
-])
-"""
 # todo Test OPCUA variables
 # todo Update ODOO if done (add time, duration)
+pdb.set_trace()
 robot = get_robot('10.10.10.1', 4840)
 calls = {
     'temp_grease': 'ns=3;s="DB_TERMOREG".NR[1].TEMPERATURA',
