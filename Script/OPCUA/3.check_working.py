@@ -94,7 +94,9 @@ status = {
 
 date_range = [6, 20]
 
-
+# -----------------------------------------------------------------------------
+# Utility:
+# -----------------------------------------------------------------------------
 def send_telegram_message(bot, message, telegram_group, timeout, verbose=True):
     """ Comunicate via telegram and manage error with timeout
     """
