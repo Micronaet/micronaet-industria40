@@ -195,20 +195,11 @@ try:
                     status['counter'] = status['total']
                     error_raised = True
             status['counter'] -= 1
-
         robot = False
-        try:
-            message = u'[WARNING] Disconnessione robot ' \
-                      u'(fine monitoraggio)\n%s' % ('-' * 80)
-            bot.sendMessage(
-                telegram_group,
-                message,
-            )
-        except:
-            print('ERRORE non comunicato: %s' % message)
+
 finally:
     try:
-        print('Disconnessione per programma fermato!')
+        print('[WARNING] Disconnessione per programma fermato!')
         del robot
     except:
         pass
