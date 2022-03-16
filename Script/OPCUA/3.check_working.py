@@ -64,7 +64,6 @@ bot = telepot.Bot(telegram_token)
 bot.getMe()
 
 # Master loop:
-robot = False
 bot.sendMessage(
     telegram_group,
     u'%s\n[INFO] PC: %s Avvio script controllo funzionamento robot...' % (
@@ -93,7 +92,30 @@ status = {
     'total': 1000,
 }
 
+date_range = [6, 20]
+
+
+def send_telegram_message(bot, message, telegram_group, timeout, verbose=True):
+    """ Comunicate via telegram and manage error with timeout
+    """
+    while True:
+        try:
+            bot.sendMessage(
+                telegram_group,
+                message,
+            )
+            break  # Normal exit
+        except:
+            if verbose:
+                print('[ERR] Not send: %s' % message)
+            time.sleep(timeout)
+    return True
+
+robot = False
 try:
+    # -------------------------------------------------------------------------
+    #                                MASTER LOOP:
+    # -------------------------------------------------------------------------
     while True:
         # ---------------------------------------------------------------------
         # Phase 1: Get robot loop:
@@ -101,20 +123,22 @@ try:
         while not robot:
             try:
                 robot = RobotOPCUA()
-                bot.sendMessage(
-                    telegram_group,
+                send_telegram_message(
+                    bot,
                     u'[INFO] Connessione con robot (inizio controllo lavoro)',
-                )
+                    telegram_group, wait['telegram'])
             except:
                 # Wait and repeat
                 time.sleep(wait['robot'])
-                print('Robot non presente!')
+                print('Robot non presente '
+                      '(riprovo connessione dopo %s sec.!' % wait['robot'])
                 continue
 
         # ---------------------------------------------------------------------
         # Phase 2: Check working time:
         # ---------------------------------------------------------------------
-        while True:  # Internal loop:
+        while robot:  # Internal loop:
+            # todo use a version call to check if robot is present?
             last_speed = status['speed']
             message = '%s Stato forno:\n' % datetime.now()
             for call in calls:
@@ -131,6 +155,7 @@ try:
                     try:
                         print('Robot not responding!')
                         del robot
+                        robot = False
                         break
                     except:
                         break
@@ -140,89 +165,50 @@ try:
             # -----------------------------------------------------------------
             # Alarm check with raise on telegram:
             # -----------------------------------------------------------------
-            error_raised = False
-            while not error_raised:
-                if last_speed <= 0 < status['speed']:
-                    try:
-                        bot.sendMessage(
-                            telegram_group,
-                            u'[INFO] Ripresa nastro trasportatore:\n%s' %
-                            message,
-                        )
-                        error_raised = True
-                    except:
-                        print('Cannot raise restart operation')
-                        time.sleep(wait['telegram'])
+            if last_speed <= 0 < status['speed']:
+                send_telegram_message(
+                    bot,
+                    u'[INFO] Ripresa nastro trasportatore:\n%s' %
+                    message,
+                    telegram_group, wait['telegram'])
 
-                elif last_speed > 0 >= status['speed']:
-                    try:
-                        bot.sendMessage(
-                            telegram_group,
-                            u'[ALLARME] Arresto nastro trasportatore:\n%s' %
-                            message,
-                        )
-                        error_raised = True
-                    except:
-                        print('Cannot raise stop operation')
-                        time.sleep(wait['telegram'])
+            elif last_speed > 0 >= status['speed']:
+                send_telegram_message(
+                    bot,
+                    u'[ALLARME] Arresto nastro trasportatore:\n%s' %
+                    message,
+                    telegram_group, wait['telegram'])
 
-                elif status['counter'] <= 0:
-                    try:
-                        bot.sendMessage(
-                            telegram_group,
-                            u'[INFO] Messagio periodico stato forno:\n%s' %
-                            message,
-                        )
-                        error_raised = True
-                        # Restore counter
-                        status['counter'] = status['total']
-                    except:
-                        print('Cannot raise stop operation')
-                        time.sleep(wait['telegram'])
+            elif status['counter'] <= 0:
+                hour = datetime.now().hour
+                if date_range[0] > hour > date_range[1]:
+                    print('No message period!\nMessage missed: %s' %
+                          message)
+                else:
+                    send_telegram_message(
+                        bot,
+                        u'[INFO] Messaggio di controllo forno:\n%s' %
+                        message,
+                        telegram_group, wait['telegram'])
 
-                else:  # nothing to raise
-                    status['counter'] -= 1
+                    # Restore counter
+                    status['counter'] = status['total']
                     error_raised = True
+            status['counter'] -= 1
 
         robot = False
-        bot.sendMessage(
-            telegram_group,
-            u'[WARNING] Disconnessione robot (fine monitoraggio)\n%s' % (
-                    '-' * 80),
-        )
+        try:
+            message = u'[WARNING] Disconnessione robot ' \
+                      u'(fine monitoraggio)\n%s' % ('-' * 80)
+            bot.sendMessage(
+                telegram_group,
+                message,
+            )
+        except:
+            print('ERRORE non comunicato: %s' % message)
 finally:
     try:
         print('Disconnessione per programma fermato!')
         del robot
     except:
         pass
-
-# -----------------------------------------------------------------------------
-# Read configuration parameter:
-# -----------------------------------------------------------------------------
-# From config file:
-# todo Test OPCUA variables
-# todo Update ODOO if done (add time, duration)
-"""
-# Parte per test:
-pdb.set_trace()
-robot = get_robot('10.10.10.1', 4840)
-calls = {
-    'temp_grease': 'ns=3;s="DB_TERMOREG".NR[1].TEMPERATURA',
-    'temp_dry': 'ns=3;s="DB_TERMOREG".NR[6].TEMPERATURA',
-    'temp_bake': 'ns=3;s="DB_TERMOREG".NR[7].TEMPERATURA',
-    'speed': 'ns=3;s="DB_TRAINO".ACT_VEL_TRAINO[1]',
-    }
-
-
-for call in calls:
-    print('\nChiamata %s' % call)
-    call_text = calls[call]
-    result = get_data_value(
-        robot,
-        call_text,
-        verbose=False,
-    )
-    print('Risposta: %s' % result)
-robot.disconnect()
-"""
