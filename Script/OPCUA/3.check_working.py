@@ -89,7 +89,7 @@ status = {
     'temp_dry': 0.0,
     'speed': 0.1,  # for raise speed 0 first time
     'counter': 0,
-    'total': 8000,  # once a day
+    'total': 8640,  # once a day
 }
 
 date_range = [6, 20]
