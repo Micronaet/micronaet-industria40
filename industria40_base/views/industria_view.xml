@@ -9,6 +9,10 @@
                 <tree string="Commesse" editable="bottom" colors="red:name == ''">
                     <field name="ref" readonly="1"/>
                     <field name="name" readonly="1"/>
+
+                    <field name="manual_job" readonly="1"/>
+                    <button name="button_send_manual_job" type="object" string="Job manuale" icon="gtk-refresh" attrs="{'invisible':[('manual_job', '=', False)]}"/>
+
                     <field name="source_id" readonly="1"/>
                     <field name="job_id" /> <!--readonly="1"-->
                     <field name="temperature" readonly="1"/>

@@ -108,11 +108,117 @@ class IndustriaProduction(orm.Model):
         return source_pool.button_load_production_from_robot(
             cr, uid, [production.source_id.id], context=context_forced)
 
+    def button_send_manual_job(self, cr, uid, ids, context=None):
+        """ Send manual job
+        """
+        # todo remove duplicated:
+        def get_value(parameter):
+            value = parameter.value
+            out_type = parameter.opcua_id.type
+            if out_type == 'float':
+                return float(value.replace(',', '.')) or 0.0
+            elif out_type == 'integer':
+                return int(value) or 0
+            else:
+                return str(value or '')
+
+        def get_ascii(value):
+            res = ''
+            for c in value:
+                if ord(c) < 127:
+                    res += c
+                else:
+                    res += '.'
+            return str(res)
+
+        if context is None:
+            context = {}
+
+        database_pool = self.pool.get('industria.database')
+        production_pool = self.pool.get('industria.production')
+        source_pool = self.pool.get('industria.robot')
+
+        robot_ids = source_pool.search(cr, uid, [
+            ('code', '=', 'FORN01'),
+        ], context=context)
+        if not robot_ids:  # todo use first not correct!
+            raise osv.except_osv(
+                _('Errore forno'),
+                _('Trovare un Robot codice: FORN01'))
+
+        source = source_pool.browse(cr, uid, robot_ids, context=context)[0]
+        database = source.database_id
+        if not source.program_ids:
+            raise osv.except_osv(
+                _('Errore forno'),
+                _('Non trovati programmmi nel forno'))
+        program = source.program_ids[0]  # todo use first (not correct)
+
+        # Send to robot:
+        robot = database_pool.get_robot(database)
+        mask = source.opcua_mask
+
+        # Get free program:
+        production_id = ids[0]  # Current is selected program
+        production = production_pool.browse(
+                cr, uid, production_id, context=context)
+        opcua_ref = production.ref
+
+        if not opcua_ref:
+            raise osv.except_osv(
+                _('Errore commessa'),
+                _('Impossibile creare commesse, il numero massimo è stato '
+                  'raggiunto, chiuderne qualcuna e riprovare'))
+
+        # Program parameter:
+        for parameter in program.parameter_ids:
+            command_text = get_ascii(mask % (
+                parameter.opcua_id.name,
+                opcua_ref
+            ))
+            _logger.info('OPCUA get: %s' % command_text)
+            database_pool.set_data_value(
+                robot,
+                command_text,
+                get_value(parameter),
+            )
+
+        # Header parameter:
+        manual_job = production.manual_job
+        manual_part = manual_job.split()
+        lot = manual_part[0]
+        color = ' '.join(manual_part[1:])
+        database_pool.set_data_value(
+            robot,
+            mask % ('Commessa', opcua_ref),
+            get_ascii(lot),
+        )
+        database_pool.set_data_value(
+            robot,
+            mask % ('Colore', opcua_ref),
+            get_ascii(color),
+        )
+
+        # Reload this ref production (link to this job_id):
+        context_forced = context.copy()
+        context_forced['reload_only_ref'] = opcua_ref
+        context_forced['force_job_id'] = ids[0]
+
+        source_pool.button_load_production_from_robot(cr, uid, [
+            source.id,
+        ], context=context_forced)
+
+        _logger.info('Send data to robot...')
+        return self.write(cr, uid, ids, {
+            'state': 'RUNNING',
+        }, context=context)
+
     _columns = {
         'source_id': fields.many2one('industria.robot', 'Robot'),
         'job_id': fields.many2one('industria.job', 'Job'),
         'ref': fields.integer('Rif.'),
         'name': fields.char('Commessa', size=30),
+        'manual_job': fields.char('Job manuale', size=50),
         'temperature': fields.char('Temperatura', size=5),
         'speed': fields.char('Velocità', size=5),
         'color': fields.char('Colore', size=20),
