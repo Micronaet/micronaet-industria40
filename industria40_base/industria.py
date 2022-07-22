@@ -1748,8 +1748,10 @@ class IndustriaProgramFabric(orm.Model):
     # _order = 'fabric_id'
 
     _columns = {
-        'program_id': fields.many2one('industria.program', 'Programma'),
-        'fabric_id': fields.many2one('product.product', 'Tessuto'),
+        'program_id': fields.many2one(
+            'industria.program', 'Programma'),
+        'fabric_id': fields.many2one(
+            'product.product', 'Tessuto'),
         'total': fields.float('Pezzi'),
     }
 
@@ -1808,7 +1810,8 @@ class IndustriaProgramFabricPart(orm.Model):
             }
 
     _columns = {
-        'fabric_id': fields.many2one('industria.program.fabric', 'Tessuto'),
+        'fabric_id': fields.many2one(
+            'industria.program.fabric', 'Tessuto', ondelete='cascade'),
         'product_id': fields.many2one('product.product', 'Semilavorato'),
         'mask': fields.char(
             'Maschera', size=20, required=True,
