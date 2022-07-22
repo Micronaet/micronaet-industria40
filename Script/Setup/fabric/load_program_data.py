@@ -77,6 +77,7 @@ def clean_float(value):
 
 
 import pdb; pdb.set_trace()
+log_f = open('import.log', 'w')
 for line in open(file_csv, 'r'):
     counter += 1
     if counter == 1:
@@ -85,13 +86,22 @@ for line in open(file_csv, 'r'):
     row = line.split('|')
 
     if len(row) != cols:
-        print('%s. Different column!' % counter)
+        log_f.write('%s. Different column!' % counter)
         continue
 
     program_id = int(row[0])
     name = row[2]
+    jump = row[1].upper() == 'X'
+    if jump:
+        log_f.write('Jump %s' % name)
+        continue
     mask = (row[7] or '')
-    total = clean_float(row[8])
+    try:
+        total = clean_float(row[8])
+    except:
+        log_f.write('%s. Error reading total, jumped: %s' % (counter, name))
+        continue
+
     length = clean_float(row[13]) * 1000.0
 
     if mask:
@@ -107,19 +117,18 @@ for line in open(file_csv, 'r'):
         program_ids = program_pool.search([
             ('id', '=', program_id),
             ])
-        print('Non trovato programma %s cercato per ID %s' % (
-            name, program_id,
-        ))
+        log_f.write('%s. Non trovato programma %s cercato per ID %s' % (
+            counter, name, program_id,
+            ))
 
     if not program_ids:
-        print('Programma non trovato né per ID %s né per nome %s' % (
-            program_id, name))
+        log_f.write('%s. Programma non trovato ne per ID %s ne per nome %s' % (
+            counter, program_id, name))
         continue
 
     # -------------------------------------------------------------------------
     # Update program:
     # -------------------------------------------------------------------------
-    print('Updating program: %s' % name)
     # Update total length:
     program_pool.write(program_ids, {
         'fabric_length': length,
@@ -144,3 +153,4 @@ for line in open(file_csv, 'r'):
 
     # Associate program:
     program_pool.button_generate_matching_product_program([program_id])
+    log_f.write('%s. Updating program: %s' % (counter,name))
