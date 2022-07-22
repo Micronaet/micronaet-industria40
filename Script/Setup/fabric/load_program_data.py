@@ -76,8 +76,19 @@ def clean_float(value):
     return float((value or '0').replace(',', '.'))
 
 
-import pdb; pdb.set_trace()
 log_f = open('import.log', 'w')
+
+
+def write_log(log_f, message, verbose=True):
+    """ Write log
+    """
+    log_f.write(message)
+    log_f.write('\n')
+    log_f.flush()
+    if verbose:
+        print(message)
+
+
 for line in open(file_csv, 'r'):
     counter += 1
     if counter == 1:
@@ -86,20 +97,21 @@ for line in open(file_csv, 'r'):
     row = line.split('|')
 
     if len(row) != cols:
-        log_f.write('%s. Different column!' % counter)
+        write_log(log_f, '%s. Different column!' % counter)
         continue
 
     program_id = int(row[0])
     name = row[2]
     jump = row[1].upper() == 'X'
     if jump:
-        log_f.write('Jump %s' % name)
+        write_log(log_f, '%s. Jump %s' % (counter, name))
         continue
     mask = (row[7] or '')
     try:
         total = clean_float(row[8])
     except:
-        log_f.write('%s. Error reading total, jumped: %s' % (counter, name))
+        write_log(log_f, '%s. Error reading total, jumped: %s' % (
+            counter, name))
         continue
 
     length = clean_float(row[13]) * 1000.0
@@ -113,17 +125,19 @@ for line in open(file_csv, 'r'):
         ('name', '=', name),
     ])
 
-    if not program_ids:
+    if program_ids:
+        message = '%s. Updating program: %s' % (counter, name)
+    else:
         program_ids = program_pool.search([
             ('id', '=', program_id),
             ])
-        log_f.write('%s. Non trovato programma %s cercato per ID %s' % (
-            counter, name, program_id,
-            ))
+        message = '%s. Non trovato programma %s cercato per ID %s' % (
+            counter, name, program_id)
 
     if not program_ids:
-        log_f.write('%s. Programma non trovato ne per ID %s ne per nome %s' % (
-            counter, program_id, name))
+        write_log(log_f,
+                  '%s. Programma non trovato ne per ID %s ne per nome %s' % (
+                      counter, program_id, name))
         continue
 
     # -------------------------------------------------------------------------
@@ -153,4 +167,4 @@ for line in open(file_csv, 'r'):
 
     # Associate program:
     program_pool.button_generate_matching_product_program([program_id])
-    log_f.write('%s. Updating program: %s' % (counter,name))
+    write_log(log_f, message)
