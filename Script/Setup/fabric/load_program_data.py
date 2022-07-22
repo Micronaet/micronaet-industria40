@@ -65,13 +65,18 @@ counter = 0
 # -----------------------------------------------------------------------------
 # Clean all operation:
 # -----------------------------------------------------------------------------
-import pdb; pdb.set_trace()
 fabric_ids = fabric_pool.search([])
 fabric_pool.unlink(fabric_ids)
 
 part_ids = part_pool.search([])
 part_pool.unlink(part_ids)
 
+
+def clean_float(value):
+    return float((value or '0').replace(',', '.'))
+
+
+import pdb; pdb.set_trace()
 for line in open(file_csv, 'r'):
     counter += 1
     if counter == 1:
@@ -83,11 +88,14 @@ for line in open(file_csv, 'r'):
         print('%s. Different column!' % counter)
         continue
 
-    program_id = row[0]
-    name = row[1]
-    mask = row[7]
-    total = row[8]
-    length = row[13]
+    program_id = int(row[0])
+    name = row[2]
+    mask = (row[7] or '')
+    total = clean_float(row[8])
+    length = clean_float(row[13]) * 1000.0
+
+    if mask:
+        mask += '%'
 
     # Select production:
     program_ids = program_pool.search([
@@ -96,7 +104,15 @@ for line in open(file_csv, 'r'):
     ])
 
     if not program_ids:
-        print('Programma non trovato %s: %s' % (
+        program_ids = program_pool.search([
+            ('id', '=', program_id),
+            ])
+        print('Non trovato programma %s cercato per ID %s' % (
+            name, program_id,
+        ))
+
+    if not program_ids:
+        print('Programma non trovato né per ID %s né per nome %s' % (
             program_id, name))
         continue
 
@@ -115,7 +131,7 @@ for line in open(file_csv, 'r'):
     fabric_id = fabric_pool.create({
         'program_id': program_ids[0],
         'fabric_id': product_id,
-        })
+        }).id
 
     # -------------------------------------------------------------------------
     # Create fabric part record:
@@ -126,3 +142,5 @@ for line in open(file_csv, 'r'):
         'mask': mask,
         })
 
+    # Associate program:
+    program_pool.button_generate_matching_product_program([program_id])
