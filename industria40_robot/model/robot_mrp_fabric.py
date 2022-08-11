@@ -215,20 +215,22 @@ class IndustriaMrp(orm.Model):
         """ Generate lined from MRP production linked
         """
         color_pool = self.pool.get('industria.robot.color')
-        # line_pool = self.pool.get('industria.mrp.line')
+        line_pool = self.pool.get('industria.mrp.line')
 
+        material_category = 'Tessuti'  # todo manage better
+
+        # ---------------------------------------------------------------------
         # Load color
+        # ---------------------------------------------------------------------
         color_db = {}
         color_ids = color_pool.search(cr, uid, [], context=context)
         for color in color_pool.browse(cr, uid, color_ids, context=context):
             color_db[color.code] = color
 
+        # I40 MRP:
         mrp_id = ids[0]
         i40_mrp = self.browse(cr, uid, mrp_id, context=context)
         robot_id = i40_mrp.robot_id.id
-
-        line_pool = self.pool.get('industria.mrp.line')
-        material_category = 'Tessuti'  # todo manage better
 
         # Clean previous line:
         _logger.warning('Clean previous line')
@@ -236,14 +238,16 @@ class IndustriaMrp(orm.Model):
         line_ids = [l.id for l in i40_mrp.line_ids]
         line_pool.unlink(cr, uid, line_ids, context=context)
 
-        # Collect new line:
+        # ---------------------------------------------------------------------
+        # Collect new line from MRP list (and BOM):
+        # ---------------------------------------------------------------------
         new_lines = {}
         _logger.warning('Generate new lines:')
         for mrp in i40_mrp.mrp_ids:
             for line in mrp.order_line_ids:
-                # todo consider also maked?
                 todo = (
                     line.product_uom_qty -
+                    # todo consider also maked?:
                     # line.deliverey_qty
                     # line.product_uom_maked_sync_qty -
                     line.mx_assigned_qty)
@@ -279,7 +283,10 @@ class IndustriaMrp(orm.Model):
                                         int(todo * bom_qty),
                                     )
 
+        # ---------------------------------------------------------------------
         # Generate line:
+        # ---------------------------------------------------------------------
+        pdb.set_trace()
         _logger.warning('Generate new lines:')
         for key in new_lines:
             todo, detail = new_lines[key]
