@@ -292,6 +292,7 @@ class IndustriaMrp(orm.Model):
             semiproduct, material = key
 
             fabric_code = material.default_code or ''
+
             # -----------------------------------------------------------------
             # Assign Program:
             # -----------------------------------------------------------------
