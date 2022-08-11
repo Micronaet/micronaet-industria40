@@ -286,7 +286,6 @@ class IndustriaMrp(orm.Model):
         # ---------------------------------------------------------------------
         # Generate line:
         # ---------------------------------------------------------------------
-        pdb.set_trace()
         _logger.warning('Generate new lines:')
         for key in new_lines:
             todo, detail = new_lines[key]
@@ -294,7 +293,7 @@ class IndustriaMrp(orm.Model):
 
             fabric_code = material.default_code or ''
             # -----------------------------------------------------------------
-            # Program part:
+            # Assign Program:
             # -----------------------------------------------------------------
             # todo choose the best program here?
             try:
