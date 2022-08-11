@@ -1355,6 +1355,25 @@ class IndustriaRobot(orm.Model):
     _rec_name = 'name'
     _order = 'name'
 
+    def button_generate_matching_product_program_all(
+            self, cr, uid, ids, context=None):
+        """ Update all program - product
+        """
+        program_pool = self.pool.get('industria.program')
+        robot_id = ids[0]
+        program_ids = self.search(cr, uid, [
+            ('robot_id', '=', robot_id),
+        ], context=context)
+
+        counter = 0
+        total = len(program_ids)
+        for program_id in program_ids:
+            counter += 1
+            # Call button action:
+            _logger.info('Updating program %s of %s' % (counter, total))
+            program_pool.button_generate_matching_product_program(
+                cr, uid, [program_id], context=context)
+
     def get_opcua_record(self, robot, source, ref):
         """ Extract OPCUA record from robot
         """
@@ -1648,7 +1667,7 @@ class IndustriaProgram(orm.Model):
 
         collect_data = {}
         for part in part_pool.browse(cr, uid, part_ids, context=context):
-            for product_id in self.get_selected_product(
+            for product_id in self.get_selected_product(  # mask query
                     cr, uid, part.mask, context=context):
                 if product_id in collect_data:
                     collect_data[product_id].append(part.id)
