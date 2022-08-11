@@ -1361,8 +1361,8 @@ class IndustriaRobot(orm.Model):
         """
         program_pool = self.pool.get('industria.program')
         robot_id = ids[0]
-        program_ids = self.search(cr, uid, [
-            ('robot_id', '=', robot_id),
+        program_ids = program_pool.search(cr, uid, [
+            ('source_id', '=', robot_id),
         ], context=context)
 
         counter = 0
