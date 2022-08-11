@@ -215,7 +215,7 @@ class IndustriaMrp(orm.Model):
         """ Generate lined from MRP production linked
         """
         color_pool = self.pool.get('industria.robot.color')
-        line_pool = self.pool.get('industria.mrp.line')
+        # line_pool = self.pool.get('industria.mrp.line')
 
         # Load color
         color_db = {}
