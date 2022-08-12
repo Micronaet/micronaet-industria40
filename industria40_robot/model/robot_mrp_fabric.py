@@ -112,7 +112,10 @@ class IndustriaMrp(orm.Model):
         program_created = {}  # job, step, max layer available
         sequence = 0
         now = datetime.now()  # note used now manually!!
-        for line in industria_mrp.line_ids:  # Sorted by program
+        # ---------------------------------------------------------------------
+        # Parse line sorted by program:
+        # ---------------------------------------------------------------------
+        for line in industria_mrp.line_ids:
             sequence += 1  # Sequence still progress for all program!
             program = line.part_id.program_id
             if not program:  # todo raise error?
