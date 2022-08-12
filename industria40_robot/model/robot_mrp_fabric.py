@@ -576,9 +576,14 @@ class IndustriaMrpLine(orm.Model):
         """
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = [
-                part.fabric_id.program_id.id for part in
-                line.product_id.industria_rule_ids]
+            res[line.id] = {
+                'program_ids': [],
+                'part_ids': [],
+            }
+            for part in line.product_id.industria_rule_ids:
+                res[line.id]['part_ids'].append(part.id)
+                res[line.id]['program_ids'].append(
+                    part.fabric_id.program_id.id)
         return res
 
     def get_total_field_data(self, cr, uid, ids, fields, args, context=None):
@@ -688,9 +693,14 @@ class IndustriaMrpLine(orm.Model):
         'program_id': fields.many2one(
             'industria.program', 'Programma'),
         'program_ids': fields.function(
-            _get_product_program, method=True,
+            _get_product_program, method=True, multi=True,
             type='many2many', relation='industria.program',
             string='Programmi disponibili',
+            ),
+        'part_ids': fields.function(
+            _get_product_program, method=True, multi=True,
+            type='many2many', relation='industria.program',
+            string='Regola',
             ),
         'sequence': fields.integer('Ord.'),
         'fabric': fields.text('Tessuto', size=20),

@@ -131,8 +131,17 @@
                                 </page>
                                 <page name="extra_page" string="Extra">
                                     <group colspan="4" col="4">
-                                        <separator string="Programmi:" colspan="4"/>
-                                        <field name="program_ids" readonly="1" nolabel="1" colspan="4"/>
+                                        <separator string="Programmi:" colspan="2"/>
+                                        <separator string="Regole:" colspan="2"/>
+                                        <field name="program_ids" readonly="1" nolabel="1" colspan="2"/>
+                                        <field name="part_ids" readonly="1" nolabel="1" colspan="2"/>
+                                        <!--
+                                            <tree editable="bottom" string="Programmi">
+                                                <field name="code"/>
+                                                <field name="name"/>
+                                            </tree>
+                                        </field>
+                                        -->
                                     </group>
                                 </page>
                             </notebook>
