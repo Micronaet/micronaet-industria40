@@ -577,7 +577,7 @@ class IndustriaMrpLine(orm.Model):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = {
-                'program_id': line.fabric_id.program_id.id,
+                'program_id': line.part_id.fabric_id.program_id.id,  # todo save in part program
                 'program_ids': [],
                 'part_ids': [],
             }
@@ -695,7 +695,7 @@ class IndustriaMrpLine(orm.Model):
         #    'industria.program', 'Programma'),
         'program_id': fields.function(
             _get_product_program, method=True, multi=True, readonly=True,
-            type='many2many', relation='industria.program',
+            type='many2one', relation='industria.program',
             string='Programma',
             help='Programma selezionato in base alla regola scelta'
             ),
