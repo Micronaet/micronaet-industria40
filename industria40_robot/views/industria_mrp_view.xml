@@ -138,13 +138,13 @@
                                                 <field name="code"/>
                                                 <field name="name"/>
                                                 <field name="source_id"/>
+                                                <!--<field name="max_layer"/> not used right is in the robot-->
                                             </tree>
                                         </field>
 
                                         <field name="part_ids" readonly="1" nolabel="1" colspan="2">
                                             <tree editable="bottom" string="Regole">
-                                                <field name="code"/>
-                                                <field name="name"/>
+                                                <field name="mask"/>
                                                 <field name="total"/>
                                             </tree>
                                         </field>
@@ -208,7 +208,9 @@
                                         <field name="line_ids" nolabel="1" colspan="4" >
                                             <tree editable="bottom" string="Linee" colors="red: program_id == False">
                                                 <field name="sequence" readonly="1"/>
-                                                <field name="part_id" readonly="1"/> <!--todo changeable?-->
+                                                <!--<field name="part_id" readonly="1"/> todo changeable?-->
+                                                <field name="part_id" domain="[('id', 'in', part_ids)]"/>
+                                                <field name="part_ids" readonly="1" widget="many2many_tags"/>
                                                 <field name="program_id" readonly="1"/> <!--todo changeable?-->
                                                 <!--<field name="program_id" domain="[('id', 'in', program_ids)]"/>--> <!--todo changeable?-->
                                                 <!--<field name="program_ids" readonly="1" widget="many2many_tags"/>-->

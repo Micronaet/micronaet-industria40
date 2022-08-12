@@ -1635,6 +1635,10 @@ class IndustriaRobot(orm.Model):
             get_today_state, 'Status', type='text', method=True),
     }
 
+    _defaults = {
+        'max_layer': lambda *x: 30,
+    }
+
 
 class IndustriaProgram(orm.Model):
     """ Model name: Industria Program
@@ -1759,6 +1763,7 @@ class IndustriaProgram(orm.Model):
 
     _defaults = {
         'piece': lambda *x: 1,
+        'max_layer': lambda *x: 30,
     }
 
 

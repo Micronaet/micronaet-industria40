@@ -699,8 +699,8 @@ class IndustriaMrpLine(orm.Model):
             ),
         'part_ids': fields.function(
             _get_product_program, method=True, multi=True,
-            type='many2many', relation='industria.program',
-            string='Regola',
+            type='many2many', relation='industria.program.fabric.part',
+            string='Regole',
             ),
         'sequence': fields.integer('Ord.'),
         'fabric': fields.text('Tessuto', size=20),
