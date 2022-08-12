@@ -578,13 +578,10 @@ class IndustriaMrpLine(orm.Model):
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = {
                 'program_id': line.part_id.program_id.id,
-                'program_ids': [],
                 'part_ids': [],
             }
             for part in line.product_id.industria_rule_ids:
                 res[line.id]['part_ids'].append(part.id)
-                res[line.id]['program_ids'].append(
-                    part.fabric_id.program_id.id)
         return res
 
     def get_total_field_data(self, cr, uid, ids, fields, args, context=None):
@@ -699,11 +696,6 @@ class IndustriaMrpLine(orm.Model):
             string='Programma',
             help='Programma selezionato in base alla regola scelta'
             ),
-        'program_ids': fields.function(
-            _get_product_program, method=True, multi=True,
-            type='many2many', relation='industria.program',
-            string='Programmi disponibili',
-            ),
         'part_ids': fields.function(
             _get_product_program, method=True, multi=True,
             type='many2many', relation='industria.program.fabric.part',
@@ -714,13 +706,6 @@ class IndustriaMrpLine(orm.Model):
         'color': fields.text('Colore', size=10),
 
         'detail': fields.text('Dettaglio'),
-
-        # todo remove?
-        # 'program_ids': fields.function(
-        #    get_total_field_data, method=True,
-        #    type='many2many', relation='industria.program',
-        #    string='Programmi disponibili',
-        # ),
 
         'todo': fields.integer(
             string='Nominali', help='Totale come da produzioni collegate'),
