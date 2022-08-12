@@ -109,7 +109,7 @@ class IndustriaMrp(orm.Model):
         now = datetime.now()  # note used now manually!!
         for line in industria_mrp.line_ids:  # Sorted by program
             sequence += 1  # Sequence still progress for all program!
-            program = line.part_id.fabric_id.program_id
+            program = line.part_id.program_id
             if not program:  # todo raise error?
                 _logger.error('Line without program')
                 continue
@@ -577,7 +577,7 @@ class IndustriaMrpLine(orm.Model):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = {
-                'program_id': line.part_id.fabric_id.program_id.id,  # todo save in part program
+                'program_id': line.part_id.program_id.id,
                 'program_ids': [],
                 'part_ids': [],
             }
