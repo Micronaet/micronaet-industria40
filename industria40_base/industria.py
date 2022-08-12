@@ -1355,6 +1355,7 @@ class IndustriaRobot(orm.Model):
     _rec_name = 'name'
     _order = 'name'
 
+    '''
     def button_generate_matching_product_program_all(
             self, cr, uid, ids, context=None):
         """ Update all program - product
@@ -1372,7 +1373,7 @@ class IndustriaRobot(orm.Model):
             # Call button action:
             _logger.info('Updating program %s of %s' % (counter, total))
             program_pool.button_generate_matching_product_program(
-                cr, uid, [program_id], context=context)
+                cr, uid, [program_id], context=context)'''
 
     def get_opcua_record(self, robot, source, ref):
         """ Extract OPCUA record from robot

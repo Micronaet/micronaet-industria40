@@ -116,12 +116,27 @@
                     </header>
                     <sheet>
                         <group colspan="4" col="4">
-                            <field name="product_id" readonly="1"/>
-                            <field name="material_id" readonly="1" />
-                            <field name="todo" readonly="1" />
+                            <field name="program_id" readonly="1"/>
+                            <field name="part_id" readonly="1"/>
 
-                            <separator string="Dettaglio:" colspan="4"/>
-                            <field name="detail" readonly="1" nolabel="1" colspan="4"/>
+                            <notebook>
+                                <page name="detail_page" string="Dettaglio">
+                                    <group colspan="4" col="4">
+                                        <field name="product_id" readonly="1"/>
+                                        <field name="material_id" readonly="1" />
+                                        <field name="todo" readonly="1" />
+
+                                        <separator string="Dettaglio:" colspan="4"/>
+                                        <field name="detail" readonly="1" nolabel="1" colspan="4"/>
+                                    </group>
+                                </page>
+                                <page name="extra_page" string="Extra">
+                                    <group colspan="4" col="4">
+                                        <separator string="Programmi:" colspan="4"/>
+                                        <field name="program_ids" readonly="1" nolabel="1" colspan="4"/>
+                                    </group>
+                                </page>
+                            </notebook>
                         </group>
                     </sheet>
                     <footer/>
