@@ -1667,6 +1667,10 @@ class IndustriaProgram(orm.Model):
 
         collect_data = {}
         for part in part_pool.browse(cr, uid, part_ids, context=context):
+            mask = part.mask
+            if not mask:
+                _logger.error('Mask not found, jumped')
+                continue
             for product_id in self.get_selected_product(  # mask query
                     cr, uid, part.mask, context=context):
                 if product_id in collect_data:
