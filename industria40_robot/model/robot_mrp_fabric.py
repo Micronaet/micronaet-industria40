@@ -699,13 +699,11 @@ class IndustriaMrpLine(orm.Model):
             string='Programma',
             help='Programma selezionato in base alla regola scelta'
             ),
-        '''
         'program_ids': fields.function(
             _get_product_program, method=True, multi=True,
             type='many2many', relation='industria.program',
             string='Programmi disponibili',
             ),
-        '''    
         'part_ids': fields.function(
             _get_product_program, method=True, multi=True,
             type='many2many', relation='industria.program.fabric.part',
