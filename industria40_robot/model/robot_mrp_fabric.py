@@ -94,7 +94,9 @@ class IndustriaMrp(orm.Model):
         fabric_pool = self.pool.get('industria.job.fabric')
         fabric_product_pool = self.pool.get('industria.job.fabric.product')
 
+        # ---------------------------------------------------------------------
         # Clean all job if draft:
+        # ---------------------------------------------------------------------
         industria_mrp_id = ids[0]
         industria_mrp = self.browse(cr, uid, industria_mrp_id, context=context)
 
@@ -104,6 +106,9 @@ class IndustriaMrp(orm.Model):
                 _logger.warning('Deleted %s job' % job.id)
                 job_pool.unlink(cr, uid, [job.id], context=context)
 
+        # ---------------------------------------------------------------------
+        # Collect data (loop in product-fabric line):
+        # ---------------------------------------------------------------------
         program_created = {}  # job, step, max layer available
         sequence = 0
         now = datetime.now()  # note used now manually!!
@@ -113,9 +118,11 @@ class IndustriaMrp(orm.Model):
             if not program:  # todo raise error?
                 _logger.error('Line without program')
                 continue
+
+            # Parameters:
             robot = program.source_id
             database = robot.database_id
-            part = line.part_id  # winner rule
+            part = line.part_id  # winner rule or changed rule
             fabric_id = line.material_id.id
             product_id = line.product_id.id
             block = part.total  # total semi product in one program
@@ -139,7 +146,9 @@ class IndustriaMrp(orm.Model):
             extra_block = total % block > 0
             sp_total_layers = int(total / block) + (1 if extra_block else 0)
 
+            # -----------------------------------------------------------------
             # Total layers is total layer put in job will turn to 0:
+            # -----------------------------------------------------------------
             while sp_total_layers > 0:
                 if program not in program_created:
                     _logger.warning(
@@ -181,23 +190,25 @@ class IndustriaMrp(orm.Model):
                 # -------------------------------------------------------------
                 # Create layer (used for unload FABRIC)
                 # -------------------------------------------------------------
-                fabric_line_id = fabric_pool.create(cr, uid, {
-                    'sequence': sequence,
-                    'step_id': step_id,
-                    'fabric_id': fabric_id,
-                    'total': this_layer,
-                    # related 'industria_mrp_id': industria_mrp_id,
-                }, context=context)
+                # Only if quantity is present
+                if this_layer:
+                    fabric_line_id = fabric_pool.create(cr, uid, {
+                        'sequence': sequence,
+                        'step_id': step_id,
+                        'fabric_id': fabric_id,
+                        'total': this_layer,
+                        # related 'industria_mrp_id': industria_mrp_id,
+                    }, context=context)
 
-                # -------------------------------------------------------------
-                # Link product from program to fabric step:
-                # -------------------------------------------------------------
-                total_product = this_layer * block
-                fabric_product_pool.create(cr, uid, {
-                    'fabric_id': fabric_line_id,
-                    'product_id': product_id,
-                    'total': total_product,
-                }, context=context)
+                    # ---------------------------------------------------------
+                    # Link product from program to fabric step:
+                    # ---------------------------------------------------------
+                    total_product = this_layer * block
+                    fabric_product_pool.create(cr, uid, {
+                        'fabric_id': fabric_line_id,
+                        'product_id': product_id,
+                        'total': total_product,
+                    }, context=context)
 
                 # todo add also extra semi product not used here (from program)
                 # Some program has 2 different semi product maybe one is not
