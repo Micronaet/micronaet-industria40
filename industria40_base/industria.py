@@ -1792,7 +1792,7 @@ class IndustriaProgramFabricPart(orm.Model):
     _name = 'industria.program.fabric.part'
     _description = 'Programma parti tessuti'
     _rec_name = 'product_id'
-    # _order = 'product_id'
+    _order = 'total desc'
 
     def name_get(self, cr, uid, ids, context=None):
         """ Override for return correct name
@@ -1842,6 +1842,10 @@ class IndustriaProgramFabricPart(orm.Model):
         'fabric_id': fields.many2one(
             'industria.program.fabric', 'Tessuto', ondelete='cascade'),
         'product_id': fields.many2one('product.product', 'Semilavorato'),
+        'program_id': fields.related(
+            'fabric_id', 'program_id',
+            type='many2one', relation='industria.program',
+            string='Programma', store=True),
         'mask': fields.char(
             'Maschera', size=20, required=True,
             help='Maschera prodotto che possono essere creati con questa dima'
