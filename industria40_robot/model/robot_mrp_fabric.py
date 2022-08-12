@@ -577,6 +577,7 @@ class IndustriaMrpLine(orm.Model):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = {
+                'program_id': line.fabric_id.program_id.id,
                 'program_ids': [],
                 'part_ids': [],
             }
@@ -690,8 +691,14 @@ class IndustriaMrpLine(orm.Model):
             'product.product', 'Semilavorato'),
         'part_id': fields.many2one(
             'industria.program.fabric.part', 'Regola'),
-        'program_id': fields.many2one(
-            'industria.program', 'Programma'),
+        # 'program_id': fields.many2one(
+        #    'industria.program', 'Programma'),
+        'program_id': fields.function(
+            _get_product_program, method=True, multi=True, readonly=True,
+            type='many2many', relation='industria.program',
+            string='Programma',
+            help='Programma selezionato in base alla regola scelta'
+            ),
         'program_ids': fields.function(
             _get_product_program, method=True, multi=True,
             type='many2many', relation='industria.program',

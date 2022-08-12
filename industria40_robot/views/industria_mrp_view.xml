@@ -208,12 +208,9 @@
                                         <field name="line_ids" nolabel="1" colspan="4" >
                                             <tree editable="bottom" string="Linee" colors="red: program_id == False">
                                                 <field name="sequence" readonly="1"/>
-                                                <!--<field name="part_id" readonly="1"/> todo changeable?-->
-                                                <field name="part_id" domain="[('id', 'in', part_ids)]"/>
-                                                <field name="part_ids" readonly="1" widget="many2many_tags"/>
+                                                <field name="part_id" domain="[('id', 'in', part_ids[0][2])]"/>  <!--For Syntax [(6, 0, ids]-->
+                                                <field name="part_ids" readonly="1" widget="many2many_tags" invisible="1"/>
                                                 <field name="program_id" readonly="1"/> <!--todo changeable?-->
-                                                <!--<field name="program_id" domain="[('id', 'in', program_ids)]"/>--> <!--todo changeable?-->
-                                                <!--<field name="program_ids" readonly="1" widget="many2many_tags"/>-->
                                                 <field name="product_id" readonly="1"/>
                                                 <field name="material_id" readonly="1"/>
                                                 <field name="fabric" readonly="1"/>
