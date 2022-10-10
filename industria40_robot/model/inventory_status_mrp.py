@@ -57,12 +57,13 @@ class MrpProduction(orm.Model):
             todo add parameter:
             only_mrp: force only MRP status not product
 
-            Current lod on file:
+            Current load on file:
             filename
                 /home/administrator/photo/log/mrp_unload_i40.xlsx
         """
-        # filename = '/home/administrator/photo/log/mrp_unload_i40.xlsx'
-        filename = False
+        filename = '/home/administrator/photo/log/mrp_unload_i40.xlsx'
+        # filename = False
+
         # ---------------------------------------------------------------------
         # Utility function:
         # ---------------------------------------------------------------------

@@ -128,7 +128,7 @@ class IndustriaMrp(orm.Model):
             part = line.part_id  # winner rule or changed rule
             fabric_id = line.material_id.id
             product_id = line.product_id.id
-            block = part.total  # total semi product in one program
+            block = part.total  # total half-product in one program
             max_layer = robot.max_layer
 
             if not max_layer:
