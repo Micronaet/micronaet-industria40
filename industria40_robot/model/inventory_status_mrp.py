@@ -22,7 +22,7 @@ import pdb
 import sys
 import logging
 import openerp
-import xlsxwriter # XLSX export
+import xlsxwriter  # XLSX export
 import openerp.netsvc as netsvc
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv, expression, orm
