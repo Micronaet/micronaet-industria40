@@ -117,12 +117,18 @@ class IndustriaMrp(orm.Model):
         # ---------------------------------------------------------------------
         for line in industria_mrp.line_ids:
             sequence += 1  # Sequence still progress for all program!
+
+            # -----------------------------------------------------------------
+            # Mandatory condition:
+            # -----------------------------------------------------------------
             program = line.part_id.program_id
             if not program:  # todo raise error?
                 _logger.error('Line without program')
                 continue
 
+            # -----------------------------------------------------------------
             # Parameters:
+            # -----------------------------------------------------------------
             robot = program.source_id
             database = robot.database_id
             part = line.part_id  # winner rule or changed rule
@@ -130,7 +136,11 @@ class IndustriaMrp(orm.Model):
             product_id = line.product_id.id
             block = part.total  # total half-product in one program
             max_layer = robot.max_layer
+            fabric = line.fabric
 
+            # -----------------------------------------------------------------
+            # Initial check:
+            # -----------------------------------------------------------------
             if not max_layer:
                 raise osv.except_osv(
                     _('Errore setup'),
@@ -153,9 +163,12 @@ class IndustriaMrp(orm.Model):
             # Total layers is total layer put in job will turn to 0:
             # -----------------------------------------------------------------
             while sp_total_layers > 0:
-                if program not in program_created:
+                key = (program, fabric)
+                # todo key must be program and default_code (6 char)
+                if key not in program_created:
                     _logger.warning(
-                        'Create new job for cache, program: %s' % program.name)
+                        'Create new job for cache, program: %s - Fabric %s' %
+                        (program.name, fabric))
                     now -= timedelta(seconds=1)
                     job_id = job_pool.create(cr, uid, {
                         'created_at': now.strftime(
@@ -173,12 +186,12 @@ class IndustriaMrp(orm.Model):
                         'program_id': program.id,
                     }, context=context)
                     # Save used data:
-                    program_created[program] = [job_id, step_id, max_layer]
+                    program_created[key] = [job_id, step_id, max_layer]
 
                 # Check max number of layer for create new job!
-                job_id, step_id, job_remain_layer = program_created[program]
+                job_id, step_id, job_remain_layer = program_created[key]
                 if sp_total_layers <= job_remain_layer:  # Available this job:
-                    program_created[program][2] -= sp_total_layers
+                    program_created[key][2] -= sp_total_layers
                     this_layer = sp_total_layers
                     sp_total_layers = 0  # Covered all, end loop
                     job_ended = False
@@ -220,8 +233,9 @@ class IndustriaMrp(orm.Model):
                 if job_ended:
                     _logger.warning(
                         'Delete job from cache, '
-                        'so new will created for program: %s' % program.name)
-                    del(program_created[program])
+                        'so new will created for program: %s - %s' % (
+                            program.name, fabric))
+                    del(program_created[key])
 
         return True
 
