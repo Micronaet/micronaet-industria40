@@ -228,7 +228,7 @@ class IndustriaMrp(orm.Model):
             # Total layers is total layer put in job will turn to 0:
             # -----------------------------------------------------------------
             while sp_total_layers > 0:
-                key = (program, fabric)
+                key = (program, fabric, step)  # Break when change this 3 param
                 # todo key must be program and default_code (6 char)
                 if key not in program_created:
                     _logger.warning(
