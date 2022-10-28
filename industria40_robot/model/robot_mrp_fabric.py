@@ -65,6 +65,26 @@ class IndustriaRobotColor(orm.Model):
     }
 
 
+class IndustriaRobotFabric(orm.Model):
+    """ Model name: Industria 4.0 MRP
+    """
+
+    _name = 'industria.robot.fabric'
+    _description = 'Industria Robot fabric'
+    _order = 'name'
+
+    _columns = {
+        'code': fields.char('Tessuto', size=10, required=True),
+        'name': fields.char('Descrizione', size=60, required=True),
+        'max_layer': fields.integer('Layer massimi', required=True),
+        'robot_id': fields.many2one('industria.robot', 'Robot'),
+    }
+
+    _defaults = {
+        'max_layer': lambda *x: 30,
+    }
+
+
 class IndustriaRobot(orm.Model):
     """ Model name: Industria 4.0 MRP
     """
@@ -74,6 +94,8 @@ class IndustriaRobot(orm.Model):
     _columns = {
         'color_ids': fields.one2many(
             'industria.robot.color', 'robot_id', 'Colori'),
+        'layer_fabric_ids': fields.one2many(
+            'industria.robot.fabric', 'robot_id', 'Tessuti'),
         }
 
 
@@ -130,14 +152,15 @@ class IndustriaMrp(orm.Model):
                 _logger.warning('Deleted %s job' % job.id)
                 job_pool.unlink(cr, uid, [job.id], context=context)
 
-        # ---------------------------------------------------------------------
-        # Collect data (loop in product-fabric line):
-        # ---------------------------------------------------------------------
+        # =====================================================================
+        #             Collect data (loop in product-fabric line):
+        # =====================================================================
         program_created = {}  # job, step, max layer available
         sequence = 0
         now = datetime.now()  # note used now manually!!
+
         # ---------------------------------------------------------------------
-        # Parse line sorted by program:
+        # SEMI PRODUCT: Parse line sorted by program:
         # ---------------------------------------------------------------------
         for line in industria_mrp.line_ids:
             sequence += 1  # Sequence still progress for all program!
@@ -145,6 +168,7 @@ class IndustriaMrp(orm.Model):
             # -----------------------------------------------------------------
             # Mandatory condition:
             # -----------------------------------------------------------------
+            # Parameter:
             program = line.part_id.program_id
             if not program:  # todo raise error?
                 _logger.error('Line without program')
@@ -158,9 +182,12 @@ class IndustriaMrp(orm.Model):
             part = line.part_id  # winner rule or changed rule
             fabric_id = line.material_id.id
             product_id = line.product_id.id
-            block = part.total  # total half-product in one program
+            block = part.total  # total semi-product in one program / lanciato
             max_layer = robot.max_layer
             fabric = line.fabric
+            step = line.step or 1
+            # todo manage max length
+            # todo manage max layer depend on fabric
 
             # -----------------------------------------------------------------
             # Initial check:
@@ -177,7 +204,7 @@ class IndustriaMrp(orm.Model):
                     _('Nel programma sono stati inseriti dei semilavorati'
                       'senza indicare il numero totale di pezzi generati'))
 
-            total = line.remain  # Total semi product to do
+            total = line.remain  # Total semi product to do (also with extra)
 
             # todo what to do with waste?
             extra_block = total % block > 0
@@ -203,14 +230,20 @@ class IndustriaMrp(orm.Model):
                         'program_id': program.id,  # Always one so put in head!
                     }, context=context)
 
-                    # todo create more step?
-                    step_id = step_pool.create(cr, uid, {
-                        'job_id': job_id,
-                        'sequence': 1,
-                        'program_id': program.id,
-                    }, context=context)
+                    # todo loop in all steps?
+                    step_ids = []
+                    for counter in range(step):
+                        _logger.warning(
+                            'Multi step generation: %s' % counter + 1)
+                        step_id = step_pool.create(cr, uid, {
+                            'job_id': job_id,
+                            'sequence': 1,
+                            'program_id': program.id,
+                        }, context=context)
+                        step_ids.append(step_id)
+
                     # Save used data:
-                    program_created[key] = [job_id, step_id, max_layer]
+                    program_created[key] = [job_id, step_ids, max_layer]
 
                 # Check max number of layer for create new job!
                 job_id, step_id, job_remain_layer = program_created[key]

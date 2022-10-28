@@ -50,13 +50,22 @@
                         <field name="partner_id" readonly="1"/>
                         <field name="database_id" readonly="1"/>
 
-                        <separator string="Colori:" colspan="4"/>
-                        <field name="color_ids" colspan="4" nolabel="1">
+                        <separator string="Colori (più scuro al più chiaro):" colspan="2"/>
+                        <separator string="Strati tessuti:" colspan="2"/>
+
+                        <field name="color_ids" colspan="2" nolabel="1">
                             <tree string="Colori" editable="bottom">
                                 <field name="sequence" widget="handle"/>
                                 <field name="code" readonly="1"/>
                                 <field name="replace"/>
                                 <field name="name" />
+                            </tree>
+                        </field>
+                        <field name="layer_fabric_ids" colspan="2" nolabel="1">
+                            <tree string="Strati tessuto" editable="bottom">
+                                <field name="code" readonly="1"/>
+                                <field name="name" />
+                                <field name="max_layer"/>
                             </tree>
                         </field>
                     </group>
@@ -70,15 +79,27 @@
             <field name="inherit_id" ref="industria40_base.view_industria_robot_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[1]" position="after">
-                    <page name="page_color" string="Colori" attrs="{'invisible': [('color_ids', '=', False)]}">
+                    <page name="page_color" string="Colori" attrs="{'invisible': [('color_ids', '=', []])]}">
                         <group>
-                            <separator string="Colori:" colspan="4"/>
+                            <separator string="Colori (più scuro al più chiaro):" colspan="4"/>
                             <field name="color_ids" colspan="4" nolabel="1">
                                 <tree string="Colori" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="code" readonly="1"/>
                                     <field name="replace"/>
                                     <field name="name" />
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                    <page name="page_fabric_layer" string="Strati tessuto" attrs="{'invisible': [('layer_fabric_ids', '=', [])]}">
+                        <group col="4">
+                            <separator string="Colori (più scuro al più chiaro):" colspan="4"/>
+                            <field name="layer_fabric_ids" colspan="4" nolabel="1">
+                                <tree string="Strati tessuto" editable="bottom">
+                                    <field name="code" readonly="1"/>
+                                    <field name="name" />
+                                    <field name="max_layer"/>
                                 </tree>
                             </field>
                         </group>
