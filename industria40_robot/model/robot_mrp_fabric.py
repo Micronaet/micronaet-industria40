@@ -244,11 +244,12 @@ class IndustriaMrp(orm.Model):
                     # todo loop in all steps?
                     step_ids = []
                     for counter in range(step):
+                        sequence = counter + 1
                         _logger.warning(
-                            'Multi step generation: %s' % counter + 1)
+                            'Multi step generation: %s' % sequence)
                         step_id = step_pool.create(cr, uid, {
                             'job_id': job_id,
-                            'sequence': 1,
+                            'sequence': sequence,
                             'program_id': program.id,
                         }, context=context)
                         step_ids.append(step_id)
@@ -257,7 +258,7 @@ class IndustriaMrp(orm.Model):
                     program_created[key] = [job_id, step_ids, max_layer]
 
                 # Check max number of layer for create new job!
-                job_id, step_id, job_remain_layer = program_created[key]
+                job_id, step_ids, job_remain_layer = program_created[key]
                 if sp_total_layers <= job_remain_layer:  # Available this job:
                     program_created[key][2] -= sp_total_layers
                     this_layer = sp_total_layers
@@ -276,23 +277,24 @@ class IndustriaMrp(orm.Model):
                 # -------------------------------------------------------------
                 # Only if quantity is present
                 if this_layer:
-                    fabric_line_id = fabric_pool.create(cr, uid, {
-                        'sequence': sequence,
-                        'step_id': step_id,
-                        'fabric_id': fabric_id,
-                        'total': this_layer,
-                        # related 'industria_mrp_id': industria_mrp_id,
-                    }, context=context)
+                    for step_id in step_ids:
+                        fabric_line_id = fabric_pool.create(cr, uid, {
+                            'sequence': sequence,
+                            'step_id': step_id,
+                            'fabric_id': fabric_id,
+                            'total': this_layer,
+                            # related 'industria_mrp_id': industria_mrp_id,
+                        }, context=context)
 
-                    # ---------------------------------------------------------
-                    # Link product from program to fabric step:
-                    # ---------------------------------------------------------
-                    total_product = this_layer * block
-                    fabric_product_pool.create(cr, uid, {
-                        'fabric_id': fabric_line_id,
-                        'product_id': product_id,
-                        'total': total_product,
-                    }, context=context)
+                        # -----------------------------------------------------
+                        # Link product from program to fabric step:
+                        # -----------------------------------------------------
+                        total_product = this_layer * block
+                        fabric_product_pool.create(cr, uid, {
+                            'fabric_id': fabric_line_id,
+                            'product_id': product_id,
+                            'total': total_product,
+                        }, context=context)
 
                 # todo add also extra semi product not used here (from program)
                 # Some program has 2 different semi product maybe one is not
