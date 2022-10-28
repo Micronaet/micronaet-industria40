@@ -151,6 +151,7 @@
                             <field name="product_id" readonly="1"/>
                             <field name="material_id" readonly="1" />
                             <field name="todo" readonly="1" />
+                            <field name="extra" readonly="1" />
                             <notebook colspan="4">
                                 <page name="detail_page" string="Dettaglio">
                                     <group colspan="4" col="4">
@@ -158,7 +159,7 @@
                                         <field name="detail" readonly="1" nolabel="1" colspan="4"/>
                                     </group>
                                 </page>
-                                <page name="extra_page" string="Extra">
+                                <page name="extra_page" string="Informazioni addizionali">
                                     <group colspan="4" col="4">
                                         <separator string="Regole di programmi:" colspan="4"/>
                                         <field name="part_ids" readonly="1" nolabel="1" colspan="4">
