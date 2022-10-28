@@ -164,6 +164,7 @@
             <field name="model">industria.mrp</field>
             <field name="arch" type="xml">
                 <tree string="I4.0 Produzioni">
+                    <field name="name"/>
                     <field name="date"/>
                     <field name="robot_id"/>
                     <field name="state" />
