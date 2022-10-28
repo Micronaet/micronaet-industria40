@@ -86,6 +86,29 @@ class IndustriaMrp(orm.Model):
     _order = 'date desc'
     _rec_name = 'name'
 
+    def open_robot_for_colors(self, cr, uid, ids, context=None):
+        """ Open robot for colors management
+        """
+        i40 = self.browse(cr, uid, ids, context=context)[0]
+        robot_id = i40.robot_id.id
+        # model_pool = self.pool.get('ir.model.data')
+        # view_id = model_pool.get_object_reference('module', 'view')[1]
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Dettaglio robot',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': robot_id,
+            'res_model': 'industria.robot',
+            # 'view_id': view_id,  # False
+            'views': [(False, 'form')],  # (False, 'tree'),
+            'domain': [],
+            'context': context,
+            # 'target': 'new',
+            'nodestroy': False,
+        }
+
     def generate_industria_job(self, cr, uid, ids, context=None):
         """ Generate job from exploded component
         """

@@ -189,7 +189,8 @@
                     <sheet>
                         <group colspan="4" col="4">
                             <field name="robot_id" domain="[('code', '=ilike', 'TESS%')]" widget="selection"/>
-                            <newline/>
+                            <button name="open_robot_for_colors" type="object" string="Ordinamento colori" colspan="2"/>
+
                             <field name="date"/>
                             <field name="name"/>
                             <notebook colspan="4">
