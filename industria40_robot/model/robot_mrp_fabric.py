@@ -91,8 +91,9 @@ class IndustriaMrp(orm.Model):
         """
         i40 = self.browse(cr, uid, ids, context=context)[0]
         robot_id = i40.robot_id.id
-        # model_pool = self.pool.get('ir.model.data')
-        # view_id = model_pool.get_object_reference('module', 'view')[1]
+        model_pool = self.pool.get('ir.model.data')
+        view_id = model_pool.get_object_reference(
+            cr, uid, 'industria40_robot', 'view_industria_robot_color_form')[1]
 
         return {
             'type': 'ir.actions.act_window',
@@ -101,8 +102,8 @@ class IndustriaMrp(orm.Model):
             'view_mode': 'form',
             'res_id': robot_id,
             'res_model': 'industria.robot',
-            # 'view_id': view_id,  # False
-            'views': [(False, 'form')],  # (False, 'tree'),
+            'view_id': view_id,
+            'views': [(view_id, 'form')],
             'domain': [],
             'context': context,
             # 'target': 'new',
