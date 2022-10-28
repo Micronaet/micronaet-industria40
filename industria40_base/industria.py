@@ -2612,14 +2612,24 @@ class IndustriaJobInherit(orm.Model):
                         layer,
                         fabric_line.fabric_id.default_code,
                     )
-                    total += layer
+                    # Total work only first loop:
+                    # Step are in this application the same total layer!
+                    # so no need to repeat in total
+                    if not total:
+                        total += layer
+
             res[job.id] = {
+                'fabric_step': len(job.step_ids),
                 'fabric_layer': total,
                 'fabric_detail': detail,
             }
         return res
 
     _columns = {
+        'fabric_step': fields.function(
+            _function_get_fabric_layer, method=True,
+            type='integer', string='Gradini', multi=True,
+            store=False),
         'fabric_layer': fields.function(
             _function_get_fabric_layer, method=True,
             type='integer', string='Strati job', multi=True,
