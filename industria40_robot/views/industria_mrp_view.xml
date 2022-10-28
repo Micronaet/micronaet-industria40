@@ -73,10 +73,11 @@
                             <field name="part_id" readonly="1"/> <!--todo changeable?-->
                             <field name="program_id" readonly="1"/> <!--todo changeable?-->
                             <group colspan="2">
-                                <field name="todo" readonly="1" string="A. Richiesti"/>
+                                <field name="todo" readonly="1" string="A1. Richiesti"/>
+                                <field name="extra" readonly="1" string="A1. Extra"/>
                                 <field name="assigned" readonly="1" string="B. Da magaz."/>
                                 <field name="produced" readonly="1" string="C. Fatti"/>
-                                <field name="remain" readonly="1" string="D. Da fare (A-B-C)"/>
+                                <field name="remain" readonly="1" string="D. Da fare (A1+A2-B-C)"/>
                                 <field name="used" readonly="1" string="E. Usati" />
                             </group>
                             <group colspan="2">
