@@ -403,15 +403,18 @@ class IndustriaMrp(orm.Model):
             # Color part:
             # -----------------------------------------------------------------
             fabric = fabric_code[:6]
+            layer_fabric = fabric[:3]
             color_part = fabric_code[6:]
 
-            if fabric not in layer_db:
-                layer_pool.create(cr, uid, {
-                    'code': fabric,
-                    'name': fabric,
+            if layer_fabric not in layer_db:
+                layer_id = layer_pool.create(cr, uid, {
+                    'code': layer_fabric,
+                    'name': layer_fabric,
                     'max_layer': 30,  # default
                     'robot_id': robot_id,
                 }, context=context)
+                layer_db[layer_fabric] = layer_pool.browse(
+                    cr, uid, layer_id, context=context)
 
             if color_part not in color_db:
                 color_id = color_pool.create(cr, uid, {
