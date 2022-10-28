@@ -630,7 +630,7 @@ class IndustriaMrpLine(orm.Model):
                     industria_cache[industria_mrp_id][unload.product_id.id] = \
                         unload.quantity
 
-            total = line.todo  # A.
+            total = line.todo + line.extra  # A1 + A2
             assigned = line.assigned  # B.
 
             # Produced:
@@ -639,8 +639,8 @@ class IndustriaMrpLine(orm.Model):
                 # todo related if slow procedure:
                 ('fabric_id.step_id.job_id.industria_mrp_id', '=',
                  industria_mrp_id),
-                ('fabric_id.step_id.job_id.state', '=',
-                 'COMPLETED'),  # only done!
+                # only done!:
+                ('fabric_id.step_id.job_id.state', '=', 'COMPLETED'),
                 ('product_id', '=', product_id),
             ], context=context)
             for job_product in job_product_pool.browse(
@@ -653,7 +653,7 @@ class IndustriaMrpLine(orm.Model):
             # Total:
             linked = assigned + produced
             remain = total - linked
-            bounded = linked # - used  # net bounded
+            bounded = linked  # - used  # net bounded
 
             # Bounded quantity:
             if remain < 0:
