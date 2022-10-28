@@ -739,6 +739,10 @@ class IndustriaMrpLine(orm.Model):
             string='Nominali', help='Totale come da produzioni collegate'),
         'assigned': fields.integer(
             string='Assegnati', help='Assegnati da magazzino manualmente'),
+        'extra': fields.integer(
+            string='Extra',
+            help='Aggiunta di tagli extra per sopperire ad eventuali '
+                 'mancanze per tessuto fallato'),
         'produced': fields.function(
             get_total_field_data, method=True,
             type='integer', multi=True,

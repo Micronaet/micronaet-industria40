@@ -207,12 +207,13 @@
                                                 <field name="fabric" readonly="1"/>
                                                 <field name="color" readonly="1"/>
 
-                                                <field name="todo" readonly="1" string="A. Richiesti"/>
+                                                <field name="todo" readonly="1" string="A1. Richiesti"/>
+                                                <field name="extra" string="A2. Extra"/>
                                                 <field name="assigned" readonly="1" string="B. Da magaz."/>
                                                 <button name="assign_stock_quantity" type="object" string="Assegna magazzino" icon="stock"/>
 
                                                 <field name="produced" readonly="1" string="C. Fatti"/>
-                                                <field name="remain" readonly="1" string="D. Da fare (A-B-C)"/>
+                                                <field name="remain" readonly="1" string="D. Da fare (A1+A2-B-C)"/>
                                                 <field name="used" readonly="1" string="E. Usati" />
                                                 <field name="bounded" readonly="1" string="F. Vincolati (B+C-E)" />
                                                 <button name="get_detail" type="object" string="Dettaglio"/>
