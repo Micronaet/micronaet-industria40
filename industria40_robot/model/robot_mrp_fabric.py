@@ -197,7 +197,7 @@ class IndustriaMrp(orm.Model):
             block = part.total * step  # Total semi product a program x step
             fabric = line.fabric
             # Extract max layer from fabric
-            max_layer = layer_db.get(fabric[:3], robot.max_layer)
+            max_layer = layer_db.get(fabric[:3].max_layer, robot.max_layer)
             # todo manage max length
             # todo manage max layer depend on fabric
 
@@ -260,7 +260,6 @@ class IndustriaMrp(orm.Model):
 
                 # Check max number of layer for create new job!
                 job_id, step_ids, job_remain_layer = program_created[key]
-                pdb.set_trace()
                 if sp_total_layers <= job_remain_layer:  # Available this job:
                     program_created[key][2] -= sp_total_layers
                     this_layer = sp_total_layers
