@@ -301,7 +301,9 @@
                                 </page>
                                 <page name="page_job" string="Job">
                                     <group colspan="4" col="4">
-                                        <separator string="Job:" colspan="4"/>
+                                        <separator string="Job:" colspan="3"/>
+                                        <button name="generate_industria_job" type="object" string="Genera job" colspan="1"/>
+
                                         <field name="job_ids" nolabel="1" colspan="4" readonly="1" context="{'form_view_ref': 'industria40_base.view_industria_job_fabric_form'}">
                                             <tree string="Job">
                                                 <field name="created_at" />
