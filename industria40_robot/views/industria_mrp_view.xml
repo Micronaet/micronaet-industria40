@@ -37,6 +37,7 @@
         <record id="view_industria_robot_color_form" model="ir.ui.view">
             <field name="name">Industria robot color</field>
             <field name="model">industria.robot</field>
+            <field name="priority" eval="40"/>
             <field name="arch" type="xml">
                 <form version="7.0" string="Colori">
                     <group colspan="4" col="4">
