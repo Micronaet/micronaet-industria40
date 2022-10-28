@@ -144,11 +144,13 @@ class IndustriaMrp(orm.Model):
         # ---------------------------------------------------------------------
         # Fabric layer color
         # ---------------------------------------------------------------------
-        # todo Only this robot
+
         layer_db = {}
-        layer_ids = layer_pool.search(cr, uid, [], context=context)
+        layer_ids = layer_pool.search(cr, uid, [
+            # todo Only this robot ('robot_id', '=', robot_id),
+        ], context=context)
         for layer in layer_pool.browse(cr, uid, layer_ids, context=context):
-            layer_db[layer.code] = layer
+            layer_db[layer.code] = layer.max_layer
 
         # ---------------------------------------------------------------------
         # Clean all job if draft:
