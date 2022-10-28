@@ -307,6 +307,7 @@
                                                 <field name="created_at" />
                                                 <field name="updated_at" invisible="1"/>
                                                 <field name="ended_at" />
+                                                <field name="fabric_step" />
                                                 <field name="fabric_layer" />
                                                 <field name="fabric_detail" />
                                                 <!--
