@@ -241,10 +241,10 @@
 
                                         <!-- attrs="{'required': [('database_id.mode', '=', 'file')], 'invisible': [('database_id.mode', '!=', 'file')]}"-->
                                         <field name="max_layer" />
-                                        <field name="max_gap" />
+                                        <field name="max_length" />
 
+                                        <field name="max_gap" />
                                         <field name="file_mode" colspan="2" />
-                                        <newline/>
 
                                         <!--<field name="file_execute_path" colspan="2" />-->
                                         <separator string="Parametri setup invio job" colspan="4"/>

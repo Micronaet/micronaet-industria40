@@ -1622,6 +1622,10 @@ class IndustriaRobot(orm.Model):
         'fabric_prefix_cad': fields.char('Prefisso disegni CAD (Robot)'),
         'fabric_cad_path': fields.char('ISO path (ODOO)'),
         'fabric_tender_path': fields.char('Stenditore path'),
+        'max_length': fields.integer(
+            'Massima lunghezza (mm.)',
+            help='Massima lunghezza del piano di posa tessuto in mm. '
+                 '(per valutare il massimo numero di gradini)!'),
         'max_layer': fields.integer(
             'Massimo numero strati',
             help='Totale teorico degli strati di questo programma, notare che'
