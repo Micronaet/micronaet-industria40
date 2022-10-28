@@ -209,6 +209,8 @@
                                                 <field name="fabric" readonly="1"/>
                                                 <field name="color" readonly="1"/>
 
+                                                <field name="step" />
+
                                                 <field name="todo" readonly="1" string="A1. Richiesti"/>
                                                 <field name="extra" string="A2. Extra"/>
                                                 <field name="assigned" readonly="1" string="B. Da magaz."/>

@@ -739,6 +739,11 @@ class IndustriaMrpLine(orm.Model):
             string='Nominali', help='Totale come da produzioni collegate'),
         'assigned': fields.integer(
             string='Assegnati', help='Assegnati da magazzino manualmente'),
+        'step': fields.integer(
+            string='Gradini',
+            help='Totale di gradini da fare (utilizzare nel caso si voglia'
+                 'aumentare la passata quando ci sono tanti pezzi da fare'
+                 'e non è stato previsto il programma con più sagome'),
         'extra': fields.integer(
             string='Extra',
             help='Aggiunta di tagli extra per sopperire ad eventuali '
@@ -769,6 +774,7 @@ class IndustriaMrpLine(orm.Model):
     }
 
     _defaults = {
+        'step': lambda *x: 1,
         'state': lambda *x: 'draft',
     }
 
