@@ -199,7 +199,7 @@ class IndustriaMrp(orm.Model):
             block = part.total * step  # Total semi product a program x step
             fabric = line.fabric
             # Extract max layer from fabric
-            max_layer = layer_db.get(fabric[:3].max_layer, robot.max_layer)
+            max_layer = layer_db.get(fabric[:3], robot.max_layer)
             # todo manage max length
             # todo manage max layer depend on fabric
 
