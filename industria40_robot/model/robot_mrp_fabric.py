@@ -300,6 +300,7 @@ class IndustriaMrp(orm.Model):
         """ Generate lined from MRP production linked
         """
         color_pool = self.pool.get('industria.robot.color')
+        layer_pool = self.pool.get('industria.robot.fabric')
         line_pool = self.pool.get('industria.mrp.line')
 
         material_category = 'Tessuti'  # todo manage better
@@ -311,6 +312,14 @@ class IndustriaMrp(orm.Model):
         color_ids = color_pool.search(cr, uid, [], context=context)
         for color in color_pool.browse(cr, uid, color_ids, context=context):
             color_db[color.code] = color
+
+        # ---------------------------------------------------------------------
+        # Fabric layer color
+        # ---------------------------------------------------------------------
+        layer_db = {}
+        layer_ids = layer_pool.search(cr, uid, [], context=context)
+        for layer in layer_pool.browse(cr, uid, layer_ids, context=context):
+            layer_db[layer.code] = layer
 
         # I40 MRP:
         mrp_id = ids[0]
@@ -395,6 +404,15 @@ class IndustriaMrp(orm.Model):
             # -----------------------------------------------------------------
             fabric = fabric_code[:6]
             color_part = fabric_code[6:]
+
+            if fabric not in layer_db:
+                layer_pool.create(cr, uid, {
+                    'code': fabric,
+                    'name': fabric,
+                    'max_layer': 30,  # default
+                    'robot_id': robot_id,
+                }, context=context)
+
             if color_part not in color_db:
                 color_id = color_pool.create(cr, uid, {
                     'code': color_part,
