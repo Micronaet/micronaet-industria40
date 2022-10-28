@@ -138,7 +138,17 @@ class IndustriaMrp(orm.Model):
         job_pool = self.pool.get('industria.job')
         step_pool = self.pool.get('industria.job.step')
         fabric_pool = self.pool.get('industria.job.fabric')
+        layer_pool = self.pool.get('industria.robot.fabric')
         fabric_product_pool = self.pool.get('industria.job.fabric.product')
+
+        # ---------------------------------------------------------------------
+        # Fabric layer color
+        # ---------------------------------------------------------------------
+        # todo Only this robot
+        layer_db = {}
+        layer_ids = layer_pool.search(cr, uid, [], context=context)
+        for layer in layer_pool.browse(cr, uid, layer_ids, context=context):
+            layer_db[layer.code] = layer
 
         # ---------------------------------------------------------------------
         # Clean all job if draft:
@@ -183,8 +193,9 @@ class IndustriaMrp(orm.Model):
             fabric_id = line.material_id.id
             product_id = line.product_id.id
             block = part.total  # total semi-product in one program / lanciato
-            max_layer = robot.max_layer
             fabric = line.fabric
+            # Extract max layer from fabric
+            max_layer = layer_db.get(fabric[:3], robot.max_layer)
             step = line.step or 1
             # todo manage max length
             # todo manage max layer depend on fabric
@@ -308,6 +319,7 @@ class IndustriaMrp(orm.Model):
         # ---------------------------------------------------------------------
         # Load color
         # ---------------------------------------------------------------------
+        # todo only this robot!
         color_db = {}
         color_ids = color_pool.search(cr, uid, [], context=context)
         for color in color_pool.browse(cr, uid, color_ids, context=context):
@@ -316,6 +328,7 @@ class IndustriaMrp(orm.Model):
         # ---------------------------------------------------------------------
         # Fabric layer color
         # ---------------------------------------------------------------------
+        # todo only this robot!
         layer_db = {}
         layer_ids = layer_pool.search(cr, uid, [], context=context)
         for layer in layer_pool.browse(cr, uid, layer_ids, context=context):
