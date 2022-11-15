@@ -731,7 +731,7 @@ class IndustriaMrpLine(orm.Model):
         current_line = self.browse(cr, uid, line_id, context=context)
         ctx = context.copy()
         ctx['default_line_id'] = line_id
-        ctx['current_material_id'] = current_line.material_id.id
+        ctx['default_current_material_id'] = current_line.material_id.id
 
         return {
             'type': 'ir.actions.act_window',
