@@ -385,7 +385,7 @@ class IndustriaMrp(orm.Model):
 
             # Step 2
             if c.isdigit():  # Change digit
-                if not change:  # When passed to step 1
+                if change == 1:  # When passed to step 2
                     change = 2
                 if change == 2:
                     fabric += c
