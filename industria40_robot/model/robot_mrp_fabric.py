@@ -148,7 +148,11 @@ class IndustriaMrp(orm.Model):
             if job.state != 'COMPLETED':
                 _logger.warning('Deleted %s job' % job.id)
                 job_pool.unlink(cr, uid, [job.id], context=context)
-        return True
+
+        # Reset version number:
+        return self.write(cr, uid, ids, {
+            'version': 0,
+        }, context=context)
 
     def generate_industria_job(self, cr, uid, ids, context=None):
         """ Generate job from exploded component
@@ -158,6 +162,11 @@ class IndustriaMrp(orm.Model):
         fabric_pool = self.pool.get('industria.job.fabric')
         layer_pool = self.pool.get('industria.robot.fabric')
         fabric_product_pool = self.pool.get('industria.job.fabric.product')
+
+        industria_mrp_id = ids[0]
+        industria_mrp = self.browse(cr, uid, industria_mrp_id, context=context)
+        version = industria_mrp.version
+        new_version = version + 1
 
         # ---------------------------------------------------------------------
         # Fabric layer color
@@ -468,6 +477,8 @@ class IndustriaMrp(orm.Model):
                 color = replace
             line_pool.create(cr, uid, {
                 'industria_mrp_id': mrp_id,
+                'version': 0,  # Changed when create job
+                'paused': False,
                 'part_id': part_id,
                 'program_id': program_id,
                 'product_id': semiproduct.id,
@@ -822,6 +833,18 @@ class IndustriaMrpLine(orm.Model):
         return res
 
     _columns = {
+        'version': fields.integer(
+            'Versione',
+            help='Indica il numero di versione nel quale è stato generato '
+                 'il job relativo per la stesura, quando ci sono più '
+                 'numeri di versione vuole dire che i job sono stati '
+                 'generati in tempi diversi, dovuto di solito a mancanza di'
+                 'tessuto che ha richiesto il blocco di un semilavorato'),
+        'paused': fields.boolean(
+            'In pausa',
+            help='Indica che il semilavorato non si può fare per ora quindi'
+                 'non viene coinvolto nella gestione dei job ma finirà '
+                 'in versioni successive una volta riabilitato'),
         'stock_bounded_ids': fields.function(
             _get_bounded_lines, method=True, relation='industria.mrp.line',
             type='many2many', string='Impegni MRP'),

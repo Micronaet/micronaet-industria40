@@ -254,9 +254,13 @@
                                         <button name="generate_industria_mrp_line" type="object" string="Genera produzione"/>
                                         <button name="generate_industria_job" type="object" string="Genera job" />
                                         <field name="line_ids" nolabel="1" colspan="4" >
-                                            <tree editable="bottom" string="Linee" colors="red: program_id == False">
+                                            <tree editable="bottom" string="Linee" colors="red: program_id == False; grey=paused == True">
                                                 <field name="sequence" readonly="1"/>
                                                 <field name="step" />
+                                                <field name="version" groups="industria40_base.group_industria_manager"/>
+                                                <field name="paused" groups="industria40_base.group_industria_manager" />
+                                                <!--todo paused buttons-->
+
                                                 <field name="part_id" domain="[('id', 'in', part_ids[0][2])]" widget="selection"/>  <!--For Syntax [(6, 0, ids]-->
                                                 <field name="part_ids" readonly="1" widget="many2many_tags" invisible="1"/>
                                                 <field name="program_id" readonly="1"/> <!--todo changeable?-->
