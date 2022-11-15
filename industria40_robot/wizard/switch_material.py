@@ -82,8 +82,9 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
         if new_mask:
             res['domain'] = {
                 'new_material_id': [
-                    ('id', '!=', current_material_id),
+                    # ('id', '!=', current_material_id),
                     ('default_code', '=ilike', new_mask),
+                    ('default_code', '>', default_code),
                 ],
             }
         return res
