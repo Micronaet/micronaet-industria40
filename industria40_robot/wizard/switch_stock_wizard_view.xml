@@ -16,7 +16,7 @@
                        <newline/>
 
                        <field name="current_material_id" on_change="onchange_current_material_id(current_material_id)"/>
-                       <field name="new_material_id" />
+                       <field name="new_material_id" widget="selection"/>
                    </group>
                 </form>
             </field>
