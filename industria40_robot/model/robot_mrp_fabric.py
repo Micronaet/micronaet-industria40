@@ -735,19 +735,16 @@ class IndustriaMrpLine(orm.Model):
 
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Lavorazioni pendenti da approvare'),
+            'name': _('Cambio tessuto'),
             'view_type': 'form',
-            'view_mode': 'tree,form',
+            'view_mode': 'form',
             # 'res_id': 1,
-            'res_model': 'stock.picking',
+            'res_model': 'industria.assign.material.wizard',
             'view_id': form_view_id,
             'views': [(form_view_id, 'form')],
             'domain': [],
-            'context': {
-                'default_dep_mode': 'workshop',
-                'open_mrp_lavoration': True,
-            },
-            'target': 'current',
+            'context': ctx,
+            'target': 'new',
             'nodestroy': False,
             }
 
