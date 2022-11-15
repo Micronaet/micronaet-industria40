@@ -259,8 +259,8 @@
                                                 <field name="step" />
                                                 <field name="version" groups="industria40_base.group_industria_manager" readonly="1" string="Vers."/>
                                                 <field name="paused" invisible="1" />
-                                                <button name="line_paused_true" type="object" string="Pausa" attrs="{'invisible': ['|', ('version', '>', 0), ('paused', '=', True)]}" icon="gtk-media-play"/>
-                                                <button name="line_paused_false" type="object" string="Ripristina" attrs="{'invisible': ['|', ('version', '>', 0), ('paused', '=', False)]}" icon="gtk-media-pause"/>
+                                                <button name="line_paused_true" type="object" string="Pausa" attrs="{'invisible': ['|', ('version', '>', 0), ('paused', '=', True)]}" icon="gtk-media-pause"/>
+                                                <button name="line_paused_false" type="object" string="Ripristina" attrs="{'invisible': ['|', ('version', '>', 0), ('paused', '=', False)]}" icon="gtk-media-play"/>
                                                 <!--todo paused buttons-->
 
                                                 <field name="part_id" domain="[('id', 'in', part_ids[0][2])]" widget="selection"/>  <!--For Syntax [(6, 0, ids]-->
