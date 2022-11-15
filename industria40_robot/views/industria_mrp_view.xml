@@ -244,6 +244,9 @@
 
                             <field name="date"/>
                             <field name="name"/>
+
+                            <field name="version"/>
+                            <newline/>
                             <notebook colspan="4">
                                 <page name="page_line_mrp" string="Semilavorati">
                                     <group colspan="4" col="4">
@@ -301,7 +304,8 @@
                                 </page>
                                 <page name="page_job" string="Job">
                                     <group colspan="4" col="4">
-                                        <separator string="Job:" colspan="3"/>
+                                        <separator string="Job:" colspan="2"/>
+                                        <button name="delete_industria_job" type="object" string="Cancella job" colspan="1" confirm="Verranno cancellati tutti i job (non completati) presenti e reimpostata la versione a 1, confermi?"/>
                                         <button name="generate_industria_job" type="object" string="Genera job" colspan="1"/>
 
                                         <field name="job_ids" nolabel="1" colspan="4" readonly="1" context="{'form_view_ref': 'industria40_base.view_industria_job_fabric_form'}">

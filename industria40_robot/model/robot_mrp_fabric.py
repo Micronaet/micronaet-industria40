@@ -132,6 +132,24 @@ class IndustriaMrp(orm.Model):
             'nodestroy': False,
         }
 
+    def delete_industria_job(self, cr, uid, ids, context=None):
+        """ Delete Job present
+        """
+        job_pool = self.pool.get('industria.job')
+
+        # ---------------------------------------------------------------------
+        # Clean all job if draft:
+        # ---------------------------------------------------------------------
+        industria_mrp_id = ids[0]
+        industria_mrp = self.browse(cr, uid, industria_mrp_id, context=context)
+
+        # Cannot delete job if not draft:
+        for job in industria_mrp.job_ids:
+            if job.state != 'COMPLETED':
+                _logger.warning('Deleted %s job' % job.id)
+                job_pool.unlink(cr, uid, [job.id], context=context)
+        return True
+
     def generate_industria_job(self, cr, uid, ids, context=None):
         """ Generate job from exploded component
         """
@@ -144,7 +162,6 @@ class IndustriaMrp(orm.Model):
         # ---------------------------------------------------------------------
         # Fabric layer color
         # ---------------------------------------------------------------------
-
         layer_db = {}
         layer_ids = layer_pool.search(cr, uid, [
             # todo Only this robot ('robot_id', '=', robot_id),
@@ -152,17 +169,20 @@ class IndustriaMrp(orm.Model):
         for layer in layer_pool.browse(cr, uid, layer_ids, context=context):
             layer_db[layer.code] = layer.max_layer
 
+        '''
+        Move deleted procedure in button: 
         # ---------------------------------------------------------------------
         # Clean all job if draft:
-        # ---------------------------------------------------------------------
+        # ---------------------------------------------------------------------        
         industria_mrp_id = ids[0]
         industria_mrp = self.browse(cr, uid, industria_mrp_id, context=context)
 
         # Cannot delete job if not draft:
         for job in industria_mrp.job_ids:
-            if job.state == 'DRAFT':
+            if job.state != 'COMPLETED':
                 _logger.warning('Deleted %s job' % job.id)
                 job_pool.unlink(cr, uid, [job.id], context=context)
+        '''
 
         # =====================================================================
         #             Collect data (loop in product-fabric line):
@@ -515,6 +535,12 @@ class IndustriaMrp(orm.Model):
         return res
 
     _columns = {
+        'version': fields.integer(
+            'Versione Job',
+            help='Numero di versione job, ad ogni generazione job viene '
+                 'incrementato il numeo così da permettere di mettere in '
+                 'pausa dei semilavorati per mancanza di tessuto e riprendere'
+                 'la generazione quando il materiale è presente'),
         'name': fields.char(
             'Nome', help='Indicare per riconoscere meglio la lavorazione'),
         'date': fields.date(
