@@ -22,4 +22,5 @@
 ###############################################################################
 
 # from . import assign_stock_i40
+from . import switch_material
 

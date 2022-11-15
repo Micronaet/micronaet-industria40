@@ -712,6 +712,11 @@ class IndustriaMrpLine(orm.Model):
             'paused': False,
         }, context=context)
 
+    def material_switch_unavailable(self, cr, uid, ids, context=None):
+        """ Open Switch wizard
+        """
+        return True
+
     def assign_stock_quantity(self, cr, uid, ids, context=None):
         """ Assign document wizard
         """
@@ -920,16 +925,17 @@ class IndustriaMrpLine(orm.Model):
         'color': fields.text('Colore', size=10),
 
         'detail': fields.text('Dettaglio'),
-
-        'todo': fields.integer(
-            string='Nominali', help='Totale come da produzioni collegate'),
-        'assigned': fields.integer(
-            string='Assegnati', help='Assegnati da magazzino manualmente'),
         'step': fields.integer(
             string='Gradini',
             help='Totale di gradini da fare (utilizzare nel caso si voglia'
                  'aumentare la passata quando ci sono tanti pezzi da fare'
                  'e non è stato previsto il programma con più sagome'),
+
+        # Quantity status:
+        'todo': fields.integer(
+            string='Nominali', help='Totale come da produzioni collegate'),
+        'assigned': fields.integer(
+            string='Assegnati', help='Assegnati da magazzino manualmente'),
         'extra': fields.integer(
             string='Extra',
             help='Aggiunta di tagli extra per sopperire ad eventuali '
@@ -948,7 +954,8 @@ class IndustriaMrpLine(orm.Model):
             get_total_field_data, method=True,
             type='integer', multi=True,
             string='Usato',
-            help='Utilizzati dalle produzioni collegate alla attuale commessa'
+            help='Semilavorati utilizzati dalle produzioni collegate alla '
+                 'attuale commessa'
             ),
         'bounded': fields.function(
             get_total_field_data, method=True,

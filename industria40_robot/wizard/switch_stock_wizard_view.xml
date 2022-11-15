@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- industria.assign.material.wizard -->
+        <record id="industria_assign_material_wizard_view" model="ir.ui.view">
+            <field name="name">industria.assign.material.wizard.form</field>
+            <field name="model">industria.assign.material.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Wizard riassegnazione tessuto" version="7.0">
+                   <header>
+                       <button string="Cancel" special="cancel" />
+                       <button name="action_assign" string="Conferma" type="object" icon="gtk-jump-to" class="oe_highlight" />
+                   </header>
+                   <group colspan="4" col="4">
+                       <field name="mode" />
+                       <newline/>
+
+                       <field name="current_material_id" />
+                       <field name="new_material_id" />
+                   </group>
+                </form>
+            </field>
+       </record>
+
+       <!--<record model="ir.actions.act_window" id="action_industria_assign_stock_wizard_wizard_view">
+          <field name="name">Assign wizard</field>
+          <field name="res_model">industria.assign.stock.wizard</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="target">new</field>
+          <field name="view_id" ref="industria_assign_stock_wizard_wizard_view"/>
+       </record>
+       -->
+    </data>
+</openerp>
