@@ -136,6 +136,7 @@ class IndustriaMrp(orm.Model):
         """ Delete Job present
         """
         job_pool = self.pool.get('industria.job')
+        semiproduct_pool = self.pool.get('industria.mrp.line')
 
         # ---------------------------------------------------------------------
         # Clean all job if draft:
@@ -148,6 +149,12 @@ class IndustriaMrp(orm.Model):
             if job.state != 'COMPLETED':
                 _logger.warning('Deleted %s job' % job.id)
                 job_pool.unlink(cr, uid, [job.id], context=context)
+
+        # Reset version number in semiproduct:
+        semiproduct_ids = [l.id for l in industria_mrp.line_ids]
+        semiproduct_pool.write(cr, uid, semiproduct_ids, {
+            'version': 0,
+        }, context=context)
 
         # Reset version number:
         return self.write(cr, uid, ids, {
