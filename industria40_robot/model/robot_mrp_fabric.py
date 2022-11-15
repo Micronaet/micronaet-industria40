@@ -368,6 +368,37 @@ class IndustriaMrp(orm.Model):
             }, context=context)
         return True
 
+    def extract_fabric_part(self, fabric_code):
+        """ Extract part of code
+        """
+        fabric = fabric_code[:6]
+        layer_fabric = fabric[:3]  # first char
+        color_part = fabric_code[6:]
+
+        change = 1
+        for c in fabric_code:
+            # Step 1
+            if change == 1 and c.isalpha():
+                fabric += c
+                layer_fabric += c
+                continue
+
+            # Step 2
+            if c.isdigit():  # Change digit
+                if not change:  # When passed to step 1
+                    change = 2
+                if change == 2:
+                    fabric += c
+                else:  # Number in part 3
+                    color_part += c
+                continue
+
+            # Step 3 (return char)
+            else:
+                change == 3  # Last part
+                color_part += c
+        return fabric, layer_fabric, color_part
+
     def generate_industria_mrp_line(self, cr, uid, ids, context=None):
         """ Generate lined from MRP production linked
         """
@@ -476,9 +507,8 @@ class IndustriaMrp(orm.Model):
             # -----------------------------------------------------------------
             # Color part:
             # -----------------------------------------------------------------
-            fabric = fabric_code[:6]
-            layer_fabric = fabric[:3]
-            color_part = fabric_code[6:]
+            fabric, layer_fabric, color_part = self.extract_fabric_part(
+                fabric_code)
 
             if layer_fabric not in layer_db:
                 layer_id = layer_pool.create(cr, uid, {
