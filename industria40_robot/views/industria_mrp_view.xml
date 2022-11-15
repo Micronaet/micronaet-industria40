@@ -315,7 +315,8 @@
                                         <button name="generate_industria_job" type="object" string="Genera job" colspan="1"/>
 
                                         <field name="job_ids" nolabel="1" colspan="4" readonly="1" context="{'form_view_ref': 'industria40_base.view_industria_job_fabric_form'}">
-                                            <tree string="Job">
+                                            <tree string="Job" editable="bottom">
+                                                <field name="version" />
                                                 <field name="created_at" />
                                                 <field name="updated_at" invisible="1"/>
                                                 <field name="ended_at" />

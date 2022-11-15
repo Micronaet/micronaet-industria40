@@ -286,6 +286,7 @@ class IndustriaMrp(orm.Model):
                         (program.name, fabric))
                     now -= timedelta(seconds=1)
                     job_id = job_pool.create(cr, uid, {
+                        'version': new_version,
                         'created_at': now.strftime(
                             DEFAULT_SERVER_DATETIME_FORMAT),
                         'source_id': robot.id,
@@ -984,6 +985,11 @@ class IndustriaJob(orm.Model):
     _inherit = 'industria.job'
 
     _columns = {
+        'version': fields.integer(
+            'Versione Job',
+            help='Numero di versione del job, utilizzato per passate '
+                 'multipe di generazione lavori'),
+
         'industria_mrp_id': fields.many2one(
             'industria.mrp', 'Produzione I40',
             help='Collegamento del job di lavorazione al suo documento di '
