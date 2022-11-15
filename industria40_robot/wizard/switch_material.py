@@ -47,6 +47,47 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
     """
     _name = 'industria.assign.material.wizard'
 
+    def onchange_current_material_id(
+            self, cr, uid, ids, current_material_id, context=None):
+        """ On change setup domain
+        """
+        product_pool = self.pool.get('product.product')
+        res = {}
+
+        if not current_material_id:
+            return res
+
+        product = product_pool.browse(
+            cr, uid, current_material_id, context=context)
+        default_code = product.default_code
+        if not default_code:
+            return res
+
+        new_mask = ''
+        part = 0
+        for c in default_code:
+            if c.isalpha():
+                new_mask += c
+                if part == 1:
+                    part = 2  # Stop replace number
+                continue
+
+            if c.isdigit():
+                if not part:
+                    part = 1
+
+                if part == 1:  # Replace number:
+                    new_mask += '_'
+
+        if new_mask:
+            res['domain'] = {
+                'new_material_id': [
+                    ('id', '!=', current_material_id),
+                    ('default_code', '=ilike', new_mask),
+                ],
+            }
+        return res
+
     # -------------------------------------------------------------------------
     # Wizard button event:
     # -------------------------------------------------------------------------
