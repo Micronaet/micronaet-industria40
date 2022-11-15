@@ -90,7 +90,9 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
             }
 
         if len(product_ids) == 1:
-            res['value']['new_material_id'] = product_ids[0]
+            res['value'] = {
+                'new_material_id': product_ids[0],
+                }
 
         if new_mask:
             res['domain'] = {
