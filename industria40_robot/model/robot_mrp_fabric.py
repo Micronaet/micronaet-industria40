@@ -371,10 +371,10 @@ class IndustriaMrp(orm.Model):
     def extract_fabric_part(self, fabric_code):
         """ Extract part of code
         """
-        fabric = fabric_code[:6]
-        layer_fabric = fabric[:3]  # first char
-        color_part = fabric_code[6:]
-
+        # fabric = fabric_code[:6]
+        # layer_fabric = fabric[:3]  # first char
+        # color_part = fabric_code[6:]
+        fabric = layer_fabric = color_part = ''
         change = 1
         for c in fabric_code:
             # Step 1
