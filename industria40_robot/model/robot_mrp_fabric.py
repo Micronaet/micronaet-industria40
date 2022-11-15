@@ -395,7 +395,7 @@ class IndustriaMrp(orm.Model):
 
             # Step 3 (return char)
             else:
-                change == 3  # Last part
+                change = 3  # Last part
                 color_part += c
         return fabric, layer_fabric, color_part
 
