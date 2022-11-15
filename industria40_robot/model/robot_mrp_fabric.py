@@ -671,6 +671,20 @@ class IndustriaMrpLine(orm.Model):
             }, context=context)
         return True
 
+    def line_paused_true(self, cr, uid, ids, context=None):
+        """ Put in pause
+        """
+        return self.write(cr, uid, ids, {
+            'paused': True,
+        }, context=context)
+
+    def line_paused_false(self, cr, uid, ids, context=None):
+        """ Put in pause
+        """
+        return self.write(cr, uid, ids, {
+            'paused': False,
+        }, context=context)
+
     def assign_stock_quantity(self, cr, uid, ids, context=None):
         """ Assign document wizard
         """

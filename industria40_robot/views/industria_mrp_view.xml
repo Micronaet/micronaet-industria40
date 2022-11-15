@@ -251,14 +251,16 @@
                                 <page name="page_line_mrp" string="Semilavorati">
                                     <group colspan="4" col="4">
                                         <separator string="Semilavorati:" colspan="2"/>
-                                        <button name="generate_industria_mrp_line" type="object" string="Genera produzione"/>
+                                        <button name="generate_industria_mrp_line" type="object" string="Genera semilavorati"/>
                                         <button name="generate_industria_job" type="object" string="Genera job" />
                                         <field name="line_ids" nolabel="1" colspan="4" >
                                             <tree editable="bottom" string="Linee" colors="red: program_id == False; grey:paused == True">
                                                 <field name="sequence" readonly="1"/>
                                                 <field name="step" />
-                                                <field name="version" groups="industria40_base.group_industria_manager" readonly="1"/>
+                                                <field name="version" groups="industria40_base.group_industria_manager" readonly="1" string="Vers."/>
                                                 <field name="paused" invisible="1" />
+                                                <button name="line_paused_true" type="object" string="Pausa" attrs="{'invisible': ['|', ('step', '>', 0), ('paused', '=', True)]}"/>
+                                                <button name="line_paused_false" type="object" string="Ripristina" attrs="{'invisible': ['|', ('step', '>', 0), ('paused', '=', False)]}"/>
                                                 <!--todo paused buttons-->
 
                                                 <field name="part_id" domain="[('id', 'in', part_ids[0][2])]" widget="selection"/>  <!--For Syntax [(6, 0, ids]-->
