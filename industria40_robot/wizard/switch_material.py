@@ -79,13 +79,20 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
                 if part == 1:  # Replace number:
                     new_mask += '_'
 
+        product_ids = product_pool.search(cr, uid, [
+            ('default_code', '=ilike', new_mask),
+            ('default_code', '>', default_code),  # Remove current and less H.
+            ], context=context)
+        if not product_ids:
+            raise osv.except_osv(
+                _('Errore'),
+                _('Tessuto non sostituibile: %s' % default_code))
+        if len(product_ids) == 1:
+            res['new_material_id'] = product_ids[0]
+
         if new_mask:
             res['domain'] = {
-                'new_material_id': [
-                    # ('id', '!=', current_material_id),
-                    ('default_code', '=ilike', new_mask),
-                    ('default_code', '>', default_code),
-                ],
+                'new_material_id': [('id', 'in', product_ids)],
             }
         return res
 
