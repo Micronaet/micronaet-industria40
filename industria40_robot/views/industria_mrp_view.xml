@@ -254,7 +254,7 @@
                                         <button name="generate_industria_mrp_line" type="object" string="Genera semilavorati"/>
                                         <button name="generate_industria_job" type="object" string="Genera job" />
                                         <field name="line_ids" nolabel="1" colspan="4" >
-                                            <tree editable="bottom" string="Linee" colors="red: program_id == False; grey:paused == True">
+                                            <tree editable="bottom" string="Linee" colors="green: version > 0; red: program_id == False; grey:paused == True">
                                                 <field name="sequence" readonly="1"/>
                                                 <field name="step" />
                                                 <field name="version" groups="industria40_base.group_industria_manager" readonly="1" string="Vers."/>
