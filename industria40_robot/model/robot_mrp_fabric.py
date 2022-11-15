@@ -478,7 +478,7 @@ class IndustriaMrp(orm.Model):
             line_pool.create(cr, uid, {
                 'industria_mrp_id': mrp_id,
                 'version': 0,  # Changed when create job
-                'paused': False,  # todo True if no program?
+                'paused': not part_id,  # If no part go in pause
                 'part_id': part_id,
                 'program_id': program_id,
                 'product_id': semiproduct.id,
