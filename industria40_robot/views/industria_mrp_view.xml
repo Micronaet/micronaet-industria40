@@ -259,8 +259,8 @@
                                                 <field name="step" />
                                                 <field name="version" groups="industria40_base.group_industria_manager" readonly="1" string="Vers."/>
                                                 <field name="paused" invisible="1" />
-                                                <button name="line_paused_true" type="object" string="Pausa" attrs="{'invisible': ['|', ('version', '>', 0), ('paused', '=', True)]}"/>
-                                                <button name="line_paused_false" type="object" string="Ripristina" attrs="{'invisible': ['|', ('version', '>', 0), ('paused', '=', False)]}"/>
+                                                <button name="line_paused_true" type="object" string="Pausa" attrs="{'invisible': ['|', ('version', '>', 0), ('paused', '=', True)]}" icon="gtk-media-play"/>
+                                                <button name="line_paused_false" type="object" string="Ripristina" attrs="{'invisible': ['|', ('version', '>', 0), ('paused', '=', False)]}" icon="gtk-media-pause"/>
                                                 <!--todo paused buttons-->
 
                                                 <field name="part_id" domain="[('id', 'in', part_ids[0][2])]" widget="selection"/>  <!--For Syntax [(6, 0, ids]-->
@@ -274,7 +274,7 @@
                                                 <field name="todo" readonly="1" string="A1. Richiesti"/>
                                                 <field name="extra" string="A2. Extra"/>
                                                 <field name="assigned" readonly="1" string="B. Da magaz."/>
-                                                <button name="assign_stock_quantity" type="object" string="Assegna magazzino" icon="stock"/>
+                                                <button name="assign_stock_quantity" type="object" string="Assegna magazzino" icon="gtk-add"/>
 
                                                 <field name="produced" readonly="1" string="C. Fatti"/>
                                                 <field name="remain" readonly="1" string="D. Da fare (A1+A2-B-C)"/>
