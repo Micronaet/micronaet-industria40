@@ -209,6 +209,11 @@ class IndustriaMrp(orm.Model):
             # -----------------------------------------------------------------
             # Mandatory condition:
             # -----------------------------------------------------------------
+            # Jump yet versioned line or paused:
+            if line.version > 0 or line.paused:
+                _logger.error('Line paused or version present')
+                continue
+
             # Parameter:
             program = line.part_id.program_id
             if not program:  # todo raise error?
