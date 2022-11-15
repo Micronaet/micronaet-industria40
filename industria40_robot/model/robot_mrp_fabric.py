@@ -158,6 +158,7 @@ class IndustriaMrp(orm.Model):
         """ Generate job from exploded component
         """
         job_pool = self.pool.get('industria.job')
+        semiproduct_pool = self.pool.get('industria.mrp.line')
         step_pool = self.pool.get('industria.job.step')
         fabric_pool = self.pool.get('industria.job.fabric')
         layer_pool = self.pool.get('industria.robot.fabric')
@@ -167,6 +168,9 @@ class IndustriaMrp(orm.Model):
         industria_mrp = self.browse(cr, uid, industria_mrp_id, context=context)
         version = industria_mrp.version
         new_version = version + 1
+        self.write(cr, uid, ids, {
+            'version': new_version,
+        }, context=context)
 
         # ---------------------------------------------------------------------
         # Fabric layer color
@@ -203,6 +207,7 @@ class IndustriaMrp(orm.Model):
         # ---------------------------------------------------------------------
         # SEMI PRODUCT: Parse line sorted by program:
         # ---------------------------------------------------------------------
+        done_ids = []
         for line in industria_mrp.line_ids:
             sequence += 1  # Sequence still progress for all program!
 
@@ -220,9 +225,13 @@ class IndustriaMrp(orm.Model):
                 _logger.error('Line without program')
                 continue
 
+            # Semi product used!
+            done_ids.append(line.id)  # To update version after
+
             # -----------------------------------------------------------------
             # Parameters:
             # -----------------------------------------------------------------
+
             robot = program.source_id
             database = robot.database_id
             part = line.part_id  # winner rule or changed rule
@@ -344,6 +353,11 @@ class IndustriaMrp(orm.Model):
                             program.name, fabric))
                     del(program_created[key])
 
+        # Update version in semiproduct:
+        if done_ids:
+            semiproduct_pool.write(cr, uid, done_ids, {
+                'version': new_version,
+            }, context=context)
         return True
 
     def generate_industria_mrp_line(self, cr, uid, ids, context=None):
