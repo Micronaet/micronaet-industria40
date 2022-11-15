@@ -80,4 +80,4 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
 
     _defaults = {
         'mode': lambda *x: 'all',
-    }
+        }
