@@ -84,9 +84,11 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
             ('default_code', '>', default_code),  # Remove current and less H.
             ], context=context)
         if not product_ids:
-            raise osv.except_osv(
-                _('Errore'),
-                _('Tessuto non sostituibile: %s' % default_code))
+            res['warning'] = {
+                'title': 'Errore',
+                'message': 'Tessuto non sostituibile %s' % default_code,
+            }
+
         if len(product_ids) == 1:
             res['new_material_id'] = product_ids[0]
 
