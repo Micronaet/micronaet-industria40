@@ -715,7 +715,41 @@ class IndustriaMrpLine(orm.Model):
     def material_switch_unavailable(self, cr, uid, ids, context=None):
         """ Open Switch wizard
         """
-        return True
+        if context is None:
+            context = {}
+        model_pool = self.pool.get('ir.model.data')
+        wizard_pool = self.pool.get('industria.assign.material.wizard')
+
+        # Return list of picking
+        form_view_id = model_pool.get_object_reference(
+            cr, uid,
+            'industria40_robot', 'industria_assign_material_wizard_view'
+        )[1]
+
+        # Setup context:
+        line_id = ids[0]
+        current_line = self.browse(cr, uid, line_id, context=context)
+        ctx = context.copy()
+        ctx['default_line_id'] = line_id
+        ctx['current_material_id'] = current_line.material_id.id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Lavorazioni pendenti da approvare'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            # 'res_id': 1,
+            'res_model': 'stock.picking',
+            'view_id': form_view_id,
+            'views': [(form_view_id, 'form')],
+            'domain': [],
+            'context': {
+                'default_dep_mode': 'workshop',
+                'open_mrp_lavoration': True,
+            },
+            'target': 'current',
+            'nodestroy': False,
+            }
 
     def assign_stock_quantity(self, cr, uid, ids, context=None):
         """ Assign document wizard
