@@ -257,8 +257,8 @@
                                             <tree editable="bottom" string="Linee" colors="red: program_id == False; grey=paused == True">
                                                 <field name="sequence" readonly="1"/>
                                                 <field name="step" />
-                                                <field name="version" groups="industria40_base.group_industria_manager"/>
-                                                <field name="paused" groups="industria40_base.group_industria_manager" />
+                                                <field name="version" /><!--groups="industria40_base.group_industria_manager"-->
+                                                <field name="paused" invisible="1" />
                                                 <!--todo paused buttons-->
 
                                                 <field name="part_id" domain="[('id', 'in', part_ids[0][2])]" widget="selection"/>  <!--For Syntax [(6, 0, ids]-->
