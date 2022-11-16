@@ -177,7 +177,7 @@ class IndustriaMrp(orm.Model):
 
         # Write chatter message:
         self.write_log_chatter_message(
-            cr, uid, ids, '[BOTTONI] Cancellati i JOB presenti',
+            cr, uid, ids, '[BOTTONE] Cancellati i JOB presenti',
             context=context)
         return True
 
@@ -390,7 +390,7 @@ class IndustriaMrp(orm.Model):
         # Write chatter message:
         self.write_log_chatter_message(
             cr, uid, ids,
-            '[BOTTONI] Generati i JOB per il taglio', context=context)
+            '[BOTTONE] Generati i JOB per il taglio', context=context)
 
         return True
 
@@ -575,7 +575,7 @@ class IndustriaMrp(orm.Model):
 
         # Write chatter message:
         self.write_log_chatter_message(
-            cr, uid, ids, '[BOTTONI] Generati i semilavorati da tagliare',
+            cr, uid, ids, '[BOTTONE] Generati i semilavorati da tagliare',
             context=context)
         return True
 
@@ -588,7 +588,7 @@ class IndustriaMrp(orm.Model):
         # Write chatter message:
         self.write_log_chatter_message(
             cr, uid, ids,
-            '[LAVORAZIONE] Lavorazione di taglio confermata',
+            '[ORDINE I40] Lavorazione di taglio confermata',
             context=context)
 
         return self.write(cr, uid, ids, {
@@ -601,7 +601,7 @@ class IndustriaMrp(orm.Model):
         # Write chatter message:
         self.write_log_chatter_message(
             cr, uid, ids,
-            '[LAVORAZIONE] Lavorazione di taglio messa in pausa',
+            '[ORDINE I40] Lavorazione di taglio messa in pausa',
             context=context)
 
         return self.write(cr, uid, ids, {
@@ -614,7 +614,7 @@ class IndustriaMrp(orm.Model):
         # Write chatter message:
         self.write_log_chatter_message(
             cr, uid, ids,
-            '[LAVORAZIONE] Lavorazione di taglio completata',
+            '[ORDINE I40] Lavorazione di taglio completata',
             context=context)
 
         return self.write(cr, uid, ids, {
@@ -627,7 +627,7 @@ class IndustriaMrp(orm.Model):
         # Write chatter message:
         self.write_log_chatter_message(
             cr, uid, ids,
-            '[LAVORAZIONE] Lavorazione di taglio messa in bozza',
+            '[ORDINE I40] Lavorazione di taglio messa in bozza',
             context=context)
 
         return self.write(cr, uid, ids, {
@@ -1007,7 +1007,7 @@ class IndustriaMrpLine(orm.Model):
         # Write chatter message:
         i40_pool.write_log_chatter_message(
             cr, uid, [line.industria_mrp_id.id],
-            '[ASSEGNAZIONE] Assegnato q. magazzino %s a semilavorato: %s' % (
+            '[MAGAZZINO] Assegnato q. magazzino %s a semilavorato: %s' % (
                 assigned,
                 line.material_id.default_code,
             ),
