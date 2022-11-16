@@ -71,7 +71,7 @@ class IndustriaAssignStockWizard(orm.TransientModel):
 
         # Write chatter message:
         i40_pool.write_log_chatter_message(
-            cr, uid, [industria_line_id],
+            cr, uid, [line.industria_line_id.id],
             'Assegnato q. magazzino %s a semilavorato: %s' % (
                 assigned,
                 line.material_id.default_code,
