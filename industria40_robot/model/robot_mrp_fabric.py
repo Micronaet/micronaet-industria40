@@ -583,10 +583,8 @@ class IndustriaMrp(orm.Model):
     def wfk_confirmed(self, cr, uid, ids, context=None):
         """ Set as confirmed
         """
-        i40_pool = self.pool.get('industria.mrp')
-
         # Write chatter message:
-        i40_pool.write_log_chatter_message(
+        self.write_log_chatter_message(
             cr, uid, ids,
             'Lavorazione di taglio confermata',
             context=context)
@@ -598,10 +596,8 @@ class IndustriaMrp(orm.Model):
     def wfk_pause(self, cr, uid, ids, context=None):
         """ Set as pause
         """
-        i40_pool = self.pool.get('industria.mrp')
-
         # Write chatter message:
-        i40_pool.write_log_chatter_message(
+        self.write_log_chatter_message(
             cr, uid, ids,
             'Lavorazione di taglio messa in pausa',
             context=context)
@@ -613,10 +609,8 @@ class IndustriaMrp(orm.Model):
     def wfk_done(self, cr, uid, ids, context=None):
         """ Set as done
         """
-        i40_pool = self.pool.get('industria.mrp')
-
         # Write chatter message:
-        i40_pool.write_log_chatter_message(
+        self.write_log_chatter_message(
             cr, uid, ids,
             'Lavorazione di taglio completata',
             context=context)
@@ -628,6 +622,12 @@ class IndustriaMrp(orm.Model):
     def wfk_draft(self, cr, uid, ids, context=None):
         """ Set as draft
         """
+        # Write chatter message:
+        self.write_log_chatter_message(
+            cr, uid, ids,
+            'Lavorazione di taglio messa in bozza',
+            context=context)
+
         return self.write(cr, uid, ids, {
             'state': 'draft',
         }, context=context)
@@ -1004,7 +1004,7 @@ class IndustriaMrpLine(orm.Model):
 
         # Write chatter message:
         i40_pool.write_log_chatter_message(
-            cr, uid, [line.industria_line_id.id],
+            cr, uid, [line.industria_mrp_id.id],
             'Assegnato q. magazzino %s a semilavorato: %s' % (
                 assigned,
                 line.material_id.default_code,
