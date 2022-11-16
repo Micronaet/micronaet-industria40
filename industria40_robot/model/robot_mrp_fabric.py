@@ -792,7 +792,7 @@ class IndustriaMrpLine(orm.Model):
         # Write chatter message:
         i40_pool.write_log_chatter_message(
             cr, uid, [i40_id],
-            'Ripreso da pausa il semilavorato: %s [TODO %s]' % (
+            'Messo in pausa il semilavorato: %s [TODO %s]' % (
                 line.material_id.default_code, line.todo),
             context=context)
 
@@ -811,7 +811,7 @@ class IndustriaMrpLine(orm.Model):
         # Write chatter message:
         i40_pool.write_log_chatter_message(
             cr, uid, [i40_id],
-            'Messo in pausa il semilavorato: %s [TODO %s]' % (
+            'Ripreso da pausa il semilavorato: %s [TODO %s]' % (
                 line.material_id.default_code, line.todo),
             context=context)
 
