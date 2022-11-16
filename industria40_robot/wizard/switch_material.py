@@ -150,7 +150,7 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
             'color': color_part,
             }, context=context)
 
-        message = 'Forzato cambio colore modo %s da %s a %s ' \
+        message = '[SCAMBIO] Forzato cambio colore modo %s da %s a %s ' \
                   '[Righe coinvolte: %s]' % (
                         mode,
                         current_material.default_code,
