@@ -37,26 +37,29 @@
                 id="menu_industria_job5"
                 action="action_industria_job_robot5"
                 sequence="20"
+                groups="industria40_base.group_industria_manager"
                 />
             <menuitem
                 parent="menu_industria_robot5"
                 id="menu_industria_mrp"
                 action="action_industria_mrp_production"
                 sequence="30"
+                groups="industria40_base.group_industria_manager"
                 />
             <menuitem
                 parent="menu_industria_robot5"
                 id="menu_industria_product_part"
                 action="industria_product_part_action"
                 sequence="40"
+                groups="industria40_base.group_industria_manager"
                 />
             <menuitem
                 parent="menu_industria_robot5"
                 id="menu_industria_program"
                 action="action_industria_program_robot5"
                 sequence="50"
+                groups="industria40_base.group_industria_manager"
                 />
-
     </data>
 </openerp>
 
