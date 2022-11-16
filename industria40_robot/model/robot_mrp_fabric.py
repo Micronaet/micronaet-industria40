@@ -109,6 +109,20 @@ class IndustriaMrp(orm.Model):
     _order = 'date desc'
     _rec_name = 'name'
 
+    def write_log_chatter_message(self, cr, uid, message, context=None):
+        """ Write message for log operation in order chatter
+        """
+        user_pool = self.pool.get('res.users')
+        user = user_pool.browse(cr, uid, uid, context=context)
+        body = '%s\n[User: %s]' % (
+            message,
+            user.name,
+            )
+        self.message_post(
+            body=body,
+            # subtype='mt_comment', partner_ids=followers
+        )
+
     def open_robot_for_colors(self, cr, uid, ids, context=None):
         """ Open robot for colors management
         """

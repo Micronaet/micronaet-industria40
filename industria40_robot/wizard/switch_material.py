@@ -110,12 +110,14 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
         i40_line_pool = self.pool.get('industria.mrp.line')
 
         wizard = self.browse(cr, uid, ids, context=context)[0]
+        mode = wizard.mode
         this_line = wizard.industria_line_id
         industria_line_id = this_line.id
-        current_material_id = wizard.current_material_id.id
+
+        current_material = wizard.current_material_id
+        current_material_id = current_material.id
         new_material = wizard.new_material_id
         new_material_id = new_material.id
-        mode = wizard.mode
 
         if not this_line:
             raise osv.except_osv(
@@ -146,6 +148,13 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
             'fabric': fabric,
             'color': color_part,
             }, context=context)
+
+        message = 'Forzato cambio colore modo %s da %s a %s [Righe: %s]' % (
+            mode, current_material_id.default_code, new_material.default_code,
+            len(line_ids)
+        )
+        i40_pool.write_log_chatter_message(
+            cr, uid, message, context=context)
         return True
 
     _columns = {
