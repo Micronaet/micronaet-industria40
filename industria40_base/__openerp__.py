@@ -43,11 +43,13 @@
     'demo': [],
     'data': [
         'security/industria_group.xml',
+        'security/robot_group.xml',
+
         'security/ir.model.access.csv',
         'views/industria_view.xml',
         'views/mode_file_view.xml',
         'report/job_report.xml',
-        
+
         'wizard/search_job_view.xml',
         ],
     'active': False,

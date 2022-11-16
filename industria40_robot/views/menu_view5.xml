@@ -24,6 +24,7 @@
             id="menu_industria_robot5"
             name="Tagliatessuti (FK Group)"
             sequence="50"
+            groups="industria40_base.group_industria_manager,industria40_base.group_industria_branch_cut_fabric_user"
             />
             <menuitem
                 parent="menu_industria_robot5"

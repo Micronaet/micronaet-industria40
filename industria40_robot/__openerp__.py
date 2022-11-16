@@ -46,6 +46,7 @@
     'demo': [],
     'data': [
         'security/ir.model.access.csv',
+
         'views/robot_oven_view.xml',
         'views/industria_mrp_view.xml',
 

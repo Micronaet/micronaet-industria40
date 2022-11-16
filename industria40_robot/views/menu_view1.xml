@@ -15,6 +15,7 @@
             id="menu_industria_robot1"
             name="Saldatrice (GIMAF)"
             sequence="10"
+            groups="industria40_base.group_industria_manager,industria40_base.group_industria_branch_weld_user"
             />
             <menuitem
                 parent="menu_industria_robot1"

@@ -15,6 +15,7 @@
             id="menu_industria_robot4"
             name="Forno (Elettrofrigo)"
             sequence="40"
+            groups="industria40_base.group_industria_manager,industria40_base.group_industria_branch_oven_user"
             />
             <!-- todo mrp.production pre selection-->
             <menuitem
