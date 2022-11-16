@@ -231,10 +231,10 @@
             <field name="arch" type="xml">
                 <form string="I4.0 Produzioni">
                     <header>
-                        <button name="wfk_confirmed" type="object" string="Confermata" attrs="{'invisible': [('state', 'not in', ('draft', 'pause'))]}"/>
-                        <button name="wfk_pause" type="object" string="In pausa" attrs="{'invisible': [('state', 'not in', ('confirmed', ))]}" />
-                        <button name="wfk_done" type="object" string="Completato" attrs="{'invisible': [('state', 'not in', ('pause', 'confirmed'))]}"/>
-                        <button name="wfk_draft" type="object" string="Riattiva" attrs="{'invisible': [('state', 'not in', ('done', ))]}"/>
+                        <button name="wfk_confirmed" type="object" string="Confermata" attrs="{'invisible': [('state', 'not in', ('draft', 'pause'))]}" groups="industria40_base.group_industria_manager"/>
+                        <button name="wfk_pause" type="object" string="In pausa" attrs="{'invisible': [('state', 'not in', ('confirmed', ))]}" groups="industria40_base.group_industria_manager"/>
+                        <button name="wfk_done" type="object" string="Completato" attrs="{'invisible': [('state', 'not in', ('pause', 'confirmed'))]}" groups="industria40_base.group_industria_manager"/>
+                        <button name="wfk_draft" type="object" string="Riattiva" attrs="{'invisible': [('state', 'not in', ('done', ))]}" groups="industria40_base.group_industria_manager"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -251,7 +251,7 @@
                                 <page name="page_line_mrp" string="Semilavorati">
                                     <group colspan="4" col="4">
                                         <separator string="Semilavorati:" colspan="2"/>
-                                        <button name="generate_industria_mrp_line" type="object" string="Genera semilavorati" confirm="Se sono già generati i JOB è il caso di cancellarli perchè poi andranno rifatti una volta creati i semilavorati!"/>
+                                        <button name="generate_industria_mrp_line" type="object" string="Genera semilavorati" confirm="Se sono già generati i JOB è il caso di cancellarli perchè poi andranno rifatti una volta creati i semilavorati!" groups="industria40_base.group_industria_manager"/>
                                         <button name="generate_industria_job" type="object" string="Genera job" confirm="Verranno generati i job per i semilavorati non ancora agganciati a JOB e non stoppati (e con il programma), confermi?"/>
                                         <field name="line_ids" nolabel="1" colspan="4" >
                                             <tree editable="bottom" string="Linee" colors="green: version > 0; red: program_id == False; grey:paused == True">
