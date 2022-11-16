@@ -109,7 +109,7 @@ class IndustriaMrp(orm.Model):
     _order = 'date desc'
     _rec_name = 'name'
 
-    def write_log_chatter_message(self, cr, uid, message, context=None):
+    def write_log_chatter_message(self, cr, uid, ids, message, context=None):
         """ Write message for log operation in order chatter
         """
         user_pool = self.pool.get('res.users')
@@ -119,9 +119,7 @@ class IndustriaMrp(orm.Model):
             user.name,
             )
         self.message_post(
-            cr, uid, body=body,
-            # subtype='mt_comment', partner_ids=followers
-            # context=context,
+            cr, uid, ids, body=body, context=context,
         )
 
     def open_robot_for_colors(self, cr, uid, ids, context=None):

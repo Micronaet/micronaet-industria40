@@ -128,9 +128,10 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
             return True
 
         fabric_code = new_material.default_code
+        i40_id = this_line.industria_mrp_id.id
         if mode == 'all':
             line_ids = i40_line_pool.search(cr, uid, [
-                ('industria_mrp_id', '=', this_line.industria_mrp_id.id),
+                ('industria_mrp_id', '=', i40_id),
                 ('version', '=', 0),  # not linked to job
                 ('material_id', '=', current_material_id),  # old line
                 # paused will be included!
@@ -154,7 +155,7 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
             len(line_ids)
         )
         i40_pool.write_log_chatter_message(
-            cr, uid, message, context=context)
+            cr, uid, [i40_id], message, context=context)
         return True
 
     _columns = {
