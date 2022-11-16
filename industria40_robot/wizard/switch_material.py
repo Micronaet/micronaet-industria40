@@ -82,7 +82,6 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
         product_ids = product_pool.search(cr, uid, [
             ('default_code', '=ilike', new_mask),
             ('default_code', '!=', default_code),  # Remove current and less H
-            (),
             ], context=context)
         if not product_ids:
             res['warning'] = {
