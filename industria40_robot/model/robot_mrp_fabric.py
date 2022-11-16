@@ -994,12 +994,23 @@ class IndustriaMrpLine(orm.Model):
     def action_assign(self, cr, uid, ids, context=None):
         """ Event for button done
         """
+        i40_pool = self.pool.get('industria.mrp')
+
         line = self.browse(cr, uid, ids, context=context)[0]
         assigned = line.new_bounded
         self.write(cr, uid, ids, {
             'assigned': assigned,
         }, context=context)
-        return True  # {'type': 'ir.actions.act_window_close'}
+
+        # Write chatter message:
+        i40_pool.write_log_chatter_message(
+            cr, uid, [line.industria_line_id.id],
+            'Assegnato q. magazzino %s a semilavorato: %s' % (
+                assigned,
+                line.material_id.default_code,
+            ),
+            context=context)
+        return True
 
     def _get_bounded_lines(self, cr, uid, ids, fields, args, context=None):
         """ Fields function for calculate
