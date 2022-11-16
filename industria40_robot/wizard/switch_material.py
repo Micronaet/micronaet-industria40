@@ -106,14 +106,41 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
     def action_assign(self, cr, uid, ids, context=None):
         """ Event for button done
         """
+        i40_pool = self.pool.get('industria.mrp')
         i40_line_pool = self.pool.get('industria.mrp.line')
 
         wizard = self.browse(cr, uid, ids, context=context)[0]
-        industria_line_id = wizard.industria_line_id.id
-        new_material_id = wizard.new_material_id.id
+        this_line = wizard.industria_line_id
+        industria_line_id = this_line.id
+        current_material_id = wizard.current_material_id.id
+        new_material = wizard.new_material_id
+        new_material_id = new_material.id
+        mode = wizard.mode
 
-        # todo change material:
-        return {'type': 'ir.actions.act_window_close'}
+        if not current_material_id or not new_material_id:
+            return True
+
+        fabric_code = new_material.default_code
+        if mode == 'all':
+            line_ids = i40_line_pool.search(cr, uid, [
+                ('industria_mrp_id', '=', this_line.industria_mrp_id.id),
+                ('version', '=', 0),  # not linked to job
+                # paused will be included!
+            ], context=context)
+            _logger.info('Selected # %s lines' % len(line_ids))
+        else:
+            line_ids = [industria_line_id]
+            _logger.info('Selected # current line')
+
+        fabric, layer_fabric, color_part = i40_pool.extract_fabric_part(
+            fabric_code)
+
+        i40_line_pool.write(cr, uid, line_ids, {
+            'material_id': new_material_id,
+            'fabric': fabric,
+            'color': color_part,
+            }, context=context)
+        return True
 
     _columns = {
         'industria_line_id': fields.many2one(
