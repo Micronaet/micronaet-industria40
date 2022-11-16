@@ -150,7 +150,7 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
             }, context=context)
 
         message = 'Forzato cambio colore modo %s da %s a %s [Righe: %s]' % (
-            mode, current_material_id.default_code, new_material.default_code,
+            mode, current_material.default_code, new_material.default_code,
             len(line_ids)
         )
         i40_pool.write_log_chatter_message(
