@@ -120,6 +120,7 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
         if not current_material_id or not new_material_id:
             return True
 
+        pdb.set_trace()
         fabric_code = new_material.default_code
         if mode == 'all':
             line_ids = i40_line_pool.search(cr, uid, [
