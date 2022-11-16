@@ -573,9 +573,8 @@ class IndustriaMrp(orm.Model):
 
         # Write chatter message:
         self.write_log_chatter_message(
-            cr, uid, ids, 'Generai i semilavorati da tagliare',
+            cr, uid, ids, 'Generati i semilavorati da tagliare',
             context=context)
-
         return True
 
     # -------------------------------------------------------------------------
@@ -591,6 +590,16 @@ class IndustriaMrp(orm.Model):
     def wfk_pause(self, cr, uid, ids, context=None):
         """ Set as pause
         """
+        line = self.browse(cr, uid, ids, context=context)
+        i40_id = line.industria_mrp_id.id
+
+        # Write chatter message:
+        self.write_log_chatter_message(
+            cr, uid, [i40_id],
+            'Messo in pausa semilavorato: %s [TODO %s]' % (
+                line.material_id.default_code, line.todo),
+            context=context)
+
         return self.write(cr, uid, ids, {
             'state': 'pause',
         }, context=context)
@@ -598,6 +607,16 @@ class IndustriaMrp(orm.Model):
     def wfk_done(self, cr, uid, ids, context=None):
         """ Set as done
         """
+        line = self.browse(cr, uid, ids, context=context)
+        i40_id = line.industria_mrp_id.id
+
+        # Write chatter message:
+        self.write_log_chatter_message(
+            cr, uid, [i40_id],
+            'Ripreso da pausa il semilavorato: %s [TODO %s]' % (
+                line.material_id.default_code, line.todo),
+            context=context)
+
         return self.write(cr, uid, ids, {
             'state': 'done',
         }, context=context)
