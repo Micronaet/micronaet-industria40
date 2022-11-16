@@ -590,11 +590,13 @@ class IndustriaMrp(orm.Model):
     def wfk_pause(self, cr, uid, ids, context=None):
         """ Set as pause
         """
+        i40_pool = self.pool.get('industria.mrp')
+
         line = self.browse(cr, uid, ids, context=context)
         i40_id = line.industria_mrp_id.id
 
         # Write chatter message:
-        self.write_log_chatter_message(
+        i40_pool.write_log_chatter_message(
             cr, uid, [i40_id],
             'Messo in pausa semilavorato: %s [TODO %s]' % (
                 line.material_id.default_code, line.todo),
@@ -613,7 +615,7 @@ class IndustriaMrp(orm.Model):
         i40_id = line.industria_mrp_id.id
 
         # Write chatter message:
-        self.write_log_chatter_message(
+        i40_pool.write_log_chatter_message(
             cr, uid, [i40_id],
             'Ripreso da pausa il semilavorato: %s [TODO %s]' % (
                 line.material_id.default_code, line.todo),
