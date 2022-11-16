@@ -29,12 +29,14 @@
                 id="menu_industria_stats_file"
                 action="industria40_base.action_industria_stats_file"
                 sequence="20"
+                groups="industria40_base.group_industria_manager"
                 />
             <menuitem
                 parent="menu_industria_robot3"
                 id="menu_industria_stats_record_file"
                 action="industria40_base.action_industria_stats_records"
                 sequence="30"
+                groups="industria40_base.group_industria_manager"
                 />
 
     </data>
