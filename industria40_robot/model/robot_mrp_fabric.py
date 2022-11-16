@@ -583,6 +583,14 @@ class IndustriaMrp(orm.Model):
     def wfk_confirmed(self, cr, uid, ids, context=None):
         """ Set as confirmed
         """
+        i40_pool = self.pool.get('industria.mrp')
+
+        # Write chatter message:
+        i40_pool.write_log_chatter_message(
+            cr, uid, ids,
+            'Lavorazione di taglio confermata',
+            context=context)
+
         return self.write(cr, uid, ids, {
             'state': 'confirmed',
         }, context=context)
@@ -592,14 +600,10 @@ class IndustriaMrp(orm.Model):
         """
         i40_pool = self.pool.get('industria.mrp')
 
-        line = self.browse(cr, uid, ids, context=context)
-        i40_id = line.industria_mrp_id.id
-
         # Write chatter message:
         i40_pool.write_log_chatter_message(
-            cr, uid, [i40_id],
-            'Messo in pausa semilavorato: %s [TODO %s]' % (
-                line.material_id.default_code, line.todo),
+            cr, uid, ids,
+            'Lavorazione di taglio messa in pausa',
             context=context)
 
         return self.write(cr, uid, ids, {
@@ -611,14 +615,10 @@ class IndustriaMrp(orm.Model):
         """
         i40_pool = self.pool.get('industria.mrp')
 
-        line = self.browse(cr, uid, ids, context=context)
-        i40_id = line.industria_mrp_id.id
-
         # Write chatter message:
         i40_pool.write_log_chatter_message(
-            cr, uid, [i40_id],
-            'Ripreso da pausa il semilavorato: %s [TODO %s]' % (
-                line.material_id.default_code, line.todo),
+            cr, uid, ids,
+            'Lavorazione di taglio completata',
             context=context)
 
         return self.write(cr, uid, ids, {
@@ -784,6 +784,18 @@ class IndustriaMrpLine(orm.Model):
     def line_paused_true(self, cr, uid, ids, context=None):
         """ Put in pause
         """
+        i40_pool = self.pool.get('industria.mrp')
+
+        line = self.browse(cr, uid, ids, context=context)
+        i40_id = line.industria_mrp_id.id
+
+        # Write chatter message:
+        i40_pool.write_log_chatter_message(
+            cr, uid, [i40_id],
+            'Ripreso da pausa il semilavorato: %s [TODO %s]' % (
+                line.material_id.default_code, line.todo),
+            context=context)
+
         return self.write(cr, uid, ids, {
             'paused': True,
         }, context=context)
@@ -791,6 +803,18 @@ class IndustriaMrpLine(orm.Model):
     def line_paused_false(self, cr, uid, ids, context=None):
         """ Put in pause
         """
+        i40_pool = self.pool.get('industria.mrp')
+
+        line = self.browse(cr, uid, ids, context=context)
+        i40_id = line.industria_mrp_id.id
+
+        # Write chatter message:
+        i40_pool.write_log_chatter_message(
+            cr, uid, [i40_id],
+            'Messo in pausa il semilavorato: %s [TODO %s]' % (
+                line.material_id.default_code, line.todo),
+            context=context)
+
         return self.write(cr, uid, ids, {
             'paused': False,
         }, context=context)
