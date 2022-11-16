@@ -117,10 +117,14 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
         new_material_id = new_material.id
         mode = wizard.mode
 
+        if not this_line:
+            raise osv.except_osv(
+                _('Errore aggiornamento'),
+                _('Non trovata la riga originale da aggiornare'))
+
         if not current_material_id or not new_material_id:
             return True
 
-        pdb.set_trace()
         fabric_code = new_material.default_code
         if mode == 'all':
             line_ids = i40_line_pool.search(cr, uid, [
