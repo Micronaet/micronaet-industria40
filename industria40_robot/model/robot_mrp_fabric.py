@@ -121,7 +121,7 @@ class IndustriaMrp(orm.Model):
         self.message_post(
             cr, uid, body=body,
             # subtype='mt_comment', partner_ids=followers
-            context=context,
+            # context=context,
         )
 
     def open_robot_for_colors(self, cr, uid, ids, context=None):
