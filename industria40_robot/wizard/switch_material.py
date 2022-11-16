@@ -130,6 +130,7 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
             line_ids = i40_line_pool.search(cr, uid, [
                 ('industria_mrp_id', '=', this_line.industria_mrp_id.id),
                 ('version', '=', 0),  # not linked to job
+                ('material_id', '=', current_material_id),  # old line
                 # paused will be included!
             ], context=context)
             _logger.info('Selected # %s lines' % len(line_ids))
