@@ -54,6 +54,7 @@ class IndustriaAssignStockWizard(orm.TransientModel):
     def action_assign(self, cr, uid, ids, context=None):
         """ Event for button done
         """
+        pdb.set_trace()
         i40_pool = self.pool.get('industria.mrp')
         i40_line_pool = self.pool.get('industria.mrp.line')
 
