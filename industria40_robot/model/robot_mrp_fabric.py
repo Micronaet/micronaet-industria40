@@ -607,6 +607,8 @@ class IndustriaMrp(orm.Model):
     def wfk_done(self, cr, uid, ids, context=None):
         """ Set as done
         """
+        i40_pool = self.pool.get('industria.mrp')
+
         line = self.browse(cr, uid, ids, context=context)
         i40_id = line.industria_mrp_id.id
 
