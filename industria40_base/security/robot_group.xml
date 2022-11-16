@@ -2,19 +2,19 @@
 <openerp>
    <data>
         <record id="group_industria_branch_cut_fabric_user" model="res.groups">
-            <field name="name">Industria 4.0 Tessuti</field>
+            <field name="name">Industria 4.0: Area Tessuti</field>
         </record>
         <record id="group_industria_branch_pipe_user" model="res.groups">
-            <field name="name">Industria 4.0 Piegatubi</field>
+            <field name="name">Industria 4.0: Area Piegatubi</field>
         </record>
         <record id="group_industria_branch_weld_user" model="res.groups">
-            <field name="name">Industria 4.0 Saldatrice</field>
+            <field name="name">Industria 4.0: Area Saldatrice</field>
         </record>
         <record id="group_industria_branch_cut_pipe_user" model="res.groups">
-            <field name="name">Industria 4.0 Taglio tubi</field>
+            <field name="name">Industria 4.0: Area Taglio tubi</field>
         </record>
         <record id="group_industria_branch_oven_user" model="res.groups">
-            <field name="name">Industria 4.0 Forno</field>
+            <field name="name">Industria 4.0: Area Forno</field>
         </record>
    </data>
 </openerp>
