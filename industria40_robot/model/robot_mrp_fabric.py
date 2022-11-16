@@ -102,6 +102,7 @@ class IndustriaRobot(orm.Model):
 class IndustriaMrp(orm.Model):
     """ Model name: Industria 4.0 MRP
     """
+    _inherit = ['mail.thread']
 
     _name = 'industria.mrp'
     _description = 'Industria 4.0 MRP'
