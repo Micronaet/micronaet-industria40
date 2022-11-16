@@ -118,7 +118,7 @@ class IndustriaMrp(orm.Model):
             message,
             user.name,
             )
-        self.message_post(
+        return self.message_post(
             cr, uid, ids, body=body, context=context,
         )
 
@@ -171,9 +171,14 @@ class IndustriaMrp(orm.Model):
         }, context=context)
 
         # Reset version number:
-        return self.write(cr, uid, ids, {
+        self.write(cr, uid, ids, {
             'version': 0,
         }, context=context)
+
+        # Write chatter message:
+        self.write_log_chatter_message(
+            cr, uid, ids, 'Cancellati i JOB presenti', context=context)
+        return True
 
     def generate_industria_job(self, cr, uid, ids, context=None):
         """ Generate job from exploded component
