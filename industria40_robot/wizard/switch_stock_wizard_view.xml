@@ -13,7 +13,7 @@
                    </header>
                    <group colspan="4" col="4">
                        <field name="mode" />
-                       <newline/>
+                       <field name="industria_line_id" invisible="1"/>
 
                        <field name="current_material_id" on_change="onchange_current_material_id(current_material_id)"/>
                        <field name="new_material_id" />
