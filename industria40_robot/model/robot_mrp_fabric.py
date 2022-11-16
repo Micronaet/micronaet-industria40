@@ -385,6 +385,11 @@ class IndustriaMrp(orm.Model):
             semiproduct_pool.write(cr, uid, done_ids, {
                 'version': new_version,
             }, context=context)
+
+        # Write chatter message:
+        self.write_log_chatter_message(
+            cr, uid, ids, 'Generati i JOB per il taglio', context=context)
+
         return True
 
     def extract_fabric_part(self, fabric_code):
@@ -565,6 +570,12 @@ class IndustriaMrp(orm.Model):
                 'todo': todo,
                 'detail': detail,
             }, context=context)
+
+        # Write chatter message:
+        self.write_log_chatter_message(
+            cr, uid, ids, 'Generai i semilavorati da tagliare',
+            context=context)
+
         return True
 
     # -------------------------------------------------------------------------
