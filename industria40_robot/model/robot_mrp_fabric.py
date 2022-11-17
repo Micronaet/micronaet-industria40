@@ -1177,8 +1177,11 @@ class StockPicking(orm.Model):
     def delete_picking_i40(self, cr, uid, ids, context=None):
         """ Delete picking
         """
+        i40_pool = self.pool.get('industria.mrp')
         stock_pool = self.pool.get('stock.move')
+
         picking_id = ids[0]
+        picking = self.browse(cr, uid, picking_id, context=context)
         stock_ids = stock_pool.search(cr, uid, [
             ('picking_id', '=', picking_id),
         ], context=context)
@@ -1186,8 +1189,18 @@ class StockPicking(orm.Model):
             'state': 'cancel',
         }, context=context)
         stock_pool.unlink(cr, uid, stock_ids, context=context)
+        self.unlink(cr, uid, ids, context=context)
 
-        return self.unlink(cr, uid, ids, context=context)
+        # Write chatter message:
+        industria_mrp_id = picking.industria_mrp_id.id
+        i40_pool.write_log_chatter_message(
+            cr, uid, [industria_mrp_id],
+            '[PICKING] Cancellato picking n. %s [%s]' % (
+                picking.name,
+                picking.create_date,
+            ),
+            context=context)
+        return True
 
     _columns = {
         'industria_mrp_id': fields.many2one(
