@@ -1179,7 +1179,7 @@ class StockPicking(orm.Model):
         """
         i40_pool = self.pool.get('industria.mrp')
         stock_pool = self.pool.get('stock.move')
-        quant_pool = self.pool.get('stock.quants')
+        quant_pool = self.pool.get('stock.quant')
 
         picking_id = ids[0]
         picking = self.browse(cr, uid, picking_id, context=context)

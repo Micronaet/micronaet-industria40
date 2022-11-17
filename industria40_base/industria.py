@@ -674,7 +674,7 @@ class IndustriaDatabase(orm.Model):
         model_pool = self.pool.get('ir.model.data')
         picking_pool = self.pool.get('stock.picking')
         move_pool = self.pool.get('stock.move')
-        quant_pool = self.pool.get('stock.quants')
+        quant_pool = self.pool.get('stock.quant')
         job_pool = self.pool.get('industria.job')
         company_pool = self.pool.get('res.company')
 
