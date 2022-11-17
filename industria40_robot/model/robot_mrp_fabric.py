@@ -236,7 +236,7 @@ class IndustriaMrp(orm.Model):
         # ---------------------------------------------------------------------
         done_ids = []
         # Sort semiproduct from black to white:
-        for line in sorted(industria_mrp.line_ids, reverse=True):
+        for line in industria_mrp.line_ids:
             sequence += 1  # Sequence still progress for all program!
 
             # -----------------------------------------------------------------

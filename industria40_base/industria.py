@@ -2018,6 +2018,12 @@ class IndustriaJob(orm.Model):
         job_id = ids[0]
         job = self.browse(cr, uid, job_id, context=context)
         industria_mrp_id = job.industria_mrp_id.id
+        robot = job.industria_mrp_id.robot_id
+        color_order = {}
+        pos = 0
+        for color in robot.color_ids:
+            pos = 1
+            color_order[color.code] = pos  # todo use forced color.name?
 
         date = get_date(job.created_at)
         from_mm = 0
@@ -2081,7 +2087,12 @@ class IndustriaJob(orm.Model):
         file_text += '|$CS$|%s' % tender_name
 
         # Loop for materasso:
-        for fabric_product in data_fabric:
+        # todo Setup order with fabric color:
+        data_fabric_sort = sorted(
+            data_fabric,
+            key=lambda f: color_order.get(
+                i40_pool.extract_fabric_part(f.default_code)[2]))
+        for fabric_product in data_fabric_sort:
             fabric_text, totals = data_fabric[fabric_product]
             file_text += '|$C$|%s' % fabric_text
             file_text += '|$Q$'
