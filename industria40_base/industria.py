@@ -1991,8 +1991,12 @@ class IndustriaJob(orm.Model):
                 date[5:7],
                 date[:4],
             )
+
+        i40_pool = self.pool.get('industria.mrp')
+
         job_id = ids[0]
         job = self.browse(cr, uid, job_id, context=context)
+        industria_mrp_id = job.industria_mrp_id.id
 
         date = get_date(job.created_at)
         from_mm = 0
@@ -2066,6 +2070,18 @@ class IndustriaJob(orm.Model):
 
         file_out.write(file_text)
         file_out.close()
+
+        # ---------------------------------------------------------------------
+        # Log message:
+        # ---------------------------------------------------------------------
+        if industria_mrp_id:
+            i40_pool.write_log_chatter_message(
+                cr, uid, [industria_mrp_id],
+                '[JOB] Job inviato a cartella MAKE, file: %s' % fullname
+                , context=context)
+        else:
+            _logger.error('Job not linked in I40 Order: %s' % fullname)
+
         self.write(cr, uid, ids, {
             'state': 'RUNNING',
         }, context=context)
@@ -2073,15 +2089,32 @@ class IndustriaJob(orm.Model):
     def restart_fabric_job(self, cr, uid, ids, context=None):
         """ Send job to tender
         """
+        i40_pool = self.pool.get('industria.mrp')
+
+        industria_mrp_id = False
+        fullname = 'NON TROVATO'
         try:
             # Delete file if present:
             job = self.browse(cr, uid, ids, context=context)[0]
+            industria_mrp_id = job.industria_mrp_id.id
+
             fullname = self.get_make_filename(job)
             if os.path.isfile(fullname):
                 _logger.warning('Deleting job %s...' % fullname)
                 os.remove(fullname)
         except:
             _logger.error('Error removing job transfer file!')
+
+        # ---------------------------------------------------------------------
+        # Log message:
+        # ---------------------------------------------------------------------
+        if industria_mrp_id:
+            i40_pool.write_log_chatter_message(
+                cr, uid, [industria_mrp_id],
+                '[JOB] Annullato job di stesura, file: %s' % fullname
+                , context=context)
+        else:
+            _logger.error('Job not linked in I40 Order: %s' % fullname)
 
         self.write(cr, uid, ids, {
             'state': 'DRAFT',
@@ -2092,13 +2125,18 @@ class IndustriaJob(orm.Model):
         """
         job_id = ids[0]
         database_pool = self.pool.get('industria.database')
+        i40_pool = self.pool.get('industria.mrp')
 
         if context is None:
             context = {}
 
+        industria_mrp_id = False
+        fullname = 'NON TROVATO'
         try:
             # Delete file if present:
             job = self.browse(cr, uid, job_id, context=context)
+            industria_mrp_id = job.industria_mrp_id.id
+
             fullname = self.get_make_filename(job)
             history_fullname = os.path.join(
                 # Make path + /fatti
@@ -2106,7 +2144,7 @@ class IndustriaJob(orm.Model):
                 # Make filename + datetime.log
                 '%s.%s.log' % (
                     os.path.basename(fullname),
-                    datetime.now().replace(':', '_').replace('/', '_')
+                    str(datetime.now()).replace(':', '_').replace('/', '_')
                 )
             )
             if os.path.isfile(fullname):
@@ -2115,6 +2153,17 @@ class IndustriaJob(orm.Model):
                 shutil.move(fullname, history_fullname)
         except:
             _logger.error('Error removing job transfer file!')
+
+        # ---------------------------------------------------------------------
+        # Log message:
+        # ---------------------------------------------------------------------
+        if industria_mrp_id:
+            i40_pool.write_log_chatter_message(
+                cr, uid, [industria_mrp_id],
+                '[JOB] Fine job di stesura / taglio, file: %s' % fullname
+                , context=context)
+        else:
+            _logger.error('Job not linked in I40 Order: %s' % fullname)
 
         self.write(cr, uid, ids, {
             'ended_at': datetime.now().strftime(
