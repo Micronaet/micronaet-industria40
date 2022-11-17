@@ -836,7 +836,6 @@ class IndustriaDatabase(orm.Model):
                             'state': 'done',
                             'generator_job_id': job_ids[0] or False,
                         })
-                        sign = +1
                     else:  # SL document:
                         onchange = move_pool.onchange_product_id(
                             cr, uid, False, product.id, sl_location_src_id,
@@ -852,7 +851,6 @@ class IndustriaDatabase(orm.Model):
                             'state': 'done',
                             'generator_job_id': job_ids[0] or False,
                         })
-                        sign = -1
                         # todo integrate with extra data from BOM:
 
                     # Stock movement:
@@ -864,7 +862,7 @@ class IndustriaDatabase(orm.Model):
                         'cost': 0.0,  # TODO
                         'location_id': stock_location,
                         'product_id': product.id,
-                        'qty': sign * qty,
+                        'qty': qty,
                         'lavoration_link_id': cl_picking_id,
                     }, context=context)
 
