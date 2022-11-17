@@ -1179,18 +1179,22 @@ class StockPicking(orm.Model):
         """
         i40_pool = self.pool.get('industria.mrp')
         stock_pool = self.pool.get('stock.move')
-        quant_pool = self.pool.get('stock.quant')
+        # quant_pool = self.pool.get('stock.quant')
+
+        # Force draft and delete:
+        self.force_draft(cr, uid, ids, context=context)  # Delete quants
 
         picking_id = ids[0]
         picking = self.browse(cr, uid, picking_id, context=context)
 
         # 1. Quants delete:
-        pdb.set_trace()
+        '''
         quant_ids = quant_pool.search(cr, uid, [
             ('lavoration_link_id', '=', picking_id),
             ], context=context)
         _logger.info('Deleting #%s quants' % len(quant_ids))
         quant_pool.unlink(cr, uid, quant_ids, context=context)
+        '''
 
         # 2. Move delete:
         stock_ids = stock_pool.search(cr, uid, [
