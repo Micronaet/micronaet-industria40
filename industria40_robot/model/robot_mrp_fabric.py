@@ -1189,7 +1189,6 @@ class StockPicking(orm.Model):
             'state': 'cancel',
         }, context=context)
         stock_pool.unlink(cr, uid, stock_ids, context=context)
-        self.unlink(cr, uid, ids, context=context)
 
         # Write chatter message:
         industria_mrp_id = picking.industria_mrp_id.id
@@ -1200,6 +1199,7 @@ class StockPicking(orm.Model):
                 picking.create_date,
             ),
             context=context)
+        self.unlink(cr, uid, ids, context=context)
         return True
 
     _columns = {
