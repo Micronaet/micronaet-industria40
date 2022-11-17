@@ -772,6 +772,24 @@ class IndustriaDatabase(orm.Model):
         new_picking_ids = []
         for origin in daily_job:
             for date in daily_job[origin]:
+                # Create unload picking (before load!):
+                sl_picking_id = picking_pool.create(cr, uid, {
+                    'industria_mrp_id': job.industria_mrp_id.id,
+                    'dep_mode': default_dep_mode,  # 'workshop',  # Always
+                    'origin': origin,
+                    'partner_id': company_partner_id,
+                    'date': date,
+                    'min_date': date,
+                    'total_work': 0.0,
+                    'total_prepare': 0.0,
+                    'total_stop': 0.0,
+                    'note': '',
+                    'state': 'done',
+                    'picking_type_id': sl_type_id,
+                    'is_mrp_lavoration': True,
+                    # 'location_id': location_id,
+                }, context=context)
+
                 # Create load picking:
                 cl_picking_id = picking_pool.create(cr, uid, {
                     'industria_mrp_id': job.industria_mrp_id.id,
@@ -787,24 +805,7 @@ class IndustriaDatabase(orm.Model):
                     'state': 'done',
                     'picking_type_id': cl_type_id,
                     'is_mrp_lavoration': True,
-                    # 'location_id': location_id,
-                }, context=context)
-
-                # Create unload picking:
-                sl_picking_id = picking_pool.create(cr, uid, {
-                    'industria_mrp_id': job.industria_mrp_id.id,
-                    'dep_mode': default_dep_mode,  # 'workshop',  # Always
-                    'origin': origin,
-                    'partner_id': company_partner_id,
-                    'date': date,
-                    'min_date': date,
-                    'total_work': 0.0,
-                    'total_prepare': 0.0,
-                    'total_stop': 0.0,
-                    'note': '',
-                    'state': 'done',
-                    'picking_type_id': sl_type_id,
-                    'is_mrp_lavoration': True,
+                    'linked_sl_id': sl_picking_id,  # Link  document
                     # 'location_id': location_id,
                 }, context=context)
 
@@ -841,12 +842,15 @@ class IndustriaDatabase(orm.Model):
                         move_data.update({
                             'picking_id': sl_picking_id,
                             'product_id': product.id,
+                            # todo used positive Q. in SL:
                             'product_uom_qty': -qty,
                             'location_id': sl_location_dest_id,
                             'location_dest_id': sl_location_src_id,
                             'state': 'done',
                             'generator_job_id': job_ids[0] or False,
                         })
+                        # todo integrate with extra data from BOM:
+
                     move_pool.create(cr, uid, move_data, context=context)
 
                     # Link job to picking:
