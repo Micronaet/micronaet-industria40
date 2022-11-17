@@ -2088,6 +2088,7 @@ class IndustriaJob(orm.Model):
 
         # Loop for materasso:
         # todo Setup order with fabric color:
+        pdb.set_trace()
         data_fabric_sort = sorted(
             data_fabric,
             key=lambda f: color_order.get(
