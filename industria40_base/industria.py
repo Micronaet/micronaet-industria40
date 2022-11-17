@@ -1936,6 +1936,15 @@ class IndustriaJob(orm.Model):
     _rec_name = 'created_at'
     _order = 'created_at desc'
 
+    def get_make_filename(self, job):
+        """ Extract make filename
+        """
+        robot = job.source_id
+        tender_path = robot.fabric_tender_path
+        fullname = os.path.expanduser(
+            os.path.join(tender_path, 'job_%s.txt' % job.id))
+        return fullname
+
     def open_job_picking(self, cr, uid, ids, context=None):
         """ Open picking job
         """
@@ -1991,10 +2000,8 @@ class IndustriaJob(orm.Model):
         file_text = '$D$|%s|$O$|Job_%s' % (date, job_id)
 
         robot = job.source_id
-        tender_path = robot.fabric_tender_path
         tender_name = robot.fabric_tender_name
-        fullname = os.path.expanduser(
-            os.path.join(tender_path, 'job_%s.txt' % job_id))
+        fullname = self.get_make_filename(job)
         file_out = open(fullname, 'w')
 
         data_files = []
@@ -2066,6 +2073,16 @@ class IndustriaJob(orm.Model):
     def restart_fabric_job(self, cr, uid, ids, context=None):
         """ Send job to tender
         """
+        try:
+            # Delete file if present:
+            job = self.browse(cr, uid, ids, context=context)[0]
+            fullname = self.get_make_filename(job)
+            if os.path.isfile(fullname):
+                _logger.warning('Deleting job %s...' % fullname)
+                os.remove(fullname)
+        except:
+            _logger.error('Error removing job transfer file!')
+
         self.write(cr, uid, ids, {
             'state': 'DRAFT',
         }, context=context)
@@ -2078,6 +2095,26 @@ class IndustriaJob(orm.Model):
 
         if context is None:
             context = {}
+
+        try:
+            # Delete file if present:
+            job = self.browse(cr, uid, job_id, context=context)
+            fullname = self.get_make_filename(job)
+            history_fullname = os.path.join(
+                # Make path + /fatti
+                os.path.dirname(fullname), 'fatti',
+                # Make filename + datetime.log
+                '%s.%s.log' % (
+                    os.path.basename(fullname),
+                    datetime.now().replace(':', '_').replace('/', '_')
+                )
+            )
+            if os.path.isfile(fullname):
+                _logger.warning('Moving job %s > %s ...' % (
+                    fullname, history_fullname))
+                shutil.move(fullname, history_fullname)
+        except:
+            _logger.error('Error removing job transfer file!')
 
         self.write(cr, uid, ids, {
             'ended_at': datetime.now().strftime(
