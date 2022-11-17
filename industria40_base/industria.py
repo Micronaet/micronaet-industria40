@@ -2118,6 +2118,7 @@ class IndustriaJob(orm.Model):
 
         self.write(cr, uid, ids, {
             'state': 'DRAFT',
+            'ended_at': False,
         }, context=context)
 
     def completed_fabric_job(self, cr, uid, ids, context=None):
