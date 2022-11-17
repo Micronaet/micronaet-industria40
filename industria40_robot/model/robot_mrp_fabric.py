@@ -1179,15 +1179,27 @@ class StockPicking(orm.Model):
         """
         i40_pool = self.pool.get('industria.mrp')
         stock_pool = self.pool.get('stock.move')
+        quant_pool = self.pool.get('stock.quants')
 
         picking_id = ids[0]
         picking = self.browse(cr, uid, picking_id, context=context)
+
+        # 1. Quants delete:
+        pdb.set_trace()
+        quant_ids = quant_pool.search(cr, uid, [
+            ('lavoration_link_id', '=', picking_id),
+            ], context=context)
+        _logger.info('Deleting #%s quants' % len(quant_ids))
+        quant_pool.unlink(cr, uid, quant_ids, context=context)
+
+        # 2. Move delete:
         stock_ids = stock_pool.search(cr, uid, [
             ('picking_id', '=', picking_id),
         ], context=context)
         stock_pool.write(cr, uid, stock_ids, {
             'state': 'cancel',
         }, context=context)
+        _logger.info('Deleting #%s move' % len(stock_ids))
         stock_pool.unlink(cr, uid, stock_ids, context=context)
 
         # Write chatter message:
@@ -1199,6 +1211,8 @@ class StockPicking(orm.Model):
                 picking.create_date,
             ),
             context=context)
+
+        # 3. Picking delete:
         self.unlink(cr, uid, ids, context=context)
         return True
 

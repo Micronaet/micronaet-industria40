@@ -674,6 +674,7 @@ class IndustriaDatabase(orm.Model):
         model_pool = self.pool.get('ir.model.data')
         picking_pool = self.pool.get('stock.picking')
         move_pool = self.pool.get('stock.move')
+        quant_pool = self.pool.get('stock.quants')
         job_pool = self.pool.get('industria.job')
         company_pool = self.pool.get('res.company')
 
@@ -690,11 +691,12 @@ class IndustriaDatabase(orm.Model):
         cl_location_src_id = cl_type.default_location_src_id.id
         cl_location_dest_id = cl_type.default_location_dest_id.id
 
-        # CL:
+        # SL:
         sl_type = company_proxy.sl_mrp_lavoration_id
         sl_type_id = sl_type.id if sl_type else False
         sl_location_src_id = sl_type.default_location_src_id.id
         sl_location_dest_id = sl_type.default_location_dest_id.id
+        stock_location = sl_type.default_location_src_id.id or False
 
         # No loop only one job closed:
         daily_job = {}
@@ -834,6 +836,7 @@ class IndustriaDatabase(orm.Model):
                             'state': 'done',
                             'generator_job_id': job_ids[0] or False,
                         })
+                        sign = +1
                     else:  # SL document:
                         onchange = move_pool.onchange_product_id(
                             cr, uid, False, product.id, sl_location_src_id,
@@ -849,9 +852,21 @@ class IndustriaDatabase(orm.Model):
                             'state': 'done',
                             'generator_job_id': job_ids[0] or False,
                         })
+                        sign = -1
                         # todo integrate with extra data from BOM:
 
+                    # Stock movement:
                     move_pool.create(cr, uid, move_data, context=context)
+
+                    # Unload quants materials:
+                    quant_pool.create(cr, uid, {
+                        'in_date': date,
+                        'cost': 0.0,  # TODO
+                        'location_id': stock_location,
+                        'product_id': product.id,
+                        'qty': sign * qty,
+                        'lavoration_link_id': cl_picking_id,
+                    }, context=context)
 
                     # Link job to picking:
                     job_pool.write(cr, uid, job_ids, {
