@@ -661,7 +661,11 @@ class IndustriaDatabase(orm.Model):
         """
         if context is None:
             context = {}
+
+        # Context parameters:
         force_job_id = context.get('force_job_id')
+        default_dep_mode = context.get('default_dep_mode', 'workshop')
+
         if not force_job_id:
             _logger.error('No job fabric passed (parameter force_job_id)')
             return False
@@ -771,7 +775,7 @@ class IndustriaDatabase(orm.Model):
                 # Create load picking:
                 cl_picking_id = picking_pool.create(cr, uid, {
                     'industria_mrp_id': job.industria_mrp_id.id,
-                    'dep_mode': 'workshop',  # Always
+                    'dep_mode': default_dep_mode,  # 'workshop',  # Always
                     'origin': origin,
                     'partner_id': company_partner_id,
                     'date': date,
@@ -789,7 +793,7 @@ class IndustriaDatabase(orm.Model):
                 # Create unload picking:
                 sl_picking_id = picking_pool.create(cr, uid, {
                     'industria_mrp_id': job.industria_mrp_id.id,
-                    'dep_mode': 'workshop',  # Always
+                    'dep_mode': default_dep_mode,  # 'workshop',  # Always
                     'origin': origin,
                     'partner_id': company_partner_id,
                     'date': date,
@@ -2175,6 +2179,7 @@ class IndustriaJob(orm.Model):
         # Generate pickings for load and unload materials:
         ctx = context.copy()
         ctx['force_job_id'] = job_id
+        ctx['default_dep_mode'] = 'cut'
         return database_pool.generate_fabric_picking_from_job(
             cr, uid, False, context=ctx)
 

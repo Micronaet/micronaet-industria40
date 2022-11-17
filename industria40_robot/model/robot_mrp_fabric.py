@@ -743,7 +743,7 @@ class IndustriaMrpLine(orm.Model):
             date = i40_mrp.date
             origin = 'I40 MRP del %s' % date
             picking_id = picking_pool.create(cr, uid, {
-                # 'dep_mode': 'workshop',  # Always
+                # 'dep_mode': 'cut',  # 'workshop' Always
                 'origin': origin,
                 # 'partner_id':
                 'date': date,
