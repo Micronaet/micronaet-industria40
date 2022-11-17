@@ -197,7 +197,7 @@ class IndustriaMrp(orm.Model):
         new_version = version + 1
         self.write(cr, uid, ids, {
             'version': new_version,
-        }, context=context)
+            }, context=context)
 
         # ---------------------------------------------------------------------
         # Fabric layer color
@@ -235,7 +235,8 @@ class IndustriaMrp(orm.Model):
         # SEMI PRODUCT: Parse line sorted by program:
         # ---------------------------------------------------------------------
         done_ids = []
-        for line in industria_mrp.line_ids:
+        # Sort semiproduct from black to white:
+        for line in sorted(industria_mrp.line_ids, reverse=True):
             sequence += 1  # Sequence still progress for all program!
 
             # -----------------------------------------------------------------
