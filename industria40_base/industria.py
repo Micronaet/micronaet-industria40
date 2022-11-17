@@ -841,7 +841,7 @@ class IndustriaDatabase(orm.Model):
                         move_data.update({
                             'picking_id': sl_picking_id,
                             'product_id': product.id,
-                            'product_uom_qty': qty,
+                            'product_uom_qty': -qty,
                             'location_id': sl_location_dest_id,
                             'location_dest_id': sl_location_src_id,
                             'state': 'done',
