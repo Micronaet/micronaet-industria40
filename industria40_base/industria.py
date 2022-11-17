@@ -2091,8 +2091,8 @@ class IndustriaJob(orm.Model):
         data_fabric_sort = sorted(
             data_fabric,
             key=lambda f: color_order.get(
-                i40_pool.extract_fabric_part(f.default_code or ''), [0, 0, 0])[
-                    2])
+                i40_pool.extract_fabric_part(f.default_code or '')[2],
+                0))
         for fabric_product in data_fabric_sort:
             fabric_text, totals = data_fabric[fabric_product]
             file_text += '|$C$|%s' % fabric_text
