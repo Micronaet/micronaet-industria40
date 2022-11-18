@@ -51,6 +51,7 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
             self, cr, uid, ids, current_material_id, context=None):
         """ On change setup domain
         """
+        i40_pool = self.pool.get('industria.mrp')
         product_pool = self.pool.get('product.product')
         res = {}
 
@@ -63,6 +64,11 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
         if not default_code:
             return res
 
+        fabric, layer_fabric, color_part = \
+            i40_pool.extract_fabric_part(default_code)
+        # todo check how many number is present!
+        new_mask = '%s___%s' % (layer_fabric, color_part)
+        '''
         new_mask = ''
         part = 0
         for c in default_code:
@@ -78,6 +84,7 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
 
                 if part == 1:  # Replace number:
                     new_mask += '_'
+        '''
 
         product_ids = product_pool.search(cr, uid, [
             ('default_code', '=ilike', new_mask),
