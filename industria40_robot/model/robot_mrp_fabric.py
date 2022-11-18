@@ -398,6 +398,8 @@ class IndustriaMrp(orm.Model):
     def extract_fabric_part(self, fabric_code):
         """ Extract part of code
         """
+        verbose = True
+
         # fabric = fabric_code[:6]
         # layer_fabric = fabric[:3]  # first char
         # color_part = fabric_code[6:]
@@ -424,6 +426,10 @@ class IndustriaMrp(orm.Model):
             else:
                 change = 3  # Last part
                 color_part += c
+        if verbose:
+            _logger.warning(
+                '[%s] >> %s - %s - %s' % (
+                    fabric_code, fabric, layer_fabric, color_part))
         return fabric, layer_fabric, color_part
 
     def generate_industria_mrp_line(self, cr, uid, ids, context=None):
