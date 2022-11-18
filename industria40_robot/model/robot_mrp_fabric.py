@@ -428,7 +428,7 @@ class IndustriaMrp(orm.Model):
                 color_part += c
         if verbose:
             _logger.warning(
-                '[%s] >> %s - %s - %s' % (
+                '[%s] >>> %s - %s - %s' % (
                     fabric_code, fabric, layer_fabric, color_part))
         return fabric, layer_fabric, color_part
 
