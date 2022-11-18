@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="industria40_base.view_industria_job_fabric_tree"/>
             <field name="arch" type="xml">
                 <field name="created_at" position="after">
-                    <fiedl name="ended_at" />
+                    <field name="ended_at" />
                     <field name="industria_mrp_id" invisible="context.get('open_mode') == 'fabric'"/>
                 </field>
                 <field name="previous_id" position="attributes">
