@@ -69,6 +69,7 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
 
         number = sum([1 for c in fabric if c.isdigit()])
         new_mask = '%s%s%s' % (layer_fabric, '_' * number, color_part)
+        _logger.info('Mask used: %s' % new_mask)
         '''
         new_mask = ''
         part = 0
