@@ -1153,7 +1153,20 @@ class IndustriaJob(orm.Model):
     """
     _inherit = 'industria.job'
 
+    def _get_job_filename(self, cr, uid, ids, fields, args, context=None):
+        """ Fields function for calculate
+        """
+        res = {}
+        for job_id in ids:
+            res[job_id] = 'job_%s.txt' % job_id
+        return res
+
     _columns = {
+        'job_filename': fields.function(
+            _get_job_filename, method=True,
+            type='char', string='File make', size=40,
+            ),
+
         'version': fields.integer(
             'Versione Job',
             help='Numero di versione del job, utilizzato per passate '

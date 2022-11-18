@@ -319,6 +319,7 @@
                                         <field name="job_ids" nolabel="1" colspan="4" readonly="1" context="{'form_view_ref': 'industria40_base.view_industria_job_fabric_form'}">
                                             <tree string="Job">
                                                 <field name="version" string="Vers."/>
+                                                <field name="job_filename" />
                                                 <field name="created_at" />
                                                 <field name="updated_at" invisible="1"/>
                                                 <field name="ended_at" />
