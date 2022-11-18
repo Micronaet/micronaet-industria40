@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <field name="created_at" position="after">
                     <field name="ended_at" />
-                    <field name="industria_mrp_id" invisible="context.get('open_mode') == 'fabric'"/>
+                    <field name="industria_mrp_id"/>
                 </field>
                 <field name="previous_id" position="attributes">
                     <attribute name="invisible">context.get('open_mode') == 'fabric'</attribute>
