@@ -56,15 +56,15 @@
                         <field name="color_ids" colspan="2" nolabel="1">
                             <tree string="Colori" editable="bottom">
                                 <field name="sequence" widget="handle"/>
-                                <field name="code" readonly="1"/>
+                                <field name="code" /><!--readonly="1"-->
                                 <field name="replace"/>
                                 <field name="name" />
                             </tree>
                         </field>
                         <field name="layer_fabric_ids" colspan="2" nolabel="1">
                             <tree string="Strati tessuto" editable="bottom">
-                                <field name="code" readonly="1"/>
-                                <field name="name" />
+                                <field name="code" />
+                                <field name="name" /><!--readonly="1"-->
                                 <field name="max_layer"/>
                             </tree>
                         </field>

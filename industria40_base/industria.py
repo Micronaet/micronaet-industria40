@@ -2086,13 +2086,16 @@ class IndustriaJob(orm.Model):
 
         file_text += '|$CS$|%s' % tender_name
 
-        # Loop for materasso:
-        # todo Setup order with fabric color:
+        # ---------------------------------------------------------------------
+        # Write file:
+        # ---------------------------------------------------------------------
+        # Setup order with fabric color:
         data_fabric_sort = sorted(
             data_fabric,
             key=lambda f: color_order.get(
                 i40_pool.extract_fabric_part(f.default_code or '')[2],
                 0))
+        # Loop for materasso:
         for fabric_product in data_fabric_sort:
             fabric_text, totals = data_fabric[fabric_product]
             file_text += '|$C$|%s' % fabric_text
