@@ -188,7 +188,7 @@
                                             <tree editable="bottom" string="Regole">
                                                 <field name="program_id" readonly="1" />
                                                 <field name="mask" readonly="1" />
-                                                <field name="fabric_length" readonly="1" />
+                                                <!--<field name="fabric_length" readonly="1" />-->
                                                 <field name="total" readonly="1" />
                                             </tree>
                                         </field>
