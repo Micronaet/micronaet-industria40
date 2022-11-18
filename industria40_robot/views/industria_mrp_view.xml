@@ -57,7 +57,7 @@
                             <tree string="Colori" editable="bottom">
                                 <field name="sequence" widget="handle"/>
                                 <field name="code" readonly="1"/>
-                                <field name="replace"/>
+                                <!--<field name="replace"/>-->
                                 <field name="name" />
                             </tree>
                         </field>
@@ -86,7 +86,7 @@
                                 <tree string="Colori" editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="code" /><!--readonly="1"-->
-                                    <field name="replace"/>
+                                    <!--<field name="replace"/>-->
                                     <field name="name" />
                                 </tree>
                             </field>

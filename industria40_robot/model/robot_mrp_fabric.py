@@ -445,10 +445,14 @@ class IndustriaMrp(orm.Model):
         # Load color
         # ---------------------------------------------------------------------
         # todo only this robot!
-        color_db = {}
+        # color_db = {}
+        color_position = {}  # todo keep only this
         color_ids = color_pool.search(cr, uid, [], context=context)
+        pos = 0
         for color in color_pool.browse(cr, uid, color_ids, context=context):
-            color_db[color.code] = color
+            pos += 1
+            # color_db[color.code] = color
+            color_position[color.code] = pos
 
         # ---------------------------------------------------------------------
         # Fabric layer color
@@ -557,18 +561,18 @@ class IndustriaMrp(orm.Model):
                 layer_db[layer_fabric] = layer_pool.browse(
                     cr, uid, layer_id, context=context)
 
-            if color_part not in color_db:
-                color_id = color_pool.create(cr, uid, {
+            if color_part not in color_position:
+                color_pool.create(cr, uid, {
                     'code': color_part,
                     'name': color_part,
                     'robot_id': robot_id,
                 }, context=context)
-                color_db[color_part] = color_pool.browse(
-                    cr, uid, color_id, context=context)
-            color = color_db[color_part]
-            replace = color_db.get(color.replace)
-            if replace:
-                color = replace
+                color_position[color_part] = 0  # not present!
+            sequence = color_position[color_part]
+            # todo not used:
+            # replace = color_db.get(color.replace)
+            # if replace:
+            #    color = replace
             line_pool.create(cr, uid, {
                 'industria_mrp_id': mrp_id,
                 'version': 0,  # Changed when create job
@@ -578,8 +582,8 @@ class IndustriaMrp(orm.Model):
                 'product_id': semiproduct.id,
                 'material_id': material.id,
                 'fabric': fabric,
-                'color': color.code,
-                'sequence': color.sequence,
+                'color': color_part,
+                'sequence': sequence,
                 'todo': todo,
                 'detail': detail,
             }, context=context)
