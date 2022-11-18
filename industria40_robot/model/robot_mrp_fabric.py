@@ -1164,7 +1164,7 @@ class IndustriaJob(orm.Model):
     _columns = {
         'job_filename': fields.function(
             _get_job_filename, method=True,
-            type='char', string='File make', size=40,
+            type='char', string='File make', size=40, store=True,
             ),
 
         'version': fields.integer(

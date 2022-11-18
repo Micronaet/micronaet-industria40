@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <record model="ir.ui.view" id="view_industria_job_file_search">
+            <field name="name">industria.job.file.search</field>
+            <field name="model">industria.job</field>
+            <field name="inherit_id" ref="industria40_base.view_industria_job_search"/>
+            <field name="arch" type="xml">
+                <field name="database_id" position="after">
+                    <field name="job_filename" />
+                </field>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_industria_job_fabric_mode_tree">
             <field name="name">industria.job.fabric.tree</field>
             <field name="model">industria.job</field>
