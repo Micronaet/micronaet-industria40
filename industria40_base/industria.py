@@ -1874,7 +1874,7 @@ class IndustriaProgramFabricPart(orm.Model):
         'fabric_length': fields.related(
             'fabric_id', 'fabric_length',
             string='Lunghezza tessuto mm.', digits=(10, 2),
-            type='char', store=False),
+            type='float', store=False),
         'mask': fields.char(
             'Maschera', size=20, required=True,
             help='Maschera prodotto che possono essere creati con questa dima'
