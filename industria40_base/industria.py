@@ -2022,7 +2022,7 @@ class IndustriaJob(orm.Model):
         color_order = {}
         pos = 0
         for color in robot.color_ids:
-            pos = 1
+            pos += 1
             color_order[color.code] = pos  # todo use forced color.name?
 
         date = get_date(job.created_at)
@@ -2088,7 +2088,6 @@ class IndustriaJob(orm.Model):
 
         # Loop for materasso:
         # todo Setup order with fabric color:
-        pdb.set_trace()
         data_fabric_sort = sorted(
             data_fabric,
             key=lambda f: color_order.get(
