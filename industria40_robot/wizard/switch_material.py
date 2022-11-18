@@ -66,8 +66,9 @@ class IndustriaAssignMaterialWizard(orm.TransientModel):
 
         fabric, layer_fabric, color_part = \
             i40_pool.extract_fabric_part(default_code)
-        # todo check how many number is present!
-        new_mask = '%s___%s' % (layer_fabric, color_part)
+
+        number = sum([1 for c in layer_fabric if c.isdigit()])
+        new_mask = '%s%s%s' % (layer_fabric, '_' * number, color_part)
         '''
         new_mask = ''
         part = 0
