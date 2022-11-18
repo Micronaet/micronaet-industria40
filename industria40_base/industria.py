@@ -1873,8 +1873,8 @@ class IndustriaProgramFabricPart(orm.Model):
             string='Programma', store=True),
         'fabric_length': fields.related(
             'fabric_id', 'fabric_length',
-            string='Lunghezza tessuto mm.', digits=(10, 2),
-            type='float', store=False),
+            type='float', string='Lunghezza tessuto mm.', digits=(10, 2),
+            ),
         'mask': fields.char(
             'Maschera', size=20, required=True,
             help='Maschera prodotto che possono essere creati con questa dima'
