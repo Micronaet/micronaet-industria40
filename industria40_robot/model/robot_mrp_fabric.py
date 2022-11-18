@@ -493,11 +493,15 @@ class IndustriaMrp(orm.Model):
                         for cmpt_line in semiproduct.half_bom_ids:
                             material = cmpt_line.product_id
                             category_name = material.inventory_category_id.name
+                            if not material.active:
+                                _logger.error(
+                                    'Material not active: %s' %
+                                    material.default_code)
                             if category_name == material_category:
                                 key = (semiproduct, material)
                                 if key not in new_lines:
                                     new_lines[key] = [0, '']  # total, detail
-                                # Updata data:
+                                # Update data:
                                 bom_qty = bom_line.product_qty
                                 total_qty = todo * bom_qty
                                 new_lines[key][0] += total_qty
