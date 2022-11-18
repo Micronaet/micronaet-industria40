@@ -567,12 +567,8 @@ class IndustriaMrp(orm.Model):
                     'name': color_part,
                     'robot_id': robot_id,
                 }, context=context)
-                color_position[color_part] = 0  # not present!
+                color_position[color_part] = 0  # not present (so red)!
             sequence = color_position[color_part]
-            # todo not used:
-            # replace = color_db.get(color.replace)
-            # if replace:
-            #    color = replace
             line_pool.create(cr, uid, {
                 'industria_mrp_id': mrp_id,
                 'version': 0,  # Changed when create job

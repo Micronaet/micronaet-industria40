@@ -251,11 +251,11 @@
                             <notebook colspan="4">
                                 <page name="page_line_mrp" string="Semilavorati">
                                     <group colspan="4" col="4">
-                                        <separator string="Semilavorati:" colspan="2"/>
+                                        <separator string="Semilavorati (rossi=no prog. o nuovo colore, grigio: pausa, verde: ha il job)" colspan="2"/>
                                         <button name="generate_industria_mrp_line" type="object" string="Genera semilavorati" confirm="Se sono già generati i JOB è il caso di cancellarli perchè poi andranno rifatti una volta creati i semilavorati!" groups="industria40_base.group_industria_manager"/>
                                         <button name="generate_industria_job" type="object" string="Genera job" confirm="Verranno generati i job per i semilavorati non ancora agganciati a JOB e non stoppati (e con il programma), confermi?"/>
                                         <field name="line_ids" nolabel="1" colspan="4" >
-                                            <tree editable="bottom" string="Linee" colors="green: version > 0; red: program_id == False; grey:paused == True">
+                                            <tree editable="bottom" string="Linee" colors="green: version > 0; red: program_id == False or sequence == 0; grey:paused == True">
                                                 <field name="sequence" readonly="1"/>
                                                 <field name="step" />
                                                 <field name="version" groups="industria40_base.group_industria_manager" readonly="1" string="Vers."/>
