@@ -1872,7 +1872,7 @@ class IndustriaProgramFabricPart(orm.Model):
             type='many2one', relation='industria.program',
             string='Programma', store=True),
         'fabric_length': fields.related(
-            'fabric_id', 'fabric_length',
+            'program_id', 'fabric_length',
             type='float', string='Lunghezza tessuto mm.', digits=(10, 2),
             ),
         'mask': fields.char(
