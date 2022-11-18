@@ -1872,7 +1872,8 @@ class IndustriaProgramFabricPart(orm.Model):
             type='many2one', relation='industria.program',
             string='Programma', store=True),
         'fabric_length': fields.related(
-            'Lunghezza tessuto mm.', digits=(10, 2),
+            'fabric_id', 'fabric_length',
+            string='Lunghezza tessuto mm.', digits=(10, 2),
             type='char', store=False),
         'mask': fields.char(
             'Maschera', size=20, required=True,
