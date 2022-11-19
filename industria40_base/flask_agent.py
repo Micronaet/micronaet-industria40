@@ -22,6 +22,7 @@
 ###############################################################################
 
 import os
+import pdb
 import sys
 import logging
 import openerp
@@ -54,7 +55,7 @@ class ResCompany(orm.Model):
         # Authenticate to get Session ID:
         # ---------------------------------------------------------------------
         company = self.browse(cr, uid, ids, context=context)[0]
-
+        pdb.set_trace()
         url = 'http://%s:%s%s' % (
             company.flask_host,
             company.flask_port,
