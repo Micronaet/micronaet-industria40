@@ -736,7 +736,7 @@ class IndustriaDatabase(orm.Model):
                     # ---------------------------------------------------------
                     if integrate_bom:
                         _logger.info('JOB unload also BOM')
-                        for bom_line in semiproduct.half_bom_ids:
+                        for bom_line in semiproduct.product_id.half_bom_ids:
                             component = bom_line.product_id
                             category = component.inventory_category_id.name
                             # todo keep as parameter Tessuto:
