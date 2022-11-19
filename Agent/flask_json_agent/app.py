@@ -124,7 +124,8 @@ def ODOOCall():
 
             payload['success'] = True
         except:
-            payload['reply']['error'] = sys.exc_info()
+            payload['reply']['error'] = str(sys.exc_info())
+
     elif command == 'job':
         # Insert Job on I40 robot:
         connection = mysql.connector.connect(**mysql_param)

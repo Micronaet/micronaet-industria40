@@ -25,7 +25,7 @@ payload = {
         'parameters': {
             'mysql': {
                 'host': '192.168.1.1',
-                'port': '3306',
+                'port': 3306,
                 'user': 'user',
                 'password': '',
                 'database': '',
