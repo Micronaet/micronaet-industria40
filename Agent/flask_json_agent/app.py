@@ -127,8 +127,20 @@ def ODOOCall():
 
     elif command == 'job':
         # Insert Job on I40 robot:
-        connection = mysql.connector.connect(**mysql_param)
-        cur = connection.cursor()
+        try:
+            connection = mysql.connector.connect(**mysql_param)
+            cur = connection.cursor()
+            query = parameter.get('query')
+            write_log(log_f, 'Executing query: %s' % query)
+
+            # INSERT INTO QUERY:
+            cur.execute(query)
+
+
+            payload['success'] = True
+        except:
+            payload['reply']['error'] = str(sys.exc_info())
+
     else:
         # ---------------------------------------------------------------------
         # Bad call:
