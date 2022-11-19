@@ -14,7 +14,7 @@ import json
 # -----------------------------------------------------------------------------
 # Authenticate to get Session ID:
 # -----------------------------------------------------------------------------
-url = 'http://localhost:5000/API/v1.0/micronaet/laucher'
+url = 'http://localhost:5000/API/v1.0/micronaet/launcher'
 headers = {
     'content-type': 'application/json',
 }

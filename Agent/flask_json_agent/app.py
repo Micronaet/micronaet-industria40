@@ -99,24 +99,20 @@ def ODOOCall():
         'success': False,
         'reply': {},
     }
+
     if 'mysql' in parameter:
         # MySQL call:
         mysql_param = parameter.get('mysql', {})
-        connection = mysql.connector.connect(
-            host=mysql_param.get('host'),
-            port=mysql_param.get('port'),
-            user=mysql_param.get('user'),
-            password=mysql_param.get('password'),
-            database=mysql_param.get('database'),
-            use_pure=mysql_param.get('use_pure'),
-        )
-        cur = connection.cursor()
+    else:
+        mysql_param = {}
 
     # -------------------------------------------------------------------------
     #                       Import invoice procedure:
     # -------------------------------------------------------------------------
     if command == 'statistic':
         try:
+            connection = mysql.connector.connect(**mysql_param)
+            cur = connection.cursor()
             cur.execute('SELECT * FROM %s;' % mysql_param.get('table'))
 
             payload['reply']['record'] = []  # Prepare reply
@@ -130,7 +126,8 @@ def ODOOCall():
             payload['reply']['error'] = sys.exc_info()
     elif command == 'job':
         # Insert Job on I40 robot:
-        pass
+        connection = mysql.connector.connect(**mysql_param)
+        cur = connection.cursor()
     else:
         # ---------------------------------------------------------------------
         # Bad call:
