@@ -743,12 +743,11 @@ class IndustriaDatabase(orm.Model):
                             # todo keep as parameter Tessuto:
                             if category == 'Tessuto':
                                 continue  # Yet used
-
-                        component_qty = -(
-                                semiproduct.total * bom_line.product_qty)
-                        products.append(
-                            # BOM component, Q. used
-                            (component, component_qty))
+                            component_qty = -(
+                                    semiproduct.total * bom_line.product_qty)
+                            products.append(
+                                # BOM component, Q. used
+                                (component, component_qty))
 
                 # Old management for fabric:
                 # for program_fabric in program.fabric_ids:
