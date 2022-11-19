@@ -1,10 +1,11 @@
-mkdir -p ~/agent/git
+#!/bin/bash
 
-cd agent/git
 
 # -----------------------------------------------------------------------------
 # Setup:
 # -----------------------------------------------------------------------------
+# mkdir -p ~/agent/git
+# cd agent/git
 # First clone repository
 # git clone https://github.com/Micronaet/micronaet-industria40
 
@@ -20,8 +21,11 @@ cd agent/git
 # -----------------------------------------------------------------------------
 
 # Update repo:
-cd micronaet-industria40
+cd ~/agent/git/micronaet-industria40
 git pull
 
 # Run Flask JSONM Agent:
 cd ~/agent/flask_json_i40
+
+~/agent/venv/bin/python3 ./app.py
+
