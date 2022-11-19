@@ -107,7 +107,7 @@ def ODOOCall():
         mysql_param = {}
 
     # -------------------------------------------------------------------------
-    #                       Import invoice procedure:
+    #                       I40 Read statistics:
     # -------------------------------------------------------------------------
     if command == 'statistic':
         try:
@@ -125,26 +125,29 @@ def ODOOCall():
         except:
             payload['reply']['error'] = str(sys.exc_info())
 
+    # -------------------------------------------------------------------------
+    #                       I40 Insert Job:
+    # -------------------------------------------------------------------------
     elif command == 'job':
         # Insert Job on I40 robot:
         try:
-            query = parameter.get('query')
-            write_log(log_f, 'Executing query: %s' % query)
-
             connection = mysql.connector.connect(**mysql_param)
             cur = connection.cursor()
 
             # INSERT INTO QUERY:
+            query = parameter.get('query')
+            write_log(log_f, 'Executing query: %s' % query)
             cur.execute(query)
 
             payload['success'] = True
         except:
             payload['reply']['error'] = str(sys.exc_info())
 
+    # -------------------------------------------------------------------------
+    #                       I40 Unmanaged calls:
+    # -------------------------------------------------------------------------
     else:
-        # ---------------------------------------------------------------------
         # Bad call:
-        # ---------------------------------------------------------------------
         payload['reply']['error'] = \
             '[ERROR] ODOO is calling wrong command {}\n'.format(command)
 
