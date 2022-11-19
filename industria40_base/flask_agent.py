@@ -88,7 +88,7 @@ class ResCompany(orm.Model):
     _columns = {
         'flask_host': fields.char('Flask Host', size=80, required=True),
         'flask_port': fields.integer('Flask port', required=True),
-        'flask_endpoint': fields.integer('Flask endpoint', required=True),
+        'flask_endpoint': fields.char('Flask endpoint', required=True, size=100),
         }
 
     _defaults = {
