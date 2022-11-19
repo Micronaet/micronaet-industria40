@@ -13,6 +13,9 @@ cd agent/git
 
 # mkdir ~/agent/flask_json_i40
 # cd ~/agent/flask_json_i40
+# ln -s ../git/micronaet-industria40/Agent/flask_json_agent/app.py .
+
+# ~/agent/venv/bin/pip3 install -r ~/agent/git/micronaet-industria40/Agent/flask_json_agent/requirements.txt
 
 # -----------------------------------------------------------------------------
 
