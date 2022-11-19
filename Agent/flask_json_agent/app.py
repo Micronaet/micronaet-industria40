@@ -159,7 +159,7 @@ def ODOOCall():
 
 @app.route('/')
 def hello_geek():
-    return '<h1>Hello from Micronaet Indutria 4.0 agent</h1>'
+    return '<h1>Hello from Micronaet Industria 4.0 agent</h1>'
 
 
 if __name__ == "__main__":
