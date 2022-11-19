@@ -26,3 +26,6 @@ git pull
 
 # Run Flask JSONM Agent:
 cd ~/agent/flask_json_i40
+
+~/agent/venv/bin/python3 ./app.py
+
