@@ -787,8 +787,10 @@ class IndustriaDatabase(orm.Model):
             daily_job[origin][date][product][0] += piece
             daily_job[origin][date][product][1] += duration
             if fabric_generator_job_id:  # used instead generator for compatib?
-                daily_job[origin][date][product][2].append(
-                    fabric_generator_job_id)
+                if fabric_generator_job_id not in daily_job[origin][date][
+                        product][2]:
+                    daily_job[origin][date][product][2].append(
+                        fabric_generator_job_id)
 
             # Multi product mode clean data:
             duration = 0  # only fist for multi product
