@@ -780,6 +780,7 @@ class IndustriaDatabase(orm.Model):
             job.duration + job.duration_stop + job.duration_change
         duration = multi_duration or job.job_duration
         fabric_generator_job_id = generator_job_id = job.id
+        pdb.set_trace()
         for product, piece in products:
             if product not in daily_job[origin][date]:
                 # Record: Total, duration, job:
