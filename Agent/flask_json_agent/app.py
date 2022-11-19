@@ -109,7 +109,10 @@ def ODOOCall():
     # -------------------------------------------------------------------------
     #                       I40 Read statistics:
     # -------------------------------------------------------------------------
-    if command == 'statistic':
+    if command == 'ping':
+        payload['success'] = True
+
+    elif command == 'statistic':
         try:
             connection = mysql.connector.connect(**mysql_param)
             cur = connection.cursor()
