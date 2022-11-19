@@ -111,7 +111,6 @@ def ODOOCall():
     # -------------------------------------------------------------------------
     if command == 'statistic':
         try:
-            pdb.set_trace()
             connection = mysql.connector.connect(**mysql_param)
             cur = connection.cursor()
             cur.execute('SELECT * FROM %s;' % mysql_param.get('table'))
