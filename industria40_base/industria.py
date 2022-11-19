@@ -780,7 +780,6 @@ class IndustriaDatabase(orm.Model):
             job.duration + job.duration_stop + job.duration_change
         duration = multi_duration or job.job_duration
         fabric_generator_job_id = generator_job_id = job.id
-        pdb.set_trace()
         for product, piece in products:
             if product not in daily_job[origin][date]:
                 # Record: Total, duration, job:
@@ -841,6 +840,7 @@ class IndustriaDatabase(orm.Model):
                 new_picking_ids.append(sl_picking_id)
 
                 total_work = 0.0
+                pdb.set_trace()
                 for product in daily_job[origin][date]:
                     # Create stock move:
                     qty, duration, job_ids = daily_job[origin][date][product]
