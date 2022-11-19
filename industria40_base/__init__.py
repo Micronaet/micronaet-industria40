@@ -21,6 +21,7 @@
 #
 ###############################################################################
 
+from . import flask_agent
 from . import industria
 from . import mode_file
 from . import report
