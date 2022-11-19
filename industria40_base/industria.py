@@ -744,7 +744,7 @@ class IndustriaDatabase(orm.Model):
                                 continue  # Yet used
 
                         component_qty = -(
-                                semiproduct.total * bom_line.product.qty)
+                                semiproduct.total * bom_line.product_qty)
                         products.append(
                             # BOM component, Q. used
                             (component, component_qty))
