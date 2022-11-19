@@ -667,6 +667,7 @@ class IndustriaDatabase(orm.Model):
         default_dep_mode = context.get('default_dep_mode', 'workshop')
 
         if not force_job_id:
+            # todo is mandatory?
             _logger.error('No job fabric passed (parameter force_job_id)')
             return False
         force_database_id = context.get('force_database_id')
@@ -701,16 +702,17 @@ class IndustriaDatabase(orm.Model):
         # No loop only one job closed:
         daily_job = {}
         job = job_pool.browse(cr, uid, force_job_id, context=context)
+        integrate_bom = job.source_id.integrate_bom
         products = []
         # materials = []
 
         # ---------------------------------------------------------------------
-        # Fabric and semi product:
+        #                      Fabric and semi product:
         # ---------------------------------------------------------------------
         for step in job.step_ids:
             program = step.program_id
             fabric_length = program.fabric_length / 1000.0  # was mm.
-            # todo manage extra semi-product from this program
+            # todo manage extra semi-product from this program (stenditore)
 
             for line in step.fabric_ids:  # fabric in job
                 fabric = line.fabric_id
@@ -719,11 +721,33 @@ class IndustriaDatabase(orm.Model):
                 # materials.append((fabric, flat_total))  # fabric, mt used
                 products.append((fabric, -flat_total))  # fabric, mt used
 
-                # Check fabric in program  todo remove?
+                # Check fabric in program log XML file  todo remove?
+                # -------------------------------------------------------------
+                #
+                # -------------------------------------------------------------
                 for semiproduct in line.product_ids:
-                    # todo manage semi-product removed?
+                    # todo manage semi-product removed mode?
+                    # Load:
                     products.append(
                         (semiproduct.product_id, semiproduct.total))
+
+                    # ---------------------------------------------------------
+                    # Append extra BOM elements:
+                    # ---------------------------------------------------------
+                    if integrate_bom:
+                        _logger.info('JOB unload also BOM')
+                        for bom_line in semiproduct.half_bom_ids:
+                            component = bom_line.product_id
+                            category = component.inventory_category_id.name
+                            # todo keep as parameter Tessuto:
+                            if category == 'Tessuto':
+                                continue  # Yet used
+
+                        component_qty = -(
+                                semiproduct.total * bom_line.product.qty)
+                        products.append(
+                            # BOM component, Q. used
+                            (component, component_qty))
 
                 # Old management for fabric:
                 # for program_fabric in program.fabric_ids:
@@ -738,7 +762,7 @@ class IndustriaDatabase(orm.Model):
             return False
 
         # ---------------------------------------------------------------------
-        # Collect job in daily block:
+        #                    Collect job in daily block:
         # ---------------------------------------------------------------------
         if not program:  # todo raise error?
             _logger.error('No program!')
@@ -758,7 +782,7 @@ class IndustriaDatabase(orm.Model):
         fabric_generator_job_id = generator_job_id = job.id
         for product, piece in products:
             if product not in daily_job[origin][date]:
-                # Total, duration, job:
+                # Record: Total, duration, job:
                 daily_job[origin][date][product] = [0, 0, []]
             daily_job[origin][date][product][0] += piece
             daily_job[origin][date][product][1] += duration
@@ -877,6 +901,7 @@ class IndustriaDatabase(orm.Model):
                     'total_work': total_work / 60.0,
                 }, context=context)
 
+            """
             # Return list of picking
             form_view_id = model_pool.get_object_reference(
                 cr, uid, 'lavoration_cl_sl', 'view_stock_picking_cl_form'
@@ -884,7 +909,6 @@ class IndustriaDatabase(orm.Model):
             tree_view_id = model_pool.get_object_reference(
                 cr, uid, 'lavoration_cl_sl', 'view_stock_picking_cl_tree',
             )[1]
-            """
             # Not used for now:
             return {
                 'type': 'ir.actions.act_window',
