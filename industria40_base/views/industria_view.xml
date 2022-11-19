@@ -236,6 +236,8 @@
                                 </page>
                                 <page name="fabric_page" string="Tessuti">
                                     <group colspan="4" col="4">
+                                        <field name="integrate_bom" />
+
                                         <separator string="Modo file:" colspan="3" />
                                         <button name="load_all_stat_file" type="object" string="Importa file stats" icon="gtk-justify-fill" attrs="{'invisible': [('file_stat_path', '=', False)]}"/>
 

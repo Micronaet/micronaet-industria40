@@ -1655,7 +1655,11 @@ class IndustriaRobot(orm.Model):
             'Massimo gap',
             help='Massimo numero di gap che possono esserci tra un gradino'
                  'e l\'altro'),
-
+        'integrate_bom': fields.boolean(
+            'Integra DB',
+            help='Indica che lo scarico tessuti deve essere integrato anche'
+                 'con i componenti della distinta base (esclusi i tessuti'
+                 'già conteggiati)'),
         'today_state': fields.function(
             get_today_state, 'Status', type='text', method=True),
     }
