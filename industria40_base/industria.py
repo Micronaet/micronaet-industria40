@@ -842,7 +842,6 @@ class IndustriaDatabase(orm.Model):
                 new_picking_ids.append(sl_picking_id)
 
                 total_work = 0.0
-                pdb.set_trace()
                 for product in daily_job[origin][date]:
                     # Create stock move:
                     qty, duration, job_ids = daily_job[origin][date][product]
