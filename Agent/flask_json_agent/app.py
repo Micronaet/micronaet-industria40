@@ -112,11 +112,13 @@ def ODOOCall():
     if command == 'ping':
         payload['success'] = True
 
-    elif command == 'statistic':
+    elif command == 'mysql_get':
         try:
             connection = mysql.connector.connect(**mysql_param)
             cur = connection.cursor()
-            cur.execute('SELECT * FROM %s;' % mysql_param.get('table'))
+            query = parameter.get('query')
+            write_log(log_f, 'Executing query: %s' % query)
+            cur.execute(query)
 
             payload['reply']['record'] = []  # Prepare reply
             for row in cur:
@@ -131,7 +133,7 @@ def ODOOCall():
     # -------------------------------------------------------------------------
     #                       I40 Insert Job:
     # -------------------------------------------------------------------------
-    elif command == 'job':
+    elif command == 'mysql_insert':
         # Insert Job on I40 robot:
         try:
             connection = mysql.connector.connect(**mysql_param)
