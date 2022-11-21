@@ -13,17 +13,17 @@ def print_node(node,level=0):
         for detail in data_value.ua_types:
             detail_name = detail[0]
             print(
-                space, 
-                '      ---> Detail:', 
-                detail_name, 
+                space,
+                '      ---> Detail:',
+                detail_name,
                 data_value.__getattribute__(detail_name),
                 )
-        
+
     except:
         print(space, ' | Structure', node)
         for child_node in node.get_children():
             print_node(child_node, level=level+1)
-           
+
 
 import ConfigParser
 
@@ -51,7 +51,7 @@ check_is_working = client.get_node(
 print('Is Working', check_is_working.get_data_value().Value._value)
 pdb.set_trace()
 sys.exit()
-      
+
 # -----------------------------------------------------------------------------
 # Browse node:
 # -----------------------------------------------------------------------------
@@ -80,10 +80,10 @@ sys.exit()
 
 
 # node =  client.get_node("ns=6;s=::AsGlobalPV:Allarmi.Presente")
-node =  client.get_node("ns=6;s=::AsGlobalPV:Allarmi.Contatore")
+node = client.get_node("ns=6;s=::AsGlobalPV:Allarmi.Contatore")
 print(node.get_value())
 pdb.set_trace()
-node =  client.get_node("ns=6;s=::AsGlobalPV:Allarmi")
+node = client.get_node("ns=6;s=::AsGlobalPV:Allarmi")
 
 # node = client.get_node("ns=6;s=::AsGlobalPV:VersionePLC")
 # print(node.get_value())

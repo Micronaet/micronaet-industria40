@@ -2077,7 +2077,6 @@ class IndustriaJob(orm.Model):
         # Step loop for fabric:
         step_pos = {}
         pos = 0
-        pdb.set_trace()
         for step in job.step_ids:
             step_pos[step] = pos
             pos += 1
