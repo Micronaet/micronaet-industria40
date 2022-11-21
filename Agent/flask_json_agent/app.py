@@ -122,6 +122,7 @@ def ODOOCall():
 
             payload['reply']['record'] = []  # Prepare reply
             for row in cur:
+                print(row)
                 payload['reply']['record'].append(row)
             cur.close()
             connection.close()
