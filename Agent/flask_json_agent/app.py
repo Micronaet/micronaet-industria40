@@ -144,6 +144,7 @@ def ODOOCall():
             write_log(log_f, 'Executing query: %s' % query)
             pdb.set_trace()
             cur.execute(query)
+            connection.commit()
             payload['reply']['id'] = cur.lastrowid
             payload['success'] = True
         except:
