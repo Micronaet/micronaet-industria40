@@ -142,7 +142,9 @@ def ODOOCall():
             # INSERT INTO QUERY:
             query = parameter.get('query')
             write_log(log_f, 'Executing query: %s' % query)
-            cur.execute(query)
+            pdb.set_trace()
+            res = cur.execute(query)
+            # todo return record ID
 
             payload['success'] = True
         except:
