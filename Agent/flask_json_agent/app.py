@@ -143,9 +143,8 @@ def ODOOCall():
             query = parameter.get('query')
             write_log(log_f, 'Executing query: %s' % query)
             pdb.set_trace()
-            res = cur.execute(query)
-            # todo return record ID
-
+            cur.execute(query)
+            payload['reply']['id'] = cur.lastrowid
             payload['success'] = True
         except:
             payload['reply']['error'] = str(sys.exc_info())
