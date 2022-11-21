@@ -2077,6 +2077,7 @@ class IndustriaJob(orm.Model):
         # Step loop for fabric:
         step_pos = {}
         pos = 0
+        pdb.set_trace()
         for step in job.step_ids:
             step_pos[step] = pos
             pos += 1
@@ -2110,7 +2111,7 @@ class IndustriaJob(orm.Model):
                     ]
 
                 total = fabric.total
-                data_fabric[fabric_product][1][step_pos[step]] = total
+                data_fabric[fabric_product][1][step_pos[step]] += total
 
         # ISO file:
         file_text += '|$M$'
