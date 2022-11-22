@@ -429,7 +429,31 @@ class IndustriaJob(orm.Model):
             }, context=context)
         return True
 
+    def _get_oven_program_id(self, cr, uid, ids, fields, args, context=None):
+        """ Fields function for calculate
+        """
+        display_pool = self.pool.get('mrp.production')
+        display_ids = display_pool.search(cr, uid, [
+            ('job_id', '!=', False),
+        ], context=context)
+        display_db = {}
+        for display in display_pool.browse(
+                cr, uid, display_ids, context=context):
+            display_db[display.job_id.id] = display.id
+
+        res = {}
+        for job_id in ids:
+            res[job_id] = display_db.get(job_id)
+        return res
+
     _columns = {
+        'oven_program_id': fields.function(
+            _get_oven_program_id, method=True,
+            type='many2one', string='Programma a display',
+            relation='mrp.production', store=False,
+            help='Programma a display sul forno industriale',
+            ),
+
         'oven_pre_job_ids': fields.one2many(
             'mrp.production.oven.selected', 'job_id',
             'Pre-Job forno'),
