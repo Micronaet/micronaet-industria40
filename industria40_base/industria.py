@@ -286,7 +286,7 @@ class IndustriaDatabase(orm.Model):
         import opcua
 
         # Create and connect as client:
-        uri = u'opc.tcp://%s:%s' % (database.ip, database.port)
+        uri = u'opc.tcp://%s:%s' % (database.opcua_ip, database.opcua_port)
         robot = opcua.Client(uri)
         try:
             robot.connect()
@@ -1376,6 +1376,10 @@ class IndustriaDatabase(orm.Model):
         'name': fields.char('Name', size=64, required=True),
         'partner_id': fields.many2one(
             'res.partner', 'Supplier'),
+
+        'opcua_ip': fields.char('OPCUA: Server', size=15),
+        'opcua_port': fields.integer('OPCUA: Posta'),
+
         'ip': fields.char('IP address', size=15),
         'username': fields.char('Username', size=64),
         'password': fields.char('Password', size=64),
@@ -2318,7 +2322,7 @@ class IndustriaJob(orm.Model):
         # Get free program:
         production_ids = production_pool.search(cr, uid, [
             ('ref', '>', 0),  # XXX exclude 0
-        ], context=context)
+            ], context=context)
         opcua_ref = 0
         for production in production_pool.browse(
                 cr, uid, production_ids, context=context):
