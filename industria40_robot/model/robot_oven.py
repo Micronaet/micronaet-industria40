@@ -451,7 +451,7 @@ class IndustriaJob(orm.Model):
         'oven_program_id': fields.function(
             _get_oven_program_id, method=True,
             type='many2one', string='Programma a display',
-            relation='mrp.production', store=False,
+            relation='industria.production', store=False,
             help='Programma a display sul forno industriale',
             ),
 
