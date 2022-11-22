@@ -144,8 +144,8 @@
                                 <page name="setup_page" string="Setup" attrs="{'invisible': [('mode', 'in', ('file', ))]}">
                                     <group col="4" colspan="4">
                                         <separator name="OPCUA server:" colspan="4"/>
-                                        <field name="opcua_ip" attrs="{'invisible': [('mode', 'not in', ('file', ))]]}"/>
-                                        <field name="opcua_port" attrs="{'invisible': [('mode', 'not in', ('file', ))]}"/>
+                                        <!--<field name="opcua_ip" attrs="{'invisible': [('mode', 'not in', ('file', ))]]}"/>
+                                        <field name="opcua_port" attrs="{'invisible': [('mode', 'not in', ('file', ))]}"/>-->
 
                                         <separator name="SQL server:" colspan="4"/>
                                         <field name="ip" attrs="{'invisible': [('mode', 'not in', ('file', ))], 'invisible': [('mode', 'in', ('file', ))]}"/>
