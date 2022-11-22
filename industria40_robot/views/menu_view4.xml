@@ -1,6 +1,18 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <record model="ir.ui.view" id="view_industria_job_fabric_tree">
+            <field name="name">industria.job.fabric.tree</field>
+            <field name="model">industria.job</field>
+            <field name="model">industria.job</field>
+            <field name="inherit_id" ref="industria40_base.view_industria_job_fabric_tree"/>
+            <field name="arch" type="xml">
+                <field name="source_id" position="after">
+                    <field name="oven_program_id" readonly="1" invisible="context.get('open_mode') != 'oven'"/>
+                </field>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_industria_job_robot4">
             <field name="name">Job Forno</field>
             <field name="res_model">industria.job</field>
@@ -10,6 +22,7 @@
             <field name="context">{'search_default_state_draft': True, 'form_view_ref': 'industria40_base.view_industria_job_opcua_form', 'default_state': 'DRAFT', 'open_mode': 'oven'}</field>
             <field name="domain">[('source_id.code', '=', 'FORN01'), ('database_id.mode', '=', 'opcua')]</field>
         </record>
+
 
         <menuitem
             parent="industria40_base.menu_industria_master_single"
