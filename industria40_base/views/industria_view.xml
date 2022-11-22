@@ -33,7 +33,7 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="action_industria_production">
-            <field name="name">Commesse in lavorazione</field>
+            <field name="name">Display forno</field>
             <field name="res_model">industria.production</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
