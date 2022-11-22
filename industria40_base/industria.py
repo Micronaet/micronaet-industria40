@@ -368,7 +368,6 @@ class IndustriaDatabase(orm.Model):
             _logger.info('Cleaned program')
         else:
             _logger.error('ODOO production not found!')
-
         return True
 
     def get_data_value(
