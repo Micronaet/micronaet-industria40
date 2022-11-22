@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="view_industria_job_fabric_tree">
+        <record model="ir.ui.view" id="view_industria_job_oven_fabric_tree">
             <field name="name">industria.job.fabric.tree</field>
             <field name="model">industria.job</field>
             <field name="model">industria.job</field>
