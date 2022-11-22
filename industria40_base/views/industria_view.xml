@@ -696,7 +696,9 @@
                     <!--<field name="job_duration" widget="float_time" sum="total_time"/>-->
                     <field name="database_id" domain="[('mode', '=', 'file')]" required="1"/>
                     <field name="source_id" domain="[('database_id', '=', database_id)]" required="1"/>
+                    <field name="oven_program_id" readonly="1" invisible="context.get('open_mode') != 'oven'"/>
                     <field name="program_id" domain="[('source_id', '=', source_id)]" required="1"/>
+
                     <!--<field name="production_id" />-->
                     <field name="state" />
                     <button name="send_fabric_job" type="object" string="Invia a tessuto" attrs="{'invisible': [('state', '!=', 'DRAFT')]}" invisible="context.get('open_mode') != 'fabric'"/>
