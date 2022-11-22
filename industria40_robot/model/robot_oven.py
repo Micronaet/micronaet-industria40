@@ -432,6 +432,7 @@ class IndustriaJob(orm.Model):
     def _get_oven_program_id(self, cr, uid, ids, fields, args, context=None):
         """ Fields function for calculate
         """
+        pdb.set_trace()
         display_pool = self.pool.get('mrp.production')
         display_ids = display_pool.search(cr, uid, [
             ('job_id', '!=', False),
