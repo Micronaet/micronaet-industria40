@@ -143,11 +143,11 @@
                                 </page>
                                 <page name="setup_page" string="Setup" attrs="{'invisible': [('mode', 'in', ('file', ))]}">
                                     <group col="4" colspan="4">
-                                        <separator name="OPCUA server:" colspan="4"/>
-                                        <!--<field name="opcua_ip" attrs="{'invisible': [('mode', 'not in', ('file', ))]]}"/>
-                                        <field name="opcua_port" attrs="{'invisible': [('mode', 'not in', ('file', ))]}"/>-->
+                                        <separator string="OPCUA server:" colspan="4"/>
+                                        <field name="opcua_ip" />
+                                        <field name="opcua_port" />
 
-                                        <separator name="SQL server:" colspan="4"/>
+                                        <separator string="SQL server:" colspan="4"/>
                                         <field name="ip" attrs="{'invisible': [('mode', 'not in', ('file', ))], 'invisible': [('mode', 'in', ('file', ))]}"/>
                                         <field name="username" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}"/>
                                         <field name="password" password="True" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}"/>
