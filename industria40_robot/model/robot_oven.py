@@ -446,6 +446,20 @@ class IndustriaJob(orm.Model):
             res[job_id] = display_db.get(job_id)
         return res
 
+    def button_clean_production(self, cr, uid, ids, context=None):
+        """ Remove display program
+        """
+        assert len(ids) == 1, 'Svincolare solo un prodotto per volta!'
+
+        display_pool = self.pool.get('industria.production')
+        job = self.browse(cr, uid, ids, context=context)[0]
+
+        display_id = job.oven_program_id.id
+        if display_id:
+            return display_pool.button_clean_production(
+                cr, uid, [display_id], context=context)
+        return False
+
     _columns = {
         'oven_program_id': fields.function(
             _get_oven_program_id, method=True,

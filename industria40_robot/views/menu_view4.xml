@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <field name="source_id" position="after">
                     <field name="oven_program_id" readonly="1" invisible="context.get('open_mode') != 'oven'"/>
+                    <button name="button_clean_production" type="object" string="Svincola programma" icon="gtk-delete" attrs="{'invisible': [('oven_program_id', '=', False)]}" confirm="Verrà rimesso il job in BOZZA e liberato il programma dal display, confermi? (si usa quando si sbaglia a mandare il job)"/>
                 </field>
             </field>
         </record>
