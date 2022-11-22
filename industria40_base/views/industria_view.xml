@@ -687,7 +687,9 @@
             <field name="arch" type="xml">
                 <tree string="Job" colors="grey:state=='DRAFT';red:state=='ERROR' OR unused==True;blue:state=='RUNNING'">
                     <field name="created_at" string="Pianificato"/>
-                    <field name="previous_id" readonly="1"/>
+                    <field name="previous_id" />
+                    <field name="id" readonly="1" string="#ID Job" invisible="context.get('open_mode') != 'oven')"/>
+                    <field name="color" readonly="1" string="Colore" invisible="context.get('open_mode') != 'oven')"/>
                     <!--<field name="dismiss" />-->
                     <!--
                     <field name="ended_at" />-->
