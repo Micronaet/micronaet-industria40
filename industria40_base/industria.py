@@ -52,8 +52,18 @@ class IndustriaProduction(orm.Model):
     def button_clean_production(self, cr, uid, ids, context=None):
         """ Clean job
         """
+        job_pool = self.pool.get('industria.job')
         database_pool = self.pool.get('industria.database')
         production = self.browse(cr, uid, ids, context=context)[0]
+
+        # Draft the job:
+        job_id = production.job_id.id
+        if job_id:
+            job_pool.write(cr, uid, [job_id], {
+                'state': 'DRAFT',
+            }, context=context)
+
+        # Clean the display:
         return database_pool.clean_opcua_job(
             cr, uid, production.source_id, production.ref, context=context)
 
