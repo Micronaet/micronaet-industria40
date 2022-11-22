@@ -433,7 +433,7 @@ class IndustriaJob(orm.Model):
         """ Fields function for calculate
         """
         pdb.set_trace()
-        display_pool = self.pool.get('mrp.production')
+        display_pool = self.pool.get('industria.production')
         display_ids = display_pool.search(cr, uid, [
             ('job_id', '!=', False),
         ], context=context)
