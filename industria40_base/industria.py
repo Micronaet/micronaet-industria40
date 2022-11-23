@@ -65,6 +65,9 @@ class IndustriaProduction(orm.Model):
                 'state': 'DRAFT',
             }, context=context)
 
+        # todo Clean the Oven Box:
+        # database.clean_opcua_mysql_job()
+
         # Clean the display:
         return database_pool.clean_opcua_job(
             cr, uid, production.source_id, production.ref, context=context)
@@ -304,7 +307,7 @@ class IndustriaDatabase(orm.Model):
     def get_flask_sql_call(self, cr, uid, database, context=None):
         """ Prepare a flask call
         """
-        user_pool = self.pool.get('res.user')
+        user_pool = self.pool.get('res.users')
 
         # todo second call (put in first for undo problem?)
         user = user_pool.browse(cr, uid, uid, context=context)
@@ -353,8 +356,8 @@ class IndustriaDatabase(orm.Model):
         database = source.database_id
         robot = database_pool.get_robot(database)
 
+        # todo move procedure in job and call directly:
         '''
-        # todo correct procedure for clean oven box if needed
         # =====================================================================
         # 1 Call: Robot Oven Box:
         # =====================================================================
