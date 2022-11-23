@@ -131,7 +131,7 @@ def ODOOCall():
                     if field is None:
                         clean_row.append(field or '')
                     elif type(field) == timedelta:
-
+                        clean_row.append(str(field))
                     else:
                         clean_row.append(field)
 
