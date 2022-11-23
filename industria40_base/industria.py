@@ -301,6 +301,7 @@ class IndustriaDatabase(orm.Model):
     def clean_opcua_job(self, cr, uid, source, opcua_ref, context=None):
         """ Send job to robot
         """
+        user_pool = self.pool.get('res.user')
         database_pool = self.pool.get('industria.database')
         # job_pool = self.pool.get('industria.job')
         production_pool = self.pool.get('industria.production')
@@ -378,6 +379,55 @@ class IndustriaDatabase(orm.Model):
             _logger.info('Cleaned program')
         else:
             _logger.error('ODOO production not found!')
+
+        # =====================================================================
+        # 2 Call: Robot Oven Box:
+        # =====================================================================
+        # todo second call
+        user = user_pool.browse(cr, uid, uid, context=context)
+        company = user.company_id
+
+        # Flask agent:
+        flask_host = company.flask_host
+        flask_port = company.flask_port
+        flask_endpoint = company.flask_endpoint
+
+        url = 'http://%s:%s%s' % (
+            flask_host, flask_port, flask_endpoint)
+        headers = {
+            'content-type': 'application/json',
+        }
+        query = '''
+            INSERT INTO siord00f(
+                SIORDANN, SIORDNUM, SIORDSTA,
+                SIORDDAT, SIORDORA,
+                SIORDDESC, SIORDCCOL, SIORDCOL,
+                SIORDDPI, SIORDSEQ
+                )
+            VALUES (
+                2022, 1111, '7',
+                '2022-11-11', '16:00:00',
+                'Descrizione commessa', 'BI', 'Bianco',
+                '2022-11-15', 10 
+                );
+            '''
+        payload = {
+            'jsonrpc': '2.0',
+            'params': {
+                'command': 'mysql_insert',
+                'parameters': {
+                    'mysql': {
+                        'host': database.ip, database.port,
+                        'user': database.username,
+                        'password': database.password,
+                        'database': 'verticall',
+                    'use_pure': False,
+                    },
+                    'query': query,
+                },
+            },
+        }
+
         return True
 
     def get_data_value(

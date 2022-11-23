@@ -152,7 +152,7 @@
                                         <field name="username" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}"/>
                                         <field name="password" password="True" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}"/>
 
-                                        <field name="database" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opcua'))], 'invisible': [('mode', 'in', ('file', 'ftp', 'opcua'))]}"/>
+                                        <field name="database" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opuca'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}"/>
                                         <field name="port" attrs="{'required': [('mode', 'not in', ('file', 'ftp'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}" />
 
                                         <!--FTP-->
