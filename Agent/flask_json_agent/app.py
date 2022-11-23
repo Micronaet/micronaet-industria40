@@ -13,7 +13,7 @@ import sys
 from flask import Flask, request
 import mysql.connector
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 try:
@@ -122,6 +122,7 @@ def ODOOCall():
             cur.execute(query)
 
             payload['reply']['record'] = []  # Prepare reply
+            pdb.set_trace()
             for row in cur:
                 print(row)
                 clean_row = []
@@ -129,6 +130,8 @@ def ODOOCall():
                 for field in row:
                     if field is None:
                         clean_row.append(field or '')
+                    elif type(field) == timedelta:
+
                     else:
                         clean_row.append(field)
 
