@@ -417,11 +417,12 @@ class IndustriaDatabase(orm.Model):
                 'command': 'mysql_insert',
                 'parameters': {
                     'mysql': {
-                        'host': database.ip, database.port,
+                        'host': database.ip,
+                        'port': database.port,
                         'user': database.username,
                         'password': database.password,
-                        'database': 'verticall',
-                    'use_pure': False,
+                        'database': database.database,
+                        'use_pure': False,
                     },
                     'query': query,
                 },
