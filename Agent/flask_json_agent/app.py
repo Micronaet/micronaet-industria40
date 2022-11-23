@@ -85,6 +85,7 @@ def ODOOCall():
     # -------------------------------------------------------------------------
     # Get parameters from call:
     # -------------------------------------------------------------------------
+    pdb.set_trace()
     params = request.get_json()
     rpc_call = params['params']
 
@@ -124,6 +125,7 @@ def ODOOCall():
             for row in cur:
                 print(row)
                 clean_row = []
+                pdb.set_trace()
                 for field in row:
                     if field is None:
                         clean_row.append(field or '')
