@@ -122,11 +122,9 @@ def ODOOCall():
             cur.execute(query)
 
             payload['reply']['record'] = []  # Prepare reply
-            pdb.set_trace()
             for row in cur:
                 print(row)
                 clean_row = []
-                pdb.set_trace()
                 for field in row:
                     if field is None:
                         clean_row.append(field or '')
@@ -155,7 +153,6 @@ def ODOOCall():
             # INSERT INTO QUERY:
             query = parameter.get('query')
             write_log(log_f, 'Executing query: %s' % query)
-            pdb.set_trace()
             cur.execute(query)
             connection.commit()
             payload['reply']['id'] = cur.lastrowid
