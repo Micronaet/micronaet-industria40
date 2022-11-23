@@ -124,9 +124,12 @@ def ODOOCall():
             for row in cur:
                 print(row)
                 clean_row = []
-                pdb.set_trace()
                 for field in row:
-                    clean_row.append(field or '')
+                    if field is None:
+                        clean_row.append(field or '')
+                    else:
+                        clean_row.append(field)
+
                 payload['reply']['record'].append(row)
             cur.close()
             connection.close()
