@@ -2449,6 +2449,7 @@ class IndustriaJob(orm.Model):
         program = job.program_id
         source = job.source_id
         robot = database_pool.get_robot(database)
+        pdb.set_trace()  # todo debug from here!
 
         # =====================================================================
         # 1. Send to OVEN BOX:
