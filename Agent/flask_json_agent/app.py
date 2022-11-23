@@ -130,7 +130,7 @@ def ODOOCall():
                     else:
                         clean_row.append(field)
 
-                payload['reply']['record'].append(row)
+                payload['reply']['record'].append(clean_row)
             cur.close()
             connection.close()
 
