@@ -123,6 +123,10 @@ def ODOOCall():
             payload['reply']['record'] = []  # Prepare reply
             for row in cur:
                 print(row)
+                clean_row = []
+                pdb.set_trace()
+                for field in row:
+                    clean_row.append(field or '')
                 payload['reply']['record'].append(row)
             cur.close()
             connection.close()
