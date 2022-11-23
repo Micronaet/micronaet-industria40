@@ -130,10 +130,10 @@ def ODOOCall():
                 for field in row:
                     if field is None:
                         clean_row.append(field or '')
-                    elif type(field) == timedelta:
-                        clean_row.append(str(field))
-                    else:
+                    elif type(field) in (str, int, float, list, tuple, dict):
                         clean_row.append(field)
+                    else:
+                        clean_row.append(str(field))
 
                 payload['reply']['record'].append(clean_row)
             cur.close()
