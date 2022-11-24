@@ -370,6 +370,7 @@ class MrpProductionOvenCabin(orm.Model):
     _name = 'mrp.production.oven.cabin'
     _description = 'Oven cabin'
     _rec_name = 'creation_date'
+    _order = 'sql_id desc'
 
     _columns = {
         'job_id': fields.many2one('industria.job', 'Job'),
