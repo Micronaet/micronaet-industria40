@@ -308,6 +308,7 @@ class IndustriaDatabase(orm.Model):
     def get_flask_sql_call(self, cr, uid, database, context=None):
         """ Prepare a flask call
         """
+        pdb.set_trace()
         user_pool = self.pool.get('res.users')
 
         # todo second call (put in first for undo problem?)
