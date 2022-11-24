@@ -88,7 +88,6 @@
                                         <field name="duration_nozzle_14" readonly="1"/>
                                         <field name="duration_nozzle_15" readonly="1"/>
                                         <field name="duration_nozzle_16" readonly="1"/>
-                                        <field name="duration_nozzle_17" readonly="1"/>
                                         <field name="duration_nozzle_21" readonly="1"/>
                                         <field name="duration_nozzle_22" readonly="1"/>
                                         <field name="duration_nozzle_23" readonly="1"/>

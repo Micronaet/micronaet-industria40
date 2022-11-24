@@ -407,7 +407,7 @@ class MrpProductionOvenCabin(orm.Model):
         'duration_nozzle_15': fields.float(
             'Tempo pistola 15 (ore)', digits=(10, 3)),
         'duration_nozzle_16': fields.float(
-            'Tempo pistola 17 (ore)', digits=(10, 3)),
+            'Tempo pistola 16 (ore)', digits=(10, 3)),
         'duration_nozzle_21': fields.float(
             'Tempo pistola 21 (ore)', digits=(10, 3)),
         'duration_nozzle_22': fields.float(
