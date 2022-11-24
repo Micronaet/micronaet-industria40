@@ -88,6 +88,7 @@ def ODOOCall():
     call_payload = request.get_json()
     params = call_payload['params']
     command = params['command']
+    verbose = params.get('verbose')
 
     # -------------------------------------------------------------------------
     #                             Execute call:
@@ -115,12 +116,14 @@ def ODOOCall():
             connection = mysql.connector.connect(**mysql_param)
             cur = connection.cursor()
             query = params.get('query')
-            write_log(log_f, 'Executing select query: %s' % query)
+            write_log(
+                log_f, 'Executing select query: %s' % query, verbose=verbose)
             cur.execute(query)
 
             reply_payload['reply']['record'] = []  # Prepare reply
             for row in cur:
-                print(row)
+                if verbose:
+                    print(row)
                 clean_row = []
                 for field in row:
                     if field is None:
@@ -149,7 +152,8 @@ def ODOOCall():
 
             # INSERT INTO QUERY:
             query = params.get('query')
-            write_log(log_f, 'Executing insert query: %s' % query)
+            write_log(
+                log_f, 'Executing insert query: %s' % query, verbose=verbose)
             cur.execute(query)
             connection.commit()
             reply_payload['reply']['id'] = cur.lastrowid
@@ -168,7 +172,8 @@ def ODOOCall():
 
             # DELETE QUERY:
             query = params.get('query')
-            write_log(log_f, 'Executing delete query: %s' % query)
+            write_log(
+                log_f, 'Executing delete query: %s' % query, verbose=verbose)
             cur.execute(query)
             connection.commit()
             reply_payload['success'] = True
