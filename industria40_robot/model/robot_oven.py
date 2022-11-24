@@ -26,6 +26,8 @@ import pdb
 import sys
 import logging
 import openerp
+import requests
+import json
 import openerp.netsvc as netsvc
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv, expression, orm
@@ -365,7 +367,6 @@ class MrpProductionOvenInherit(orm.Model):
 class MrpProductionOvenCabin(orm.Model):
     """ Wizard name: class Mrp Production Oven Cabin
     """
-
     _name = 'mrp.production.oven.cabin'
     _description = 'Oven cabin'
     _rec_name = 'job_id'
@@ -443,6 +444,48 @@ class IndustriaJob(orm.Model):
     """ Model name: Job relation
     """
     _inherit = 'industria.job'
+
+    # Statistic function:
+    def load_all_statistics(self, cr, uid, ids, context=None):
+        """ Load statistic for this jobs
+            Button mode event  but could be used from scheduled Job
+        """
+        # Search oven cabin job passed and generate statistics
+        # Update it not in closed state
+
+        # 1. Search all job_id in statistics
+
+        jobs = self.browse(cr, uid, ids, context=context)
+        if not jobs:
+            return False
+
+        database = jobs[0].database_id
+        cabin_call = self.get_flask_sql_call(
+                cr, uid, database, context=context)
+        if not cabin_call:
+            _logger.error('Cabin not ready!')
+            return False
+
+        # 2. Create or update statistic oven job
+        url, headers, payload = cabin_call
+
+        # Read all Job selected data:
+        query = 'SELECT * FROM SIIMP00F WHERE SIIMPANN in ();' % \
+                ', '.join([str(r) for r in ids])
+        payload['params']['command'] = 'mysql_select'
+        payload['params']['query'] = query
+
+        response = requests.post(
+            url, headers=headers, data=json.dumps(payload))
+        response_json = response.json()
+        if not response_json['success']:
+            _logger.error(
+                'Error calling Oven cabin: %s!' %
+                response_json['reply']['error'])
+
+        # 3. Update / Create statistic records:
+        records = response_json['reply'].get('record')
+        return True
 
     def explode_oven_preload_detail(self, cr, uid, ids, context=None):
         """ Generate job detail for product items in preproduction lines

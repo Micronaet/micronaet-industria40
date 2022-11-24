@@ -6,4 +6,3 @@ access_industria_mrp_unload_user,industria.mrp.unload,model_industria_mrp_unload
 access_industria_robot_color_user,industria.robot.color,model_industria_robot_color,base.group_user,1,1,1,1
 access_industria_robot_fabric_user,industria.robot.fabric,model_industria_robot_fabric,base.group_user,1,1,1,1
 access_mrp_production_oven_cabin_user,mrp.production.oven.cabin,model_mrp_production_oven_cabin,base.group_user,1,1,1,1
-

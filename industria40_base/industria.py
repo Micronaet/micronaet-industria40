@@ -352,7 +352,6 @@ class IndustriaDatabase(orm.Model):
         # =====================================================================
         # 1 Call: Robot Oven Box:
         # =====================================================================
-        pdb.set_trace()
         cabin_call = self.get_flask_sql_call(
                 cr, uid, job.database_id, context=context)
         if not cabin_call:

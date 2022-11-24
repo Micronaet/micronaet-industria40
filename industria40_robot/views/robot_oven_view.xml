@@ -14,6 +14,14 @@
                             <field name="oven_pre_job_ids" colspan="4" nolabel="1" />
                         </group>
                     </page>
+                    <!--Oven stat page:-->
+                    <page name="oven_stat_page" string="Statistiche forno" invisible="context.get('open_mode') != 'oven'">
+                        <group col="4">
+                            <separator string="Statistiche forno:" colspan="3" />
+                            <button name="load_all_statistics" type="object" string="Carica / Aggiorna statistica" icon="gtk-refresh"/>
+                            <field name="cabin_state_id" nolabel="1" readonly="1"/>
+                        </group>
+                    </page>
                 </page>
             </field>
         </record>
