@@ -624,7 +624,6 @@ class IndustriaDatabase(orm.Model):
 
         # 3. Update / Create statistic records:
         records = response_json['reply'].get('record')
-        pdb.set_trace()
         # todo check max sql_id to test last insert?
         for record in records:
             # -----------------------------------------------------------------
