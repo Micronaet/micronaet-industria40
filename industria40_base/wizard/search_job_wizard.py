@@ -47,25 +47,12 @@ class IndustriaJobBarcodeSearchWizard(orm.TransientModel):
     """
     _name = 'industria.job.barcode.search.wizard'
 
-    # --------------------
-    # Wizard button event:
-    # --------------------
-    def onchange_barcode(self, cr, uid, ids, barcode, context=None):
-        """ Call search
-        """
-        if barcode:
-            return self.action_search(cr, uid, ids, context=context)
-        else:
-            return True
-
-    def action_search(self, cr, uid, ids, context=None):
-        """ Event for button done
+    def open_job(self, cr, uid, barcode, context=None):
+        """ Utility function
         """
         if context is None:
             context = {}
 
-        wizard_browse = self.browse(cr, uid, ids, context=context)[0]
-        barcode = wizard_browse.barcode or ''
         if not barcode:
             _logger.error('No barcode!')
             return False
@@ -92,6 +79,26 @@ class IndustriaJobBarcodeSearchWizard(orm.TransientModel):
             'nodestroy': False,
             }
 
+    # --------------------
+    # Wizard button event:
+    # --------------------
+    def onchange_barcode(self, cr, uid, ids, barcode, context=None):
+        """ Call search
+        """
+        if barcode:
+            return self.open_job(cr, uid, barcode, context=context)
+        else:
+            return True
+
+    def action_search(self, cr, uid, ids, context=None):
+        """ Event for button done
+        """
+        if context is None:
+            context = {}
+
+        wizard_browse = self.browse(cr, uid, ids, context=context)[0]
+        barcode = wizard_browse.barcode or ''
+        return self.open_job(cr, uid, barcode, context=context)
 
     _columns = {
         'barcode': fields.char(
