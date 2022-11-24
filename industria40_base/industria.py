@@ -354,7 +354,7 @@ class IndustriaDatabase(orm.Model):
         # =====================================================================
         pdb.set_trace()
         cabin_call = self.get_flask_sql_call(
-                cr, uid, job.database, context=context)
+                cr, uid, job.database_id, context=context)
         if not cabin_call:
             return 'Errore nella chiamata Flask JSON alla macchina di servizio'
 
