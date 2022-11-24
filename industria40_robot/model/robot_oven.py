@@ -369,9 +369,10 @@ class MrpProductionOvenCabin(orm.Model):
     """
     _name = 'mrp.production.oven.cabin'
     _description = 'Oven cabin'
-    _rec_name = 'job_id'
+    _rec_name = 'creation_date'
 
     _columns = {
+        'job_id': fields.many2one('industria.job', 'Job'),
         'sql_id': fields.integer('ID SQL'),
 
         'enterprise_code': fields.char('Codice impianto', size=6),
@@ -435,10 +436,6 @@ class MrpProductionOvenCabin(orm.Model):
             ], 'Tipo')
         }
 
-    _defaults = {
-        # 'mode': lambda *x: 'I'
-        }
-
 
 class IndustriaJob(orm.Model):
     """ Model name: Job relation
@@ -470,8 +467,8 @@ class IndustriaJob(orm.Model):
         url, headers, payload = cabin_call
 
         # Read all Job selected data:
-        query = 'SELECT * FROM SIIMP00F WHERE SIIMPANN in ();' % \
-                ', '.join([str(r) for r in ids])
+        query = 'SELECT * FROM SIIMP00F WHERE SIIMPANN in (%s);' % (
+            ', '.join([str(r) for r in ids]), )
         payload['params']['command'] = 'mysql_select'
         payload['params']['query'] = query
 
