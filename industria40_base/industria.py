@@ -308,6 +308,7 @@ class IndustriaDatabase(orm.Model):
     def get_flask_sql_call(self, cr, uid, database, context=None):
         """ Prepare a flask call
         """
+        verbose = True
         user_pool = self.pool.get('res.users')
 
         # todo second call (put in first for undo problem?)
@@ -328,6 +329,7 @@ class IndustriaDatabase(orm.Model):
             'params': {
                 # 'command': 'mysql_insert',
                 # 'query': query,
+                'verbose': True,
                 'mysql': {
                     'host': database.ip,
                     'port': database.port,
