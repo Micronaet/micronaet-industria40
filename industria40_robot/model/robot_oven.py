@@ -631,7 +631,7 @@ class IndustriaDatabase(orm.Model):
             # Job part:
             # -----------------------------------------------------------------
             # Check if still present:
-            job_id = record[32]  # Job code (don't need year for key)
+            job_id = record[33]  # Job code (don't need year for key)
             job_ids = job_pool.search(cr, uid, [
                 ('id', '=', job_id),
                 ], context=context)
