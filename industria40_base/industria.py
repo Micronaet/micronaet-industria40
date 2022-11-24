@@ -339,7 +339,10 @@ class IndustriaDatabase(orm.Model):
                 },
             },
         }
-        return url, headers, payload
+        if flask_endpoint and database.database:
+            return url, headers, payload
+        else:
+            return False  # Not configured for Cabin box Oven
 
     # OCPUA function:
     def clean_opcua_job(self, cr, uid, source, opcua_ref, context=None):
@@ -2436,8 +2439,6 @@ class IndustriaJob(orm.Model):
         if context is None:
             context = {}
 
-        cabin_active = True  # todo paremeters
-
         database_pool = self.pool.get('industria.database')
         production_pool = self.pool.get('industria.production')
         source_pool = self.pool.get('industria.robot')
@@ -2454,13 +2455,15 @@ class IndustriaJob(orm.Model):
         # =====================================================================
         # 1. Send to OVEN BOX:
         # =====================================================================
-        if cabin_active:
+        cabin_call = self.get_flask_sql_call(
+            cr, uid, database, context=context)
+        if cabin_call:
             # -----------------------------------------------------------------
             # 1. Check if job is present:
             # -----------------------------------------------------------------
-            url, headers, payload = self.get_flask_sql_call(
-                cr, uid, database, context=context)
+            url, headers, payload = cabin_call  # Extract 3 parameter
 
+            # Extend call params:
             payload['params']['command'] = 'mysql_get'
             payload['params']['query'] = \
                 'SELECT * FROM siord00f WHERE SIORDNUM = %s;' % job_id
@@ -2468,11 +2471,12 @@ class IndustriaJob(orm.Model):
             response = requests.post(
                 url, headers=headers, data=json.dumps(payload))
             response_json = response.json()
-            yet_present = False
+            job_present = False
             if response_json['success']:
                 record = response_json.get('reply', {}).get('record', [])
                 if record:
-                    yet_present = True
+                    job_present = True
+                    # todo update if needed?
             else:
                 raise osv.except_osv(
                     _('Cabina:'),
@@ -2481,15 +2485,15 @@ class IndustriaJob(orm.Model):
             # -----------------------------------------------------------------
             # 2. Create new job:
             # -----------------------------------------------------------------
-            if not yet_present:
-                # Setup data used for timestap and deadline (for now)
+            if not job_present:
+                # Setup data used for timestamp and deadline (for now)
                 now = datetime.now()
                 now_text = str(now)
 
-                # Extract data for job insert:
+                # Extract detail for insert job:
                 job_detail = ''
                 for product in job.product_ids:
-                    job_detail += '[%s - Pz %s] ' % (
+                    job_detail += '%s - Pz %s\n' % (
                         product.product_id.default_code or '',
                         product.piece,
                     )
@@ -2497,9 +2501,11 @@ class IndustriaJob(orm.Model):
                 # oven_pre_job_ids  for mrp_id
                 job_color_code = job.color   # 'BI'
                 job_color = job_color_code   # todo convert as 'Bianco'?
-                job_deadline = now_text[:10]  # deadline
-                job_sequence = 10  # priority
+                job_deadline = now_text[:10]  # todo deadline
+                job_sequence = 10  # todo priority
+                state = '7'  # to be sent
 
+                # Override previous call params:
                 payload['params']['command'] = 'mysql_insert'
                 payload['params']['query'] = '''
                     INSERT INTO siord00f(
@@ -2517,7 +2523,7 @@ class IndustriaJob(orm.Model):
                     ''' % (
                     now.year,
                     job_id,
-                    '7',  # to be sent
+                    state,
                     now_text[:10],
                     now_text[11:19],
                     job_detail,
