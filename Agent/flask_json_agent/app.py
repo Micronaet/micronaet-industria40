@@ -117,7 +117,7 @@ def ODOOCall():
             connection = mysql.connector.connect(**mysql_param)
             cur = connection.cursor()
             query = parameter.get('query')
-            write_log(log_f, 'Executing query: %s' % query)
+            write_log(log_f, 'Executing select query: %s' % query)
             cur.execute(query)
 
             payload['reply']['record'] = []  # Prepare reply
@@ -151,10 +151,28 @@ def ODOOCall():
 
             # INSERT INTO QUERY:
             query = parameter.get('query')
-            write_log(log_f, 'Executing query: %s' % query)
+            write_log(log_f, 'Executing insert query: %s' % query)
             cur.execute(query)
             connection.commit()
             payload['reply']['id'] = cur.lastrowid
+            payload['success'] = True
+        except:
+            payload['reply']['error'] = str(sys.exc_info())
+
+    # -------------------------------------------------------------------------
+    #                       I40 Delete Job:
+    # -------------------------------------------------------------------------
+    elif command == 'mysql_insert':
+        # Insert Job on I40 robot:
+        try:
+            connection = mysql.connector.connect(**mysql_param)
+            cur = connection.cursor()
+
+            # DELETE QUERY:
+            query = parameter.get('query')
+            write_log(log_f, 'Executing delete query: %s' % query)
+            cur.execute(query)
+            connection.commit()
             payload['success'] = True
         except:
             payload['reply']['error'] = str(sys.exc_info())

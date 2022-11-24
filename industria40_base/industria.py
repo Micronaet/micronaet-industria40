@@ -59,14 +59,15 @@ class IndustriaProduction(orm.Model):
         production = self.browse(cr, uid, ids, context=context)[0]
 
         # Draft the job:
-        job_id = production.job_id.id
+        job = production.job_id
+        job_id = job.id
         if job_id:
             job_pool.write(cr, uid, [job_id], {
                 'state': 'DRAFT',
             }, context=context)
 
-        # todo Clean the Oven Box:
-        # database.clean_opcua_mysql_job()
+        # Clean the Oven Box:
+        database_pool.clean_flask_mysql_job(cr, uid, job, context=context)
 
         # Clean the display:
         return database_pool.clean_opcua_job(
@@ -344,13 +345,45 @@ class IndustriaDatabase(orm.Model):
         else:
             return False  # Not configured for Cabin box Oven
 
+    # Flask JSON function:
+    def clean_flask_mysql_job(self, cr, uid, job, context=None):
+        """ Clean Cabin Box Oven
+        """
+        error_cleaning = ''
+
+        # =====================================================================
+        # 1 Call: Robot Oven Box:
+        # =====================================================================
+        cabin_call = self.get_flask_sql_call(
+                cr, uid, job.database, context=context)
+        if not cabin_call:
+            return 'Errore nella chiamata Flask JSON alla macchina di servizio'
+
+        url, headers, payload = cabin_call
+
+        # 1. Delete job ID:
+        # todo check if job is in done status?
+        job_id = job.id
+
+        query = 'DELETE FROM siord00f WHERE SIORDNUM = %s;' % job_id
+        payload['params']['command'] = 'mysql_delete'
+        payload['params']['query'] = query
+
+        response = requests.post(
+            url, headers=headers, data=json.dumps(payload))
+        response_json = response.json()
+        if not response_json['success']:
+            raise osv.except_osv(
+                _('Errore chiamata a Cabina:'),
+                _('Errore cancellando il Job in cabina: %s!' %
+                  response_json['reply']['error']))
+        return True
+
     # OCPUA function:
     def clean_opcua_job(self, cr, uid, source, opcua_ref, context=None):
         """ Remove job to robot
         """
-        cabin_active = False
         database_pool = self.pool.get('industria.database')
-        # job_pool = self.pool.get('industria.job')
         production_pool = self.pool.get('industria.production')
 
         # ---------------------------------------------------------------------
@@ -359,87 +392,6 @@ class IndustriaDatabase(orm.Model):
         database = source.database_id
         robot = database_pool.get_robot(database)
 
-        # todo move procedure in job and call directly:
-        '''
-        # =====================================================================
-        # 1 Call: Robot Oven Box:
-        # =====================================================================
-        if cabin_active:
-            url, headers, payload = self.get_flask_sql_call(
-                cr, uid, database, context=context)
-
-            # 1. Check if job is present:
-            # todo:
-            job_id = 1
-            job_detail = 'Descrizione commessa'
-            job_color_code = 'BI'
-            job_color = 'Bianco'
-            job_deadline = '2022-01-01'
-            job_sequence = 10
-
-            query = 'SELECT * FROM siord00f WHERE SIORDNUM = %s;' % job_id
-            payload['params']['command'] = 'mysql_get'
-            payload['params']['query'] = query
-
-            response = requests.post(
-                url, headers=headers, data=json.dumps(payload))
-            response_json = response.json()
-            yet_present = False
-            if response_json['success']:
-                record = response_json.get('reply', {}).get('record', [])
-                if record:
-                    yet_present = True
-            else:
-                raise osv.except_osv(
-                    _('Cabina:'),
-                    _('La cabina non risponde (o la macchina di servizio)!'))
-
-            # 2. Create new job:
-            now = datetime.now()
-            now_text = str(now)
-
-            query = """
-                INSERT INTO siord00f(
-                    SIORDANN, SIORDNUM, SIORDSTA,
-                    SIORDDAT, SIORDORA,
-                    SIORDDESC, SIORDCCOL, SIORDCOL,
-                    SIORDDPI, SIORDSEQ
-                    )
-                VALUES (
-                    %s, %s, %s,
-                    %s, %s,
-                    %s, %s, %s,
-                    %s, %s
-                    );
-                """ % (
-                now.year,
-                job_id,
-                '7',  # to be sent
-                now_text[:10],
-                now_text[11:19],
-                job_detail,
-                job_color_code,
-                job_color,
-
-                # Deadline:
-                job_deadline,
-                job_sequence,
-            )
-            payload['params']['command'] = 'mysql_insert'
-            payload['params']['query'] = query
-
-            response = requests.post(
-                url, headers=headers, data=json.dumps(payload))
-            response_json = response.json()
-            if response_json['success']:
-                record_id = response_json.get(
-                    'reply', {}).get('id', 'ID Non trovato')
-            else:
-                _logger.error(
-                    response_json.get('reply', {}).get(
-                        'error', 'Errore collegandosi alla macchina'))
-        # todo if error remove also from oven
-        '''
         # =====================================================================
         # 2 Call: Oven program
         # =====================================================================
@@ -2891,7 +2843,7 @@ class IndustriaDatabaseInherit(orm.Model):
     }
 
 
-class IndustriaProgram(orm.Model):
+class IndustriaProgramInherit(orm.Model):
     """ Model name: Industria Program
     """
 
