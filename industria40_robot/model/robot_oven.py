@@ -607,8 +607,8 @@ class IndustriaDatabase(orm.Model):
                 SIIMPTP25, SIIMPDAT, SIIMPORA, SIIMPCOL, SIIMPDES,
                 SIIMPPCG, SIIMPCOP, SIIMPANN, SIIMPNUM, SIIMPTIP
             FROM SIIMP00F 
-            WHERE SIIMPID0 >= %s;' % last_stat_id
-            '''
+            WHERE SIIMPID0 >= %s;''' % last_stat_id
+
         payload['params']['command'] = 'mysql_select'
         payload['params']['query'] = query
 
