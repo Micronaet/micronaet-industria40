@@ -679,7 +679,7 @@ class IndustriaDatabase(orm.Model):
                 'powder': record[30] / 1000.0,
                 'comment': record[31],
                 'job_code': job_id,
-                'job_year': record[33],
+                'job_year': record[32],
                 'mode': record[34],
             }
             stat_pool.create(cr, uid, data, context=context)
