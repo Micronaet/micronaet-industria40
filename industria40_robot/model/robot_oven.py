@@ -685,8 +685,6 @@ class IndustriaDatabase(orm.Model):
             stat_pool.create(cr, uid, data, context=context)
 
         # Update last record:
-        self.write(cr, uid, ids, {
-            'last_stat_id': last_stat_id,
+        return self.write(cr, uid, ids, {
+            'last_stat_id': new_last_stat_id,
         }, context=context)
-
-        return True
