@@ -2447,6 +2447,7 @@ class IndustriaJob(orm.Model):
                         product.product_id.default_code or '',
                         product.piece,
                     )
+                job_detail = job_detail[:500]  # Limit of char
 
                 # oven_pre_job_ids  for mrp_id
                 job_color_code = job.color   # 'BI'
