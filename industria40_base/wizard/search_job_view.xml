@@ -11,7 +11,7 @@
                        <button string="Cancel" special="cancel" />
                     </header>
                     <group colspan="4" col="4">
-                        <field name="barcode" />
+                        <field name="barcode" on_change="onchange_barcode(barcode)"/>
                        <button name="action_search" string="Ricerca job" type="object" icon="gtk-search" class="oe_highlight" />
                     </group>
                 </form>

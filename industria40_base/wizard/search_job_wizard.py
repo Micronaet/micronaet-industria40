@@ -50,6 +50,14 @@ class IndustriaJobBarcodeSearchWizard(orm.TransientModel):
     # --------------------
     # Wizard button event:
     # --------------------
+    def onchange_barcode(self, cr, uid, ids, barcode, context=None):
+        """ Call search
+        """
+        if barcode:
+            return self.action_search(cr, uid, ids, context=context)
+        else:
+            return True
+
     def action_search(self, cr, uid, ids, context=None):
         """ Event for button done
         """
