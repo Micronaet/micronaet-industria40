@@ -362,6 +362,83 @@ class MrpProductionOvenInherit(orm.Model):
     }
 
 
+class MrpProductionOvenCabin(orm.Model):
+    """ Wizard name: class Mrp Production Oven Cabin
+    """
+
+    _name = 'mrp.production.oven.cabin'
+    _description = 'Oven cabin'
+    _rec_name = 'job_id'
+
+    _columns = {
+        'sql_id': fields.integer('ID SQL'),
+
+        'enterprise_code': fields.char('Codice impianto', size=6),
+        'company_code': fields.char('Codice sede', size=6),
+
+        'creation_date': fields.datetime('Data creazione'),
+
+        'paused': fields.boolean('In pausa'),
+        'pause_duration': fields.float('Tot. pausa ore', digits=(10, 3)),
+
+        'changing': fields.boolean('In cambio colore'),
+        'duration_change': fields.float(
+            'Durata cambio colore', digits=(10, 3)),
+        'total_change': fields.integer('Tot. cambi colore'),
+
+        'speed_chain': fields.char('Velocità catena', size=45),
+
+        'duration_chain_pause': fields.float(
+            'Durata pausa catena (ore)', digits=(10, 3)),
+        'duration_chain_work': fields.float(
+            'Durata marcia catena (ore)', digits=(10, 3)),
+
+        'duration_nozzle_11': fields.float(
+            'Tempo pistola 11 (ore)', digits=(10, 3)),
+        'duration_nozzle_12': fields.float(
+            'Tempo pistola 12 (ore)', digits=(10, 3)),
+        'duration_nozzle_13': fields.float(
+            'Tempo pistola 13 (ore)', digits=(10, 3)),
+        'duration_nozzle_14': fields.float(
+            'Tempo pistola 14 (ore)', digits=(10, 3)),
+        'duration_nozzle_15': fields.float(
+            'Tempo pistola 15 (ore)', digits=(10, 3)),
+        'duration_nozzle_16': fields.float(
+            'Tempo pistola 17 (ore)', digits=(10, 3)),
+        'duration_nozzle_21': fields.float(
+            'Tempo pistola 21 (ore)', digits=(10, 3)),
+        'duration_nozzle_22': fields.float(
+            'Tempo pistola 22 (ore)', digits=(10, 3)),
+        'duration_nozzle_23': fields.float(
+            'Tempo pistola 23 (ore)', digits=(10, 3)),
+        'duration_nozzle_24': fields.float(
+            'Tempo pistola 24 (ore)', digits=(10, 3)),
+        'duration_nozzle_25': fields.float(
+            'Tempo pistola 25 (ore)', digits=(10, 3)),
+
+        'record_date': fields.datetime('Data registrazione'),
+
+        'color_code': fields.char('Codice colore', size=45),
+        'color_description': fields.char('Descrizione colore', size=45),
+
+        'powder': fields.integer('Polvere consumata (Kg.)'),
+        'comment': fields.char('Commento operatore', size=100),
+
+        'job_code': fields.integer('Codice Job'),
+        'job_year': fields.integer('Anno Job'),
+
+        'mode': fields.selection([
+            ('I', 'Inizio'),
+            ('M', 'Monitor'),
+            ('F', 'Fine'),
+            ], 'Tipo')
+        }
+
+    _defaults = {
+        # 'mode': lambda *x: 'I'
+        }
+
+
 class IndustriaJob(orm.Model):
     """ Model name: Job relation
     """
@@ -461,6 +538,13 @@ class IndustriaJob(orm.Model):
         return False
 
     _columns = {
+        'cabin_state_id': fields.many2one(
+            'mrp.production.oven.cabin', 'Statistica cabina',
+            help='Quando viene iniziato il lavoro vengono caricati i dati'
+                 'statistici generati dalla cabina di verniciatura che '
+                 'vengono tenuti aggiornati nel record abbinato al Job '
+                 'di lavoro'
+        ),
         'oven_program_id': fields.function(
             _get_oven_program_id, method=True,
             type='many2one', string='Programma a display',
