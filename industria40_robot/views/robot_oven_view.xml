@@ -28,8 +28,19 @@
                     <!--Oven stat page:-->
                     <page name="oven_stat_page" string="Statistiche forno" invisible="context.get('open_mode') != 'oven'">
                         <group col="4">
-                            <separator string="Statistiche forno:" colspan="4" />
-                            <field name="cabin_state_id" nolabel="1" readonly="1"/>
+                            <separator string="Statistiche cabina:" colspan="4" />
+                            <field name="oven_sql_stat_ids" nolabel="1" readonly="1">
+                                <tree string="Statistiche">
+                                    <field name="sql_id" />
+                                    <field name="creation_date" />
+                                    <field name="color_code" />
+                                    <field name="powder" />
+                                    <field name="paused" />
+                                    <field name="duration_pause" />
+                                    <field name="comment" />
+                                    <field name="mode" />
+                                </tree>
+                            </field>
                         </group>
                     </page>
                 </page>

@@ -537,13 +537,6 @@ class IndustriaJob(orm.Model):
         return False
 
     _columns = {
-        'cabin_state_id': fields.many2one(
-            'mrp.production.oven.cabin', 'Statistica cabina',
-            help='Quando viene iniziato il lavoro vengono caricati i dati'
-                 'statistici generati dalla cabina di verniciatura che '
-                 'vengono tenuti aggiornati nel record abbinato al Job '
-                 'di lavoro'
-        ),
         'oven_program_id': fields.function(
             _get_oven_program_id, method=True,
             type='many2one', string='Programma a display',
@@ -554,6 +547,9 @@ class IndustriaJob(orm.Model):
         'oven_pre_job_ids': fields.one2many(
             'mrp.production.oven.selected', 'job_id',
             'Pre-Job forno'),
+        'oven_sql_stat_ids': fields.one2many(
+            'mrp.production.oven.cabin', 'job_id',
+            'Statistiche cabina'),
     }
 
 
