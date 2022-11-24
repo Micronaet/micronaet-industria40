@@ -2408,6 +2408,8 @@ class IndustriaJob(orm.Model):
         # =====================================================================
         # 1. Send to OVEN BOX:
         # =====================================================================
+        robot_site_code = robot.site_code or ''
+        robot_ref_code = robot.ref_code or ''
         cabin_call = database_pool.get_flask_sql_call(
             cr, uid, database, context=context)
         if cabin_call:
@@ -2466,13 +2468,15 @@ class IndustriaJob(orm.Model):
                         SIORDANN, SIORDNUM, SIORDSTA,
                         SIORDDAT, SIORDORA,
                         SIORDDESC, SIORDCCOL, SIORDCOL,
-                        SIORDDPI, SIORDSEQ
+                        SIORDDPI, SIORDSEQ,
+                        SIORDCIMP, SIORDCSED
                         )
                     VALUES (
                         %s, %s, '%s',
                         '%s', '%s',
                         '%s', '%s', '%s',
-                        '%s', '%s'
+                        '%s', '%s',
+                        '%s', '%s'                        
                         );
                     ''' % (
                     now.year, job_id, state,
@@ -2481,6 +2485,7 @@ class IndustriaJob(orm.Model):
 
                     # Deadline:
                     job_deadline, job_sequence,
+                    robot_site_code, robot_ref_code,
                 )
 
                 response = requests.post(
