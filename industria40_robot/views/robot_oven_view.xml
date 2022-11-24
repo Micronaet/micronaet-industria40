@@ -1,6 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record model="ir.ui.view" id="view_mrp_production_oven_cabin_tree">
+            <field name="name">mrp.production.oven.cabin.tree</field>
+            <field name="model">mrp.production.oven.cabin</field>
+            <field name="arch" type="xml">
+                <tree string="Statistiche cabina">
+                    <field name="mode" widget="statusbar" />
+                    <field name="sql_id" readonly="1"/>
+                    <field name="job_id" readonly="1"/>
+
+                    <field name="creation_date" readonly="1"/>
+                    <field name="record_date" readonly="1"/>
+                    <field name="color_code" readonly="1"/>
+                    <field name="powder" readonly="1"/>
+                    <field name="comment" readonly="1"/>
+                    <field name="paused" readonly="1"/>
+                    <field name="duration_pause" readonly="1"/>
+
+                    <field name="changing" readonly="1"/>
+                    <field name="duration_change" readonly="1"/>
+                    <field name="total_change" readonly="1"/>
+
+                    <field name="speed_chain" invisible="1"/>
+                    <field name="duration_chain_pause" invisible="1"/>
+                    <field name="duration_chain_work" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mrp_production_oven_cabin_form">
+            <field name="name">mrp.production.oven.cabin.form</field>
+            <field name="model">mrp.production.oven.cabin</field>
+            <field name="arch" type="xml">
+                <form string="Statistiche cabina">
+                    <header>
+                        <field name="mode" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <group col="4" colspan="4">
+                            <field name="job_id" readonly="1"/>
+                            <field name="sql_id" readonly="1"/>
+
+                            <field name="enterprise_code" readonly="1"/>
+                            <field name="company_code" readonly="1"/>
+
+                            <field name="creation_date" readonly="1"/>
+                            <field name="record_date" readonly="1"/>
+                            <notebook colspan="4">
+                                <page name="page_detail" string="Dettaglio">
+                                    <group col="4" colspan="4">
+                                        <separator string="Dettaglio:" colspan="4"/>
+                                        <field name="color_code" readonly="1"/>
+                                        <field name="color_description" readonly="1"/>
+                                        <field name="powder" readonly="1"/>
+                                        <field name="comment" readonly="1"/>
+                                        <field name="job_code" readonly="1"/>
+                                        <field name="job_year" readonly="1"/>
+                                    </group>
+                                </page>
+                                <page name="page_operator" string="Operatività">
+                                    <group col="4" colspan="4">
+                                        <separator string="Pause:" colspan="4"/>
+                                        <field name="paused" readonly="1"/>
+                                        <field name="duration_pause" readonly="1"/>
+
+                                        <separator string="Cambio:" colspan="4"/>
+                                        <field name="changing" readonly="1"/>
+                                        <newline/>
+                                        <field name="duration_change" readonly="1"/>
+                                        <field name="total_change" readonly="1"/>
+
+                                        <separator string="Catena:" colspan="4"/>
+                                        <field name="speed_chain" readonly="1"/>
+                                        <newline/>
+                                        <field name="duration_chain_pause" readonly="1"/>
+                                        <field name="duration_chain_work" readonly="1"/>
+
+                                    </group>
+                                </page>
+                                <page name="page_nozzle" string="Augelli">
+                                    <group col="4" colspan="4">
+                                        <separator string="Augelli:" colspan="4"/>
+                                        <field name="duration_nozzle_11" readonly="1"/>
+                                        <field name="duration_nozzle_12" readonly="1"/>
+                                        <field name="duration_nozzle_13" readonly="1"/>
+                                        <field name="duration_nozzle_14" readonly="1"/>
+                                        <field name="duration_nozzle_15" readonly="1"/>
+                                        <field name="duration_nozzle_16" readonly="1"/>
+                                        <field name="duration_nozzle_17" readonly="1"/>
+                                        <field name="duration_nozzle_21" readonly="1"/>
+                                        <field name="duration_nozzle_22" readonly="1"/>
+                                        <field name="duration_nozzle_23" readonly="1"/>
+                                        <field name="duration_nozzle_24" readonly="1"/>
+                                        <field name="duration_nozzle_25" readonly="1"/>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_industria_database_form">
             <field name="name">industria.database.form</field>
             <field name="model">industria.database</field>
