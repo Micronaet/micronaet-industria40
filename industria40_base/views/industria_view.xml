@@ -154,6 +154,7 @@
 
                                         <field name="database" attrs="{'required': [('mode', 'not in', ('file', 'ftp', 'opuca'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}"/>
                                         <field name="port" attrs="{'required': [('mode', 'not in', ('file', 'ftp'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}" />
+                                        <field name="last_stat_id" attrs="{'required': [('mode', 'not in', ('file', 'ftp'))], 'invisible': [('mode', 'in', ('file', 'ftp'))]}" readonly="1" />
 
                                         <!--FTP-->
                                         <separator string="Modo file:" colspan="4" attrs="{'invisible': [('mode', '!=', 'ftp')]}"/>

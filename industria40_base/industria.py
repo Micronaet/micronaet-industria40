@@ -1468,6 +1468,11 @@ class IndustriaDatabase(orm.Model):
         'password': fields.char('Password', size=64),
         'database': fields.char('Database', size=64),
         'port': fields.integer('Port'),
+        'last_stat_id': fields.integer(
+            'Ultimo ID',
+            help='Ultimo ID dati statitici recuperati dal database,'
+                 'utilizzato per evitare di leggere sempre tutte le'
+                 'righe presenti.')
         'note': fields.text('Note'),
         'ftp_command': fields.text(
             'FTP command', help='FTP command for unload Job'),
