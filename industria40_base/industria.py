@@ -349,12 +349,12 @@ class IndustriaDatabase(orm.Model):
     def clean_flask_mysql_job(self, cr, uid, job, context=None):
         """ Clean Cabin Box Oven
         """
-        error_cleaning = ''
+        database_pool = odoo.model('industria.database')
 
         # =====================================================================
         # 1 Call: Robot Oven Box:
         # =====================================================================
-        cabin_call = self.get_flask_sql_call(
+        cabin_call = database_pool.get_flask_sql_call(
                 cr, uid, job.database, context=context)
         if not cabin_call:
             return 'Errore nella chiamata Flask JSON alla macchina di servizio'
