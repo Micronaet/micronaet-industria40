@@ -619,7 +619,7 @@ class IndustriaDatabase(orm.Model):
         # return True
 
         # 3. Update / Create statistic records:
-        records = response_json['reply'].get('record')
+        records = response_json['reply'].get('record') or []
         # todo check max sql_id to test last insert?
         for record in records:
             # -----------------------------------------------------------------
