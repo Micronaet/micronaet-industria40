@@ -219,6 +219,9 @@
                             <field name="name" />
                             <field name="code" />
 
+                            <field name="site_code" />
+                            <field name="ref_code" />
+
                             <field name="partner_id" />
                             <field name="database_id" />
 
@@ -289,8 +292,13 @@
                 <tree string="Database">
                     <field name="ip" />
                     <field name="name" />
+                    <field name="code" />
+                    <field name="site_code" />
+                    <field name="ref_code" />
+
                     <field name="partner_id" />
                     <field name="database_id" />
+
                     <button name="button_load_production_from_robot" type="object" string="Carica commesse da robot" icon="gtk-refresh"/>
                     <button name="load_fabric_program" type="object" string="Carica programmi CAD" icon="STOCK_DND_MULTIPLE"/>
                 </tree>

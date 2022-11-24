@@ -452,7 +452,6 @@ class IndustriaJob(orm.Model):
         # Update it not in closed state
 
         # 1. Search all job_id in statistics
-        pdb.set_trace()
         jobs = self.browse(cr, uid, ids, context=context)
         if not jobs:
             return False
@@ -482,7 +481,11 @@ class IndustriaJob(orm.Model):
                 response_json['reply']['error'])
 
         # 3. Update / Create statistic records:
+        return True
+
         records = response_json['reply'].get('record')
+        # todo part to be test when there's data on robot
+
         return True
 
     def explode_oven_preload_detail(self, cr, uid, ids, context=None):

@@ -1749,6 +1749,10 @@ class IndustriaRobot(orm.Model):
         'ip': fields.char('IP address', size=15),
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Codice', size=20, required=True),
+        'site_code': fields.char(
+            'Codice impianto', size=20,
+            help='Codice impianto usato spesso per indetivi'),
+        'ref_code': fields.char('Riferimento impianto', size=20),
         'opcua_mask': fields.char('OPCUA Mask', size=180),
         'industria_ref': fields.integer('Industria ref key'),
         'database_id': fields.many2one(
