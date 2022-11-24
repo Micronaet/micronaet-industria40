@@ -85,6 +85,7 @@ def ODOOCall():
     # -------------------------------------------------------------------------
     # Get parameters from call:
     # -------------------------------------------------------------------------
+    pdb.set_trace()
     call_payload = request.get_json()
     command = call_payload['command']
     params = call_payload['params']
