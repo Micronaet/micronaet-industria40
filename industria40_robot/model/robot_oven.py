@@ -368,7 +368,7 @@ class MrpProductionOvenCabin(orm.Model):
     """ Wizard name: class Mrp Production Oven Cabin
     """
     _name = 'mrp.production.oven.cabin'
-    _description = 'Oven cabin'
+    _description = 'Oven cabin statistics'
     _rec_name = 'creation_date'
     _order = 'sql_id desc'
 
@@ -382,7 +382,7 @@ class MrpProductionOvenCabin(orm.Model):
         'creation_date': fields.datetime('Data creazione'),
 
         'paused': fields.boolean('In pausa'),
-        'pause_duration': fields.float('Tot. pausa ore', digits=(10, 3)),
+        'duration_pause': fields.float('Tot. pausa ore', digits=(10, 3)),
 
         'changing': fields.boolean('In cambio colore'),
         'duration_change': fields.float(
@@ -580,6 +580,7 @@ class IndustriaDatabase(orm.Model):
             Button mode event  but could be used from scheduled Job
         """
         job_pool = self.pool.get('industria.job')
+        stat_pool = self.pool.get('mrp.production.oven.cabin')
         # Search oven cabin job passed and generate statistics
         # Update it not in closed state
 
@@ -596,7 +597,18 @@ class IndustriaDatabase(orm.Model):
         url, headers, payload = cabin_call
 
         # Read all Job selected data:
-        query = 'SELECT * FROM SIIMP00F WHERE SIIMPID0 >= %s;' % last_stat_id
+        query = '''
+            SELECT 
+                SIIMPID0, SIIMPCIMP, SIIMPCSED, SIIMPDTC, SIIMPORC,
+                SIIMPPAU, SIIMPSECP, SIIMPMINP, SIIMPCCOL, SIIMPSCCO,
+                SIIMPMCCO, SIIMPNCCO, SIIMPVMC, SIIMPMPC, SIIMPMMC,
+                SIIMPTP11, SIIMPTP12, SIIMPTP13, SIIMPTP14, SIIMPTP15,
+                SIIMPTP16, SIIMPTP21, SIIMPTP22, SIIMPTP23, SIIMPTP24,
+                SIIMPTP25, SIIMPDAT, SIIMPORA, SIIMPCOL, SIIMPDES,
+                SIIMPPCG, SIIMPCOP, SIIMPANN, SIIMPNUM, SIIMPTIP
+            FROM SIIMP00F 
+            WHERE SIIMPID0 >= %s;' % last_stat_id
+            '''
         payload['params']['command'] = 'mysql_select'
         payload['params']['query'] = query
 
@@ -608,51 +620,73 @@ class IndustriaDatabase(orm.Model):
                 'Error calling Oven cabin: %s!' %
                 response_json['reply']['error'])
 
-        # 3. Update / Create statistic records:
         # return True
 
+        # 3. Update / Create statistic records:
         records = response_json['reply'].get('record')
         pdb.set_trace()
+        # todo check max sql_id to test last insert?
         for record in records:
-            last_stat_id = record['SIIMPID0']
-            data = [  #]{
-                # 'sql_id': last_stat_id,
-                record['SIIMPCIMP'],
-                record['SIIMPCSED'],
-                record['SIIMPDTC'],
-                record['SIIMPORC'],
-                record['SIIMPPAU'],
-                record['SIIMPSECP'],
-                record['SIIMPMINP'],
-                record['SIIMPCCOL'],
-                record['SIIMPSCCO'],
-                record['SIIMPMCCO'],
-                record['SIIMPNCCO'],
-                record['SIIMPVMC'],
-                record['SIIMPMPC'],
-                record['SIIMPMMC'],
-                record['SIIMPTP11'],
-                record['SIIMPTP12'],
-                record['SIIMPTP13'],
-                record['SIIMPTP14'],
-                record['SIIMPTP15'],
-                record['SIIMPTP16'],
-                record['SIIMPTP21'],
-                record['SIIMPTP22'],
-                record['SIIMPTP23'],
-                record['SIIMPTP24'],
-                record['SIIMPTP25'],
-                record['SIIMPDAT'],
-                record['SIIMPORA'],
-                record['SIIMPCOL'],
-                record['SIIMPDES'],
-                record['SIIMPPCG'],
-                record['SIIMPCOP'],
-                record['SIIMPANN'],
-                record['SIIMPNUM'],
-                record['SIIMPTIP'],
-            ]  # }
+            # -----------------------------------------------------------------
+            # Job part:
+            # -----------------------------------------------------------------
+            # Check if still present:
+            job_id = record[32]  # Job code (don't need year for key)
+            job_ids = job_pool.search(cr, uid, [
+                ('id', '=', job_id),
+                ], context=context)
+            if not job_ids:
+                _logger.error('Job ID: %s no more present, jump' % job_id)
 
-        # todo part to be test when there's data on robot
+            # -----------------------------------------------------------------
+            # Compose stat record:
+            # -----------------------------------------------------------------
+            new_last_stat_id = record[0]
+            creation_date = '%s %s' % (record[3], record[4])
+            duration_pause = (record[7] + record[6] / 60.0) / 60.0  # H.
+            duration_change = (record[10] + record[9] / 60.0) / 60.0  # H.
+            record_date = '%s %s' % (record[26], record[27])
+
+            data = {
+                'sql_id': new_last_stat_id,
+                'job_id': job_id,
+
+                'enterprise_code': record[1],
+                'company_code': record[2],
+                'creation_date': creation_date,
+                'paused': record[5],  # todo bolean
+                'duration_pause': duration_pause,
+                'changing': record[8],
+                'duration_change': duration_change,
+                'total_change': record[11],
+                'speed_chain': record[12],
+                'duration_chain_pause': record[13] / 60.0,  # H.
+                'duration_chain_work': record[14] / 60.0,  # H.
+                'duration_nozzle_11': record[15] / 60.0,  # H.
+                'duration_nozzle_12': record[16] / 60.0,  # H.
+                'duration_nozzle_13': record[17] / 60.0,  # H.
+                'duration_nozzle_14': record[18] / 60.0,  # H.
+                'duration_nozzle_15': record[19] / 60.0,  # H.
+                'duration_nozzle_16': record[20] / 60.0,  # H.
+                'duration_nozzle_21': record[21] / 60.0,  # H.
+                'duration_nozzle_22': record[22] / 60.0,  # H.
+                'duration_nozzle_23': record[23] / 60.0,  # H.
+                'duration_nozzle_24': record[24] / 60.0,  # H.
+                'duration_nozzle_25': record[25] / 60.0,  # H.
+                'record_date': record_date,
+                'color_code': record[28],
+                'color_description': record[29],
+                'powder': record[30] / 1000.0,
+                'comment': record[31],
+                'job_code': job_id,
+                'job_year': record[33],
+                'mode': record[34],
+            }
+            stat_pool.create(cr, uid, data, context=context)
+
+        # Update last record:
+        self.write(cr, uid, ids, {
+            'last_stat_id': last_stat_id,
+        }, context=context)
 
         return True
