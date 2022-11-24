@@ -2463,24 +2463,18 @@ class IndustriaJob(orm.Model):
                         SIORDDPI, SIORDSEQ
                         )
                     VALUES (
-                        %s, %s, %s,
-                        %s, %s,
-                        %s, %s, %s,
-                        %s, %s
+                        %s, %s, '%s',
+                        '%s', '%s',
+                        '%s', '%s', '%s',
+                        '%s', '%s'
                         );
                     ''' % (
-                    now.year,
-                    job_id,
-                    state,
-                    now_text[:10],
-                    now_text[11:19],
-                    job_detail,
-                    job_color_code,
-                    job_color,
+                    now.year, job_id, state,
+                    now_text[:10], now_text[11:19],
+                    job_detail, job_color_code, job_color,
 
                     # Deadline:
-                    job_deadline,
-                    job_sequence,
+                    job_deadline, job_sequence,
                 )
 
                 response = requests.post(
