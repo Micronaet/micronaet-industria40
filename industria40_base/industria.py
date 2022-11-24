@@ -2414,7 +2414,7 @@ class IndustriaJob(orm.Model):
             url, headers, payload = cabin_call  # Extract 3 parameter
 
             # Extend call params:
-            payload['params']['command'] = 'mysql_get'
+            payload['params']['command'] = 'mysql_select'
             payload['params']['query'] = \
                 'SELECT * FROM siord00f WHERE SIORDNUM = %s;' % job_id
 

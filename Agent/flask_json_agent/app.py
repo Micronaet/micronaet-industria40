@@ -112,8 +112,9 @@ def ODOOCall():
     if command == 'ping':
         payload['success'] = True
 
-    elif command == 'mysql_get':
+    elif command == 'mysql_select':
         try:
+            pdb.set_trace()
             connection = mysql.connector.connect(**mysql_param)
             cur = connection.cursor()
             query = parameter.get('query')
@@ -162,7 +163,7 @@ def ODOOCall():
     # -------------------------------------------------------------------------
     #                       I40 Delete Job:
     # -------------------------------------------------------------------------
-    elif command == 'mysql_insert':
+    elif command == 'mysql_delete':
         # Insert Job on I40 robot:
         try:
             connection = mysql.connector.connect(**mysql_param)
