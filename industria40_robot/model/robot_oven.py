@@ -481,9 +481,10 @@ class IndustriaJob(orm.Model):
                 response_json['reply']['error'])
 
         # 3. Update / Create statistic records:
-        return True
+        # return True
 
         records = response_json['reply'].get('record')
+        pdb.set_trace()
         # todo part to be test when there's data on robot
 
         return True
