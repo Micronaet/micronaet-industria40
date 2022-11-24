@@ -654,7 +654,7 @@ class IndustriaDatabase(orm.Model):
                 'enterprise_code': record[1],
                 'company_code': record[2],
                 'creation_date': creation_date,
-                'paused': record[5],  # todo bolean
+                'paused': record[5] == '1',  # Boolean
                 'duration_pause': duration_pause,
                 'changing': record[8],
                 'duration_change': duration_change,
