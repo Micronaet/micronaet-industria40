@@ -1472,7 +1472,7 @@ class IndustriaDatabase(orm.Model):
             'Ultimo ID',
             help='Ultimo ID dati statitici recuperati dal database,'
                  'utilizzato per evitare di leggere sempre tutte le'
-                 'righe presenti.')
+                 'righe presenti.'),
         'note': fields.text('Note'),
         'ftp_command': fields.text(
             'FTP command', help='FTP command for unload Job'),

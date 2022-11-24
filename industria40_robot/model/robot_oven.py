@@ -443,53 +443,6 @@ class IndustriaJob(orm.Model):
     """
     _inherit = 'industria.job'
 
-    # Statistic function:
-    def load_all_statistics(self, cr, uid, ids, context=None):
-        """ Load statistic for this jobs
-            Button mode event  but could be used from scheduled Job
-        """
-        database_pool = self.pool.get('industria.database')
-        # Search oven cabin job passed and generate statistics
-        # Update it not in closed state
-
-        # 1. Search all job_id in statistics
-        jobs = self.browse(cr, uid, ids, context=context)
-        if not jobs:
-            return False
-
-        database = jobs[0].database_id
-        cabin_call = database_pool.get_flask_sql_call(
-                cr, uid, database, context=context)
-        if not cabin_call:
-            _logger.error('Cabin not ready!')
-            return False
-
-        # 2. Create or update statistic oven job
-        url, headers, payload = cabin_call
-
-        # Read all Job selected data:
-        query = 'SELECT * FROM SIIMP00F WHERE SIIMPANN in (%s);' % (
-            ', '.join([str(r) for r in ids]), )
-        payload['params']['command'] = 'mysql_select'
-        payload['params']['query'] = query
-
-        response = requests.post(
-            url, headers=headers, data=json.dumps(payload))
-        response_json = response.json()
-        if not response_json['success']:
-            _logger.error(
-                'Error calling Oven cabin: %s!' %
-                response_json['reply']['error'])
-
-        # 3. Update / Create statistic records:
-        # return True
-
-        records = response_json['reply'].get('record')
-        pdb.set_trace()
-        # todo part to be test when there's data on robot
-
-        return True
-
     def explode_oven_preload_detail(self, cr, uid, ids, context=None):
         """ Generate job detail for product items in preproduction lines
         """
@@ -614,3 +567,92 @@ class MrpBomStructureCategory(orm.Model):
         'need_oven': fields.boolean('Necessita verniciatura'),
         'need_fabric': fields.boolean('Necessita taglio tessuto'),
     }
+
+
+class IndustriaDatabase(orm.Model):
+    """ Model name: I40 DB
+    """
+    _inherit = 'industria.database'
+
+    # Statistic function:
+    def load_all_statistics(self, cr, uid, ids, context=None):
+        """ Load statistic for this jobs
+            Button mode event  but could be used from scheduled Job
+        """
+        job_pool = self.pool.get('industria.job')
+        # Search oven cabin job passed and generate statistics
+        # Update it not in closed state
+
+        # 1. Search all job_id in statistics
+        database = self.browse(cr, uid, ids, context=context)[0]
+        last_stat_id = database.last_stat_id or 0
+        cabin_call = self.get_flask_sql_call(
+            cr, uid, database, context=context)
+        if not cabin_call:
+            _logger.error('Cabin not ready!')
+            return False
+
+        # 2. Create or update statistic oven job
+        url, headers, payload = cabin_call
+
+        # Read all Job selected data:
+        query = 'SELECT * FROM SIIMP00F WHERE SIIMPID0 >= %s;' % last_stat_id
+        payload['params']['command'] = 'mysql_select'
+        payload['params']['query'] = query
+
+        response = requests.post(
+            url, headers=headers, data=json.dumps(payload))
+        response_json = response.json()
+        if not response_json['success']:
+            _logger.error(
+                'Error calling Oven cabin: %s!' %
+                response_json['reply']['error'])
+
+        # 3. Update / Create statistic records:
+        # return True
+
+        records = response_json['reply'].get('record')
+        pdb.set_trace()
+        for record in records:
+            last_stat_id = record['SIIMPID0']
+            data = [  #]{
+                # 'sql_id': last_stat_id,
+                record['SIIMPCIMP'],
+                record['SIIMPCSED'],
+                record['SIIMPDTC'],
+                record['SIIMPORC'],
+                record['SIIMPPAU'],
+                record['SIIMPSECP'],
+                record['SIIMPMINP'],
+                record['SIIMPCCOL'],
+                record['SIIMPSCCO'],
+                record['SIIMPMCCO'],
+                record['SIIMPNCCO'],
+                record['SIIMPVMC'],
+                record['SIIMPMPC'],
+                record['SIIMPMMC'],
+                record['SIIMPTP11'],
+                record['SIIMPTP12'],
+                record['SIIMPTP13'],
+                record['SIIMPTP14'],
+                record['SIIMPTP15'],
+                record['SIIMPTP16'],
+                record['SIIMPTP21'],
+                record['SIIMPTP22'],
+                record['SIIMPTP23'],
+                record['SIIMPTP24'],
+                record['SIIMPTP25'],
+                record['SIIMPDAT'],
+                record['SIIMPORA'],
+                record['SIIMPCOL'],
+                record['SIIMPDES'],
+                record['SIIMPPCG'],
+                record['SIIMPCOP'],
+                record['SIIMPANN'],
+                record['SIIMPNUM'],
+                record['SIIMPTIP'],
+            ]  # }
+
+        # todo part to be test when there's data on robot
+
+        return True

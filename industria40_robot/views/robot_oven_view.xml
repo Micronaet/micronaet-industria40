@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record model="ir.ui.view" id="view_industria_database_form">
+            <field name="name">industria.database.form</field>
+            <field name="model">industria.database</field>
+            <field name="inherit_id" ref="industria40_base.view_industria_database_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/button[1]" position="before">
+                   <button name="load_all_statistics" type="object" string="Carica statistica" icon="gtk-refresh"/>
+                </xpath>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_industria_job_opcua_form">
             <field name="name">industria.job.opcua.form</field>
             <field name="model">industria.job</field>
@@ -17,8 +28,7 @@
                     <!--Oven stat page:-->
                     <page name="oven_stat_page" string="Statistiche forno" invisible="context.get('open_mode') != 'oven'">
                         <group col="4">
-                            <separator string="Statistiche forno:" colspan="3" />
-                            <button name="load_all_statistics" type="object" string="Carica / Aggiorna statistica" icon="gtk-refresh"/>
+                            <separator string="Statistiche forno:" colspan="4" />
                             <field name="cabin_state_id" nolabel="1" readonly="1"/>
                         </group>
                     </page>
