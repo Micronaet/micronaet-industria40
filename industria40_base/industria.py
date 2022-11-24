@@ -328,15 +328,13 @@ class IndustriaDatabase(orm.Model):
             'params': {
                 # 'command': 'mysql_insert',
                 # 'query': query,
-                'parameters': {
-                    'mysql': {
-                        'host': database.ip,
-                        'port': database.port,
-                        'user': database.username,
-                        'password': database.password,
-                        'database': database.database,
-                        'use_pure': False,
-                    },
+                'mysql': {
+                    'host': database.ip,
+                    'port': database.port,
+                    'user': database.username,
+                    'password': database.password,
+                    'database': database.database,
+                    'use_pure': False,
                 },
             },
         }

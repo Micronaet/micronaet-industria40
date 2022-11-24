@@ -85,24 +85,22 @@ def ODOOCall():
     # -------------------------------------------------------------------------
     # Get parameters from call:
     # -------------------------------------------------------------------------
-    params = request.get_json()
-    rpc_call = params['params']
-
-    command = rpc_call['command']
-    parameter = rpc_call['parameters']
+    call_payload = request.get_json()
+    command = call_payload['command']
+    params = call_payload['params']
 
     # -------------------------------------------------------------------------
     #                             Execute call:
     # -------------------------------------------------------------------------
     # Start reply payload:
-    payload = {
+    reply_payload = {
         'success': False,
         'reply': {},
-    }
+        }
 
-    if 'mysql' in parameter:
+    if 'mysql' in params:
         # MySQL call:
-        mysql_param = parameter.get('mysql', {})
+        mysql_param = params.get('mysql', {})
     else:
         mysql_param = {}
 
@@ -110,18 +108,17 @@ def ODOOCall():
     #                       I40 Read statistics:
     # -------------------------------------------------------------------------
     if command == 'ping':
-        payload['success'] = True
+        reply_payload['success'] = True
 
     elif command == 'mysql_select':
         try:
-            pdb.set_trace()
             connection = mysql.connector.connect(**mysql_param)
             cur = connection.cursor()
-            query = parameter.get('query')
+            query = params.get('query')
             write_log(log_f, 'Executing select query: %s' % query)
             cur.execute(query)
 
-            payload['reply']['record'] = []  # Prepare reply
+            reply_payload['reply']['record'] = []  # Prepare reply
             for row in cur:
                 print(row)
                 clean_row = []
@@ -133,13 +130,13 @@ def ODOOCall():
                     else:
                         clean_row.append(str(field))
 
-                payload['reply']['record'].append(clean_row)
+                reply_payload['reply']['record'].append(clean_row)
             cur.close()
             connection.close()
 
-            payload['success'] = True
+            reply_payload['success'] = True
         except:
-            payload['reply']['error'] = str(sys.exc_info())
+            reply_payload['reply']['error'] = str(sys.exc_info())
 
     # -------------------------------------------------------------------------
     #                       I40 Insert Job:
@@ -151,14 +148,14 @@ def ODOOCall():
             cur = connection.cursor()
 
             # INSERT INTO QUERY:
-            query = parameter.get('query')
+            query = params.get('query')
             write_log(log_f, 'Executing insert query: %s' % query)
             cur.execute(query)
             connection.commit()
-            payload['reply']['id'] = cur.lastrowid
-            payload['success'] = True
+            reply_payload['reply']['id'] = cur.lastrowid
+            reply_payload['success'] = True
         except:
-            payload['reply']['error'] = str(sys.exc_info())
+            reply_payload['reply']['error'] = str(sys.exc_info())
 
     # -------------------------------------------------------------------------
     #                       I40 Delete Job:
@@ -170,26 +167,26 @@ def ODOOCall():
             cur = connection.cursor()
 
             # DELETE QUERY:
-            query = parameter.get('query')
+            query = params.get('query')
             write_log(log_f, 'Executing delete query: %s' % query)
             cur.execute(query)
             connection.commit()
-            payload['success'] = True
+            reply_payload['success'] = True
         except:
-            payload['reply']['error'] = str(sys.exc_info())
+            reply_payload['reply']['error'] = str(sys.exc_info())
 
     # -------------------------------------------------------------------------
     #                       I40 Unmanaged calls:
     # -------------------------------------------------------------------------
     else:
         # Bad call:
-        payload['reply']['error'] = \
+        reply_payload['reply']['error'] = \
             '[ERROR] ODOO is calling wrong command {}\n'.format(command)
 
     # -------------------------------------------------------------------------
     # Prepare response
     # -------------------------------------------------------------------------
-    return payload
+    return reply_payload
 
 
 @app.route('/')
