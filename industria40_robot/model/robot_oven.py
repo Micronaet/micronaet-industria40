@@ -447,6 +447,7 @@ class IndustriaJob(orm.Model):
         """ Load statistic for this jobs
             Button mode event  but could be used from scheduled Job
         """
+        database_pool = self.pool.get('industria.database')
         # Search oven cabin job passed and generate statistics
         # Update it not in closed state
 
@@ -457,7 +458,7 @@ class IndustriaJob(orm.Model):
             return False
 
         database = jobs[0].database_id
-        cabin_call = self.get_flask_sql_call(
+        cabin_call = database_pool.get_flask_sql_call(
                 cr, uid, database, context=context)
         if not cabin_call:
             _logger.error('Cabin not ready!')
