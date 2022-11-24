@@ -86,9 +86,10 @@ class IndustriaJobBarcodeSearchWizard(orm.TransientModel):
         """ Call search
         """
         if barcode:
+            _logger.info('Found Barcode: %s' % barcode)
             return self.open_job(cr, uid, barcode, context=context)
         else:
-            return True
+            return False
 
     def action_search(self, cr, uid, ids, context=None):
         """ Event for button done
@@ -98,7 +99,10 @@ class IndustriaJobBarcodeSearchWizard(orm.TransientModel):
 
         wizard_browse = self.browse(cr, uid, ids, context=context)[0]
         barcode = wizard_browse.barcode or ''
-        return self.open_job(cr, uid, barcode, context=context)
+        if barcode:
+            return self.open_job(cr, uid, barcode, context=context)
+        else:
+            return False
 
     _columns = {
         'barcode': fields.char(
