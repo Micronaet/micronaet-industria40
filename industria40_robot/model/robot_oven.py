@@ -451,7 +451,7 @@ class IndustriaJob(orm.Model):
         # Update it not in closed state
 
         # 1. Search all job_id in statistics
-
+        pdb.set_trace()
         jobs = self.browse(cr, uid, ids, context=context)
         if not jobs:
             return False
