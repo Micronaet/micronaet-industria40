@@ -15,7 +15,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_industria_job_robot4">
-            <field name="name">Job Forno</field>
+            <field name="name">Job di verniciatura</field>
             <field name="res_model">industria.job</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>

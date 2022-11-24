@@ -101,7 +101,7 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="action_mrp_production_oven_selected">
-            <field name="name">Preselezione forno</field>
+            <field name="name">Semilavorati pendenti</field>
             <field name="res_model">mrp.production.oven.selected</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
@@ -135,7 +135,7 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="action_mrp_production">
-            <field name="name">Verniciatura da fare</field>
+            <field name="name">Produzioni da verniciare</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -144,7 +144,7 @@
             <field name="domain">[('state','not in', ('cancel', 'done')), ('industria_oven_state', '!=', 'done')]</field>
         </record>
         <record model="ir.actions.act_window" id="action_mrp_production_done">
-            <field name="name">Verniciature fatte</field>
+            <field name="name">Produzioni verniciate</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
