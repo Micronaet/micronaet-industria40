@@ -87,6 +87,7 @@ except:
         log_f, 'Creating pickle file: %s' % pickle_file)
     file_status_log = {}
 
+total = 0
 for root, folders, files in os.walk(draft_path):
     for filename in files:
         fullname = os.path.join(root, filename)
@@ -119,6 +120,7 @@ for root, folders, files in os.walk(draft_path):
                     if odoo_job.state != 'COMPLETED':
                         try:
                             job_pool.completed_fabric_job([job_id])
+                            total += 1
                             write_log(
                                 log_f, 'Close job %s' % job_id)
                         except:
@@ -143,3 +145,5 @@ pickle.dump(
     file_status_log,
     open(pickle_file, 'wb'),
     )
+
+write_log(log_f, 'Job closed #%s ' % total)
