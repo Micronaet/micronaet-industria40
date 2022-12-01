@@ -47,7 +47,7 @@ class XmlDictConfig(dict):
     """
     def __init__(self, parent_element):
         if parent_element.items():
-            self.updateShim( dict(parent_element.items()))
+            self.updateShim(dict(parent_element.items()))
         for element in parent_element:
             if len(element):
                 aDict = XmlDictConfig(element)
@@ -62,7 +62,7 @@ class XmlDictConfig(dict):
             else:
                 self.updateShim({element.tag: element.text})
 
-    def updateShim (self, aDict):
+    def updateShim(self, aDict):
         for key in aDict.keys():   # keys() includes tag and attributes
             if key in self:
                 value = self.pop(key)
