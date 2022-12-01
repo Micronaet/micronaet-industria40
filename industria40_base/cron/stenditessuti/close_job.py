@@ -44,8 +44,8 @@ pwd = config.get('dbaccess', 'pwd')
 server = config.get('dbaccess', 'server')
 port = config.get('dbaccess', 'port')  # verify if it's necessary: getint
 
-draft_path = config.get('path', 'draft')
-cut_path = config.get('path', 'cut')
+draft_path = os.path.expanduser(config.get('path', 'draft'))
+cut_path = os.path.expanduser(config.get('path', 'cut'))
 
 # -----------------------------------------------------------------------------
 # Connect to ODOO:
