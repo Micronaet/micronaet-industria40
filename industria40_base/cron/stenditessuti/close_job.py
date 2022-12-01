@@ -78,7 +78,7 @@ for root, folders, files in os.walk(draft_path):
                 if 'fileNameMattress' in line and 'Job_' in line:
                     job_id = int(line.split('_')[-1].split('.')[0])
                     try:
-                        odoo_job = job_pool.browse(job_id)
+                        odoo_job = job_pool.browse([job_id])
                     except:
                         no_error = False
                         print('Error no job %s present!' % job_id)
