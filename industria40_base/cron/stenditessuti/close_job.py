@@ -78,6 +78,12 @@ for root, folders, files in os.walk(draft_path):
                 if 'fileNameMattress' in line and 'Job_' in line:
                     job_id = int(line.split('_')[-1].split('.')[0])
                     try:
+                        job_ids = job_pool.search([('id', '=', job_id)])
+                        if not job_ids:
+                            print('Error no job %s present!' % job_id)
+                            # No error for file pickle!
+                            continue
+
                         odoo_job = job_pool.browse([job_id])
                     except:
                         no_error = False
