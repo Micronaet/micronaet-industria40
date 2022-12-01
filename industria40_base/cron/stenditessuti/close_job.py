@@ -86,7 +86,6 @@ except:
     write_log(
         log_f, 'Creating pickle file: %s' % pickle_file)
     file_status_log = {}
-pdb.set_trace()
 
 for root, folders, files in os.walk(draft_path):
     for filename in files:
@@ -117,7 +116,6 @@ for root, folders, files in os.walk(draft_path):
                             log_f, 'Error no job %s present!' % job_id,
                             mode='ERROR')
                         continue
-                    pdb.set_trace()
                     if odoo_job.state != 'COMPLETED':
                         try:
                             job_pool.completed_fabric_job([job_id])
