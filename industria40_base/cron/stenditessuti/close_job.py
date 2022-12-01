@@ -84,7 +84,7 @@ for root, folders, files in os.walk(draft_path):
                             # No error for file pickle!
                             continue
 
-                        odoo_job = job_pool.browse([job_id])
+                        odoo_job = job_pool.browse(job_id)
                     except:
                         no_error = False
                         print('Error no job %s present!' % job_id)
