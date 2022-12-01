@@ -34,7 +34,7 @@ from datetime import datetime
 # -----------------------------------------------------------------------------
 # Utility:
 # -----------------------------------------------------------------------------
-log_f = open('/tmp/I40_fabric_close_job.log')
+log_f = open('/tmp/I40_fabric_close_job.log', 'w')
 
 
 def write_log(log_f, message, mode='INFO', verbose=True):
