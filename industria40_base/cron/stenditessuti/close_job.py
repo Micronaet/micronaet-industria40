@@ -32,6 +32,26 @@ except:
 from datetime import datetime
 
 # -----------------------------------------------------------------------------
+# Utility:
+# -----------------------------------------------------------------------------
+log_f = open('/tmp/I40_fabric_close_job.log')
+
+
+def write_log(log_f, message, mode='INFO', verbose=True):
+    """ Write log file
+    """
+    complete_message = '%s [%s]: %s' % (
+        str(datetime.now())[:19],
+        mode,
+        message,
+    )
+    if verbose:
+        print(' * {}'.format(complete_message))
+    log_f.write('{}\n'.format(complete_message))
+    log_f.flush()
+
+
+# -----------------------------------------------------------------------------
 # Read configuration parameter:
 # -----------------------------------------------------------------------------
 pickle_file = './file_status.log'
@@ -50,7 +70,7 @@ cut_path = os.path.expanduser(config.get('path', 'cut'))
 # -----------------------------------------------------------------------------
 # Connect to ODOO:
 # -----------------------------------------------------------------------------
-print('Connect to ODOO')
+write_log(log_f, 'Connect to ODOO')
 odoo = erppeek.Client(
     'http://%s:%s' % (
         server, port),
@@ -63,8 +83,11 @@ job_pool = odoo.model('industria.job')
 try:
     file_status_log = pickle.load(open(pickle_file, 'rb'))
 except:
+    write_log(
+        log_f, 'Creating pickle file: %s' % pickle_file)
     file_status_log = {}
 pdb.set_trace()
+
 for root, folders, files in os.walk(draft_path):
     for filename in files:
         fullname = os.path.join(root, filename)
@@ -73,31 +96,38 @@ for root, folders, files in os.walk(draft_path):
         # <fileNameMattress>S:\unicont\Job_70217.fks</fileNameMattress>
         if file_status_log.get(fullname) != modify_time:
             no_error = True
-            f_log = open(fullname, 'r')
-            for line in open(fullname):
+            f_detail = open(fullname, 'r')
+            for line in f_detail:
                 if 'fileNameMattress' in line and 'Job_' in line:
                     job_id = int(line.split('_')[-1].split('.')[0])
                     try:
                         job_ids = job_pool.search([('id', '=', job_id)])
                         if not job_ids:
-                            print('Error no job %s present!' % job_id)
+                            write_log(
+                                log_f, 'Error no job %s present!' % job_id,
+                                mode='ERROR')
                             # No error for file pickle!
                             continue
 
                         odoo_job = job_pool.browse(job_id)
                     except:
                         no_error = False
-                        print('Error no job %s present!' % job_id)
+                        write_log(
+                            log_f, 'Error no job %s present!' % job_id,
+                            mode='ERROR')
                         continue
                     pdb.set_trace()
                     if odoo_job.state != 'COMPLETED':
                         try:
                             job_pool.completed_fabric_job([job_id])
-                            print('Close job')
+                            write_log(
+                                log_f, 'Close job %s' % job_id)
                         except:
                             no_error = False
-                            print('Error closing Job: %s' % job_id)
-            f_log.close()
+                            write_log(
+                                log_f, 'Error closing Job: %s' % job_id,
+                                mode='ERROR')
+            f_detail.close()
 
             if no_error:
                 # No more read this file:
