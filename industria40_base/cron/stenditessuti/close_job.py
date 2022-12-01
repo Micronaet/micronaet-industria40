@@ -68,7 +68,7 @@ pdb.set_trace()
 for root, folders, files in os.walk(draft_path):
     for filename in files:
         fullname = os.path.join(root, filename)
-        modify_time = os.stat(fullname[os.stat.ST_MTIME])
+        modify_time = os.stat(fullname).st_mtime
         # modify_time = time.ctime(os.stat(fullname[os.stat.ST_MTIME]))
         # <fileNameMattress>S:\unicont\Job_70217.fks</fileNameMattress>
         if file_status_log.get(fullname) != modify_time:
