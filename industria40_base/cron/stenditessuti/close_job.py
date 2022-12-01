@@ -128,6 +128,11 @@ for root, folders, files in os.walk(draft_path):
                             write_log(
                                 log_f, 'Error closing Job: %s' % job_id,
                                 mode='ERROR')
+                    else:
+                        write_log(
+                            log_f, 'Yet closed job %s' % job_id,
+                            mode='WARNING')
+
             f_detail.close()
 
             if no_error:
