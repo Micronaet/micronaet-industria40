@@ -75,7 +75,7 @@ for root, folders, files in os.walk(draft_path):
             no_error = True
             f_log = open(fullname, 'r')
             for line in open(fullname):
-                if 'fileNameMattress' in line:
+                if 'fileNameMattress' in line and 'Job_' in line:
                     job_id = int(line.split('_')[-1].split('.')[0])
                     try:
                         job = job_pool.browse(job_id)
