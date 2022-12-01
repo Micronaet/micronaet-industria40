@@ -97,6 +97,7 @@ for root, folders, files in os.walk(draft_path):
         if file_status_log.get(fullname) != modify_time:
             no_error = True
             f_detail = open(fullname, 'r')
+            write_log(log_f, 'Reading file %s' % fullname)
             for line in f_detail:
                 if 'fileNameMattress' in line and 'Job_' in line:
                     job_id = int(line.split('_')[-1].split('.')[0])
@@ -132,6 +133,7 @@ for root, folders, files in os.walk(draft_path):
             if no_error:
                 # No more read this file:
                 file_status_log[fullname] = modify_time
+                write_log(log_f, 'No more reading file for %s' % fullname)
 
 # Store pickle information:
 pickle.dump(
