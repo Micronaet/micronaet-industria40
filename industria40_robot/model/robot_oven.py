@@ -382,7 +382,7 @@ class MrpProductionOvenCabin(orm.Model):
         'creation_date': fields.datetime('Data creazione'),
 
         'paused': fields.boolean('In pausa'),
-        'duration_pause': fields.float('Tot. pausa (min)', digits=(10, 3)),
+        'duration_pause': fields.float('Tot. pausa (M:SS)', digits=(10, 3)),
 
         'changing': fields.boolean('In cambio colore'),
         'duration_change': fields.float(
@@ -392,32 +392,32 @@ class MrpProductionOvenCabin(orm.Model):
         'speed_chain': fields.char('Velocità catena', size=45),
 
         'duration_chain_pause': fields.float(
-            'Durata pausa catena (min.)', digits=(10, 3)),
+            'Durata pausa catena (M:SS)', digits=(10, 3)),
         'duration_chain_work': fields.float(
-            'Durata marcia catena (min.)', digits=(10, 3)),
+            'Durata marcia catena (M:SS)', digits=(10, 3)),
 
         'duration_nozzle_11': fields.float(
-            'Tempo pistola 11 (min)', digits=(10, 3)),
+            'Tempo pistola 11 (M:SS)', digits=(10, 3)),
         'duration_nozzle_12': fields.float(
-            'Tempo pistola 12 (min)', digits=(10, 3)),
+            'Tempo pistola 12 (M:SS)', digits=(10, 3)),
         'duration_nozzle_13': fields.float(
-            'Tempo pistola 13 (min)', digits=(10, 3)),
+            'Tempo pistola 13 (M:SS)', digits=(10, 3)),
         'duration_nozzle_14': fields.float(
-            'Tempo pistola 14 (min)', digits=(10, 3)),
+            'Tempo pistola 14 (M:SS)', digits=(10, 3)),
         'duration_nozzle_15': fields.float(
-            'Tempo pistola 15 (min)', digits=(10, 3)),
+            'Tempo pistola 15 (M:SS)', digits=(10, 3)),
         'duration_nozzle_16': fields.float(
-            'Tempo pistola 16 (min)', digits=(10, 3)),
+            'Tempo pistola 16 (M:SS)', digits=(10, 3)),
         'duration_nozzle_21': fields.float(
-            'Tempo pistola 21 (min)', digits=(10, 3)),
+            'Tempo pistola 21 (M:SS)', digits=(10, 3)),
         'duration_nozzle_22': fields.float(
-            'Tempo pistola 22 (min)', digits=(10, 3)),
+            'Tempo pistola 22 (M:SS)', digits=(10, 3)),
         'duration_nozzle_23': fields.float(
-            'Tempo pistola 23 (min)', digits=(10, 3)),
+            'Tempo pistola 23 (M:SS)', digits=(10, 3)),
         'duration_nozzle_24': fields.float(
-            'Tempo pistola 24 (min)', digits=(10, 3)),
+            'Tempo pistola 24 (M:SS)', digits=(10, 3)),
         'duration_nozzle_25': fields.float(
-            'Tempo pistola 25 (min)', digits=(10, 3)),
+            'Tempo pistola 25 (M:SS)', digits=(10, 3)),
 
         'record_date': fields.datetime('Data registrazione'),
 
