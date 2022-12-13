@@ -382,7 +382,7 @@ class MrpProductionOvenCabin(orm.Model):
         'creation_date': fields.datetime('Data creazione'),
 
         'paused': fields.boolean('In pausa'),
-        'duration_pause': fields.float('Tot. pausa ore', digits=(10, 3)),
+        'duration_pause': fields.float('Tot. pausa (min)', digits=(10, 3)),
 
         'changing': fields.boolean('In cambio colore'),
         'duration_change': fields.float(
@@ -392,32 +392,32 @@ class MrpProductionOvenCabin(orm.Model):
         'speed_chain': fields.char('Velocità catena', size=45),
 
         'duration_chain_pause': fields.float(
-            'Durata pausa catena (ore)', digits=(10, 3)),
+            'Durata pausa catena (min.)', digits=(10, 3)),
         'duration_chain_work': fields.float(
-            'Durata marcia catena (ore)', digits=(10, 3)),
+            'Durata marcia catena (min.)', digits=(10, 3)),
 
         'duration_nozzle_11': fields.float(
-            'Tempo pistola 11 (ore)', digits=(10, 3)),
+            'Tempo pistola 11 (min)', digits=(10, 3)),
         'duration_nozzle_12': fields.float(
-            'Tempo pistola 12 (ore)', digits=(10, 3)),
+            'Tempo pistola 12 (min)', digits=(10, 3)),
         'duration_nozzle_13': fields.float(
-            'Tempo pistola 13 (ore)', digits=(10, 3)),
+            'Tempo pistola 13 (min)', digits=(10, 3)),
         'duration_nozzle_14': fields.float(
-            'Tempo pistola 14 (ore)', digits=(10, 3)),
+            'Tempo pistola 14 (min)', digits=(10, 3)),
         'duration_nozzle_15': fields.float(
-            'Tempo pistola 15 (ore)', digits=(10, 3)),
+            'Tempo pistola 15 (min)', digits=(10, 3)),
         'duration_nozzle_16': fields.float(
-            'Tempo pistola 16 (ore)', digits=(10, 3)),
+            'Tempo pistola 16 (min)', digits=(10, 3)),
         'duration_nozzle_21': fields.float(
-            'Tempo pistola 21 (ore)', digits=(10, 3)),
+            'Tempo pistola 21 (min)', digits=(10, 3)),
         'duration_nozzle_22': fields.float(
-            'Tempo pistola 22 (ore)', digits=(10, 3)),
+            'Tempo pistola 22 (min)', digits=(10, 3)),
         'duration_nozzle_23': fields.float(
-            'Tempo pistola 23 (ore)', digits=(10, 3)),
+            'Tempo pistola 23 (min)', digits=(10, 3)),
         'duration_nozzle_24': fields.float(
-            'Tempo pistola 24 (ore)', digits=(10, 3)),
+            'Tempo pistola 24 (min)', digits=(10, 3)),
         'duration_nozzle_25': fields.float(
-            'Tempo pistola 25 (ore)', digits=(10, 3)),
+            'Tempo pistola 25 (min)', digits=(10, 3)),
 
         'record_date': fields.datetime('Data registrazione'),
 
@@ -639,8 +639,8 @@ class IndustriaDatabase(orm.Model):
             # -----------------------------------------------------------------
             new_last_stat_id = record[0]
             creation_date = '%s %s' % (record[3], record[4])
-            duration_pause = (record[7] + record[6] / 60.0) / 60.0  # H.
-            duration_change = (record[10] + record[9] / 60.0) / 60.0  # H.
+            duration_pause = (record[7] + record[6] / 60.0)  # / 60.0  # m.
+            duration_change = (record[10] + record[9] / 60.0)  # / 60.0  # m.
             record_date = '%s %s' % (record[26], record[27])
 
             data = {
@@ -656,19 +656,19 @@ class IndustriaDatabase(orm.Model):
                 'duration_change': duration_change,
                 'total_change': record[11],
                 'speed_chain': record[12],
-                'duration_chain_pause': record[13] / 60.0,  # H.
-                'duration_chain_work': record[14] / 60.0,  # H.
-                'duration_nozzle_11': record[15] / 60.0,  # H.
-                'duration_nozzle_12': record[16] / 60.0,  # H.
-                'duration_nozzle_13': record[17] / 60.0,  # H.
-                'duration_nozzle_14': record[18] / 60.0,  # H.
-                'duration_nozzle_15': record[19] / 60.0,  # H.
-                'duration_nozzle_16': record[20] / 60.0,  # H.
-                'duration_nozzle_21': record[21] / 60.0,  # H.
-                'duration_nozzle_22': record[22] / 60.0,  # H.
-                'duration_nozzle_23': record[23] / 60.0,  # H.
-                'duration_nozzle_24': record[24] / 60.0,  # H.
-                'duration_nozzle_25': record[25] / 60.0,  # H.
+                'duration_chain_pause': record[13] #/ 60.0,  # H.
+                'duration_chain_work': record[14] #/ 60.0,  # H.
+                'duration_nozzle_11': record[15] #/ 60.0,  # H.
+                'duration_nozzle_12': record[16] #/ 60.0,  # H.
+                'duration_nozzle_13': record[17] #/ 60.0,  # H.
+                'duration_nozzle_14': record[18] #/ 60.0,  # H.
+                'duration_nozzle_15': record[19] #/ 60.0,  # H.
+                'duration_nozzle_16': record[20] #/ 60.0,  # H.
+                'duration_nozzle_21': record[21] #/ 60.0,  # H.
+                'duration_nozzle_22': record[22] #/ 60.0,  # H.
+                'duration_nozzle_23': record[23] #/ 60.0,  # H.
+                'duration_nozzle_24': record[24] #/ 60.0,  # H.
+                'duration_nozzle_25': record[25] #/ 60.0,  # H.
                 'record_date': record_date,
                 'color_code': record[28],
                 'color_description': record[29],
