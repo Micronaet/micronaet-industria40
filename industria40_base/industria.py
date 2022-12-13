@@ -225,6 +225,14 @@ class IndustriaProduction(orm.Model):
         ], context=context_forced)
 
         _logger.info('Send data to robot...')
+
+        # todo
+        # try:
+        #     robot.disconnect()
+        # except:
+        #     _logger.error('Error disconnecting robot OPCUA!\n{}'.format(
+        #         sys.exc_info(),
+        #     ))
         return self.write(cr, uid, ids, {
             'state': 'RUNNING',
         }, context=context)
@@ -461,6 +469,15 @@ class IndustriaDatabase(orm.Model):
             _logger.info('Cleaned program')
         else:
             _logger.error('ODOO production not found!')
+
+        # todo
+        # try:
+        #     robot.disconnect()
+        # except:
+        #     _logger.error('Error disconnecting robot OPCUA!\n{}'.format(
+        #         sys.exc_info(),
+        #     ))
+
         return True
 
     def get_data_value(
@@ -1631,6 +1648,7 @@ class IndustriaRobot(orm.Model):
             # Write in ODOO:
             self.write_record_in_odoo(
                 cr, uid, robot_id, record, ref, context=context)
+
         try:
             robot.disconnect()
         except:
