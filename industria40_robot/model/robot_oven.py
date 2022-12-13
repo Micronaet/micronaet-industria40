@@ -593,7 +593,6 @@ class IndustriaDatabase(orm.Model):
         url, headers, payload = cabin_call
 
         # Read all Job selected data:
-        pdb.set_trace()
         query = '''
             SELECT 
                 SIIMPID0, SIIMPCIMP, SIIMPCSED, SIIMPDTC, SIIMPORC,
