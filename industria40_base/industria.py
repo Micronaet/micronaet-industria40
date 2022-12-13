@@ -324,6 +324,7 @@ class IndustriaDatabase(orm.Model):
         headers = {
             'content-type': 'application/json',
         }
+        pdb.set_trace()
         payload = {
             'jsonrpc': '2.0',
             'params': {
@@ -2399,7 +2400,6 @@ class IndustriaJob(orm.Model):
         if context is None:
             context = {}
 
-        pdb.set_trace()
         database_pool = self.pool.get('industria.database')
         production_pool = self.pool.get('industria.production')
         source_pool = self.pool.get('industria.robot')
