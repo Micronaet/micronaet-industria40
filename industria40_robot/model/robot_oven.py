@@ -621,6 +621,7 @@ class IndustriaDatabase(orm.Model):
         # 3. Update / Create statistic records:
         records = response_json['reply'].get('record') or []
         new_last_stat_id = last_stat_id  # Keep same if no loop
+        last_oven_stat_id = False
         # todo check max sql_id to test last insert?
         for record in records:
             # -----------------------------------------------------------------
@@ -678,9 +679,19 @@ class IndustriaDatabase(orm.Model):
                 'job_year': record[32],
                 'mode': record[34],
             }
-            stat_pool.create(cr, uid, data, context=context)
+            last_oven_stat_id = stat_pool.create(
+                cr, uid, data, context=context)
 
         # Update last record:
+        if last_oven_stat_id:
+            self.write(cr, uid, ids, {
+                'last_oven_stat_id': last_oven_stat_id,
+                }, context=context)
         return self.write(cr, uid, ids, {
             'last_stat_id': new_last_stat_id,
         }, context=context)
+
+    _columns = {
+        'last_oven_stat_id': fields.many2one(
+            'mrp.production.oven.cabin', 'Ultimo record stat'),
+    }
