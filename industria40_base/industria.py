@@ -2414,8 +2414,8 @@ class IndustriaJob(orm.Model):
         # =====================================================================
         # 1. Send to OVEN BOX:
         # =====================================================================
-        robot_site_code = robot.site_code or ''
-        robot_ref_code = robot.ref_code or ''
+        robot_site_code = source.site_code or ''
+        robot_ref_code = source.ref_code or ''
         cabin_call = database_pool.get_flask_sql_call(
             cr, uid, database, context=context)
         if cabin_call:
@@ -2563,6 +2563,12 @@ class IndustriaJob(orm.Model):
             source.id,
         ], context=context_forced)
 
+        try:
+            robot.disconnect()
+        except:
+            _logger.error('Error disconnecting robot OPCUA!\n{}'.format(
+                sys.exc_info(),
+            ))
         _logger.info('Send data to robot...')
         return self.write(cr, uid, ids, {
             'state': 'RUNNING',
