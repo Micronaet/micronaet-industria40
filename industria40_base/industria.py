@@ -1756,7 +1756,8 @@ class IndustriaRobot(orm.Model):
         'code': fields.char('Codice', size=20, required=True),
         'site_code': fields.char(
             'Codice impianto', size=20,
-            help='Codice impianto usato spesso per indetivi'),
+            help='Codice usato spesso per indetificare '
+                 'l\'impianto'),
         'ref_code': fields.char('Riferimento impianto', size=20),
         'opcua_mask': fields.char('OPCUA Mask', size=180),
         'industria_ref': fields.integer('Industria ref key'),

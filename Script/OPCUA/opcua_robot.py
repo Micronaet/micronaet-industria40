@@ -126,6 +126,7 @@ class RobotOPCUA:
         except:
             raise ValueError(
                 'Cannot read: %s, robot unplugged?' % node_description)
+                'Cannot read: %s, robot unplugged?' % node_description)
         if verbose:
             comment = comment or node_description
             print(comment, data)
