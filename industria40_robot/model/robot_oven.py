@@ -656,19 +656,19 @@ class IndustriaDatabase(orm.Model):
                 'duration_change': duration_change,
                 'total_change': record[11],
                 'speed_chain': record[12],
-                'duration_chain_pause': record[13] #/ 60.0,  # H.
-                'duration_chain_work': record[14] #/ 60.0,  # H.
-                'duration_nozzle_11': record[15] #/ 60.0,  # H.
-                'duration_nozzle_12': record[16] #/ 60.0,  # H.
-                'duration_nozzle_13': record[17] #/ 60.0,  # H.
-                'duration_nozzle_14': record[18] #/ 60.0,  # H.
-                'duration_nozzle_15': record[19] #/ 60.0,  # H.
-                'duration_nozzle_16': record[20] #/ 60.0,  # H.
-                'duration_nozzle_21': record[21] #/ 60.0,  # H.
-                'duration_nozzle_22': record[22] #/ 60.0,  # H.
-                'duration_nozzle_23': record[23] #/ 60.0,  # H.
-                'duration_nozzle_24': record[24] #/ 60.0,  # H.
-                'duration_nozzle_25': record[25] #/ 60.0,  # H.
+                'duration_chain_pause': record[13],  # / 60.0,  # H.
+                'duration_chain_work': record[14],  # / 60.0,  # H.
+                'duration_nozzle_11': record[15],  # / 60.0,  # H.
+                'duration_nozzle_12': record[16],  # / 60.0,  # H.
+                'duration_nozzle_13': record[17],  # / 60.0,  # H.
+                'duration_nozzle_14': record[18],  # / 60.0,  # H.
+                'duration_nozzle_15': record[19],  # / 60.0,  # H.
+                'duration_nozzle_16': record[20],  # / 60.0,  # H.
+                'duration_nozzle_21': record[21],  # / 60.0,  # H.
+                'duration_nozzle_22': record[22],  # / 60.0,  # H.
+                'duration_nozzle_23': record[23],  # / 60.0,  # H.
+                'duration_nozzle_24': record[24],  # / 60.0,  # H.
+                'duration_nozzle_25': record[25],  # / 60.0,  # H.
                 'record_date': record_date,
                 'color_code': record[28],
                 'color_description': record[29],
