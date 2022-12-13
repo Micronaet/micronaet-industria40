@@ -113,7 +113,6 @@ def ODOOCall():
 
     elif command == 'mysql_select':
         try:
-            pdb.set_trace()
             connection = mysql.connector.connect(**mysql_param)
             cur = connection.cursor()
             query = params.get('query')

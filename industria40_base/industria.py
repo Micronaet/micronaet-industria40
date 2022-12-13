@@ -324,7 +324,6 @@ class IndustriaDatabase(orm.Model):
         headers = {
             'content-type': 'application/json',
         }
-        pdb.set_trace()
         payload = {
             'jsonrpc': '2.0',
             'params': {
