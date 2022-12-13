@@ -70,9 +70,16 @@
                 />
             <menuitem
                 parent="menu_industria_robot4"
+                id="menu_industria_job_cabin_stats"
+                action="industria40_base.action_view_mrp_production_oven_cabin_tree"
+                sequence="50"
+                groups="industria40_base.group_industria_manager"
+                />
+            <menuitem
+                parent="menu_industria_robot4"
                 id="menu_industria_job_search_wizard"
                 action="industria40_base.action_view_industria_job_barcode_search_wizard"
-                sequence="50"
+                sequence="90"
                 groups="industria40_base.group_industria_manager"
                 />
     </data>
