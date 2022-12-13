@@ -575,7 +575,6 @@ class IndustriaDatabase(orm.Model):
         """ Load statistic for this jobs
             Button mode event  but could be used from scheduled Job
         """
-        pdb.set_trace()
         job_pool = self.pool.get('industria.job')
         stat_pool = self.pool.get('mrp.production.oven.cabin')
         # Search oven cabin job passed and generate statistics
@@ -594,6 +593,7 @@ class IndustriaDatabase(orm.Model):
         url, headers, payload = cabin_call
 
         # Read all Job selected data:
+        pdb.set_trace()
         query = '''
             SELECT 
                 SIIMPID0, SIIMPCIMP, SIIMPCSED, SIIMPDTC, SIIMPORC,

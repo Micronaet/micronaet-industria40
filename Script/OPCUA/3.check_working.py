@@ -94,6 +94,7 @@ status = {
 
 date_range = [6, 20]
 
+
 # -----------------------------------------------------------------------------
 # Utility:
 # -----------------------------------------------------------------------------
@@ -112,6 +113,7 @@ def send_telegram_message(bot, message, telegram_group, timeout, verbose=True):
                 print('[ERR] Not send: %s' % message)
             time.sleep(timeout)
     return True
+
 
 robot = False
 try:
