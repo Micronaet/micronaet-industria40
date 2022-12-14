@@ -98,7 +98,6 @@ def ODOOCall():
         'success': False,
         'reply': {},
         }
-    pdb.set_trace()
     if 'mysql' in params:
         # MySQL call:
         mysql_param = params.get('mysql', {})
