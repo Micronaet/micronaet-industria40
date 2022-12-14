@@ -2427,6 +2427,7 @@ class IndustriaJob(orm.Model):
         database = job.database_id
         program = job.program_id
         source = job.source_id
+        pdb.set_trace()
         robot = database_pool.get_robot(database)
 
         # =====================================================================
