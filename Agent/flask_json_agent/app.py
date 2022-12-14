@@ -147,7 +147,6 @@ def ODOOCall():
     elif command == 'mysql_insert':
         # Insert Job on I40 robot:
         try:
-            pdb.set_trace()
             connection = mysql.connector.connect(**mysql_param)
             cur = connection.cursor()
 
