@@ -1882,7 +1882,7 @@ class IndustriaProgram(orm.Model):
         }, context=context)
 
     _columns = {
-        'code': fields.char('Code', size=30),
+        'code': fields.char('Code', size=40),
         'name': fields.char('Name', size=64, required=True),
         'industria_ref': fields.integer('Industria ref key'),
         'timeout': fields.integer('Timeout'),
