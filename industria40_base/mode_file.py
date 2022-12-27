@@ -169,7 +169,6 @@ class IndustriaRobot(orm.Model):
         excel_pool.autofilter(ws_name, row, 0, row, len(header) - 1)
         excel_pool.freeze_panes(ws_name, row + 1, 3)
 
-        color = excel_format['black']
         for program in sorted(robot.program_ids):
             program_line = [
                 robot.name,
@@ -188,7 +187,7 @@ class IndustriaRobot(orm.Model):
             for fabric in program.fabric_ids:
                 # fabric_id  (AUTO MRP)
                 for part in fabric.part_ids:  # >= 1
-                    header_col = excel_format['green']  # if present
+                    header_color = excel_format['green']  # if present
 
                     part_line = [
                         part.mask,
