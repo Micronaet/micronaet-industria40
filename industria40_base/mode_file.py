@@ -198,11 +198,11 @@ class IndustriaRobot(orm.Model):
                     # ---------------------------------------------------------
                     # Product part:
                     # ---------------------------------------------------------
-                    row += 1
                     excel_pool.write_xls_line(
                         ws_name, row, part_line,
                         default_format=excel_format['green']['text'],
                         col=header_col)
+                    row += 1
 
             excel_pool.write_xls_line(
                 ws_name, header_row, program_line,
