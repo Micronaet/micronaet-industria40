@@ -194,6 +194,10 @@ class IndustriaRobot(orm.Model):
             for fabric in program.fabric_ids:
                 layer += 1
                 # fabric_id  (AUTO MRP)
+                if len(fabric.part_ids) > 1:
+                    line_color = excel_format['blue']
+                else:
+                    line_color = excel_format['green']
                 for part in fabric.part_ids:
                     semiproduct += 1
                     part_line = [
@@ -206,7 +210,7 @@ class IndustriaRobot(orm.Model):
                     # ---------------------------------------------------------
                     excel_pool.write_xls_line(
                         ws_name, row, part_line,
-                        default_format=excel_format['green']['text'],
+                        default_format=line_color['text'],
                         col=header_col)
                     row += 1
 
