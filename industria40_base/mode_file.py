@@ -160,9 +160,7 @@ class IndustriaRobot(orm.Model):
         header = [
             'Robot',
             'Codice', 'Nome', 'Filename', 'Lunghezza',
-
-            u'[Marchera]',
-            u'[Totale]',
+            u'[Marchera]', u'[Totale]',
         ]
 
         excel_pool.write_xls_line(
