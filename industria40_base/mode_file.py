@@ -169,6 +169,7 @@ class IndustriaRobot(orm.Model):
         excel_pool.autofilter(ws_name, row, 0, row, len(header) - 1)
         excel_pool.freeze_panes(ws_name, row + 1, 3)
 
+        row += 1
         for program in sorted(robot.program_ids):
             program_line = [
                 robot.name,
