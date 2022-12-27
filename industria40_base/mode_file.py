@@ -105,6 +105,105 @@ class IndustriaRobot(orm.Model):
 
     _inherit = 'industria.robot'
 
+    def report_fabric_program(self, cr, uid, ids, context=None):
+        """ Report program
+        """
+        # Pool used:
+        excel_pool = self.pool.get('excel.writer')
+
+        # ---------------------------------------------------------------------
+        #                         Excel report:
+        # ---------------------------------------------------------------------
+        robot = self.browse(cr, uid, ids, context=context)[0]
+
+        ws_name = u'Programmi prodotti'
+        excel_pool.create_worksheet(ws_name)
+
+        # Load formats:
+        excel_format = {
+            'title': excel_pool.get_format('title'),
+            'header': excel_pool.get_format('header'),
+            'black': {
+                'text': excel_pool.get_format('text'),
+                'number': excel_pool.get_format('number'),
+            },
+            'red': {
+                'text': excel_pool.get_format('bg_red'),
+                'number': excel_pool.get_format('bg_red_number'),
+            },
+            'yellow': {
+                'text': excel_pool.get_format('bg_yellow'),
+                'number': excel_pool.get_format('bg_yellow_number'),
+            },
+            'green': {
+                'text': excel_pool.get_format('bg_green'),
+                'number': excel_pool.get_format('bg_green_number'),
+            },
+            'grey': {
+                'text': excel_pool.get_format('bg_grey'),
+                'number': excel_pool.get_format('bg_grey_number'),
+            },
+        }
+
+        # ---------------------------------------------------------------------
+        # Published product:
+        # ---------------------------------------------------------------------
+        # Width
+        excel_pool.column_width(ws_name, [
+            25,
+            10, 25, 25, 10,
+            10, 10,
+        ])
+
+        # Print header
+        row = 0
+        header = [
+            'Robot',
+            'Codice', 'Nome', 'Filename', 'Lunghezza',
+
+            u'[Marchera]',
+            u'[Totale]',
+        ]
+
+        excel_pool.write_xls_line(
+            ws_name, row, header, default_format=excel_format['header'])
+        excel_pool.autofilter(ws_name, row, 0, row, len(header) - 1)
+        excel_pool.freeze_panes(ws_name, row + 1, 3)
+
+        color = excel_format['black']
+        for program in sorted(robot.program_ids):
+            program_line = [
+                robot.name,
+                program.code,
+                program.name,
+                program.fabric_filename,
+                program.fabric_length,
+            ]
+            # -----------------------------------------------------------------
+            # Program part:
+            # -----------------------------------------------------------------
+            row += 1
+            excel_pool.write_xls_line(
+                ws_name, row, program_line,
+                default_format=color['text'])
+
+            for fabric in program.fabric_ids:
+                # fabric_id  (AUTO MRP)
+                for part in fabric.part_ids:  # >= 1
+                    part_line = [
+                        part.mask,
+                        part.total,
+                    ]
+
+                    # ---------------------------------------------------------
+                    # Product part:
+                    # ---------------------------------------------------------
+                    row += 1
+                    excel_pool.write_xls_line(
+                        ws_name, row, part_line,
+                        default_format=color['text'])
+        return excel_pool.return_attachment(cr, uid, 'fabric_program')
+
     def load_fabric_program(self, cr, uid, ids, context=None):
         """ Load all daily file from data folder
         """

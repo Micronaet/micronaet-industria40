@@ -237,7 +237,8 @@
                                 <page name="program_page" string="Program">
                                     <group colspan="4" col="4">
                                         <separator string="Program" colspan="2"/>
-                                        <button name="load_fabric_program" type="object" string="Carica programmi CAD" icon="STOCK_DND_MULTIPLE" colspan="2"/>
+                                        <button name="load_fabric_program" type="object" string="Carica programmi CAD" icon="STOCK_DND_MULTIPLE" colspan="1"/>
+                                        <button name="report_fabric_program" type="object" string="Stampa programmi CAD" icon="gtk-print" colspan="1"/>
                                         <!--<button name="button_generate_matching_product_program_all" type="object" string="Abbiana i programmi ai prodotti" icon="gtk-execute" colspan="1" confirm="Abbino tutti i programmi ai relativi prodotti? (l'operazione dura parecchio)"/>-->
 
                                         <field name="program_ids" colspan="4" nolabel="1"/>
