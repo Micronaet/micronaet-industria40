@@ -151,7 +151,7 @@ class IndustriaRobot(orm.Model):
         # Width
         excel_pool.column_width(ws_name, [
             25,
-            10, 25, 25, 10,
+            10, 25, 25, 10, 8,
             10, 10,
         ])
 
@@ -159,7 +159,7 @@ class IndustriaRobot(orm.Model):
         row = 0
         header = [
             'Robot',
-            'Codice', 'Nome', 'Filename', 'Lunghezza',
+            'Codice', 'Nome', 'Filename', 'Lunghezza', 'Tot. SL',
             u'[Marchera]', u'[Totale]',
         ]
         header_col = len(header) - 2
@@ -178,6 +178,7 @@ class IndustriaRobot(orm.Model):
                 program.name,
                 program.fabric_filename,
                 program.fabric_length,
+                0,  # tot semi product
             ]
             # -----------------------------------------------------------------
             # Program part:
@@ -186,9 +187,11 @@ class IndustriaRobot(orm.Model):
             header_color = excel_format['red']
             # row += 1
 
+            semiproduct = 0
             for fabric in program.fabric_ids:
                 # fabric_id  (AUTO MRP)
                 for part in fabric.part_ids:  # >= 1
+                    semiproduct += 1
                     header_color = excel_format['green']  # if present
 
                     part_line = [
@@ -204,7 +207,7 @@ class IndustriaRobot(orm.Model):
                         default_format=excel_format['green']['text'],
                         col=header_col)
                     row += 1
-
+            program_line[-1] = semiproduct
             excel_pool.write_xls_line(
                 ws_name, header_row, program_line,
                 default_format=header_color['text'])
