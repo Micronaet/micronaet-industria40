@@ -182,7 +182,7 @@ class IndustriaRobot(orm.Model):
             # Program part:
             # -----------------------------------------------------------------
             header_row = row
-            header_col = excel_format['red']
+            header_color = excel_format['red']
             row += 1  # Written after
 
             for fabric in program.fabric_ids:
@@ -206,7 +206,7 @@ class IndustriaRobot(orm.Model):
 
             excel_pool.write_xls_line(
                 ws_name, header_row, program_line,
-                default_format=color['text'])
+                default_format=header_color['text'])
 
         return excel_pool.return_attachment(cr, uid, 'fabric_program')
 
