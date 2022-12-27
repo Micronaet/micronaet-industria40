@@ -127,6 +127,10 @@ class IndustriaRobot(orm.Model):
                 'text': excel_pool.get_format('text'),
                 'number': excel_pool.get_format('number'),
             },
+            'blue': {
+                'text': excel_pool.get_format('bg_blue'),
+                'number': excel_pool.get_format('bg_blue_number'),
+            },
             'red': {
                 'text': excel_pool.get_format('bg_red'),
                 'number': excel_pool.get_format('bg_red_number'),
