@@ -151,7 +151,7 @@ class IndustriaRobot(orm.Model):
         # Width
         excel_pool.column_width(ws_name, [
             25,
-            10, 25, 25, 10, 8,
+            15, 25, 25, 10, 8, 8,
             10, 10,
         ])
 
@@ -159,7 +159,8 @@ class IndustriaRobot(orm.Model):
         row = 0
         header = [
             'Robot',
-            'Codice', 'Nome', 'Filename', 'Lunghezza', 'Tot. SL',
+            'Codice', 'Nome', 'Filename', 'Lunghezza',
+            'Tot. strati', 'Tot. SL',
             u'[Marchera]', u'[Totale]',
         ]
         header_col = len(header) - 2
@@ -167,7 +168,7 @@ class IndustriaRobot(orm.Model):
         excel_pool.write_xls_line(
             ws_name, row, header, default_format=excel_format['header'])
         excel_pool.autofilter(ws_name, row, 0, row, len(header) - 1)
-        excel_pool.freeze_panes(ws_name, row + 1, 3)
+        excel_pool.freeze_panes(ws_name, row + 1, 4)
 
         row += 1
         for program in sorted(robot.program_ids):
@@ -178,7 +179,8 @@ class IndustriaRobot(orm.Model):
                 program.name,
                 program.fabric_filename,
                 program.fabric_length,
-                0,  # tot semi product
+                0,  # tot. layer
+                0,  # tot. semi product
             ]
             # -----------------------------------------------------------------
             # Program part:
@@ -187,8 +189,9 @@ class IndustriaRobot(orm.Model):
             header_color = excel_format['red']
             # row += 1
 
-            semiproduct = 0
+            semiproduct = layer = 0
             for fabric in program.fabric_ids:
+                layer += 1
                 # fabric_id  (AUTO MRP)
                 for part in fabric.part_ids:  # >= 1
                     semiproduct += 1
@@ -207,7 +210,12 @@ class IndustriaRobot(orm.Model):
                         default_format=excel_format['green']['text'],
                         col=header_col)
                     row += 1
+
+            # Update total:
+            program_line[-2] = layer
             program_line[-1] = semiproduct
+
+            # Write program line:
             excel_pool.write_xls_line(
                 ws_name, header_row, program_line,
                 default_format=header_color['text'])
