@@ -186,17 +186,12 @@ class IndustriaRobot(orm.Model):
             # Program part:
             # -----------------------------------------------------------------
             header_row = row
-            header_color = excel_format['red']
-            # row += 1
-
             semiproduct = layer = 0
             for fabric in program.fabric_ids:
                 layer += 1
                 # fabric_id  (AUTO MRP)
-                for part in fabric.part_ids:  # >= 1
+                for part in fabric.part_ids:
                     semiproduct += 1
-                    header_color = excel_format['green']  # if present
-
                     part_line = [
                         part.mask,
                         part.total,
@@ -215,7 +210,17 @@ class IndustriaRobot(orm.Model):
             program_line[-2] = layer
             program_line[-1] = semiproduct
 
+            # Setup color:
+            if semiproduct == 1:
+                header_color = excel_format['green']
+            elif semiproduct > 1:
+                header_color = excel_format['blue']
+            else:  # 0
+                header_color = excel_format['red']
+
+            # -----------------------------------------------------------------
             # Write program line:
+            # -----------------------------------------------------------------
             excel_pool.write_xls_line(
                 ws_name, header_row, program_line,
                 default_format=header_color['text'])
