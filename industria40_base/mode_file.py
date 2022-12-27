@@ -171,6 +171,7 @@ class IndustriaRobot(orm.Model):
 
         row += 1
         for program in sorted(robot.program_ids):
+            # Written after
             program_line = [
                 robot.name,
                 program.code,
@@ -183,7 +184,7 @@ class IndustriaRobot(orm.Model):
             # -----------------------------------------------------------------
             header_row = row
             header_color = excel_format['red']
-            row += 1  # Written after
+            # row += 1
 
             for fabric in program.fabric_ids:
                 # fabric_id  (AUTO MRP)
