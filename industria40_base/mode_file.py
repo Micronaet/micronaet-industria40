@@ -211,6 +211,8 @@ class IndustriaRobot(orm.Model):
             excel_pool.write_xls_line(
                 ws_name, header_row, program_line,
                 default_format=header_color['text'])
+            if not semiproduct:
+                row += 1
 
         return excel_pool.return_attachment(cr, uid, 'fabric_program')
 
