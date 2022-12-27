@@ -162,6 +162,7 @@ class IndustriaRobot(orm.Model):
             'Codice', 'Nome', 'Filename', 'Lunghezza',
             u'[Marchera]', u'[Totale]',
         ]
+        header_col = len(header) - 2
 
         excel_pool.write_xls_line(
             ws_name, row, header, default_format=excel_format['header'])
@@ -180,14 +181,15 @@ class IndustriaRobot(orm.Model):
             # -----------------------------------------------------------------
             # Program part:
             # -----------------------------------------------------------------
-            row += 1
-            excel_pool.write_xls_line(
-                ws_name, row, program_line,
-                default_format=color['text'])
+            header_row = row
+            header_col = excel_format['red']
+            row += 1  # Written after
 
             for fabric in program.fabric_ids:
                 # fabric_id  (AUTO MRP)
                 for part in fabric.part_ids:  # >= 1
+                    header_col = excel_format['green']  # if present
+
                     part_line = [
                         part.mask,
                         part.total,
@@ -199,7 +201,13 @@ class IndustriaRobot(orm.Model):
                     row += 1
                     excel_pool.write_xls_line(
                         ws_name, row, part_line,
-                        default_format=color['text'])
+                        default_format=excel_format['green']['text'],
+                        col=header_col)
+
+            excel_pool.write_xls_line(
+                ws_name, header_row, program_line,
+                default_format=color['text'])
+
         return excel_pool.return_attachment(cr, uid, 'fabric_program')
 
     def load_fabric_program(self, cr, uid, ids, context=None):
