@@ -415,11 +415,12 @@ class IndustriaMrp(orm.Model):
                         # Link product from program to fabric step:
                         # -----------------------------------------------------
                         # Multi semiproduct integration:
-                        for product_id, block in load_product:
-                            total_product = this_layer * block
+                        for semiproduct_id, semiproduct_block in \
+                                load_product:
+                            total_product = this_layer * semiproduct_block
                             fabric_product_pool.create(cr, uid, {
                                 'fabric_id': fabric_line_id,
-                                'product_id': product_id,
+                                'product_id': semiproduct_id,
                                 'total': total_product,
                             }, context=context)
 
