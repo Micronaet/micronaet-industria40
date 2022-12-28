@@ -110,11 +110,13 @@ class IndustriaRobot(orm.Model):
         """
         # Pool used:
         excel_pool = self.pool.get('excel.writer')
+        program_pool = self.pool.get('industria.program')
 
         # ---------------------------------------------------------------------
         #                         Excel report:
         # ---------------------------------------------------------------------
-        robot = self.browse(cr, uid, ids, context=context)[0]
+        robot_id = ids[0]
+        robot = self.browse(cr, uid, robot_id, context=context)
 
         ws_name = u'Programmi prodotti'
         excel_pool.create_worksheet(ws_name)
@@ -176,8 +178,13 @@ class IndustriaRobot(orm.Model):
         excel_pool.autofilter(ws_name, row, 0, row, len(header) - 1)
         excel_pool.freeze_panes(ws_name, row + 1, 4)
 
+        program_ids = program_pool.search(cr, uid, [
+            ('active', 'in', (True, False)),
+            ('robot_id', '=', robot_id),
+        ], context=context)
         row += 1
-        for program in sorted(robot.program_ids):
+        for program in program_pool.browse(
+                cr, uid, program_ids, context=context):
             # Written after
             active = program.active
             program_line = [
