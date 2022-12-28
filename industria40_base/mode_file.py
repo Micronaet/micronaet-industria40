@@ -157,8 +157,8 @@ class IndustriaRobot(orm.Model):
         # Width
         excel_pool.column_width(ws_name, [
             # 5,
-            25,
-            15, 25, 25, 10, 8, 8,
+            20,
+            20, 22, 22, 10, 8, 8,
             10, 10,
         ])
 
@@ -168,8 +168,8 @@ class IndustriaRobot(orm.Model):
             # 'Attivo',
             'Robot',
             'Codice', 'Nome', 'Filename', 'Lunghezza',
-            'Tot. strati', 'Tot. SL',
-            u'[Marchera]', u'[Totale]',
+            'Strati', 'Semil.',
+            u'[Maschera]', u'[Totale]',
         ]
         header_col = len(header) - 2
 
