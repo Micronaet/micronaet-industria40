@@ -271,6 +271,7 @@ class IndustriaMrp(orm.Model):
             fabric = line.fabric
             # Extract max layer from fabric
             max_layer = layer_db.get(fabric[:3], robot.max_layer)
+
             # todo manage max length
             # todo manage max layer depend on fabric
 
@@ -278,6 +279,8 @@ class IndustriaMrp(orm.Model):
             load_product = [
                 (product_id, block),
             ]
+            # Check other product in multi part program:
+
 
             # -----------------------------------------------------------------
             # Initial check:
@@ -584,6 +587,7 @@ class IndustriaMrp(orm.Model):
                 'program_id': program_id,
                 'product_id': semiproduct.id,
                 'material_id': material.id,
+                'bom_material_id': material.id,  # Stored for read original BOM
                 'fabric': fabric,
                 'color': color_part,
                 'sequence': sequence,
@@ -1070,6 +1074,11 @@ class IndustriaMrpLine(orm.Model):
             'stock.move', 'Movimenti assegnati', ondelete='set null',
             help='Collegamento al movimento che scarica gli impegni per questo'
                  'semilavorato'),
+        'bom_material_id': fields.many2one(
+            'product.product', 'Materiale DB',
+            help='Materiale originale nella distinta base, utilizzato per'
+                 'cercare eventuali altri semilavorati correttamente '
+                 'qualora venisse cambiato il tessuto nelle lavorazioni.'),
         'material_id': fields.many2one(
             'product.product', 'Materiale'),
         'product_id': fields.many2one(
