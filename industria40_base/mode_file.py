@@ -181,7 +181,7 @@ class IndustriaRobot(orm.Model):
         cr.execute('''
             SELECT id 
             FROM industria_program 
-            WHERE source_id=%s AND active='f';
+            WHERE source_id=%s AND active='t';
             ''', [robot_id])   # todo only active
         # program_ids = program_pool.search(cr, uid, [
         #    ('active', '=', (True, False)),
