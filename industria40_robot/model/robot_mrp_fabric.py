@@ -274,6 +274,11 @@ class IndustriaMrp(orm.Model):
             # todo manage max length
             # todo manage max layer depend on fabric
 
+            # Multi semiproduct management:
+            load_product = [
+                (product_id, block),
+            ]
+
             # -----------------------------------------------------------------
             # Initial check:
             # -----------------------------------------------------------------
@@ -364,12 +369,14 @@ class IndustriaMrp(orm.Model):
                         # -----------------------------------------------------
                         # Link product from program to fabric step:
                         # -----------------------------------------------------
-                        total_product = this_layer * block
-                        fabric_product_pool.create(cr, uid, {
-                            'fabric_id': fabric_line_id,
-                            'product_id': product_id,
-                            'total': total_product,
-                        }, context=context)
+                        # Multi semiproduct integration:
+                        for product_id, block in load_product:
+                            total_product = this_layer * block
+                            fabric_product_pool.create(cr, uid, {
+                                'fabric_id': fabric_line_id,
+                                'product_id': product_id,
+                                'total': total_product,
+                            }, context=context)
 
                 # todo add also extra semi product not used here (from program)
                 # Some program has 2 different semi product maybe one is not
