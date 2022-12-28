@@ -184,6 +184,7 @@ class IndustriaMrp(orm.Model):
     def generate_industria_job(self, cr, uid, ids, context=None):
         """ Generate job from exploded component
         """
+        bom_pool = self.pool.get('mrp.bom.line')
         job_pool = self.pool.get('industria.job')
         semiproduct_pool = self.pool.get('industria.mrp.line')
         step_pool = self.pool.get('industria.job.step')
@@ -275,12 +276,53 @@ class IndustriaMrp(orm.Model):
             # todo manage max length
             # todo manage max layer depend on fabric
 
-            # Multi semiproduct management:
+            # -----------------------------------------------------------------
+            # Check other product in multi part program:
+            # -----------------------------------------------------------------
+            # Multi semiproduct management (normal part):
+            # -----------------------------------------------------------------
             load_product = [
                 (product_id, block),
-            ]
-            # Check other product in multi part program:
+                ]
 
+            # -----------------------------------------------------------------
+            # Extra part:
+            # -----------------------------------------------------------------
+            # Read original fabric in DB (could be changed):
+            bom_fabric_id = line.bom_fabric_id or line.fabric_id
+            extra_parts = [p for p in part.fabric_id.part_ids if p != part]
+            for extra_part in extra_parts:   # Multi semiproduct program
+                extra_mask = extra_part.mask
+                extra_bom_ids = bom_pool.search(cr, uid, [
+                    ('product_id', '=', bom_fabric_id),  # Same fabric
+                    ('bom_id.product_id.default_code', '=ilike', extra_mask)
+                    # relative_type half,
+                    # todo usare prodotti per ricerca? halfwork_id
+                ], context=context)
+
+                if not extra_bom_ids:
+                    raise osv.except_osv(
+                        _('Errore DB'),
+                        _('Non è possibile trovare una distinta base per '
+                          'semilavorato con maschera: %s e tessuto %s!' % (
+                              extra_mask,
+                              fabric.name,
+                              )))
+                if len(extra_bom_ids) > 1:
+                    raise osv.except_osv(
+                        _('Errore DB'),
+                        _('Trovate più distinte per semilavorato '
+                          'con maschera: %s e tessuto %s!' % (
+                              extra_mask,
+                              fabric.name,
+                              )))
+
+                extra_bom = bom_pool.browse(
+                    cr, uid, extra_bom_ids, context=context)[0]
+                extra_product_id = extra_bom.bom_id.product_id.id
+                load_product.append(
+                    (extra_product_id, extra_part.total * step),
+                )
 
             # -----------------------------------------------------------------
             # Initial check:
