@@ -226,12 +226,12 @@ class IndustriaRobot(orm.Model):
 
             # Setup color:
             if not active:
-                line_color = excel_format['grey']
+                header_color = excel_format['grey']
             elif semiproduct == 1:
                 header_color = excel_format['green']
             elif semiproduct > 1:
                 header_color = excel_format['blue']
-            else:  # 0
+            else:  # 0 part
                 header_color = excel_format['red']
 
             # -----------------------------------------------------------------
@@ -254,6 +254,9 @@ class IndustriaRobot(orm.Model):
         database_id = robot.database_id.id
         path = os.path.expanduser(robot.fabric_cad_path)
         extension = 'gbr'
+        remove_ids = program_pool.search(cr, uid, [
+            ('source_id', '=', robot_id),
+            ], context=context)
         for root, folders, files in os.walk(path):
             for filename in files:
                 if not filename.endswith(extension):
@@ -264,7 +267,9 @@ class IndustriaRobot(orm.Model):
                     ('source_id', '=', robot_id),
                     ('fabric_filename', '=', filename),
                 ], context=context)
-                if not file_ids:
+                if file_ids:
+                    remove_ids.remove(file_ids[0])
+                else:
                     # timestamp = str(os.stat(fullname).st_mtime)
                     name = filename[:-4]
                     program_pool.create(cr, uid, {
@@ -276,6 +281,11 @@ class IndustriaRobot(orm.Model):
                         # 'timestamp': timestamp,  # Not the first time!
                     }, context=context)
             break  # No subfolders
+        if remove_ids:
+            _logger.info('Remove %s program' % len(remove_ids))
+            program_pool.write(cr, uid, remove_ids, {
+                'active': False,
+            }, context=context)
         return True
 
     def get_today_file(self, cr, uid, ids, context=None):
