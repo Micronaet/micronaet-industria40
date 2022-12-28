@@ -178,8 +178,11 @@ class IndustriaRobot(orm.Model):
         excel_pool.autofilter(ws_name, row, 0, row, len(header) - 1)
         excel_pool.freeze_panes(ws_name, row + 1, 4)
 
-        cr.execute(
-            'SELECT id FROM industria_program where source_id=%s', [robot_id])
+        cr.execute('''
+            SELECT id 
+            FROM industria_program 
+            WHERE source_id=%s AND active='f';
+            ''', [robot_id])   # todo only active
         # program_ids = program_pool.search(cr, uid, [
         #    ('active', '=', (True, False)),
         #    ('source_id', '=', robot_id),
