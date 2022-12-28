@@ -1845,7 +1845,7 @@ class IndustriaProgram(orm.Model):
         _logger.info('Clean all matching')
         cr.execute('DELETE FROM product_industria_part_rel;')
 
-        _logger.info('Collect data')
+        _logger.info('Collect data (only active)')
         part_ids = part_pool.search(cr, uid, [
             ('fabric_id.program_id.active', '=', True),
             ], context=context)
