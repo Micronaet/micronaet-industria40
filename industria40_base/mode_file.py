@@ -156,7 +156,7 @@ class IndustriaRobot(orm.Model):
         # ---------------------------------------------------------------------
         # Width
         excel_pool.column_width(ws_name, [
-            5,
+            # 5,
             25,
             15, 25, 25, 10, 8, 8,
             10, 10,
@@ -165,7 +165,7 @@ class IndustriaRobot(orm.Model):
         # Print header
         row = 0
         header = [
-            'Attivo',
+            # 'Attivo',
             'Robot',
             'Codice', 'Nome', 'Filename', 'Lunghezza',
             'Tot. strati', 'Tot. SL',
@@ -191,7 +191,7 @@ class IndustriaRobot(orm.Model):
             # Written after
             active = program.active
             program_line = [
-                'X' if active else '',
+                # 'X' if active else '',
                 robot.name,
                 program.code,
                 program.name,
