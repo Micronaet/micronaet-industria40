@@ -178,10 +178,13 @@ class IndustriaRobot(orm.Model):
         excel_pool.autofilter(ws_name, row, 0, row, len(header) - 1)
         excel_pool.freeze_panes(ws_name, row + 1, 4)
 
-        program_ids = program_pool.search(cr, uid, [
-            ('active', 'in', (True, False)),
-            ('source_id', '=', robot_id),
-        ], context=context)
+        cr.execute(
+            'SELECT id FROM industria_program where source_id=%s', [robot_id])
+        # program_ids = program_pool.search(cr, uid, [
+        #    ('active', '=', (True, False)),
+        #    ('source_id', '=', robot_id),
+        # ], context=context)
+        program_ids = [item[0] for item in cr.fetchall()]
         row += 1
         for program in program_pool.browse(
                 cr, uid, program_ids, context=context):
