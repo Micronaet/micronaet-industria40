@@ -180,7 +180,7 @@ class IndustriaRobot(orm.Model):
 
         program_ids = program_pool.search(cr, uid, [
             ('active', 'in', (True, False)),
-            ('robot_id', '=', robot_id),
+            ('source_id', '=', robot_id),
         ], context=context)
         row += 1
         for program in program_pool.browse(
