@@ -186,8 +186,10 @@ class IndustriaRobot(orm.Model):
         # ], context=context)
         program_ids = [item[0] for item in cr.fetchall()]
         row += 1
-        for program in program_pool.browse(
-                cr, uid, program_ids, context=context):
+        for program in sorted(
+                program_pool.browse(
+                    cr, uid, program_ids, context=context),
+                key=lambda p: p.filename):
             # Written after
             active = program.active
             program_line = [
