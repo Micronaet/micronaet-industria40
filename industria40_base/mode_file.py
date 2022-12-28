@@ -189,7 +189,7 @@ class IndustriaRobot(orm.Model):
         for program in sorted(
                 program_pool.browse(
                     cr, uid, program_ids, context=context),
-                key=lambda p: p.filename):
+                key=lambda p: p.fabric_filename):
             # Written after
             active = program.active
             program_line = [
