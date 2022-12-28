@@ -1882,6 +1882,7 @@ class IndustriaProgram(orm.Model):
         }, context=context)
 
     _columns = {
+        'active': fields.boolean('Attivo'),
         'code': fields.char('Code', size=40),
         'name': fields.char('Name', size=64, required=True),
         'industria_ref': fields.integer('Industria ref key'),
@@ -1940,6 +1941,7 @@ class IndustriaProgram(orm.Model):
     }
 
     _defaults = {
+        'active': lambda *x: True,
         'piece': lambda *x: 1,
         'max_layer': lambda *x: 30,
     }

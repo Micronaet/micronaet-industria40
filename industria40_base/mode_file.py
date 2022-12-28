@@ -154,6 +154,7 @@ class IndustriaRobot(orm.Model):
         # ---------------------------------------------------------------------
         # Width
         excel_pool.column_width(ws_name, [
+            5,
             25,
             15, 25, 25, 10, 8, 8,
             10, 10,
@@ -162,6 +163,7 @@ class IndustriaRobot(orm.Model):
         # Print header
         row = 0
         header = [
+            'Attivo',
             'Robot',
             'Codice', 'Nome', 'Filename', 'Lunghezza',
             'Tot. strati', 'Tot. SL',
@@ -177,7 +179,9 @@ class IndustriaRobot(orm.Model):
         row += 1
         for program in sorted(robot.program_ids):
             # Written after
+            active = program.active
             program_line = [
+                'X' if active else '',
                 robot.name,
                 program.code,
                 program.name,
@@ -194,7 +198,9 @@ class IndustriaRobot(orm.Model):
             for fabric in program.fabric_ids:
                 layer += 1
                 # fabric_id  (AUTO MRP)
-                if len(fabric.part_ids) > 1:
+                if not active:
+                    line_color = excel_format['grey']
+                elif len(fabric.part_ids) > 1:
                     line_color = excel_format['blue']
                 else:
                     line_color = excel_format['green']
@@ -219,7 +225,9 @@ class IndustriaRobot(orm.Model):
             program_line[-1] = semiproduct
 
             # Setup color:
-            if semiproduct == 1:
+            if not active:
+                line_color = excel_format['grey']
+            elif semiproduct == 1:
                 header_color = excel_format['green']
             elif semiproduct > 1:
                 header_color = excel_format['blue']
