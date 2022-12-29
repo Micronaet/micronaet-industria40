@@ -306,7 +306,7 @@ class IndustriaMrp(orm.Model):
                         _('Non è possibile trovare una distinta base per '
                           'semilavorato con maschera: %s e tessuto %s!' % (
                               extra_mask,
-                              fabric.name,
+                              bom_material.name,
                               )))
                 if len(extra_bom_ids) > 1:
                     raise osv.except_osv(
