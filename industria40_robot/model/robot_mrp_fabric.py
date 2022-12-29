@@ -260,7 +260,6 @@ class IndustriaMrp(orm.Model):
             # -----------------------------------------------------------------
             # Parameters:
             # -----------------------------------------------------------------
-
             robot = program.source_id
             database = robot.database_id
             part = line.part_id  # winner rule or changed rule
@@ -302,7 +301,7 @@ class IndustriaMrp(orm.Model):
 
                 if not extra_bom_ids:
                     raise osv.except_osv(
-                        _(u'Errore DB'),
+                        _(u'Errore Distinta base'),
                         _(u'Non è possibile trovare una distinta base per '
                           'semilavorato con maschera: %s e tessuto %s!' % (
                               extra_mask,
@@ -458,9 +457,12 @@ class IndustriaMrp(orm.Model):
         # color_part = fabric_code[6:]
         fabric = layer_fabric = color_part = ''
         change = 1
+        position = 0
         for c in fabric_code:
-            # Step 1
-            if change == 1 and c.isalpha():
+            position += 1
+
+            # Step 1 (min. 3 char alpha/num)
+            if change == 1 and (c.isalpha() or position <= 3):
                 fabric += c
                 layer_fabric += c
                 continue
