@@ -289,12 +289,12 @@ class IndustriaMrp(orm.Model):
             # Extra part:
             # -----------------------------------------------------------------
             # Read original fabric in DB (could be changed):
-            bom_fabric_id = line.bom_fabric_id or line.fabric_id
+            bom_material_id = line.bom_material_id or line.material_id
             extra_parts = [p for p in part.fabric_id.part_ids if p != part]
             for extra_part in extra_parts:   # Multi semiproduct program
                 extra_mask = extra_part.mask
                 extra_bom_ids = bom_pool.search(cr, uid, [
-                    ('product_id', '=', bom_fabric_id),  # Same fabric
+                    ('product_id', '=', bom_material_id),  # Same fabric
                     ('bom_id.product_id.default_code', '=ilike', extra_mask)
                     # relative_type half,
                     # todo usare prodotti per ricerca? halfwork_id
