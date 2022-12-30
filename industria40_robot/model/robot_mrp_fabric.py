@@ -313,7 +313,7 @@ class IndustriaMrp(orm.Model):
                         _('Trovate più distinte per semilavorato '
                           'con maschera: %s e tessuto %s!' % (
                               extra_mask,
-                              fabric.name,
+                              bom_material.default_code,
                               )))
 
                 extra_bom = bom_pool.browse(
