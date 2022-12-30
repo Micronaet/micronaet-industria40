@@ -303,15 +303,15 @@ class IndustriaMrp(orm.Model):
                     raise osv.except_osv(
                         _(u'Errore Distinta base'),
                         _(u'Non è possibile trovare una distinta base per '
-                          'semilavorato con maschera: %s e tessuto %s!' % (
+                          u'semilavorato con maschera: %s e tessuto %s!' % (
                               extra_mask,
                               bom_material.default_code,
                               )))
                 if len(extra_bom_ids) > 1:
                     raise osv.except_osv(
-                        _('Errore DB'),
-                        _('Trovate più distinte per semilavorato '
-                          'con maschera: %s e tessuto %s!' % (
+                        _(u'Errore DB'),
+                        _(u'Trovate più distinte per semilavorato '
+                          u'con maschera: %s e tessuto %s!' % (
                               extra_mask,
                               bom_material.default_code,
                               )))
