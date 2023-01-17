@@ -848,9 +848,10 @@ class IndustriaDatabase(orm.Model):
                         _logger.info('JOB unload also BOM')
                         for bom_line in semiproduct.product_id.half_bom_ids:
                             component = bom_line.product_id
-                            category = component.inventory_category_id.name
+                            category = component.inventory_category_id.name \
+                                       or ''
                             # todo keep as parameter Tessuto:
-                            if category == 'Tessuto':
+                            if category.startswith('Tessut'):
                                 continue  # Yet used
                             component_qty = -(
                                     semiproduct.total * bom_line.product_qty)
