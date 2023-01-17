@@ -818,7 +818,6 @@ class IndustriaDatabase(orm.Model):
         # ---------------------------------------------------------------------
         #                      Fabric and semi product:
         # ---------------------------------------------------------------------
-        pdb.set_trace()
         for step in job.step_ids:
             program = step.program_id
             fabric_length = program.fabric_length / 1000.0  # was mm.
