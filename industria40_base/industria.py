@@ -793,7 +793,10 @@ class IndustriaDatabase(orm.Model):
         # ---------------------------------------------------------------------
         company_proxy = company_pool._get_company_browse(
             cr, uid, context=context)
-        company_partner_id = 29552  # todo hardcoded to remove!!!!! company_proxy.partner_id.id
+        # todo hardcoded to remove!!!!!
+        #  use: company_proxy.partner_id.id  (not included in TX report)
+        company_partner_id = 29552
+
 
         # CL:
         cl_type = company_proxy.cl_mrp_lavoration_id
