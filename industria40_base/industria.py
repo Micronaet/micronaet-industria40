@@ -994,7 +994,7 @@ class IndustriaDatabase(orm.Model):
                     # Unload quants materials:
                     quant_pool.create(cr, uid, {
                         'in_date': date,
-                        'cost': 0.0,  # TODO
+                        'cost': 0.0,  # todo
                         'location_id': stock_location,
                         'product_id': product.id,
                         'qty': qty,
