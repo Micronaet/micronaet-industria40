@@ -795,8 +795,8 @@ class IndustriaDatabase(orm.Model):
             cr, uid, context=context)
         # todo hardcoded to remove!!!!!
         #  use: company_proxy.partner_id.id  (not included in TX report)
-        company_partner_id = 29552
-
+        # company_partner_id = 29552
+        company_partner_id = False
 
         # CL:
         cl_type = company_proxy.cl_mrp_lavoration_id
