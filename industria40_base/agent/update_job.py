@@ -24,11 +24,13 @@ import erppeek
 import ConfigParser
 import pdb
 
+
 def host_up(host):
     if os.system('ping -c 2 %s' % host) is 0:
         return True
     else:
         return False
+
 
 # -----------------------------------------------------------------------------
 # Read configuration parameter:
@@ -55,10 +57,13 @@ odoo = erppeek.Client(
     password=pwd,
     )
 
-# Update cut job from file:
+# Pool used:
 robot_pool = odoo.model('industria.robot')
+database_pool = odoo.model('industria.database')
 
-# For all database present:
+# -----------------------------------------------------------------------------
+# Tagliatubi:
+# -----------------------------------------------------------------------------
 robot_ids = robot_pool.search([
     ('code', '=', 'TAGL01'),
 ])
@@ -69,10 +74,11 @@ if robot_ids:
 else:
     print('No TAGL01 robot found')
 
-# Update other:
-database_pool = odoo.model('industria.database')
-
+# -----------------------------------------------------------------------------
+#                           Piegatubi, Saldatrice
+# -----------------------------------------------------------------------------
 # For all database present:
+pdb.set_trace()
 database_ids = database_pool.search([])
 for database in database_pool.browse(database_ids):
     ip = database.ip
