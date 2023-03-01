@@ -1243,7 +1243,6 @@ class IndustriaDatabase(orm.Model):
         database_id = ids[0]
 
         # Start from last imported:
-        pdb.set_trace()
         try:
             cr.execute('''
                 SELECT max(industria_ref) 
@@ -1253,6 +1252,7 @@ class IndustriaDatabase(orm.Model):
             from_industria_ref = records[0][0]
         except:
             from_industria_ref = False
+        _logger.warning('Load SQL record from ID >= %s' % from_industria_ref)
 
         connection = self.mssql_connect(cr, uid, ids, context=context)
         cursor = connection.cursor()
