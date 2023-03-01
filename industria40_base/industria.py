@@ -1236,13 +1236,24 @@ class IndustriaDatabase(orm.Model):
 
         # 2. MY SQL:
         _logger.info('Import Job via M*SQL')
-        # TODO create context from ID (partial run)
+        # todo create context from ID (partial run)
         job_pool = self.pool.get('industria.job')
         robot_pool = self.pool.get('industria.robot')
         program_pool = self.pool.get('industria.program')
-
-        from_industria_ref = False
         database_id = ids[0]
+
+        # Start from last imported:
+        pdb.set_trace()
+        try:
+            cr.execute('''
+                SELECT max(industria_ref) 
+                FROM industria_job 
+                WHERE database_id = %s''' % database_id)
+            records = cr.fetchall()
+            from_industria_ref = records[0][0]
+        except:
+            from_industria_ref = False
+
         connection = self.mssql_connect(cr, uid, ids, context=context)
         cursor = connection.cursor()
 
@@ -1268,7 +1279,6 @@ class IndustriaDatabase(orm.Model):
                     query,
                     sys.exc_info(),
                 ))
-
         # partner_id = database.partner_id.id
 
         # Load program:
