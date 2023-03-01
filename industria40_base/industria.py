@@ -1334,7 +1334,7 @@ class IndustriaDatabase(orm.Model):
                     cr, uid, data, context=context)
 
         # Update medium:
-        self.update_medium_program_job(cr, uid, ids, context=context)
+        # self.update_medium_program_job(cr, uid, ids, context=context)
         return True
 
     def import_job_ftp(self, cr, uid, ids, context=None):
