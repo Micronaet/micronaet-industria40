@@ -1249,7 +1249,7 @@ class IndustriaDatabase(orm.Model):
                 FROM industria_job 
                 WHERE database_id = %s''' % database_id)
             records = cr.fetchall()
-            from_industria_ref = records[0][0]
+            from_industria_ref = records[0][0] or 0
         except:
             from_industria_ref = False
         _logger.warning('Load SQL record from ID >= %s' % from_industria_ref)
