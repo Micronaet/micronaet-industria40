@@ -1244,9 +1244,10 @@ class IndustriaDatabase(orm.Model):
         cursor = connection.cursor()
 
         previous_id = False
+        pdb.set_trace()
         try:
             if from_industria_ref:
-                query = "SELECT * FROM jobs WHERE id >= %s;" % \
+                query = "SELECT * FROM jobs WHERE id >= %s LIMIT 400;" % \
                         from_industria_ref
 
                 # Find last record to create join element:
@@ -1256,7 +1257,7 @@ class IndustriaDatabase(orm.Model):
                 if last_ids:
                     previous_id = last_ids[0]
             else:
-                query = "SELECT * FROM jobs;"
+                query = "SELECT * FROM jobs LIMIT 400;"
             cursor.execute(query)
         except:
             raise osv.except_osv(
@@ -1334,7 +1335,7 @@ class IndustriaDatabase(orm.Model):
                     cr, uid, data, context=context)
 
         # Update medium:
-        # self.update_medium_program_job(cr, uid, ids, context=context)
+        self.update_medium_program_job(cr, uid, ids, context=context)
         return True
 
     def import_job_ftp(self, cr, uid, ids, context=None):
