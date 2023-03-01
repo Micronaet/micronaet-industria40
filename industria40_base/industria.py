@@ -535,6 +535,7 @@ class IndustriaDatabase(orm.Model):
             ('database_id.mode', '!=', 'opcua'),  # Exclude OPCUA program
         ], context=context)
         program_medium = {}
+        _logger.info('Job for medium %s' % len(job_ids))
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             program = job.program_id
             if program not in program_medium:
@@ -543,6 +544,7 @@ class IndustriaDatabase(orm.Model):
             program_medium[program][1] += job.job_duration
 
         program_alarm = {}
+        _logger.info('Update medium %s' % len(program_medium))
         for program in program_medium:
             if program_medium[program][0]:
                 medium = \
@@ -554,6 +556,7 @@ class IndustriaDatabase(orm.Model):
             }, context=context)
             program_alarm[program] = program.over_alarm
 
+        _logger.info('Unmark medium job error %s' % len(job_ids))
         for job in job_pool.browse(cr, uid, job_ids, context=context):
             program = job.program_id
 
@@ -1244,10 +1247,9 @@ class IndustriaDatabase(orm.Model):
         cursor = connection.cursor()
 
         previous_id = False
-        pdb.set_trace()
         try:
             if from_industria_ref:
-                query = "SELECT * FROM jobs WHERE id >= %s LIMIT 400;" % \
+                query = "SELECT * FROM jobs WHERE id >= %s;" % \
                         from_industria_ref
 
                 # Find last record to create join element:
@@ -1257,7 +1259,7 @@ class IndustriaDatabase(orm.Model):
                 if last_ids:
                     previous_id = last_ids[0]
             else:
-                query = "SELECT * FROM jobs LIMIT 400;"
+                query = "SELECT * FROM jobs;"
             cursor.execute(query)
         except:
             raise osv.except_osv(
