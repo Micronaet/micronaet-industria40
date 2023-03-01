@@ -78,7 +78,6 @@ else:
 #                           Piegatubi, Saldatrice
 # -----------------------------------------------------------------------------
 # For all database present:
-pdb.set_trace()
 database_ids = database_pool.search([])
 for database in database_pool.browse(database_ids):
     ip = database.ip
@@ -94,6 +93,7 @@ for database in database_pool.browse(database_ids):
 
         print('[INFO] Import robot')
         database_pool.import_robot([database.id])
+        # External from IF
 
-    print('[INFO] Import job')
-    database_pool.import_job([database.id])
+        print('[INFO] Import job')
+        database_pool.import_job([database.id])
