@@ -81,6 +81,26 @@ def get_odoo_table(param, table='mrp.robot'):
     return param['odoo']['handle'].model(table)
 
 
+@app.route('/', methods=['GET'])
+def ODOOIndustriaHello():
+    """ MES Dashboard
+    """
+    return '''
+        <html>
+            <header>
+                <title>Industria 4.0 Web server</title>
+                <meta http-equiv="refresh" content="%s">
+            </header>
+            <body>
+                <p>
+                    <b>Micronaet</b><br/>
+                    Per vedere lo stato utilizzare: /odoo/industria/mes
+                </p>
+            </body>
+        </html>
+        '''
+
+
 @app.route('/odoo/industria/mes', methods=['GET'])
 def ODOOIndustriaStatus():
     """ MES Dashboard
@@ -119,7 +139,19 @@ def ODOOIndustriaStatus():
     robot_ids = robot_pool.search([])
     robot_detail = ''
     for robot in robot_pool.browse(robot_ids):
-        robot_detail += '%s<br/>' % robot.name
+        job = robot.current_job_id
+        if job:
+            job_name = job.name
+        else:
+            job_name = '/'
+        robot_detail += \
+            '<b>{}</b>: Stato <b>{}</b> Ultima attivit&agrave;: {} Job: {}' \
+            '<br/>'.format(
+                robot.name,
+                robot.state,
+                robot.last_log_id,
+                job_name,
+            )
 
     html = '''
         <html>
