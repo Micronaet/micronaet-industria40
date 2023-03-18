@@ -163,4 +163,4 @@ for robot in robot_pool.browse(robot_ids):
         row += 1
         WB.write_xls_line(ws_name, row, data, color['text'])
     WB.close_workbook()
-    break   # todo remove
+    sys.exit()   # todo remove
