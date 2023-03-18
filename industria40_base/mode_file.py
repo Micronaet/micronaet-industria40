@@ -219,9 +219,8 @@ class IndustriaRobot(orm.Model):
                 row += 1
                 excel_pool.write_xls_line(
                     ws_name, row, data, default_format=color['text'])
-
             excel_pool.save_file_as(fullname)
-
+            del(excel_pool)
 
     def report_fabric_program(self, cr, uid, ids, context=None):
         """ Report program
