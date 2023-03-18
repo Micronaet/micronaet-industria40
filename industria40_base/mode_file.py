@@ -139,7 +139,13 @@ class IndustriaRobot(orm.Model):
                         root_path, robot_code, this_period[0], this_period[1])
                     filename = '%s_%s_%s' % (
                         robot_code, this_period[0], this_period[1])
-                    fullname = os.path(path, filename)
+                    fullname = os.path.join(path, filename)
+                    if os.path.isfile(fullname):
+                        _logger.warning(
+                            'Remove yet present file: %s' % fullname)
+                        os.remove(fullname)
+                    else:
+                        _logger.info('New file: %s' % fullname)
 
                     # ---------------------------------------------------------
                     # New Excel file:
