@@ -1,0 +1,6 @@
+[dbaccess]
+host: host
+dbname: database
+user: user
+pwd: password
+

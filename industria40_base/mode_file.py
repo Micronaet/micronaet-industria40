@@ -105,6 +105,7 @@ class IndustriaRobot(orm.Model):
 
     _inherit = 'industria.robot'
 
+    # todo not used! (Excel problem)
     def export_history_log(self, cr, uid, root_path, context=None):
         """ Export history log
             Parameter: root_path = base fodler
