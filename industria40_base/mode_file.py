@@ -127,6 +127,9 @@ class IndustriaRobot(orm.Model):
             job_ids = job_ids[::-1]  # Reverse order
 
             previous_period = False
+            if not job_ids:
+                _logger.error('No job for robot: %s' % robot.name)
+                continue
             for job in job_pool.browse(cr, uid, job_ids, context=context):
                 created_at = job.created_at
 
