@@ -32,7 +32,7 @@ import excel_export
 # -----------------------------------------------------------------------------
 # Parameters:
 # -----------------------------------------------------------------------------
-cfg_file = os.path.expanduser('./openerp.cfg')
+cfg_file = os.path.expanduser('./odoo.cfg')
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
 
