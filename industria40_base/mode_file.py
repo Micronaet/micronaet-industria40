@@ -142,7 +142,7 @@ class IndustriaRobot(orm.Model):
                         root_path, robot_code, this_period[0], this_period[1])
                     os.system('mkdir -p %s' % path)
 
-                    filename = '%s_%s_%s' % (
+                    filename = '%s_%s_%s.xlsx' % (
                         robot_code, this_period[0], this_period[1])
                     fullname = os.path.join(path, filename)
                     if os.path.isfile(fullname):
