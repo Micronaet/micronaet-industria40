@@ -27,31 +27,11 @@ import shutil
 import pymssql
 import pdb
 import ConfigParser
-
 import excel_export
-
-# -----------------------------------------------------------------------------
-# Parameters:
-# -----------------------------------------------------------------------------
-cfg_file = os.path.expanduser('./odoo.cfg')
-config = ConfigParser.ConfigParser()
-config.read([cfg_file])
-
-# SQL:
-server = config.get('dbaccess', 'dbname')
-port = config.get('dbaccess', 'port')
-user = config.get('dbaccess', 'user')
-password = config.get('dbaccess', 'pwd')
-database = config.get('dbaccess', 'server')
-
-# Filesystem:
-root_path = config.get('dbaccess', 'root')
-root_path = os.path.expanduser(root_path)  # Base folder
 
 # -----------------------------------------------------------------------------
 # Connect to ODOO:
 # -----------------------------------------------------------------------------
-pdb.set_trace()
 cfg_file = os.path.expanduser('./odoo.cfg')
 
 config = ConfigParser.ConfigParser()
@@ -62,9 +42,12 @@ pwd = config.get('dbaccess', 'pwd')
 server = config.get('dbaccess', 'server')
 port = config.get('dbaccess', 'port')   # verify if it's necessary: getint
 
+# Filesystem:
+root_path = config.get('dbaccess', 'root')
+root_path = os.path.expanduser(root_path)  # Base folder
+
 odoo = erppeek.Client(
-    'http://%s:%s' % (
-        server, port),
+    'http://%s:%s' % (server, port),
     db=dbname,
     user=user,
     password=pwd,
@@ -81,7 +64,6 @@ ExcelWriter = excel_export.excel_wrapper.ExcelWriter
 # -----------------------------------------------------------------------------
 #                         Excel report:
 # -----------------------------------------------------------------------------
-import pdb; pdb.set_trace()
 robot_ids = robot_pool.search([])
 for robot in robot_pool.browse(robot_ids):
     robot_id = robot.id
