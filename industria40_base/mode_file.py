@@ -105,6 +105,112 @@ class IndustriaRobot(orm.Model):
 
     _inherit = 'industria.robot'
 
+    def export_history_log(self, cr, uid, context=None):
+        """ Export history log
+        """
+        # Pool used:
+        job_pool = self.pool.get('industria.job')
+        robot_ids = self.search(cr, uid, [], context=context)
+
+        # ---------------------------------------------------------------------
+        #                         Excel report:
+        # ---------------------------------------------------------------------
+        root_path = os.path.expanduser('~/NAS/Industria/Log')  # Base folder
+        pdb.set_trace()
+        for robot in self.browse(cr, uid, robot_ids, context=context):
+            robot_id = robot.id
+            robot_code = robot.code
+            job_ids = job_pool.search(cr, uid, [
+                ('source_id', '=', robot_id),
+            ], context=context)
+            job_ids = job_ids[::-1]  # Reverse order
+
+            previous_period = False
+            for job in job_pool.browse(cr, uid, job_ids, context=context):
+                created_at = job.created_at
+
+                # Period = Year, month
+                this_period = created_at[:4], created_at[5:7]
+                if previous_period != this_period:
+
+                    previous_period = this_period
+                    path = os.path.join(
+                        root_path, robot_code, this_period[0], this_period[1])
+                    filename = '%s_%s_%s' % (
+                        robot_code, this_period[0], this_period[1])
+                    fullname = os.path(path, filename)
+
+                    # ---------------------------------------------------------
+                    # New Excel file:
+                    # ---------------------------------------------------------
+                    excel_pool = self.pool.get('excel.writer')
+                    ws_name = u'Job robot %s' % robot.code
+                    excel_pool.create_worksheet(ws_name)
+
+                    # Load formats:
+                    excel_format = {
+                        'header': excel_pool.get_format('header'),
+                        'black': {
+                            'text': excel_pool.get_format('text'),
+                            'number': excel_pool.get_format('number'),
+                        },
+                        'red': {
+                            'text': excel_pool.get_format('bg_red'),
+                            'number': excel_pool.get_format('bg_red_number'),
+                        },
+                        'green': {
+                            'text': excel_pool.get_format('bg_green'),
+                            'number': excel_pool.get_format('bg_green_number'),
+                        },
+                    }
+
+                    excel_pool.column_width(ws_name, [
+                        20,
+                        20, 20,
+                        10, 10, 10,
+                        5,
+                        10,
+                    ])
+
+                    # Print header
+                    row = 0
+                    header = [
+                        'Robot',
+                        'Inizio', 'Fine',
+                        'T. Cambio', 'T. Totale', 'T. Setup',
+                        'Fuori stat.',
+                        'Pz.'
+                    ]
+                    excel_pool.write_xls_line(
+                        ws_name, row, header,
+                        default_format=excel_format['header'])
+                    excel_pool.autofilter(
+                        ws_name, row, 0, row, len(header) - 1)
+                    excel_pool.freeze_panes(
+                        ws_name, row + 1, 4)
+
+                not_consider = job.duration_not_considered
+                data = [
+                    robot.name,
+                    job.created_at,
+                    job.ended_at,
+                    job.duration_change_total,
+                    job.duration_change_gap,
+                    job.duration_setup,
+                    not_consider,
+                ]
+                if not_consider:
+                    color = excel_format['red']
+                else:
+                    color = excel_format['black']
+
+                row += 1
+                excel_pool.write_xls_line(
+                    ws_name, row, data, default_format=color['text'])
+
+            excel_pool.save_file_as(fullname)
+
+
     def report_fabric_program(self, cr, uid, ids, context=None):
         """ Report program
         """
