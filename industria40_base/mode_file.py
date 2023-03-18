@@ -105,8 +105,9 @@ class IndustriaRobot(orm.Model):
 
     _inherit = 'industria.robot'
 
-    def export_history_log(self, cr, uid, context=None):
+    def export_history_log(self, cr, uid, root_path, context=None):
         """ Export history log
+            Parameter: root_path = base fodler
         """
         # Pool used:
         job_pool = self.pool.get('industria.job')
@@ -115,7 +116,7 @@ class IndustriaRobot(orm.Model):
         # ---------------------------------------------------------------------
         #                         Excel report:
         # ---------------------------------------------------------------------
-        root_path = os.path.expanduser('~/NAS/Industria/Log')  # Base folder
+        root_path = os.path.expanduser(root_path)  # Base folder
         pdb.set_trace()
         for robot in self.browse(cr, uid, robot_ids, context=context):
             robot_id = robot.id
