@@ -25,6 +25,7 @@ import os
 import erppeek
 import shutil
 import pymssql
+import pdb
 import ConfigParser
 
 import excel_export
@@ -50,12 +51,23 @@ root_path = os.path.expanduser(root_path)  # Base folder
 # -----------------------------------------------------------------------------
 # Connect to ODOO:
 # -----------------------------------------------------------------------------
+pdb.set_trace()
+cfg_file = os.path.expanduser('./odoo.cfg')
+
+config = ConfigParser.ConfigParser()
+config.read([cfg_file])
+dbname = config.get('dbaccess', 'dbname')
+user = config.get('dbaccess', 'user')
+pwd = config.get('dbaccess', 'pwd')
+server = config.get('dbaccess', 'server')
+port = config.get('dbaccess', 'port')   # verify if it's necessary: getint
+
 odoo = erppeek.Client(
     'http://%s:%s' % (
         server, port),
-    db=database,
+    db=dbname,
     user=user,
-    password=password,
+    password=pwd,
     )
 
 robot_pool = odoo.model('industria.robot')
