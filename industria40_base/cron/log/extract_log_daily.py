@@ -28,6 +28,8 @@ import pymssql
 import pdb
 import ConfigParser
 import excel_export
+from datetime import datetime
+
 
 # -----------------------------------------------------------------------------
 # Connect to ODOO:
@@ -64,12 +66,22 @@ ExcelWriter = excel_export.excel_wrapper.ExcelWriter
 # -----------------------------------------------------------------------------
 #                         Excel report:
 # -----------------------------------------------------------------------------
+# Start from last 2 month:
+dt = datetime.now()
+year = dt.year
+month = dt.month
+if month == 1:
+    month = 12
+    year -= 1
+from_date = '%s-%s-01 00:00:00' % (year, month)
+
 robot_ids = robot_pool.search([])
 for robot in robot_pool.browse(robot_ids):
     robot_id = robot.id
     robot_code = robot.code
     job_ids = job_pool.search([
         ('source_id', '=', robot_id),
+        ('created_at', '>=', from_date),
         ])
     job_ids = job_ids[::-1]  # Reverse order
 
