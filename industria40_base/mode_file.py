@@ -140,6 +140,8 @@ class IndustriaRobot(orm.Model):
                     previous_period = this_period
                     path = os.path.join(
                         root_path, robot_code, this_period[0], this_period[1])
+                    os.system('mkdir -p %s' % path)
+
                     filename = '%s_%s_%s' % (
                         robot_code, this_period[0], this_period[1])
                     fullname = os.path.join(path, filename)
