@@ -69,6 +69,14 @@ div.about {
      -moz-border-radius: 6px;
           border-radius: 6px;
 }
+div.error {
+  padding: 10px 0 30px 0;
+  background-color: #E6E6FA;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+}
+
 h2 {
   font-size: 3em;
   margin-top: 40px;
@@ -101,11 +109,11 @@ h3 {
 /*
  * Robot box
  */
-.robot {
+.robot_list {
   width: 1300px;
   margin: 0 auto;
 }
-div.robot {
+.robot_box {
   padding: 10px 0 30px 0;
   background-color: #E6E6FA;
   -webkit-border-radius: 6px;
@@ -126,14 +134,14 @@ h3 {
   letter-spacing: -1px;
   color: #999;
 }
-.robot li {
+.robot_box li {
   // display: inline;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
-.robot li + li {
+.robot_box li + li {
   margin-left: 35px;
 }
-.robot li a {
+.robot_box li a {
   color: #444;
   text-decoration: none;
 }
