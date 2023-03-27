@@ -3,9 +3,19 @@
     {% block content %}
         <div class="mes">
             <h1>Macchinari attivi</h1>
-            <div>
 
-            </div>
+            {% for div in div_boxes %}
+                {% if div %}
+                    <div class="robot_box_{{div.color}}">
+                        <b>{{div.name}}</b><br/>
+                        {{div.category}}<br/>
+
+                    </div>
+                {% endif %}
+                {% if not div %}
+                    <div style="clear:both;"></div>
+                {% endif %}
+            {%endfor%}
         </div>
     {% endblock %}
 

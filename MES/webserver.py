@@ -10,6 +10,7 @@ import os
 import sys
 import pdb
 import time
+import random
 import erppeek
 from datetime import datetime
 from flask import Flask, request, render_template, session
@@ -185,7 +186,41 @@ def mes():
     """ MES Dashboard
     """
     auto_refresh_setup()
-    return render_template('mes.html', args=context_parameters)
+
+    # -------------------------------------------------------------------------
+    #                             Load data from ODOO:
+    # -------------------------------------------------------------------------
+    try:
+        robot_pool = get_odoo_table(parameters, 'mrp.robot')
+        erp_on = True
+    except:
+        erp_on = False
+
+    # -------------------------------------------------------------------------
+    # ERP OFF:
+    # -------------------------------------------------------------------------
+    if not erp_on:
+        return render_template('no_ERP.html', args=context_parameters)
+
+    # -------------------------------------------------------------------------
+    # ERP ON:
+    # -------------------------------------------------------------------------
+    colors = ['red', 'green', 'yellow', 'grey']
+    robot_ids = robot_pool.search([])
+    div_boxes = []
+    for robot in robot_pool.browse(robot_ids):
+        div_boxes.append({
+            'color': random.choice(colors),
+            'category': robot.category_id,
+            'name': robot.name,
+        })
+        # New line:
+        if random.choice((True, False)):
+            div_boxes.append('')
+    div_boxes.append('')  # Necessary for box dimension
+
+    return render_template(
+        'mes.html', args=context_parameters, div_boxes=div_boxes)
 
 
 @app.route('/odoo/industria/mes/', methods=['GET'])
