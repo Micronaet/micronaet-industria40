@@ -11,8 +11,8 @@ import sys
 import pdb
 import time
 import erppeek
-from flask import Flask, request
 from datetime import datetime
+from flask import Flask, request, render_template, session
 try:
     import configparser as ConfigParser
 except:
@@ -22,15 +22,17 @@ except:
 # -----------------------------------------------------------------------------
 # End point definition:
 # -----------------------------------------------------------------------------
-app = Flask(__name__)
-
+app = Flask(
+    __name__,
+    # template_folder='../templates',
+)
 # -----------------------------------------------------------------------------
 # Read parameters from file:
 # -----------------------------------------------------------------------------
 current_path = os.path.dirname(__file__)
-
-cfg_file = os.path.join(current_path, 'odoo.cfg')
+cfg_file = '~/connection/odoo.cfg'
 cfg_file = os.path.expanduser(cfg_file)
+
 if not os.path.isfile(cfg_file):
     print('Config file not present!')
     sys.exit()
@@ -58,6 +60,22 @@ parameters = {
         'refresh': 5,
         },
     }
+
+# -----------------------------------------------------------------------------
+# Context for web:
+# -----------------------------------------------------------------------------
+context_parameters = {}
+
+
+def auto_refresh_setup():
+    """ Set parameters
+    """
+    if not context_parameters.get('refresh'):
+        context_parameters.update({
+            'refresh': parameters['webserver']['refresh'],
+            'last_refresh': str(datetime.now())[:19],
+        })
+    context_parameters['last_update'] = str(datetime.now())[:19]
 
 
 # -----------------------------------------------------------------------------
@@ -146,28 +164,32 @@ def get_odoo_table(param, table='mrp.robot'):
     return param['odoo']['handle'].model(table)
 
 
-@app.route('/', methods=['GET'])
-def ODOOIndustriaHello():
+@app.route('/')  # , methods=['GET']
+def home():
     """ MES Dashboard
     """
-    return '''
-        <html>
-            <header>
-                <title>Industria 4.0 Web server</title>
-                <meta http-equiv="refresh" content="%s">
-            </header>
-            <body>
-                <p>
-                    <b>Micronaet</b><br/>
-                    Per vedere lo stato utilizzare: /odoo/industria/mes
-                </p>
-            </body>
-        </html>
-        '''
+    auto_refresh_setup()
+    return render_template('home.html', args=context_parameters)
 
 
-@app.route('/odoo/industria/mes', methods=['GET'])
-def ODOOIndustriaStatus():
+@app.route('/about/')
+def about():
+    """ About page
+    """
+    auto_refresh_setup()
+    return render_template('about.html', args=context_parameters)
+
+
+@app.route('/mes/', methods=['GET'])
+def mes():
+    """ MES Dashboard
+    """
+    auto_refresh_setup()
+    return render_template('mes.html', args=context_parameters)
+
+
+@app.route('/odoo/industria/mes/', methods=['GET'])
+def mes_online():
     """ MES Dashboard
     """
     try:
@@ -180,23 +202,10 @@ def ODOOIndustriaStatus():
     # ERP OFF:
     # -------------------------------------------------------------------------
     if not erp_on:
-        html = '''
-            <html>
-                <header>
-                    <title>Industria 4.0 Web server</title>
-                    <meta http-equiv="refresh" content="%s">
-                </header>
-                <body>
-                    <p>
-                        <b>Micronaet</b><br/>
-                        ODOO non operativo, attesa risposta...\n<br/>Now: %s
-                    </p>
-                </body>''' % (
-                parameters['webserver']['refresh'],
-                str(datetime.now())[:19],
-                )
-
-        return html
+        # todo parameter to insert:
+        # parameters['webserver']['refresh'],
+        # str(datetime.now())[:19],
+        return render_template('no_ERP.html')
 
     # -------------------------------------------------------------------------
     # ERP ON:
@@ -213,8 +222,10 @@ def ODOOIndustriaStatus():
     # Header:
     lines = []
     header_line = ''
+    robot_line = ''
     for category in category_robot:
-        header_line = '<th></th>' % category.name
+        header_line += '<th>%s</th>' % category.name
+        robot_line += '<td>%s</td>'
     lines.append('<tr>%s</tr>' % header_line)
     table = '<table width="100%%">%s</table>' % (''.join(lines))
 
@@ -252,13 +263,16 @@ def ODOOIndustriaStatus():
         str(datetime.now())[:19],
         robot_detail,
         )
-    # return table + html
+    return table + html
     return html
 
 
-app.run(
-    debug=parameters['webserver']['debug'],
-    host=parameters['webserver']['host'],
-    port=parameters['webserver']['port'],
-    )
-
+if __name__ == '__main__':
+    # app.secret_key = b'MICRONAET_SUPER_SECRET_KEY'
+    # app.config['SESSION_TYPE'] = 'filesystem'
+    # this_session.init_app(app)
+    app.run(
+        debug=parameters['webserver']['debug'],
+        host=parameters['webserver']['host'],
+        port=parameters['webserver']['port'],
+        )

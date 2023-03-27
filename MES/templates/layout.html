@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Fiam - MES</title>
+        <meta http-equiv="refresh" content="{{args.get('refresh')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <h1 class="logo">MENU</h1>
+                <strong>
+                    <nav>
+                        <ul class="menu">
+                          <li><a href="{{ url_for('home') }}">Home</a></li>
+                          <li><a href="{{ url_for('mes') }}">MES</a></li>
+                          <li><a href="{{ url_for('mes_online') }}">MES (old)</a></li>
+                          <li><a href="{{ url_for('about') }}">About</a></li>
+                        </ul>
+                    </nav>
+                </strong>
+              </div>
+        </header>
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <footer>
+            <div class="container">
+                <!--<h1 class="logo">MENU</h1>-->
+                <strong>
+                    <nav>
+                        <ul class="menu">
+                          <li>Aggiornato alle: {{args.get('last_update', '/') | safe}}</li>
+                        </ul>
+                    </nav>
+                </strong>
+            </div>
+        </footer>
+    </body>
+</html>

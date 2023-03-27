@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+    {% extends "layout.html" %}
+    {% block content %}
+        <div class="home">
+            <h1>Fiam - MES</h1>
+            <p>
+                <b>Micronaet</b><br/>
+                Sistema di controllo per macchinari Industria 4.0.<br/>
+                Le attivit&agrave; sono visibilit dal menu MES in alto.
+                Refresh timeout = {{args.get('refresh', 0)}}
+            </p>
+        </div>
+    {% endblock %}
