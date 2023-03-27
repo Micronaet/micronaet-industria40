@@ -203,20 +203,37 @@ def ODOOIndustriaStatus():
     # -------------------------------------------------------------------------
     robot_ids = robot_pool.search([])
     robot_detail = ''
+    category_robot = {}
     for robot in robot_pool.browse(robot_ids):
-        job = robot.current_job_id
-        if job:
-            job_name = job.name
-        else:
-            job_name = '/'
-        robot_detail += \
-            '<b>{}</b>: Stato <b>{}</b> Ultima attivit&agrave;: {} Job: {}' \
-            '<br/>'.format(
-                robot.name,
-                robot.state,
-                robot.last_log_id,
-                job_name,
-            )
+        category = robot.category_id
+        if category not in category_robot:
+            category_robot[category] = []
+        category_robot[category].append(robot)
+
+    # Header:
+    lines = []
+    header_line = ''
+    for category in category_robot:
+        header_line = '<th></th>' % category.name
+    lines.append('<tr>%s</tr>' % header_line)
+    table = '<table width="100%%">%s</table>' % (''.join(lines))
+
+    for category in category_robot:
+        for robot in category_robot[category]:
+
+            job = robot.current_job_id
+            if job:
+                job_name = job.name
+            else:
+                job_name = '/'
+            robot_detail += \
+                '<b>{}</b>: Stato <b>{}</b> Ultima attivit&agrave;: {} Job: {}' \
+                '<br/>'.format(
+                    robot.name,
+                    robot.state,
+                    robot.last_log_id,
+                    job_name,
+                )
 
     html = '''
         <html>
@@ -235,6 +252,7 @@ def ODOOIndustriaStatus():
         str(datetime.now())[:19],
         robot_detail,
         )
+    # return table + html
     return html
 
 
