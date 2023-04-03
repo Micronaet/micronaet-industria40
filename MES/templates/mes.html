@@ -10,7 +10,8 @@
                         <b>{{div.robot.name|safe}}</b><br/>
                         <b>Cat.</b> {{div.robot.category_id.name|safe}}<br/>
                         <b>Job:</b> {{div.job|safe}}<br/>
-                        <b>Last:</b> {{div.robot.last_log_id|safe}}<br/>
+                        <b>Last:</b> {{div.robot.last_activity|safe}}<br/>
+                        <b>Last log:</b> {{div.robot.last_log_id|safe}}<br/>
                     </div>
                 {% endif %}
                 {% if not div %}
