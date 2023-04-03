@@ -178,6 +178,7 @@ def mes():
     """ MES Dashboard
     """
     auto_refresh_setup()
+    pdb.set_trace()
     admin_mode = request.args.get('admin_mode', False) == 't'
 
     # -------------------------------------------------------------------------
