@@ -93,7 +93,6 @@ def generate_robot_static_img():
         robot_pool = get_odoo_table(parameters, 'mrp.robot')
         robot_ids = robot_pool.search([])
         robots = robot_pool.browse(robot_ids)
-        pdb.set_trace()
         for robot in robots:
             image = robot.image
             image_fullname = os.path.join(
