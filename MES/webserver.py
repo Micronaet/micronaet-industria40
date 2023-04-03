@@ -178,6 +178,7 @@ def mes():
     """ MES Dashboard
     """
     auto_refresh_setup()
+    admin_mode = request.args.get('admin_mode', False)
 
     # -------------------------------------------------------------------------
     #                             Load data from ODOO:
@@ -229,7 +230,8 @@ def mes():
     div_boxes.append('')  # Necessary for box dimension
 
     return render_template(
-        'mes.html', args=context_parameters, div_boxes=div_boxes, robot=robot)
+        'mes.html', args=context_parameters,
+        div_boxes=div_boxes, robot=robot, admin_mode=admin_mode)
 
 
 # Old link keep for back-compatibility:
