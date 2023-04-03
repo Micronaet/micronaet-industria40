@@ -100,8 +100,8 @@ def generate_robot_static_img():
 
             image_file = open(image_fullname, 'wb')
             image_file.write(base64.decodebytes(image))
-            print('Updated image {}'.format(image_fullname))
             image_file.close()
+            print('Updated image {}'.format(image_fullname))
         print('Static image, loaded!')
         return True
     except:
