@@ -209,6 +209,7 @@ def mes():
 def mes_online():
     """ MES Dashboard
     """
+    return mes()
     try:
         robot_pool = get_odoo_table(parameters, 'mrp.robot')
         erp_on = True
