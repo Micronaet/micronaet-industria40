@@ -14,8 +14,7 @@
                         <b>Inattivo da:</b> {{div.robot.last_log_id or ''|safe}}<br/>
                         <img src="/static/img/{{div.robot.id}}.jpg" alt="{{div.robot.name|safe}}" width="150px">
                     </div>
-                {% endif %}
-                {% if not div %}
+                {% else %}
                     <div style="clear:both;"></div>
                 {% endif %}
             {%endfor%}
