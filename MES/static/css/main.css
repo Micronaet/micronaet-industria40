@@ -146,6 +146,18 @@ div.robot_box_red {
        -moz-border-radius: 6px;
            border-radius: 6px;
 }
+div.robot_box_darkred {
+    float: left;
+    display: block;
+    width: 250px;
+    height: 300px;
+    background-color: #c91016;
+    margin: 10px;
+    padding: 5px;
+    -webkit-border-radius: 6px;
+       -moz-border-radius: 6px;
+           border-radius: 6px;
+}
 div.robot_box_green {
     float: left;
     display: block;
