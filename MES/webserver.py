@@ -205,22 +205,36 @@ def mes():
     # -------------------------------------------------------------------------
     # ERP ON:
     # -------------------------------------------------------------------------
-    colors = ['red', 'green', 'yellow', 'grey']
+    colors = {
+        'alarm': 'red',
+        'prepare': 'blue',
+        'pause': 'yellow',
+        'working': 'green',
+        'on': 'grey',
+        'off': 'black',
+    }
     robot_ids = robot_pool.search([])
     div_boxes = []
     for robot in robot_pool.browse(robot_ids):
+        job = robot.current_job_id
+        if job:
+            job_name = job.name
+        else:
+            job_name = '/'
+
         div_boxes.append({
-            'color': random.choice(colors),
-            'category': robot.category_id,
-            'name': robot.name,
+            'robot': robot,
+            'color': colors.get(robot.state, 'grey'),
+            'job': job_name,
         })
+
         # New line:
         if random.choice((True, False)):
             div_boxes.append('')
     div_boxes.append('')  # Necessary for box dimension
 
     return render_template(
-        'mes.html', args=context_parameters, div_boxes=div_boxes)
+        'mes.html', args=context_parameters, div_boxes=div_boxes, robot=robot)
 
 
 @app.route('/odoo/industria/mes/', methods=['GET'])
