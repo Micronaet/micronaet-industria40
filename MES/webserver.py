@@ -226,7 +226,7 @@ def mes():
             'robot': robot,
             'color': colors.get(robot.state, 'grey'),
             'job': job_name,
-        })
+            })
 
         # New line:
         if random.choice((True, False)):
@@ -287,8 +287,8 @@ def mes_online():
             else:
                 job_name = '/'
             robot_detail += \
-                '<b>{}</b>: Stato <b>{}</b> Ultima attivit&agrave;: {} Job: {}' \
-                '<br/>'.format(
+                '<b>{}</b>: Stato <b>{}</b> Ultima attivit&agrave;: {} ' \
+                'Job: {}<br/>'.format(
                     robot.name,
                     robot.state,
                     robot.last_log_id,
