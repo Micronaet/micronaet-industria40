@@ -71,7 +71,10 @@ context_parameters = {}
 # -----------------------------------------------------------------------------
 # Utility:
 # -----------------------------------------------------------------------------
-def parser_write_hour(value):
+# Parameters
+gmt_gap = 2  # 2 legal hour, 1 solar hour
+
+def parser_write_hour(value, gap=gmt_gap):
     """ Write hour in correct format
     """
     value = str(value or '')
@@ -83,7 +86,6 @@ def parser_write_hour(value):
     else:
         mask = '%H:%M:%S %d/%m/%Y'
 
-    gmt_gap = 2  # 2 legal hour, 1 solar hour
     try:
         dt = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
         italian_dt = dt + timedelta(hours=gmt_gap)
