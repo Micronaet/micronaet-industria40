@@ -12,7 +12,7 @@
                         <b>Job:</b> {{div.job|safe}}<br/>
                         <b>Cat.</b> {{div.robot.category_id.name|safe}}<br/>
                         <b>Cambio stato:</b> {{parser_write_hour(div.robot.last_activity_state)|safe}}<br/>
-                        <b>Ultima attivit&agrave;:</b> {{parser_write_hour(div.robot.last_log_id)|safe}}<br/>
+                        <b>Ultima attivit&agrave;:</b> {{div.robot.last_log_id or ''|safe}}<br/><!--not use parser_write_hour!-->
                         <img src="/static/img/{{div.robot.id}}.jpg" title="{{'{} [{}]'.format(div.robot.name, div.robot.host_ip)|safe}}" width="150px">
                     </div>
                 {% else %}
