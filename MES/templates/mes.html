@@ -8,7 +8,7 @@
                 {% if div %}
                     <div class="robot_box_{{div.color}}" string="Prova">
                         <b>{{div.robot.name.upper()|safe}}</b><br/>
-                        <b>Stato</b> {{div.robot.state|safe}}<br/>
+                        <b>Stato</b> {{div.robot.state.upper()|safe}}<br/>
                         <b>Job:</b> {{div.job|safe}}<br/>
                         <b>Cat.</b> {{div.robot.category_id.name|safe}}<br/>
                         <b>Cambio stato:</b> {{parser_write_hour(div.robot.last_activity_state)|safe}}<br/>
