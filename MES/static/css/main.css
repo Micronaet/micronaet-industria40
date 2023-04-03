@@ -116,10 +116,10 @@ h3 {
  * Robot box
  */
 div.robot_box_black {
-    float:left;
-    display:block;
-    width:250px;
-    height:250px;
+    float: left;
+    display: block;
+    width: 250px;
+    height: 300px;
     color: white;
     background-color: #222222;
     margin: 10px;
@@ -129,10 +129,10 @@ div.robot_box_black {
            border-radius: 6px;
 }
 div.robot_box_red {
-    float:left;
-    display:block;
-    width:250px;
-    height:250px;
+    float: left;
+    display: block;
+    width: 250px;
+    height: 300px;
     background-color: #ff9999;
     margin: 10px;
     padding: 5px;
@@ -141,10 +141,10 @@ div.robot_box_red {
            border-radius: 6px;
 }
 div.robot_box_green {
-    float:left;
-    display:block;
-    width:250px;
-    height:250px;
+    float: left;
+    display: block;
+    width: 250px;
+    height: 300px;
     background-color: #b3ffcc;
     margin: 10px;
     padding: 5px;
@@ -153,10 +153,10 @@ div.robot_box_green {
            border-radius: 6px;
 }
 div.robot_box_blue {
-    float:left;
-    display:block;
+    float: left;
+    display: block;
     width:250px;
-    height:250px;
+    height:300px;
     background-color: #2596be;
     margin: 10px;
     padding: 5px;
@@ -165,10 +165,10 @@ div.robot_box_blue {
            border-radius: 6px;
 }
 div.robot_box_yellow {
-    float:left;
-    display:block;
+    float: left;
+    display: block;
     width:250px;
-    height:250px;
+    height: 300px;
     background-color: #ffff99;
     margin: 10px;
     padding: 5px;
@@ -180,7 +180,7 @@ div.robot_box_grey {
     float: left;
     display: block;
     width: 250px;
-    height: 250px;
+    height: 300px;
     background-color: #ebebeb;
     margin: 10px;
     padding: 5px;
