@@ -96,9 +96,7 @@ def parser_write_hour(value, gap=gmt_gap):
     except:
         print(f'Error converting {value}')
         return ''
-    result = italian_dt.strftime(mask)
-    print('Converted: {} >> {} [{}]'.format(value, result, gap))
-    return result
+    return italian_dt.strftime(mask)
 
 
 def auto_refresh_setup():
