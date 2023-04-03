@@ -192,8 +192,8 @@ div.robot_box_grey {
 div img {
     width: 200px;
     text-align: center;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 20px;
+    margin-right: 20px;
     padding: 10px;
     -webkit-border-radius: 6px;
        -moz-border-radius: 6px;
