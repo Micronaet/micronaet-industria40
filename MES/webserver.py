@@ -149,6 +149,7 @@ rgb_color = {  # For background
 
 div_order = {
     'alarm': 1,
+    'damage': 1,
     'off': 2,
     'pause': 2,
     'prepare': 2,
@@ -157,6 +158,7 @@ div_order = {
 }
 
 colors = {
+    'damage': 'red',
     'alarm': 'red',
     'prepare': 'blue',
     'pause': 'yellow',
