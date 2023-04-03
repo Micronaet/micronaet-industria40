@@ -229,8 +229,8 @@ def mes():
             })
 
         # New line:
-        if random.choice((True, False)):
-            div_boxes.append('')
+        # if random.choice((True, False)):
+        #    div_boxes.append('')
     div_boxes.append('')  # Necessary for box dimension
 
     return render_template(
