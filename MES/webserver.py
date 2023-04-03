@@ -239,6 +239,7 @@ def mes():
         if last_color != current_color:
             last_color = current_color
             div_boxes.append('')
+            print('Split line to: {}'.format(current_color))
 
         job = robot.current_job_id
         if job:
