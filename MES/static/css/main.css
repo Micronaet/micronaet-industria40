@@ -189,6 +189,10 @@ div.robot_box_grey {
            border-radius: 6px;
 }
 
+div img {
+    width: 200px;
+    text-align: center;
+}
  /*
 .robot_list {
   width: 1300px;
