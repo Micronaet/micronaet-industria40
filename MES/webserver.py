@@ -141,6 +141,7 @@ rgb_color = {  # For background
     'green': '#c6f9bd',  # b3fcb9
     'yellow': '#f4f9c5',
     'red': '#fcc7c7',
+    'darkred': '#c91016',
     'black': '#ecedea',
     'grey': '#dbdbdb',
     'darkgrey': '#939393',
@@ -159,7 +160,7 @@ div_order = {
 
 colors = {
     'damage': 'red',
-    'alarm': 'red',
+    'alarm': 'darkred',
     'prepare': 'blue',
     'pause': 'yellow',
     'working': 'green',
