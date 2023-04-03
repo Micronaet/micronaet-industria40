@@ -77,6 +77,11 @@ def parser_write_hour(value):
     value = str(value or '')
     if not value:
         return ''
+    today = str(datetime.now())[:10]
+    if value.startswith(today)
+        mask = '%H:%M:%S OGGI'
+    else:
+        mask = '%H:%M:%S %d/%m/%Y'
 
     gmt_gap = 2  # 2 legal hour, 1 solar hour
     try:
@@ -85,7 +90,8 @@ def parser_write_hour(value):
     except:
         print(f'Error converting {value}')
         return ''
-    return italian_dt.strftime('%H:%M:%S %d/%m/%Y')
+
+    return italian_dt.strftime(mask)
 
 
 def auto_refresh_setup():
