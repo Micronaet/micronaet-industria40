@@ -10,10 +10,9 @@ import os
 import sys
 import pdb
 import time
-import random
 import erppeek
 from datetime import datetime
-from flask import Flask, request, render_template, session
+from flask import Flask, render_template  # request,
 try:
     import configparser as ConfigParser
 except:
