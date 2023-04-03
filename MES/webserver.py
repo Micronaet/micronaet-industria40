@@ -10,6 +10,7 @@ import os
 import sys
 import pdb
 import time
+from datetime import datetime, timedelta
 import erppeek
 from datetime import datetime
 from flask import Flask, render_template  # request,
@@ -70,6 +71,18 @@ context_parameters = {}
 # -----------------------------------------------------------------------------
 # Utility:
 # -----------------------------------------------------------------------------
+def parser_write_hour(value):
+    """ Write hour in correct format
+    """
+    if not value:
+        return ''
+
+    gmt_gap = 2  # 2 legal hour, 1 solar hour
+    dt = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+    italian_dt = dt + timedelta(hours=gmt_gap)
+    return italian_dt.strftime('%d-%m-%Y %H:%M:%S')
+
+
 def auto_refresh_setup():
     """ Set parameters
     """
@@ -229,7 +242,10 @@ def mes():
 
     return render_template(
         'mes.html', args=context_parameters,
-        div_boxes=div_boxes, robot=robot)
+        div_boxes=div_boxes,
+        parser_write_hour=parser_write_hour,
+        # robot=robot,
+    )
 
 
 # Old link keep for back-compatibility:
