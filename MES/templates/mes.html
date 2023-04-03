@@ -9,6 +9,7 @@
                     <div class="robot_box_{{div.color}}" string="Prova">
                         <b>{{div.robot.name|safe}}</b><br/>
                         <b>Cat.</b> {{div.robot.category_id.name|safe}}<br/>
+                        <b>Stato</b> {{div.robot.state|safe}}<br/>
                         <b>Job:</b> {{div.job|safe}}<br/>
                         <b>Cambio stato:</b> {{div.robot.last_activity_state or ''|safe}}<br/>
                         <b>Ultima attivit&agrave;:</b> {{div.robot.last_log_id or ''|safe}}<br/>
