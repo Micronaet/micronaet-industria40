@@ -231,7 +231,7 @@ def mes():
 
     return render_template(
         'mes.html', args=context_parameters,
-        div_boxes=div_boxes, robot=robot, admin_mode=admin_mode)
+        div_boxes=div_boxes, robot=robot)
 
 
 # Old link keep for back-compatibility:

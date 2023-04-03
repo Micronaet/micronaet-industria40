@@ -2,7 +2,7 @@
     {% extends "layout.html" %}
     {% block content %}
         <div class="mes">
-            <h1>Stato macchinari{{' [ADMIN MODE]' if admin_mode else ''}}</h1>
+            <h1>Stato macchinari</h1>
             {% for div in div_boxes %}
                 {% if div %}
                     <div class="robot_box_{{div.color}}">
