@@ -78,7 +78,7 @@ def parser_write_hour(value):
     if not value:
         return ''
     today = str(datetime.now())[:10]
-    if value.startswith(today)
+    if value.startswith(today):
         mask = '%H:%M:%S OGGI'
     else:
         mask = '%H:%M:%S %d/%m/%Y'
