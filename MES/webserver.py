@@ -233,10 +233,12 @@ def mes():
         state = robot.state
         current_color = div_order.get(state)
         if not last_color:
+            pdb.set_trace()
             last_color = current_color
 
         # New line:
         if last_color != current_color:
+            pdb.set_trace()
             last_color = current_color
             div_boxes.append('')
             print('Split line to: {}'.format(current_color))
