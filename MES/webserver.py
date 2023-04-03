@@ -78,7 +78,8 @@ def parser_write_hour(value):
         return ''
 
     gmt_gap = 2  # 2 legal hour, 1 solar hour
-    dt = value  # datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+    pdb.set_trace()
+    dt = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
     italian_dt = dt + timedelta(hours=gmt_gap)
     return italian_dt.strftime('%d-%m-%Y %H:%M:%S')
 
