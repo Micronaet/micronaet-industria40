@@ -100,7 +100,7 @@ def generate_robot_static_img():
                 root_folder, '{}.jpg'.format(robot.id))
 
             image_file = open(image_fullname, 'wb')
-            image_file.write(base64.decodebytes(image))
+            image_file.write(base64.decodebytes(byte(image)))
             image_file.close()
             print('Updated image {}'.format(image_fullname))
         print('Static image, loaded!')
