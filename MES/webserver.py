@@ -92,6 +92,24 @@ rgb_color = {  # For background
     'blue': '#a2bcf9',
 }
 
+div_order = {
+    'alarm': 1,
+    'off': 2,
+    'pause': 2,
+    'prepare': 2,
+    'working': 2,
+    'on': 2,
+}
+
+colors = {
+    'alarm': 'red',
+    'prepare': 'blue',
+    'pause': 'yellow',
+    'working': 'green',
+    'on': 'grey',
+    'off': 'black',
+}
+
 
 # HTML Utility:
 def html_td(value, bgcolor='white', tag='td', align='left', bold=False):
@@ -205,17 +223,23 @@ def mes():
     # -------------------------------------------------------------------------
     # ERP ON:
     # -------------------------------------------------------------------------
-    colors = {
-        'alarm': 'red',
-        'prepare': 'blue',
-        'pause': 'yellow',
-        'working': 'green',
-        'on': 'grey',
-        'off': 'black',
-    }
     robot_ids = robot_pool.search([])
     div_boxes = []
-    for robot in robot_pool.browse(robot_ids):
+
+    robots = sorted(robot_pool.browse(robot_ids),
+                    key=lambda r: div_order.get(r.state, 0))
+    last_color = ''
+    for robot in robots:
+        state = robot.state
+        current_color = div_order.get(state)
+        if not last_color:
+            last_color = current_color
+
+        # New line:
+        if last_color != current_color:
+            last_color = current_color
+            div_boxes.append('')
+
         job = robot.current_job_id
         if job:
             job_name = job.name
@@ -224,13 +248,10 @@ def mes():
 
         div_boxes.append({
             'robot': robot,
-            'color': colors.get(robot.state, 'grey'),
+            'color': colors.get(state, 'grey'),
             'job': job_name,
             })
 
-        # New line:
-        # if random.choice((True, False)):
-        #    div_boxes.append('')
     div_boxes.append('')  # Necessary for box dimension
 
     return render_template(
