@@ -89,7 +89,7 @@ def parser_write_hour(value, gap=gmt_gap):
     try:
         dt = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
         if gmt_gap:
-            italian_dt = dt + timedelta(hours=gmt_gap)
+            italian_dt = dt + timedelta(hours=gap)
         else:
             italian_dt = dt
 
@@ -97,7 +97,7 @@ def parser_write_hour(value, gap=gmt_gap):
         print(f'Error converting {value}')
         return ''
     result = italian_dt.strftime(mask)
-    print('Converted: {} >> {}'.format(value, result))
+    print('Converted: {} >> {} [{}]'.format(value, result, gap))
     return result
 
 
