@@ -5,7 +5,7 @@
 #            https://it.linkedin.com/in/thebrush
 #            https://linktr.ee/nicolariolini
 ###############################################################################
-
+import base64
 import os
 import sys
 import pdb
@@ -68,6 +68,9 @@ parameters = {
 context_parameters = {}
 
 
+# -----------------------------------------------------------------------------
+# Utility:
+# -----------------------------------------------------------------------------
 def auto_refresh_setup():
     """ Set parameters
     """
@@ -79,9 +82,33 @@ def auto_refresh_setup():
     context_parameters['last_update'] = str(datetime.now())[:19]
 
 
-# -----------------------------------------------------------------------------
-# Utility:
-# -----------------------------------------------------------------------------
+def generate_robot_static_img():
+    """ Load images from ODOO
+    """
+    # -------------------------------------------------------------------------
+    #                             Load data from ODOO:
+    # -------------------------------------------------------------------------
+    try:
+        root_folder = './static/img'
+        robot_pool = get_odoo_table(parameters, 'mrp.robot')
+        robot_ids = robot_pool.search([])
+        robots = robot_pool.browse(robot_ids)
+        for robot in robots:
+            image = robot.image
+            image_fullname = os.path.join(
+                root_folder, '{}.jpg'.format(robot.id))
+
+            image_file = open(image_fullname, 'wb')
+            image_file.write(base64.decodebytes(image))
+            print('Updated image {}'.format(image_fullname))
+            image_file.close()
+        print('Static image, loaded!')
+        return True
+    except:
+        print('No image, problem loading!')
+        return False
+
+
 rgb_color = {  # For background
     'green': '#c6f9bd',  # b3fcb9
     'yellow': '#f4f9c5',
@@ -205,90 +232,23 @@ def mes():
         'mes.html', args=context_parameters, div_boxes=div_boxes, robot=robot)
 
 
+# Old link keep for back-compatibility:
 @app.route('/odoo/industria/mes/', methods=['GET'])
 def mes_online():
     """ MES Dashboard
     """
     return mes()
-    try:
-        robot_pool = get_odoo_table(parameters, 'mrp.robot')
-        erp_on = True
-    except:
-        erp_on = False
-
-    # -------------------------------------------------------------------------
-    # ERP OFF:
-    # -------------------------------------------------------------------------
-    if not erp_on:
-        # todo parameter to insert:
-        # parameters['webserver']['refresh'],
-        # str(datetime.now())[:19],
-        return render_template('no_ERP.html')
-
-    # -------------------------------------------------------------------------
-    # ERP ON:
-    # -------------------------------------------------------------------------
-    robot_ids = robot_pool.search([])
-    robot_detail = ''
-    category_robot = {}
-    for robot in robot_pool.browse(robot_ids):
-        category = robot.category_id
-        if category not in category_robot:
-            category_robot[category] = []
-        category_robot[category].append(robot)
-
-    # Header:
-    lines = []
-    header_line = ''
-    robot_line = ''
-    for category in category_robot:
-        header_line += '<th>%s</th>' % category.name
-        robot_line += '<td>%s</td>'
-    lines.append('<tr>%s</tr>' % header_line)
-    table = '<table width="100%%">%s</table>' % (''.join(lines))
-
-    for category in category_robot:
-        for robot in category_robot[category]:
-
-            job = robot.current_job_id
-            if job:
-                job_name = job.name
-            else:
-                job_name = '/'
-            robot_detail += \
-                '<b>{}</b>: Stato <b>{}</b> Ultima attivit&agrave;: {} ' \
-                'Job: {}<br/>'.format(
-                    robot.name,
-                    robot.state,
-                    robot.last_log_id,
-                    job_name,
-                )
-
-    html = '''
-        <html>
-            <header>
-                <title>Industria 4.0 Web server</title>
-                <meta http-equiv="refresh" content="%s">
-            </header>
-            <body>
-                <p>
-                    <b>Micronaet</b><br/>
-                    Flask Webserver for OpenERP - Mexal call\n<br/>Now: %s<br/>
-                    %s
-                </p>
-            </body>''' % (
-        parameters['webserver']['refresh'],
-        str(datetime.now())[:19],
-        robot_detail,
-        )
-    return table + html
-    return html
 
 
 if __name__ == '__main__':
     # app.secret_key = b'MICRONAET_SUPER_SECRET_KEY'
     # app.config['SESSION_TYPE'] = 'filesystem'
     # this_session.init_app(app)
+
+    # Start up:
+    generate_robot_static_img()
+
+    # Webserver load:
     app.run(
         debug=parameters['webserver']['debug'],
         host=parameters['webserver']['host'],

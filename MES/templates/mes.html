@@ -12,7 +12,7 @@
                         <b>Job:</b> {{div.job|safe}}<br/>
                         <b>Last:</b> {{div.robot.last_activity or ''|safe}}<br/>
                         <b>Last log:</b> {{div.robot.last_log_id or ''|safe}}<br/>
-                        <img src="/static/img/prova.jpg" alt="{{robot.name|safe}}" width="150px">
+                        <img src="/static/img/{{div.robot.id}}.jpg" alt="{{div.robot.name|safe}}" width="150px">
                     </div>
                 {% endif %}
                 {% if not div %}
