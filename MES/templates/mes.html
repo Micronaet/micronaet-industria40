@@ -2,7 +2,7 @@
     {% extends "layout.html" %}
     {% block content %}
         <div class="mes">
-            <h1>Macchinari attivi</h1>
+            <h1>Stato macchinari</h1>
 
             {% for div in div_boxes %}
                 {% if div %}
@@ -12,6 +12,7 @@
                         <b>Job:</b> {{div.job|safe}}<br/>
                         <b>Last:</b> {{div.robot.last_activity or ''|safe}}<br/>
                         <b>Last log:</b> {{div.robot.last_log_id or ''|safe}}<br/>
+                        <img src="./static/img/prova.jpg">
                     </div>
                 {% endif %}
                 {% if not div %}
