@@ -13,7 +13,7 @@
                         <b>Categoria:</b> {{div.robot.category_id.name|safe}}<br/>
                         <b>Cambio stato:</b> {{parser_write_hour(div.robot.last_activity_state)|safe}}<br/>
                         <b>Ultima attivit&agrave;:</b> {{parser_write_hour(div.robot.last_log_id, gap=0)|safe}}<br/><!--Still in GMT!-->
-                        <img src="/static/img/{{div.robot.id}}.jpg" title="{{'{} [{}]'.format(div.robot.name, div.robot.host_ip)|safe}}" width="150px">
+                        <img src="/static/img/{{div.robot.id}}.jpg" title="{{'{} [{}]<br/>Stato OPCUA: {}'.format(div.robot.name, div.robot.host_ip, div.robot.opcua_state or '/')|safe}}" width="150px">
                     </div>
                 {% else %}
                     <div style="clear:both;"></div>
