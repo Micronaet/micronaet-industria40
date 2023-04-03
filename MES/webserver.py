@@ -178,7 +178,7 @@ def mes():
     """ MES Dashboard
     """
     auto_refresh_setup()
-    admin_mode = request.args.get('admin_mode', False) == 't'
+    admin_mode = request.args.get('admin_mode', False)
 
     # -------------------------------------------------------------------------
     #                             Load data from ODOO:
