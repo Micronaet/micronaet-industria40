@@ -141,7 +141,7 @@ rgb_color = {  # For background
     'green': '#c6f9bd',  # b3fcb9
     'yellow': '#f4f9c5',
     'red': '#fcc7c7',
-    'darkred': '#c91016',
+    'darkred': '#ea4b50',
     'black': '#ecedea',
     'grey': '#dbdbdb',
     'darkgrey': '#939393',
