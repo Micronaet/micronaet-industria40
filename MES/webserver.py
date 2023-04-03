@@ -85,7 +85,7 @@ def parser_write_hour(value):
     except:
         print(f'Error converting {value}')
         return ''
-    return italian_dt.strftime('%d-%m-%Y %H:%M:%S')
+    return italian_dt.strftime('%H:%M:%S %d/%m/%Y')
 
 
 def auto_refresh_setup():
