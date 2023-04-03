@@ -159,8 +159,8 @@ div_order = {
 }
 
 colors = {
-    'damage': 'red',
-    'alarm': 'darkred',
+    'damage': 'darkred',
+    'alarm': 'red',
     'prepare': 'blue',
     'pause': 'yellow',
     'working': 'green',
