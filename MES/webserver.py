@@ -245,10 +245,14 @@ def mes():
                 job_name = '[NON PRESENTE]'
 
             # Change state also depend on last activity
+
+            # if robot.opcua_id and robot.opcua_id.working_command_id:
+            last_change = robot.opcua_id.last_activity_datetime or ''
             div_boxes.append({
                 'robot': robot,
                 'color': colors.get(state, 'grey'),
                 'state': state,
+                'last_change': last_change,
                 'job': job_name,
                 })
 
