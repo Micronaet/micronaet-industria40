@@ -227,8 +227,13 @@ def mes():
             key=lambda r: div_order.get(r.get_robot_activity_state(), 0))
         last_color = ''
         for robot in robots:
-            # state = robot.state
-            state = robot.get_robot_activity_state()
+            # Linked robot is used for check state and last change:
+            if robot.linked_robot_id:
+                check_robot = robot.linked_robot_id  # Parent robot
+            else:
+                check_robot = robot
+
+            state = check_robot.get_robot_activity_state()
             current_color = div_order.get(state)
             if not last_color:
                 last_color = current_color
@@ -249,10 +254,6 @@ def mes():
             # if robot.opcua_id and robot.opcua_id.working_command_id:
             try:
                 # Last change get from linked robot if present:
-                if robot.linked_robot_id:
-                    check_robot = robot.linked_robot_id  # Parent robot
-                else:
-                    check_robot = robot
                 last_change = parser_write_hour(
                     check_robot.opcua_id.last_activity_datetime) or '[NON GESTITA]'
 
