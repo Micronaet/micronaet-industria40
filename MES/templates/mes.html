@@ -22,7 +22,7 @@
                             <img src="/static/img/{{div.robot.id}}.jpg"
                                  width="150px"/>
                             <!--Try: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_tooltip -->
-                                <span class="tooltiptext">{{'{} [{}]\nStato OPCUA: {}'.format(div.robot.name, div.robot.host_ip, div.robot.opcua_state or '/')|safe}}</span>
+                                <span class="tooltiptext">{{'{} [{}]<br/>Stato OPCUA:<br/> {}'.format(div.robot.name, div.robot.host_ip, div.robot.opcua_state or '/')|safe}}</span>
                         </span>
                     </div>
                 {% else %}
