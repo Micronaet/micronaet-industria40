@@ -12,7 +12,7 @@
                         <b>Job:</b> {{div.job|safe}}<br/>
                         <b>Categoria:</b> {{div.robot.category_id.name|safe}}<br/>
                         <b>Cambio stato:</b> {{parser_write_hour(div.robot.last_activity_state)|safe}}<br/>
-                        <b>Ultima attivit&agrave;</b> {{parser_write_hour(div.robot.opcua_id.last_activity_datetime) if div.robot.opcua_id else 'Non controllata!'|safe}}<br/><!--Still in GMT!-->
+                        <b>Ultima attivit&agrave;</b> {{parser_write_hour(div.robot.opcua_id.working_command_id.last_change) if div.robot.opcua_id and div.robot.opcua_id else 'Non controllata!'|safe}}<br/><!--Still in GMT!-->
                         <img src="/static/img/{{div.robot.id}}.jpg" title="{{'{} [{}]\nStato OPCUA: {}'.format(div.robot.name, div.robot.host_ip, div.robot.opcua_state or '/')|safe}}" width="150px">
                         <!--Try: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_tooltip -->
                     </div>
