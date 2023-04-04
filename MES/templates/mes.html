@@ -13,7 +13,7 @@
                         <b>Categoria:</b> {{div.robot.category_id.name|safe}}<br/>
                         <b>Cambio stato:</b> {{parser_write_hour(div.robot.last_activity_state)|safe}}<br/>
                         <!--<span class="tooltip"><b>Ultima attivit&agrave;</b> {{parser_write_hour(div.robot.opcua_id.working_command_id.last_change) if div.robot.opcua_id and div.robot.opcua_id.working_command_id else 'Non controllata!'|safe}}<br/> -->
-                        <span class="tooltip"><b>Ultima attivit&agrave;</b> {{div.last_activity|safe}}<br/><!--Still in GMT!-->
+                        <span class="tooltip"><b>Ultima attivit&agrave;:</b> {{div.last_activity|safe}}<br/><!--Still in GMT!-->
                            {% if div.robot.last_activity_second > 0 %}
                                 <span class="tooltiptext">Va in pausa se passa {{div.robot.last_activity_second}} sec.</span>
                            {% endif %}
