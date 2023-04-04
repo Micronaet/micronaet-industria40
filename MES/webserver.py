@@ -247,7 +247,10 @@ def mes():
             # Change state also depend on last activity
 
             # if robot.opcua_id and robot.opcua_id.working_command_id:
-            last_change = robot.opcua_id.last_activity_datetime or ''
+            try:
+                last_change = robot.opcua_id.last_activity_datetime or ''
+            except:
+                last_change = ''
             div_boxes.append({
                 'robot': robot,
                 'color': colors.get(state, 'grey'),
