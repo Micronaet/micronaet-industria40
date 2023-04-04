@@ -6,9 +6,9 @@
 
             {% for div in div_boxes %}
                 {% if div %}
-                    <div class="robot_box_{{div.color}}" string="Prova">
+                    <div class="robot_box_{{div.color}}">
                         <b>{{div.robot.name.upper()|safe}}</b><br/>
-                        <b>Stato</b> {{div.robot.get_robot_activity_state().upper()|safe}}<br/>
+                        <b>Stato</b> {{state.upper()|safe}}<br/>
                         <b>Job:</b> {{div.job|safe}}<br/>
                         <b>Categoria:</b> {{div.robot.category_id.name|safe}}<br/>
                         <b>Cambio stato:</b> {{parser_write_hour(div.robot.last_activity_state)|safe}}<br/>

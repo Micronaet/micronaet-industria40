@@ -243,9 +243,12 @@ def mes():
             else:
                 job_name = '/'
 
+            # Change state also depend on last activity
+            state = robot.get_robot_activity_state()
             div_boxes.append({
                 'robot': robot,
                 'color': colors.get(state, 'grey'),
+                'state': state,
                 'job': job_name,
                 })
 
