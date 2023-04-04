@@ -227,7 +227,8 @@ def mes():
             key=lambda r: div_order.get(r.state, 0))
         last_color = ''
         for robot in robots:
-            state = robot.state
+            # state = robot.state
+            state = robot.get_robot_activity_state()
             current_color = div_order.get(state)
             if not last_color:
                 last_color = current_color
@@ -244,7 +245,6 @@ def mes():
                 job_name = '/'
 
             # Change state also depend on last activity
-            state = robot.get_robot_activity_state()
             div_boxes.append({
                 'robot': robot,
                 'color': colors.get(state, 'grey'),
