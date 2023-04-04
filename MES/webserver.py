@@ -248,7 +248,8 @@ def mes():
 
             # if robot.opcua_id and robot.opcua_id.working_command_id:
             try:
-                last_change = robot.opcua_id.last_activity_datetime or ''
+                last_change = parser_write_hour(
+                    robot.opcua_id.last_activity_datetime)
             except:
                 last_change = ''
             div_boxes.append({
