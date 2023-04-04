@@ -248,8 +248,13 @@ def mes():
 
             # if robot.opcua_id and robot.opcua_id.working_command_id:
             try:
+                # Last change get from linked robot if present:
+                if robot.linked_robot_id:
+                    check_robot = robot.linked_robot_id  # Parent robot
+                else:
+                    check_robot = robot
                 last_change = parser_write_hour(
-                    robot.opcua_id.last_activity_datetime) or '[NON GESTITA]'
+                    check_robot.opcua_id.last_activity_datetime) or '[NON GESTITA]'
 
             except:
                 last_change = ''
