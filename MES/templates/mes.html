@@ -18,7 +18,9 @@
                                 <span class="tooltiptext">Va in pausa se passa {{div.robot.last_activity_second}} sec.</span>
                            {% endif %}
                         </span>
-                        <img src="/static/img/{{div.robot.id}}.jpg" title="{{'{} [{}]\nStato OPCUA: {}'.format(div.robot.name, div.robot.host_ip, div.robot.opcua_state or '/')|safe}}" width="150px">
+                        <img src="/static/img/{{div.robot.id}}.jpg"
+                             title="{{'{} [{}]\nStato OPCUA: {}'.format(div.robot.name, div.robot.host_ip, div.robot.opcua_state or '/')|safe}}"
+                             width="150px"/>
                         <!--Try: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_tooltip -->
                     </div>
                 {% else %}
