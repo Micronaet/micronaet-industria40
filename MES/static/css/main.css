@@ -202,6 +202,7 @@ div.robot_box_blue {
     display: block;
     width: 250px;
     height: 300px;
+    color: white;
     background-color: #2596be;
     margin: 10px;
     padding: 5px;
