@@ -242,7 +242,7 @@ def mes():
             if job:
                 job_name = job.name
             else:
-                job_name = '/'
+                job_name = '[NON PRESENTE]'
 
             # Change state also depend on last activity
             div_boxes.append({
