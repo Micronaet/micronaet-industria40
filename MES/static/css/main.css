@@ -179,6 +179,7 @@ div.robot_box_darkred {
     width: 250px;
     height: 300px;
     background-color: #ea4b50;
+    color: white;
     margin: 10px;
     padding: 5px;
     -webkit-border-radius: 6px;
