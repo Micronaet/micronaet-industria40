@@ -215,49 +215,46 @@ def mes():
     # -------------------------------------------------------------------------
     try:
         robot_pool = get_odoo_table(parameters, 'mrp.robot')
-        erp_on = True
+
+        # ---------------------------------------------------------------------
+        # ERP ON:
+        # ---------------------------------------------------------------------
+        robot_ids = robot_pool.search([])
+        div_boxes = []
+
+        robots = sorted(
+            robot_pool.browse(robot_ids),
+            key=lambda r: div_order.get(r.state, 0))
+        last_color = ''
+        for robot in robots:
+            state = robot.state
+            current_color = div_order.get(state)
+            if not last_color:
+                last_color = current_color
+
+            # New line:
+            if last_color != current_color:
+                last_color = current_color
+                div_boxes.append('')
+
+            job = robot.current_job_id
+            if job:
+                job_name = job.name
+            else:
+                job_name = '/'
+
+            div_boxes.append({
+                'robot': robot,
+                'color': colors.get(state, 'grey'),
+                'job': job_name,
+                })
+
+        div_boxes.append('')  # Necessary for box dimension
     except:
-        erp_on = False
-
-    # -------------------------------------------------------------------------
-    # ERP OFF:
-    # -------------------------------------------------------------------------
-    if not erp_on:
+        # ---------------------------------------------------------------------
+        # ERP OFF:
+        # ---------------------------------------------------------------------
         return render_template('no_ERP.html', args=context_parameters)
-
-    # -------------------------------------------------------------------------
-    # ERP ON:
-    # -------------------------------------------------------------------------
-    robot_ids = robot_pool.search([])
-    div_boxes = []
-
-    robots = sorted(robot_pool.browse(robot_ids),
-                    key=lambda r: div_order.get(r.state, 0))
-    last_color = ''
-    for robot in robots:
-        state = robot.state
-        current_color = div_order.get(state)
-        if not last_color:
-            last_color = current_color
-
-        # New line:
-        if last_color != current_color:
-            last_color = current_color
-            div_boxes.append('')
-
-        job = robot.current_job_id
-        if job:
-            job_name = job.name
-        else:
-            job_name = '/'
-
-        div_boxes.append({
-            'robot': robot,
-            'color': colors.get(state, 'grey'),
-            'job': job_name,
-            })
-
-    div_boxes.append('')  # Necessary for box dimension
 
     return render_template(
         'mes.html', args=context_parameters,
