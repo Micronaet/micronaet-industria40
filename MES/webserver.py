@@ -224,7 +224,7 @@ def mes():
 
         robots = sorted(
             robot_pool.browse(robot_ids),
-            key=lambda r: div_order.get(r.state, 0))
+            key=lambda r: div_order.get(robot.get_robot_activity_state(), 0))
         last_color = ''
         for robot in robots:
             # state = robot.state
