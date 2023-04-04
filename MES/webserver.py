@@ -257,7 +257,7 @@ def mes():
                 'robot': robot,
                 'color': colors.get(state, 'grey'),
                 'state': state,
-                'last_change': last_change,
+                'last_activity': last_change,
                 'job': job_name,
                 })
 
