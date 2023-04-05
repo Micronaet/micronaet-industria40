@@ -261,11 +261,13 @@ def mes():
                 if check_robot.opcua_id:
                     last_change = parser_write_hour(
                         check_robot.opcua_id.last_activity_datetime) or \
-                        '[NON GESTITA]'
+                        '[NON TROVATA]'
                 elif check_robot.mysql_id:
                     last_change = parser_write_hour(
                         check_robot.mysql_id.last_activity_datetime) or \
-                        '[NON GESTITA]'
+                        '[NON TROVATA]'
+                else:
+                    last_change = '[NON RILEVABILE]'
             except:
                 pass
 
