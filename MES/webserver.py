@@ -260,12 +260,26 @@ def mes():
 
             except:
                 last_change = ''
+
+            # Robot state:
+            robot_state = '{} [{}]'.format(
+                robot.name,
+                robot.host_ip or '',
+            )
+            if robot.opcua_id and robot.opcua_state:
+                robot_state += '<br/>Stato OPCUA:<br/> {}'.format(
+                    robot.opcua_state)
+            if robot.mysql_id and robot.mysql_state:
+                robot_state += '<br/>Stato SQL:<br/> {}'.format(
+                    robot.mysql_state)
+
             div_boxes.append({
                 'robot': robot,
                 'color': colors.get(state, 'grey'),
                 'state': state,
                 'last_activity': last_change,
                 'job': job_name,
+                'robot_state': robot_state,
                 })
 
         div_boxes.append('')  # Necessary for box dimension
