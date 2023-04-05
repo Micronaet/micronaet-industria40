@@ -251,13 +251,17 @@ def mes():
                 job_name = '[NON PRESENTE]'
 
             # Change state also depend on last activity
-
             # if robot.opcua_id and robot.opcua_id.working_command_id:
             try:
                 # Last change get from linked robot if present:
-                last_change = parser_write_hour(
-                    check_robot.opcua_id.last_activity_datetime) or '[NON GESTITA]'
-
+                if check_robot.opcua_id:
+                    last_change = parser_write_hour(
+                        check_robot.opcua_id.last_activity_datetime) or \
+                        '[NON GESTITA]'
+                elif check_robot.mysql_id:
+                    last_change = parser_write_hour(
+                        check_robot.mysql_id.last_activity_datetime) or \
+                        '[NON GESTITA]'
             except:
                 last_change = ''
 
