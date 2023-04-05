@@ -255,6 +255,7 @@ def mes():
 
             # Change state also depend on last activity
             # if robot.opcua_id and robot.opcua_id.working_command_id:
+            last_change = ''
             try:
                 # Last change get from linked robot if present:
                 if check_robot.opcua_id:
@@ -266,7 +267,7 @@ def mes():
                         check_robot.mysql_id.last_activity_datetime) or \
                         '[NON GESTITA]'
             except:
-                last_change = ''
+                pass
 
             # Robot state:
             robot_state = '{} [{}]'.format(
