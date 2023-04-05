@@ -81,8 +81,11 @@ def parser_write_hour(value, gap=gmt_gap):
     if not value:
         return ''
     today = str(datetime.now())[:10]
+    yesterday = str(datetime.now() - timedelta(hours=24))[:10]
     if value.startswith(today):
         mask = '%H:%M:%S [OGGI]'
+    elif value.startswith(yesterday):
+        mask = '%H:%M:%S [IERI]'
     else:
         mask = '%H:%M:%S %d/%m/%Y'
 
