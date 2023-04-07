@@ -266,7 +266,6 @@ def mes():
                     last_change = parser_write_hour(
                         check_robot.mysql_id.last_activity_datetime) or \
                         '[NON TROVATA]'
-
                 elif check_robot.ftp_id and check_robot.ftp_id.mode != 'ftp':
                     # FTP in all or fs mode only:
                     last_change = parser_write_hour(
@@ -278,19 +277,22 @@ def mes():
                 pass
 
             # -----------------------------------------------------------------
-            #                        Robot state:
+            #                        Robot state (all are written):
             # -----------------------------------------------------------------
+            # Network:
             robot_state = '{} [{}]'.format(
                 robot.name,
                 robot.host_ip or '',
             )
-            # All written:
+            # OPCUA:
             if robot.opcua_id and robot.opcua_state:
                 robot_state += '<br/>Stato OPCUA:<br/> {}'.format(
                     robot.opcua_state)
+            # MYSQL:
             if robot.mysql_id and robot.mysql_state:
                 robot_state += '<br/>Stato SQL:<br/> {}'.format(
                     robot.mysql_state)
+            # FTP:
             if robot.ftp_id and robot.ftp_id.mode != 'ftp' and \
                     robot.ftp_state:
                 robot_state += '<br/>Stato FTP:<br/> {}'.format(
