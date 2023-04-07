@@ -266,6 +266,12 @@ def mes():
                     last_change = parser_write_hour(
                         check_robot.mysql_id.last_activity_datetime) or \
                         '[NON TROVATA]'
+
+                elif check_robot.ftp_id and check_robot.ftp_id.mode != 'ftp':
+                    # FTP in all or fs mode only:
+                    last_change = parser_write_hour(
+                        check_robot.ftp_id.last_activity_datetime) or \
+                        '[NON TROVATA]'
                 else:
                     last_change = '[NON RILEVABILE]'
             except:
