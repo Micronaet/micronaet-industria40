@@ -3,6 +3,11 @@
     {% block content %}
         <div class="about">
             <h1>Micronaet</h1>
-            ODOO non operativo, attesa risposta...<br/>Now:
+            ODOO non operativo, attesa risposta...<br/>
+            Now:<br/>
+            {% if error %}
+            Errore riscontrato: {{error}}
+            {% endif %}
+
         </div>
     {% endblock %}

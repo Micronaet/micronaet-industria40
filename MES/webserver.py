@@ -312,7 +312,8 @@ def mes():
         # ---------------------------------------------------------------------
         # ERP OFF:
         # ---------------------------------------------------------------------
-        return render_template('no_ERP.html', args=context_parameters)
+        return render_template(
+            'no_ERP.html', args=context_parameters, error=str(sys.exc_info()))
 
     return render_template(
         'mes.html', args=context_parameters,
