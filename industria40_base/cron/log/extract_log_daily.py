@@ -35,6 +35,7 @@ from datetime import datetime
 # Connect to ODOO:
 # -----------------------------------------------------------------------------
 cfg_file = os.path.expanduser('./odoo.cfg')
+all_mode = True
 
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
@@ -74,6 +75,11 @@ if month == 1:
     month = 12
     year -= 1
 from_date = '%s-%s-01 00:00:00' % (year, month)
+
+# All mode:
+if all_mode:
+    from_date = '1900-01-01 00:00:00'
+
 
 robot_ids = robot_pool.search([])
 for robot in robot_pool.browse(robot_ids):
