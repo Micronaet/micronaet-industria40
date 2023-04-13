@@ -178,7 +178,7 @@ for robot in robot_pool.browse(robot_ids):
             job.duration_change_gap,
             job.duration_setup,
             'X' if not_consider else '',
-            0,  # todo where is used?
+            1,  # todo where is used?
         ]
         if not_consider:
             color = excel_format['red']
