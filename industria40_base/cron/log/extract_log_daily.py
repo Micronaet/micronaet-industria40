@@ -99,6 +99,7 @@ for robot in robot_pool.browse(robot_ids):
     WB = {}  # Replaced
     for job in job_pool.browse(job_ids):
         created_at = job.created_at
+        piece = job.piece
         program = job.program_id
         if program:
             program_name = program.name
@@ -178,7 +179,7 @@ for robot in robot_pool.browse(robot_ids):
             job.duration_change_gap,
             job.duration_setup,
             'X' if not_consider else '',
-            1,  # todo where is used?
+            piece or 1,  # todo where is used?
         ]
         if not_consider:
             color = excel_format['red']
