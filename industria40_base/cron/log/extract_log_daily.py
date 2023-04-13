@@ -99,6 +99,11 @@ for robot in robot_pool.browse(robot_ids):
     WB = {}  # Replaced
     for job in job_pool.browse(job_ids):
         created_at = job.created_at
+        program = job.program_id
+        if program:
+            program_name = program.name
+        else:
+            program_name = 'Sconosciuto'
 
         # Period = Year, month
         this_period = created_at[:4], created_at[5:7]
@@ -142,7 +147,7 @@ for robot in robot_pool.browse(robot_ids):
             }
 
             WB.column_width(ws_name, [
-                20,
+                20, 20,
                 20, 20,
                 10, 10, 10,
                 5,
@@ -153,6 +158,7 @@ for robot in robot_pool.browse(robot_ids):
             row = 0
             header = [
                 'Robot',
+                'Programma',
                 'Inizio', 'Fine',
                 'T. Cambio', 'T. Totale', 'T. Setup',
                 'Fuori stat.',
@@ -165,6 +171,7 @@ for robot in robot_pool.browse(robot_ids):
         not_consider = job.duration_not_considered
         data = [
             robot.name,
+            program_name,
             job.created_at,
             job.ended_at,
             job.duration_change_total,
