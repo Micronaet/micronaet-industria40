@@ -74,12 +74,12 @@ month = dt.month
 if month == 1:
     month = 12
     year -= 1
-from_date = '%s-%s-01 00:00:00' % (year, month)
 
 # All mode:
 if all_mode:
     from_date = '1900-01-01 00:00:00'
-
+else:
+    from_date = '%s-%s-01 00:00:00' % (year, month)
 
 robot_ids = robot_pool.search([])
 for robot in robot_pool.browse(robot_ids):
