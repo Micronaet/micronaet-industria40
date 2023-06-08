@@ -42,12 +42,12 @@ database = {
                 'controllo.xlsx',
                 'Semilavorati_disponibili_',
                 'Order_OC\/',  # residuo minimo
+                'Tubi.odt',
             ],
             # 1 = previous year
             1: [
                 'Componenti_20',
                 'Stato_tessuti_',
-                'Tubi.odt',
             ],
         },
         'mail': {
@@ -67,12 +67,12 @@ database = {
                 'Fiam: Partner senza mail per invio fattura:',
                 'Confronto prezzi DB modello',
                 'Invio automatico stato materiali per le prossime ',
+                'Invio automatico stato telai',
             ],
             # 1 = previous year
             1: [
                 'Invio automatico stato componenti',
                 'Invio automatico stato tessuto',
-                'Invio automatico stato telai',
             ],
         },
     },
