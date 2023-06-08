@@ -69,6 +69,7 @@ database = {
                 'Invio automatico stato materiali per le prossime ',
                 'Invio automatico stato telai',
                 'Mail automatica ODOO: Ordini per negozio',
+                'Ordini Wordpress',
             ],
             # 1 = previous year
             1: [
