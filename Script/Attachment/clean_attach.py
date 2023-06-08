@@ -34,6 +34,7 @@ company_list = ('fia', 'gpb')
 database = {
     'fia': {
         'attachment': {
+            # 0 = current year
             0: [
                 'Extra_sconti.xlsx',
                 'commercializzati.xlsx',
@@ -42,6 +43,7 @@ database = {
                 'Semilavorati_disponibili_',
                 'Order_OC\/',  # residuo minimo
             ],
+            # 1 = previous year
             1: [
                 'Componenti_20',
                 'Stato_tessuti_',
@@ -49,6 +51,7 @@ database = {
             ],
         },
         'mail': {
+            # 0 = current year
             0: [
                 'Invio automatico stato disponibilità materiali',
                 'Invio automatico stato extra sconto',
@@ -60,7 +63,9 @@ database = {
                 'Distinte non controllate negli ordini',
                 'Fiam S.r.l: Ordine con prodotti nuovi',
                 ' ha residuo minimo',  # finale dell'oggetto
+                'Righe fattura con prodotti commercializzati',
             ],
+            # 1 = previous year
             1: [
                 'Invio automatico stato componenti',
                 'Invio automatico stato tessuto',
