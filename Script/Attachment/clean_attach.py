@@ -64,6 +64,7 @@ database = {
                 'Fiam S.r.l: Ordine con prodotti nuovi',
                 ' ha residuo minimo',  # finale dell'oggetto
                 'Righe fattura con prodotti commercializzati',
+                'Fiam: Partner senza mail per invio fattura:',
             ],
             # 1 = previous year
             1: [
