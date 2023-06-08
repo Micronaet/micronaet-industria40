@@ -66,6 +66,7 @@ database = {
                 'Righe fattura con prodotti commercializzati',
                 'Fiam: Partner senza mail per invio fattura:',
                 'Confronto prezzi DB modello',
+                'Invio automatico stato materiali per le prossime ',
             ],
             # 1 = previous year
             1: [
