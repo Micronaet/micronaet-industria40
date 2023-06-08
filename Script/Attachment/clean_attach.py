@@ -65,6 +65,7 @@ database = {
                 ' ha residuo minimo',  # finale dell'oggetto
                 'Righe fattura con prodotti commercializzati',
                 'Fiam: Partner senza mail per invio fattura:',
+                'Confronto prezzi DB modello',
             ],
             # 1 = previous year
             1: [
