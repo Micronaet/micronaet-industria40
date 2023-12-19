@@ -63,8 +63,6 @@ class MrpProduction(orm.Model):
             'update': False,  # Only dry run!
             }
         '''
-        pdb.set_trace()
-
         return self.schedule_unload_mrp_material(
             cr, uid,
             from_date=context.get('run_force', {}).get('from_date'),
@@ -109,13 +107,13 @@ class MrpProduction(orm.Model):
         # ---------------------------------------------------------------------
         # Force procedure:
         # ---------------------------------------------------------------------
-        force_run = context.get('force_run', {})
+        run_force = context.get('run_force', {})
         # Force run parameters:
-        from_date = force_run.get('from_date', from_date)
-        to_date = force_run.get('to_date', False)
-        update_mode = force_run.get('update', True)
+        from_date = run_force.get('from_date', from_date)
+        to_date = run_force.get('to_date', False)
+        update_mode = run_force.get('update', True)
         pdb.set_trace()
-        filename = force_run.get(
+        filename = run_force.get(
             'filename',
             '/home/administrator/photo/log/mrp_unload_i40.xlsx',
             )
