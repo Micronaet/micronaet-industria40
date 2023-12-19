@@ -47,12 +47,14 @@ class MrpProduction(orm.Model):
     _inherit = 'mrp.production'
 
     def schedule_unload_mrp_material_erpeek(
-            self, cr, uid, from_date=False, to_date=False, filename='',
+            self, cr, uid,
+            # from_date=False, to_date=False, filename='',
             context=None):
         """ Erpeek call for extract Tcar Tscar detail from MRP
         """
         if context is None:
             context = {}
+        '''    
         ctx = context.copy()
         ctx['run_force'] = {
             'from_date': from_date,
@@ -60,10 +62,11 @@ class MrpProduction(orm.Model):
             'filename': filename,
             'update': False,  # Only dry run!
             }
+        '''
         pdb.set_trace()
 
         return self.schedule_unload_mrp_material(
-            cr, uid, from_date=from_date, context=ctx)
+            cr, uid, from_date=context.get('from_date'), context=context)
 
     # Override original function for link unload to Industria MRP:
     def schedule_unload_mrp_material(
