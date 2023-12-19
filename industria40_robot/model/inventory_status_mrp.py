@@ -23,6 +23,7 @@ import sys
 import logging
 import openerp
 import xlsxwriter  # XLSX export
+import pickle
 import openerp.netsvc as netsvc
 import openerp.addons.decimal_precision as dp
 from openerp.osv import fields, osv, expression, orm
@@ -231,7 +232,5 @@ class MrpProduction(orm.Model):
                     'mx_mrp_out': unload,
                     }, context=context)
         else:  # Dry run mode:
-            pdb.set_trace()
-            context['return'] = product_unload
-            return True
-            # return product_unload  # todo only this?
+            product_unload_text = pickle.dumps(product_unload)
+            return product_unload_text  # Converted in Text
