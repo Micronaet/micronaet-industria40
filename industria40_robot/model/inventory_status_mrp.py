@@ -232,4 +232,6 @@ class MrpProduction(orm.Model):
                     }, context=context)
         else:  # Dry run mode:
             pdb.set_trace()
-            return product_unload  # todo only this?
+            context['return'] = product_unload
+            return True
+            # return product_unload  # todo only this?
