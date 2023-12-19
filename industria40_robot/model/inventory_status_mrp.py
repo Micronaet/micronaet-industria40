@@ -60,6 +60,7 @@ class MrpProduction(orm.Model):
             'filename': filename,
             'update': False,  # Only dry run!
             }
+        pdb.set_trace()
 
         return self.schedule_unload_mrp_material(
             cr, uid, from_date=from_date, context=ctx)
