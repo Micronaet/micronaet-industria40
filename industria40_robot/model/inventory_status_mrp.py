@@ -58,6 +58,7 @@ class MrpProduction(orm.Model):
             'from_date': from_date,
             'to_date': to_date,
             'filename': filename,
+            'update': False,  # Only dry run!
             }
 
         return self.schedule_unload_mrp_material(
