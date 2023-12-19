@@ -112,10 +112,9 @@ class MrpProduction(orm.Model):
         from_date = run_force.get('from_date', from_date)
         to_date = run_force.get('to_date', False)
         update_mode = run_force.get('update', True)
-        pdb.set_trace()
         filename = run_force.get(
             'filename',
-            '/home/administrator/photo/log/mrp_unload_i40.xlsx',
+            '/home/administrator/photo/log/mrp_unload_i40.xlsx',  # Default
             )
 
         # todo use one year data instead?
