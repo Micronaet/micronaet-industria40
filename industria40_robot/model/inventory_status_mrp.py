@@ -231,4 +231,5 @@ class MrpProduction(orm.Model):
                     'mx_mrp_out': unload,
                     }, context=context)
         else:  # Dry run mode:
+            pdb.set_trace()
             return product_unload  # todo only this?
