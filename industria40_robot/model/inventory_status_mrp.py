@@ -62,8 +62,7 @@ class MrpProduction(orm.Model):
             }
 
         return self.schedule_unload_mrp_material(
-            cr, uid, from_date=from_date, to_date=to_date, filename=filename,
-            context=ctx)
+            cr, uid, from_date=from_date, context=ctx)
 
     # Override original function for link unload to Industria MRP:
     def schedule_unload_mrp_material(
