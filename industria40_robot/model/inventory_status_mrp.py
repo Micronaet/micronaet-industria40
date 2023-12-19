@@ -108,6 +108,7 @@ class MrpProduction(orm.Model):
         from_date = force_run.get('from_date', from_date)
         to_date = force_run.get('to_date', False)
         update_mode = force_run.get('update', True)
+        pdb.set_trace()
         filename = force_run.get(
             'filename',
             '/home/administrator/photo/log/mrp_unload_i40.xlsx',
