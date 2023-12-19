@@ -66,7 +66,9 @@ class MrpProduction(orm.Model):
         pdb.set_trace()
 
         return self.schedule_unload_mrp_material(
-            cr, uid, from_date=context.get('from_date'), context=context)
+            cr, uid,
+            from_date=context.get('run_force', {}).get('from_date'),
+            context=context)
 
     # Override original function for link unload to Industria MRP:
     def schedule_unload_mrp_material(
