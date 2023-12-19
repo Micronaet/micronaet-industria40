@@ -46,6 +46,24 @@ class MrpProduction(orm.Model):
 
     _inherit = 'mrp.production'
 
+    def schedule_unload_mrp_material_erpeek(
+            self, cr, uid, from_date=False, to_date=False, filename='',
+            context=None):
+        """ Erpeek call for extract Tcar Tscar detail from MRP
+        """
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        ctx['run_force'] = {
+            'from_date': from_date,
+            'to_date': to_date,
+            'filename': filename,
+            }
+
+        return self.schedule_unload_mrp_material(
+            cr, uid, from_date=from_date, to_date=to_date, filename=filename,
+            context=ctx)
+
     # Override original function for link unload to Industria MRP:
     def schedule_unload_mrp_material(
             self, cr, uid, from_date=False,
@@ -53,6 +71,7 @@ class MrpProduction(orm.Model):
             context=None):
         """ Update product field with unloaded elements
             Add also unload move to MRP status
+            Context param: run_force used to force parameter in a dry run
 
             todo add parameter:
             only_mrp: force only MRP status not product
@@ -61,8 +80,8 @@ class MrpProduction(orm.Model):
             filename
                 /home/administrator/photo/log/mrp_unload_i40.xlsx
         """
-        filename = '/home/administrator/photo/log/mrp_unload_i40.xlsx'
-        # filename = False
+        if context is None:
+            context = {}
 
         # ---------------------------------------------------------------------
         # Utility function:
@@ -80,6 +99,19 @@ class MrpProduction(orm.Model):
         # Pool used:
         product_pool = self.pool.get('product.product')
         unload_pool = self.pool.get('industria.mrp.unload')
+
+        # ---------------------------------------------------------------------
+        # Force procedure:
+        # ---------------------------------------------------------------------
+        force_run = context.get('force_run', {})
+        # Force run parameters:
+        from_date = force_run.get('from_date', from_date)
+        to_date = force_run.get('to_date', False)
+        update_mode = force_run.get('update', True)
+        filename = force_run.get(
+            'filename',
+            '/home/administrator/photo/log/mrp_unload_i40.xlsx',
+            )
 
         # todo use one year data instead?
         if not from_date:
@@ -107,21 +139,29 @@ class MrpProduction(orm.Model):
         # After inventory date:
         # todo get_range_inventory_date(self, cr, uid, context=None)
 
-        mrp_ids = self.search(cr, uid, [
+        domain = [
             # State filter (not needed):
             # ('state', 'not in', ('done', 'cancel')),
-
-            # Period filter (only up not down limit)
             ('date_planned', '>=', from_date),
-            ], context=context)
+            ]
+        if to_date:
+            domain.append(
+                ('date_planned', '<=', to_date),
+                )
+        _logger.warning('Filter from %s to %s [%s mode]' % (
+            from_date, to_date, 'update' if update_mode else 'no update',
+            ))
+
+        mrp_ids = self.search(cr, uid, domain, context=context)
 
         # ---------------------------------------------------------------------
         # Clean operation:
         # ---------------------------------------------------------------------
-        # Current assign in product:
-        cr.execute('UPDATE product_product set mx_mrp_out=0;')
-        # Current I40 load:
-        cr.execute('DELETE FROM industria_mrp_unload;')
+        if update_mode:
+            # Current assign in product:
+            cr.execute('UPDATE product_product set mx_mrp_out=0;')
+            # Current I40 load:
+            cr.execute('DELETE FROM industria_mrp_unload;')
 
         # Generate MRP total component report with totals:
         mrp_unload = {}
@@ -171,17 +211,20 @@ class MrpProduction(orm.Model):
         if filename:
             wb.close()
 
-        # Update MRP I4.0
-        for key in mrp_unload:
-            industria_mrp_id, product_id = key
-            unload_pool.create(cr, uid, {
-                'industria_mrp_id': industria_mrp_id,
-                'product_id': product_id,
-                'quantity': mrp_unload[key],
-            }, context=context)
-
-        # Update product status:
-        for product_id, unload in product_unload.iteritems():
-            product_pool.write(cr, uid, product_id, {
-                'mx_mrp_out': unload,
+        if update_mode:
+            # Update MRP I4.0
+            for key in mrp_unload:
+                industria_mrp_id, product_id = key
+                unload_pool.create(cr, uid, {
+                    'industria_mrp_id': industria_mrp_id,
+                    'product_id': product_id,
+                    'quantity': mrp_unload[key],
                 }, context=context)
+
+            # Update product status:
+            for product_id, unload in product_unload.iteritems():
+                product_pool.write(cr, uid, product_id, {
+                    'mx_mrp_out': unload,
+                    }, context=context)
+        else:  # Dry run mode:
+            return product_unload  # todo only this?
