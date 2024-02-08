@@ -390,9 +390,12 @@
                     <field name="robot_id"/>
                     <field name="state"/>
 
-                    <!--<filter name="industria_in_yes" string="I 4.0 in" domain="[('industria_in_id','!=',False')]"/>
-                    <filter name="industria_out_yes" string="I 4.0 out" domain="[('industria_out_id','!=',False')]"/>-->
-                    <group expand="0" string="Group By...">
+                    <!--<filter name="state_open" string="Aperti" domain="[('state','in',('pause', 'confirmed'))]"/>-->
+                    <filter name="state_draft" string="Bozza" domain="[('state','=','draft')]"/>
+                    <filter name="state_confirmed" string="Confermati" domain="[('state','=','confirmed')]"/>
+                    <filter name="state_pause" string="In Pausa" domain="[('state','=','pause')]"/>
+                    <filter name="state_done" string="Fatti" domain="[('state','=','done')]"/>
+                    <group expand="0" string="Raggruppa per...">
                         <filter name="group_robot_id" string="Robot" context="{'group_by': 'robot_id'}"/>
                         <filter name="group_date" string="Data" context="{'group_by': 'date'}"/>
                         <filter name="group_state" string="Stato" context="{'group_by': 'state'}"/>
@@ -408,7 +411,7 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="view_id" ref="industria_mrp_view_tree"/>
             <field name="search_view_id" ref="action_industria_mrp_production_list_search"/>
-            <field name="context">{}</field>
+            <field name="context">{'search_default_state_confirmed': True}</field>
             <field name="domain">[]</field>
         </record>
 
