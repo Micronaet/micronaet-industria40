@@ -375,14 +375,20 @@ class IndustriaDatabase(orm.Model):
         payload['params']['command'] = 'mysql_delete'
         payload['params']['query'] = query
 
-        response = requests.post(
-            url, headers=headers, data=json.dumps(payload))
-        response_json = response.json()
-        if not response_json['success']:
+        try:
+            response = requests.post(
+                url, headers=headers, data=json.dumps(payload))
+            response_json = response.json()
+            if not response_json['success']:
+                raise osv.except_osv(
+                    _('Errore chiamata a Cabina:'),
+                    _('Errore cancellando il Job in cabina: %s!' %
+                      response_json['reply']['error']))
+        except:
             raise osv.except_osv(
                 _('Errore chiamata a Cabina:'),
-                _('Errore cancellando il Job in cabina: %s!' %
-                  response_json['reply']['error']))
+                _('Errore cancellando il Job in cabina [%s]!' % url)
+
         return True
 
     # OCPUA function:
