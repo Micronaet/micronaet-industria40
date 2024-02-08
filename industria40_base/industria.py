@@ -3022,8 +3022,6 @@ class IndustriaJobInherit(orm.Model):
             for step in job.step_ids:
                 fabric_length = step.program_id.fabric_length
                 for fabric_line in step.fabric_ids:
-                    program = fabric_line.program_id
-
                     layer = fabric_line.total
                     detail += '%s x %s = mt %s\n' % (
                         layer,
