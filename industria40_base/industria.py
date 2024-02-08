@@ -3021,10 +3021,13 @@ class IndustriaJobInherit(orm.Model):
             detail = ''
             for step in job.step_ids:
                 for fabric_line in step.fabric_ids:
+                    program = fabric_line.program_id
+
                     layer = fabric_line.total
-                    detail += '[%s x %s] ' % (
+                    detail += '%s x %s = mt %s\n' % (
                         layer,
                         fabric_line.fabric_id.default_code,
+                        layer * program.fabric_length,
                     )
                     # Total work only first loop:
                     # Step are in this application the same total layer!
