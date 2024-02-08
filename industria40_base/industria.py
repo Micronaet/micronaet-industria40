@@ -3031,8 +3031,8 @@ class IndustriaJobInherit(orm.Model):
                     # Total work only first loop:
                     # Step are in this application the same total layer!
                     # so no need to repeat in total
-                    if not total:
-                        total += layer
+                    # if not total:
+                    total += layer
 
             res[job.id] = {
                 'fabric_step': len(job.step_ids),
