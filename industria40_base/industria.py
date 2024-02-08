@@ -3023,8 +3023,8 @@ class IndustriaJobInherit(orm.Model):
                 fabric_length = step.program_id.fabric_length
                 for fabric_line in step.fabric_ids:
                     layer = fabric_line.total
-                    detail += '%s mt. di %s (strati %s)\n' % (
-                        layer * fabric_length / 1000.0,
+                    detail += '%s mt. [strati %s] di %s \n' % (
+                        round(layer * fabric_length / 1000.0, 0),
                         fabric_line.fabric_id.default_code,
                         layer,
                     )
