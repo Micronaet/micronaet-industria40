@@ -565,9 +565,9 @@ class IndustriaMrp(orm.Model):
                                 total_qty = todo * bom_qty
                                 new_lines[key][0] += total_qty
                                 new_lines[key][1] += \
-                                    '[MRP: %s] [%s - %s] [%s] pz %s >> ' \
-                                    '%s x [SL. (%s) %s] >> ' \
-                                    '[MP. %s] = %s\n' % (
+                                    '[MRP: %s] [%s - %s] [%s] pz %s x ' \
+                                    '%s [%s - %s] = ' \
+                                    '%s [%s]\n' % (
                                         mrp.name,
                                         line.order_id.name,
                                         line.order_id.partner_id.name,
@@ -576,8 +576,8 @@ class IndustriaMrp(orm.Model):
                                         int(bom_qty),
                                         cmpt_category.name,
                                         semiproduct.default_code,
-                                        material.default_code,
                                         int(todo * bom_qty),
+                                        material.default_code,
                                     )
 
         # ---------------------------------------------------------------------
@@ -1188,7 +1188,7 @@ class IndustriaMrpLine(orm.Model):
             string='Collegati',
             help='Calcolo dei semilavorati assegnati da magazzino o prodotti '
                  'per una determinata produzione'),
-        'new_bounded': fields.integer('Nuova proposta')
+        'new_bounded': fields.integer('Assegna da magazzino')
     }
 
     _defaults = {
