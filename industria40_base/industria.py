@@ -387,7 +387,7 @@ class IndustriaDatabase(orm.Model):
         except:
             raise osv.except_osv(
                 _('Errore chiamata a Cabina:'),
-                _('Errore cancellando il Job in cabina [%s]!' % url)
+                _('Errore cancellando il Job in cabina [%s]!' % url))
 
         return True
 
