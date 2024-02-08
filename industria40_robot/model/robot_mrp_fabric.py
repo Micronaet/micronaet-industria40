@@ -565,12 +565,14 @@ class IndustriaMrp(orm.Model):
                                 total_qty = todo * bom_qty
                                 new_lines[key][0] += total_qty
                                 new_lines[key][1] += \
-                                    '[MRP: %s] %s x [PR. %s] >> ' \
+                                    '[MRP: %s] [%s - %s] [%s] pz %s >> ' \
                                     '%s x [SL. (%s) %s] >> ' \
                                     '[MP. %s] = %s\n' % (
                                         mrp.name,
-                                        int(todo),
+                                        line.order_id.name,
+                                        line.order_id.partner_id.name,
                                         product.default_code,
+                                        int(todo),
                                         int(bom_qty),
                                         cmpt_category.name,
                                         semiproduct.default_code,
