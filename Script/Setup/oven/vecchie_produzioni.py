@@ -62,7 +62,7 @@ selection_pool = odoo.model('mrp.production.oven.selected')
 mrp_ids = mrp_pool.search([
     ('state', '=', 'done'),
     ('industria_oven_state', '!=', 'done'),
-    ('date_planned', '>=', '2021-11-30'),
+    ('date_planned', '>=', '2022-02-16'),
     # todo filter per color?
     ])
 pdb.set_trace()
