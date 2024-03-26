@@ -62,7 +62,7 @@ class MrpProduction(orm.Model):
         """
         if context is None:
             context = {}
-        pdb.set_trace()
+
         return self.schedule_unload_mrp_material(
             cr, uid,
             from_date=context.get('run_force', {}).get('from_date'),
