@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-# ODOO (ex OpenERP) 
+# ODOO (ex OpenERP)
 # Open Source Management Solution
 # Copyright (C) 2001-2015 Micronaet S.r.l. (<http://www.micronaet.it>)
 # Developer: Nicola Riolini @thebrush (<https://it.linkedin.com/in/thebrush>)
@@ -12,7 +12,7 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 # See the GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
@@ -22,30 +22,31 @@
 import os
 import sys
 import erppeek
-import xlrd
-import ConfigParser
+try:
+    import ConfigParser
+except:
+    import configparser as ConfigParser
 
 
 # -----------------------------------------------------------------------------
 #                              Parameters:
 # -----------------------------------------------------------------------------
 # A: Static
-from_date = '2020-09-01
+from_date = '2020-09-01'
 filename = '/home/administrator/photo/log/mrp_unload__from_%s.xlsx' % from_date
 
 context = {
-    'run_force': {    
+    'run_force': {
         'from_date': from_date,
         'to_date': False,
         'filename': filename,
         'update': False,  # Only dry run!
         }}
 
-
-# B: File: 
+# B: File:
 config_file = '../openerp.cfg'
 cfg_file = os.path.expanduser(config_file)
-    
+
 config = ConfigParser.ConfigParser()
 config.read([cfg_file])
 dbname = config.get('dbaccess', 'dbname')
@@ -54,18 +55,18 @@ pwd = config.get('dbaccess', 'pwd')
 server = config.get('dbaccess', 'server')
 port = config.get('dbaccess', 'port')   # verify if it's necessary: getint
 
-# -------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Connect to ODOO:
-# -------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 odoo = erppeek.Client(
     'http://%s:%s' % (
-        server, port), 
+        server, port),
     db=dbname,
     user=user,
     password=pwd,
     )
 odoo.context = context
 
-mrp_pool = odoo.model('mrp.production'),
+mrp_pool = odoo.model('mrp.production')
 mrp_pool.schedule_unload_mrp_material_erpeek()
 
