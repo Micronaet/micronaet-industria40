@@ -35,7 +35,8 @@ pdb.set_trace()
 # -----------------------------------------------------------------------------
 # A: Static
 from_date = '2020-09-01'
-filename = '/home/administrator/photo/log/mrp_unload__from_%s.xlsx' % from_date
+filename = '/home/administrator/photo/log/mrp_unload_from_%s.xlsx' % \
+           from_date.replace('-', '_')
 
 context = {
     'run_force': {
