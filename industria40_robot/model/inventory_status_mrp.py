@@ -196,7 +196,6 @@ class MrpProduction(orm.Model):
                     product_unload[product_id] += cmpt_maked
                 else:
                     product_unload[product_id] = cmpt_maked
-        pdb.set_trace()
 
         # ---------------------------------------------------------------------
         # B. Generate MRP total component report with totals:
