@@ -169,9 +169,38 @@ class MrpProduction(orm.Model):
             # Current I40 load:
             cr.execute('DELETE FROM industria_mrp_unload;')
 
-        # Generate MRP total component report with totals:
+        # ---------------------------------------------------------------------
+        # A. Setup unload starting with SOL error:
+        # ---------------------------------------------------------------------
+        pdb.set_trace()
         mrp_unload = {}
         product_unload = {}
+
+        cr.execute('''
+            SELECT product_id, sum(error_qty) 
+            FROM sale_order_line_error 
+            WHERE date >= '%s' 
+            GROUP BY product_id 
+            HAVING sum(error_qty) > 0;
+            ''' % from_date)
+
+        for record in cr.fetchall():
+            product_id = record[0]
+            maked = record[0]
+
+            product = product_pool.browse(cr, uid, product_id, context=context)
+            for item in product.dynamic_bom_line_ids:
+                component = item.product_id
+                product_id = component.id
+                cmpt_maked = maked * item.product_qty
+                if product.id in product_unload:
+                    product_unload[product_id] += cmpt_maked
+                else:
+                    product_unload[product_id] = cmpt_maked
+
+        # ---------------------------------------------------------------------
+        # B. Generate MRP total component report with totals:
+        # ---------------------------------------------------------------------
         for mrp in self.browse(cr, uid, mrp_ids, context=context):
             # Collect fabric semiproduct (if needed):
             industria_mrp = mrp.industria_mrp_id
@@ -184,6 +213,10 @@ class MrpProduction(orm.Model):
                 _logger.info('No I4.0 MRP %s' % mrp.name)
                 fabric_semiproduct = []
                 industria_mrp_id = False  # Not used
+
+            # Generate previous a list of product, maked record?
+
+            # Integrate with forced error sol lines?
             for sol in mrp.order_line_ids:
                 # Total elements:
                 maked = sol.product_uom_maked_sync_qty
@@ -214,6 +247,7 @@ class MrpProduction(orm.Model):
                             product_id, product.default_code, cmpt_maked,
                             mrp.state,
                             ])
+
         if filename:
             wb.close()
 
