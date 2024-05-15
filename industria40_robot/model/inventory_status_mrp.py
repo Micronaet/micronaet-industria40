@@ -185,7 +185,7 @@ class MrpProduction(orm.Model):
 
         for record in cr.fetchall():
             product_id = record[0]
-            maked = record[0]
+            maked = record[1]
 
             product = product_pool.browse(cr, uid, product_id, context=context)
             for item in product.dynamic_bom_line_ids:
