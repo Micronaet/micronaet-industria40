@@ -214,9 +214,6 @@ class MrpProduction(orm.Model):
                 fabric_semiproduct = []
                 industria_mrp_id = False  # Not used
 
-            # Generate previous a list of product, maked record?
-
-            # Integrate with forced error sol lines?
             for sol in mrp.order_line_ids:
                 # Total elements:
                 maked = sol.product_uom_maked_sync_qty
