@@ -172,7 +172,6 @@ class MrpProduction(orm.Model):
         # ---------------------------------------------------------------------
         # A. Setup unload starting with SOL error:
         # ---------------------------------------------------------------------
-        pdb.set_trace()
         mrp_unload = {}
         product_unload = {}
 
