@@ -144,7 +144,6 @@ class MrpProduction(orm.Model):
         # ---------------------------------------------------------------------
         # Generate movement:
         # ---------------------------------------------------------------------
-        pdb.set_trace()
         date = str(datetime.now())[:10]
         for component in component_unload:
             quantity = component_unload[component]
@@ -200,7 +199,6 @@ class MrpProduction(orm.Model):
                 'persistent': persistent,
                 }, context=context)
             '''
-        pdb.set_trace()
         query = '''
             UPDATE sale_order_line_error 
             SET done = 't' 
@@ -312,7 +310,6 @@ class MrpProduction(orm.Model):
             cr.execute('DELETE FROM industria_mrp_unload;')
             self.pre_schedule_unload_mrp_material_operation(
                 cr, uid, from_date=from_date, context=context)
-            return True
 
         # ---------------------------------------------------------------------
         # A. Setup unload starting with SOL error:
