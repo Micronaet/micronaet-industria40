@@ -90,7 +90,6 @@ class MrpProduction(orm.Model):
         company_ids = company_pool.search(cr, uid, [], context=context)
         company_proxy = company_pool.browse(
             cr, uid, company_ids, context=context)[0]
-        pdb.set_trace()
 
         if not company_proxy.stock_report_mrp_out_ids:
             _logger.error('Need setup for MRP out reference')
@@ -120,10 +119,10 @@ class MrpProduction(orm.Model):
 
         # Parameters:
         mrp_type_out = company_proxy.stock_report_mrp_out_ids[0]
+        mrp_type_out_id = mrp_type_out.id
         location_id = mrp_type_out.default_location_src_id.id
         location_dest_id = mrp_type_out.default_location_dest_id.id
 
-        pdb.set_trace()
         picking_id = sol_pool.get_force_pick(
             cr, uid, mrp_type_out, context=context)
 
@@ -156,7 +155,7 @@ class MrpProduction(orm.Model):
                 'picking_id': picking_id,
                 'location_dest_id': location_dest_id,
                 'location_id': location_id,
-                'picking_type_id': mrp_type_out,
+                'picking_type_id': mrp_type_out_id,
                 'product_id': component_id,
                 'product_uom_qty': quantity,
                 'product_uom': component.uom_id.id,
@@ -310,10 +309,8 @@ class MrpProduction(orm.Model):
             cr.execute('UPDATE product_product set mx_mrp_out=0;')
             # Current I40 load:
             cr.execute('DELETE FROM industria_mrp_unload;')
-            pdb.set_trace()
             self.pre_schedule_unload_mrp_material_operation(
                 cr, uid, from_date=from_date, context=context)
-            return True  # todo remove
 
         # ---------------------------------------------------------------------
         # A. Setup unload starting with SOL error:
