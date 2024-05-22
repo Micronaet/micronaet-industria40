@@ -68,6 +68,147 @@ class MrpProduction(orm.Model):
             from_date=context.get('run_force', {}).get('from_date'),
             context=context)
 
+    def pre_schedule_unload_mrp_material_operation(
+            self, cr, uid, from_date, context=None):
+        """ MRP pre schedule setup
+        """
+        if context is None:
+            context = {}
+
+        # ---------------------------------------------------------------------
+        # Pool used:
+        # ---------------------------------------------------------------------
+        sol_pool = self.pool.get('sale.order.line.error')
+        move_pool = self.pool.get('stock.move')
+        company_pool = self.pool.get('res.company')
+        product_pool = self.pool.get('product.product')
+        # quant_pool = self.pool.get('stock.quant')
+
+        # ---------------------------------------------------------------------
+        # Parameter for location:
+        # ---------------------------------------------------------------------
+        company_ids = company_pool.search(cr, uid, [], context=context)
+        company_proxy = company_pool.browse(
+            cr, uid, company_ids, context=context)[0]
+        pdb.set_trace()
+
+        if not company_proxy.stock_report_mrp_out_ids:
+            _logger.error('Need setup for MRP out reference')
+
+        # ---------------------------------------------------------------------
+        # Picking reference mode
+        # ---------------------------------------------------------------------
+        cr.execute('''
+            SELECT id  
+            FROM sale_order_line_error 
+            WHERE date >= '%s' and done is null;
+            ''' % from_date)
+        done_ids = [r[0] for r in cr.fetchall()]
+
+        cr.execute('''
+            SELECT product_id, sum(error_qty) 
+            FROM sale_order_line_error 
+            WHERE date >= '%s' and done is null
+            GROUP BY product_id 
+            HAVING sum(error_qty) > 0;
+            ''' % from_date)
+        records = [record for record in cr.fetchall()]
+
+        if not records:
+            _logger.error('No movement')
+            return False
+
+        # Parameters:
+        mrp_type_out = company_proxy.stock_report_mrp_out_ids[0]
+        location_id = mrp_type_out.default_location_src_id.id
+        location_dest_id = mrp_type_out.default_location_dest_id.id
+
+        pdb.set_trace()
+        picking_id = sol_pool.get_force_pick(
+            cr, uid, mrp_type_out, context=context)
+
+        component_unload = {}
+        for record in records:
+            product_id = record[0]
+            made = record[1]
+
+            product = product_pool.browse(
+                cr, uid, product_id, context=context)
+            for item in product.dynamic_bom_line_ids:
+                component = item.product_id
+                cmpt_made = made * item.product_qty
+                if component in component_unload:
+                    component_unload[component] += cmpt_made
+                else:
+                    component_unload[component] = cmpt_made
+
+        # ---------------------------------------------------------------------
+        # Generate movement:
+        # ---------------------------------------------------------------------
+        pdb.set_trace()
+        date = str(datetime.now)
+        for component in component_unload:
+            quantity = component_unload[component]
+            component_id = component.id
+            name = component.name
+
+            move_pool.create(cr, uid, {
+                'picking_id': picking_id,
+                'location_dest_id': location_dest_id,
+                'location_id': location_id,
+                'picking_type_id': mrp_type_out,
+                'product_id': component_id,
+                'product_uom_qty': quantity,
+                'product_uom': component.uom_id.id,
+                'date_expected': date,
+                'origin': '',
+                'display_name': name,
+                'name': name,
+                'state': 'done',  # confirmed, available
+                # 'persistent': persistent,
+                # 'production_sol_id': line_proxy.id,
+                # 'production_load_type': 'sl',
+
+                # 'product_uom_qty'
+                # 'product_uos'
+                # 'product_uos_qty'
+                # 'warehouse_id'
+                # 'weight'
+                # 'weight_net'
+                # 'group_id'
+                # 'production_id'
+                # 'product_packaging'
+                # 'company_id'
+                # 'date'
+                # 'date_expected'
+                # 'note'
+                # 'partner_id'
+                # 'price_unit'
+                # 'priority'
+                }, context=context)
+
+            '''
+            # Quants create:
+            quant_pool.create(cr, uid, {
+                'in_date': datetime.now().strftime(
+                    DEFAULT_SERVER_DATETIME_FORMAT),
+                'cost': 0.0, # TODO
+                'location_id': stock_location,
+                'product_id': bom.product_id.id,
+                'qty': - unload_qty,
+                #'product_uom': bom.product_id.uom_id.id,
+                'production_sol_id': line_proxy.id,
+                'persistent': persistent,
+                }, context=context)
+            '''
+
+        cr.execute('''
+            UPDATE sale_order_line_error 
+            SET done = 't' 
+            WHERE id in (%s);
+            ''' % ', '.join([str(r) for r in done_ids]))
+        return True
+
     # -------------------------------------------------------------------------
     # Override original function for link unload to Industria MRP:
     # -------------------------------------------------------------------------
@@ -110,6 +251,7 @@ class MrpProduction(orm.Model):
         # Force procedure:
         # ---------------------------------------------------------------------
         run_force = context.get('run_force', {})
+
         # Force run parameters:
         from_date = run_force.get('from_date', from_date)
         to_date = run_force.get('to_date', False)
@@ -168,34 +310,16 @@ class MrpProduction(orm.Model):
             cr.execute('UPDATE product_product set mx_mrp_out=0;')
             # Current I40 load:
             cr.execute('DELETE FROM industria_mrp_unload;')
+            pdb.set_trace()
+            self.pre_schedule_unload_mrp_material_operation(
+                cr, uid, from_date=from_date, context=context)
+            return True  # todo remove
 
         # ---------------------------------------------------------------------
         # A. Setup unload starting with SOL error:
         # ---------------------------------------------------------------------
         mrp_unload = {}
         product_unload = {}
-
-        cr.execute('''
-            SELECT product_id, sum(error_qty) 
-            FROM sale_order_line_error 
-            WHERE date >= '%s' 
-            GROUP BY product_id 
-            HAVING sum(error_qty) > 0;
-            ''' % from_date)
-
-        for record in cr.fetchall():
-            product_id = record[0]
-            maked = record[1]
-
-            product = product_pool.browse(cr, uid, product_id, context=context)
-            for item in product.dynamic_bom_line_ids:
-                component = item.product_id
-                product_id = component.id
-                cmpt_maked = maked * item.product_qty
-                if product.id in product_unload:
-                    product_unload[product_id] += cmpt_maked
-                else:
-                    product_unload[product_id] = cmpt_maked
 
         # ---------------------------------------------------------------------
         # B. Generate MRP total component report with totals:
