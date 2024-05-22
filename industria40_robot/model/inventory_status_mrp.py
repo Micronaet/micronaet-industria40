@@ -145,7 +145,7 @@ class MrpProduction(orm.Model):
         # Generate movement:
         # ---------------------------------------------------------------------
         pdb.set_trace()
-        date = str(datetime.now)
+        date = str(datetime.now())[:10]
         for component in component_unload:
             quantity = component_unload[component]
             component_id = component.id
@@ -200,12 +200,13 @@ class MrpProduction(orm.Model):
                 'persistent': persistent,
                 }, context=context)
             '''
-
-        cr.execute('''
+        pdb.set_trace()
+        query = '''
             UPDATE sale_order_line_error 
             SET done = 't' 
             WHERE id in (%s);
-            ''' % ', '.join([str(r) for r in done_ids]))
+            ''' % ', '.join([str(r) for r in done_ids])
+        cr.execute(query)
         return True
 
     # -------------------------------------------------------------------------
