@@ -312,6 +312,7 @@ class MrpProduction(orm.Model):
             cr.execute('DELETE FROM industria_mrp_unload;')
             self.pre_schedule_unload_mrp_material_operation(
                 cr, uid, from_date=from_date, context=context)
+            return True
 
         # ---------------------------------------------------------------------
         # A. Setup unload starting with SOL error:
