@@ -63,7 +63,7 @@ parameters = {
         'host': '0.0.0.0',
         'port': 8080,
         'debug': True,
-        'refresh': 20,
+        'refresh': 20,  # Keep in config file?
         },
     }
 
