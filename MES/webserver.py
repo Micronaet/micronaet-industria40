@@ -19,6 +19,10 @@ try:
 except:
     import ConfigParser
 
+try:
+    from pytz import timezone
+except:
+    print('Error importing pytz')
 
 # -----------------------------------------------------------------------------
 # End point definition:
