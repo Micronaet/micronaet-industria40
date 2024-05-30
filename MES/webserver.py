@@ -27,6 +27,7 @@ app = Flask(
     __name__,
     # template_folder='../templates',
 )
+
 # -----------------------------------------------------------------------------
 # Read parameters from file:
 # -----------------------------------------------------------------------------
@@ -71,6 +72,18 @@ context_parameters = {}
 # -----------------------------------------------------------------------------
 # Utility:
 # -----------------------------------------------------------------------------
+def get_tz_time():
+    """ Get Now timezone in Europe Rome
+    """
+    from datetime import datetime
+    from pytz import timezone
+
+    # utc_time = datetime.now()
+    # print(utc_time.strftime('%Y-%m-%d_%H-%M-%S'))
+    europe = timezone('Europe/Rome')
+    tz_time = datetime.now(europe)
+    return tz_time  # print(tz_time.strftime('%Y-%m-%d_%H-%M-%S'))
+
 # Parameters
 gmt_gap = 2  # 2 legal hour, 1 solar hour
 
@@ -110,7 +123,8 @@ def auto_refresh_setup():
             'refresh': parameters['webserver']['refresh'],
             'last_refresh': str(datetime.now())[:19],
         })
-    context_parameters['last_update'] = str(datetime.now())[:19]
+    # context_parameters['last_update'] = str(datetime.now())[:19]
+    context_parameters['last_update'] = str(get_tz_time())[:19]
 
 
 def generate_robot_static_img():
