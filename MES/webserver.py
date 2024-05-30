@@ -127,8 +127,8 @@ def auto_refresh_setup():
             'refresh': parameters['webserver']['refresh'],
             'last_refresh': str(datetime.now())[:19],
         })
-    context_parameters['last_update'] = str(datetime.now())[:19]
-    # context_parameters['last_update'] = str(get_tz_time())[:19]
+    # context_parameters['last_update'] = str(datetime.now())[:19]
+    context_parameters['last_update'] = str(get_tz_time())[:19]
 
 
 def generate_robot_static_img():
