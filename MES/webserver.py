@@ -79,14 +79,14 @@ context_parameters = {}
 def get_tz_time():
     """ Get Now timezone in Europe Rome
     """
-    from datetime import datetime
-    from pytz import timezone
-
     # utc_time = datetime.now()
     # print(utc_time.strftime('%Y-%m-%d_%H-%M-%S'))
-    europe = timezone('Europe/Rome')
-    tz_time = datetime.now(europe)
-    return tz_time  # print(tz_time.strftime('%Y-%m-%d_%H-%M-%S'))
+    try:
+        europe = timezone('Europe/Rome')
+        tz_time = datetime.now(europe)
+        return tz_time  # print(tz_time.strftime('%Y-%m-%d_%H-%M-%S'))
+    except:
+        return 'ERROR'
 
 # Parameters
 gmt_gap = 2  # 2 legal hour, 1 solar hour
