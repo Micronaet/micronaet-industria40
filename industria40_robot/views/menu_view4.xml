@@ -33,26 +33,26 @@
             groups="industria40_base.group_industria_manager,industria40_base.group_industria_branch_oven_user"
             />
             <!-- todo mrp.production pre selection-->
-            <menuitem
+            <!--<menuitem
                 parent="menu_industria_robot4"
                 id="menu_mrp_production_pre_selection"
                 action="action_mrp_production"
                 sequence="10"
             />
-            <menuitem
-                parent="menu_mrp_production_pre_selection"
-                id="menu_mrp_production_pre_selection_done"
-                action="action_mrp_production_done"
-                sequence="10"
-                groups="industria40_base.group_industria_manager"
-            />
+                <menuitem
+                    parent="menu_mrp_production_pre_selection"
+                    id="menu_mrp_production_pre_selection_done"
+                    action="action_mrp_production_done"
+                    sequence="10"
+                    groups="industria40_base.group_industria_manager"
+                />
             <menuitem
                 parent="menu_industria_robot4"
                 id="menu_mrp_production_oven_selected"
                 action="action_mrp_production_oven_selected"
                 sequence="20"
                 groups="industria40_base.group_industria_manager"
-            />
+            />-->
 
             <menuitem
                 parent="menu_industria_robot4"

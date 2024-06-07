@@ -131,7 +131,27 @@
                         <group>
                             <separator string="Lavori pre produzione:" colspan="3" />
                             <button name="explode_oven_preload_detail"  colspan="1" type="object" string="Aggiorna lavorazione" confirm="Vuoi ricaricare i prodotti da verniciare? (quelli precedenti verranno eliminati)" icon="gtk-refresh"/>
-                            <field name="oven_pre_job_ids" colspan="4" nolabel="1" />
+                            <field name="oven_pre_job_ids" colspan="4" nolabel="1">
+                                <tree string="MRP selezione per forno" editable="bottom" colors="blue:send==True">
+                                    <field name="send" invisible="1"/>
+                                    <field name="color_code" invisible="1" />
+                                    <field name="bom_id" domain="[('bom_category', '=', 'parent')]" />
+                                    <field name="parent_code" />
+                                    <!--<button name="generate_oven_job" type="object" attrs="{'invisible': [('job_id', '!=', False)]}" string="Crea job per questo colore" icon="gtk-execute" confirm="Prepara i job del forno per tutti i lavori pendendi con questo colore, confermi?"/>-->
+                                    <field name="total" />
+                                    <field name="partial" invisible="1"/>
+                                    <!--<field name="from_date" />
+                                    <field name="to_date" />-->
+                                    <field name="product_id" invisible="1"/>
+                                    <field name="job_id" invisible="1"/>
+                                    <field name="mrp_id" invisible="1"/>
+                                    <field name="line_id" invisible="1"/>
+                                    <button name="generate_oven_job_all" type="object"  attrs="{'invisible': [('job_id', '!=', False)]}"
+                                            string="Crea job per tutti quelli aperti" icon="gtk-refresh"
+                                            confirm="Prepara i job del forno per tutti i lavori pendenti, confermi?"/>
+                                    <!--<button name="unlink_line" type="object"  attrs="{'invisible': [('job_id', '!=', False)]}" string="Scollega dal job la riga lasciandola in quelle da assegnare" icon="gtk-disconnect" confirm="Prepara i job del forno per tutti i lavori pendenti, confermi?"/>-->
+                                </tree>
+                            </field>
                         </group>
                     </page>
                     <!--Oven stat page:-->

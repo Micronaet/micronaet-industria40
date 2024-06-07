@@ -718,7 +718,6 @@
                     <button name="send_fabric_job" type="object" string="Invia a tessuto" attrs="{'invisible': [('state', '!=', 'DRAFT')]}" invisible="context.get('open_mode') != 'fabric'"/>
                     <button name="send_opcua_job" type="object" string="Invia a forno" attrs="{'invisible': [('state', '!=', 'DRAFT')]}" invisible="context.get('open_mode') != 'oven'"/>
                     <button name="button_print_job_report" string="Stampa" type="object" invisible="context.get('open_mode') != 'oven'"/>
-
                 </tree>
             </field>
         </record>

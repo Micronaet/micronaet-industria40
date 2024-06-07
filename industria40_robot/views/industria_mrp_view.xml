@@ -349,7 +349,7 @@
                                                 <button name="restart_fabric_job" type="object" string="Riavvia" attrs="{'invisible': [('state', '=', 'DRAFT')]}" icon="gtk-undo" />
                                                 <!--<button name="error_fabric_job" type="object" string="Errato" attrs="{'invisible': [('state', 'not in', ('DRAFT', 'RUNNING'))]}"/>-->
                                                 <button name="completed_fabric_job" type="object" string="Completato" attrs="{'invisible': [('state', '!=', 'RUNNING')]}" icon="gtk-goto-last" />
-                                                <field name="state" widget="statusbar"/>
+                                                <field name="state" />
                                             </tree>
                                         </field>
                                     </group>

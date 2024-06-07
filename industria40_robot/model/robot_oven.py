@@ -195,7 +195,7 @@ class MrpProductionOvenSelected(orm.Model):
     _name = 'mrp.production.oven.selected'
     _description = 'Pre selection wizard'
     _order = 'color_code, parent_code'
-    _rec_name = 'parent_code'
+    _rec_name = 'bom_id'
 
     def unlink_line(self, cr, uid, ids, context=None):
         """ Unlink line from job
@@ -222,6 +222,9 @@ class MrpProductionOvenSelected(orm.Model):
         robot_pool = self.pool.get('industria.robot')
         program_pool = self.pool.get('industria.program')
 
+        # ---------------------------------------------------------------------
+        # Extract header parameters:
+        # ---------------------------------------------------------------------
         robot_ids = robot_pool.search(cr, uid, [
             ('code', '=', 'FORN01'),
         ], context=context)
@@ -247,16 +250,23 @@ class MrpProductionOvenSelected(orm.Model):
                 )
         program_id = program_ids[0]  # todo Take the first for now
 
-        # Select with dynamic domain:
+        # ---------------------------------------------------------------------
+        # Select oven preload BOM to link in a Job:
+        # ---------------------------------------------------------------------
+        # Select with dynamic domain forced color:
         if context is None:
             context = {}
         force_color = context.get('force_color')
+        force_data = context.get('force_header')
+
         domain = [('job_id', '=', False)]  # pending not linked
         if force_color:
             domain.append(('color_code', '=', force_color))
         record_ids = self.search(cr, uid, domain, context=context)
 
-        # Collect data x color:
+        # ---------------------------------------------------------------------
+        # Collect data x color (every color = new job):
+        # ---------------------------------------------------------------------
         jobs_created = {}
         for record in self.browse(cr, uid, record_ids, context=context):
             color = record.color_code
@@ -264,7 +274,7 @@ class MrpProductionOvenSelected(orm.Model):
             #    _logger.error('Color not present, jumped')
             #    continue
             if color not in jobs_created:
-                jobs_created[color] = job_pool.create(cr, uid, {
+                job_data = {
                     'database_id': database_id,
                     'source_id': robot_id,
                     'program_id': program_id,
@@ -273,14 +283,21 @@ class MrpProductionOvenSelected(orm.Model):
                     # 'force_name': ,
                     # 'label': 1,
                     # 'state': 'draft',
-                }, context=context)
+                }
+                # Update with forced:
+                if force_data:
+                    job_data.update(force_data)
+                jobs_created[color] = job_pool.create(
+                    cr, uid, job_data, context=context)
 
             # Link pre-line to job:
             self.write(cr, uid, [record.id], {
                 'job_id': jobs_created[color],
             }, context=context)
 
+        # ---------------------------------------------------------------------
         # Explode lines in job detail (simulate button press):
+        # ---------------------------------------------------------------------
         job_ids = []
         for color in jobs_created:
             job_id = jobs_created[color]
@@ -288,11 +305,13 @@ class MrpProductionOvenSelected(orm.Model):
             job_pool.explode_oven_preload_detail(
                 cr, uid, [job_id], context=context)
 
+        # ---------------------------------------------------------------------
         # Return view:
+        # ---------------------------------------------------------------------
         model_pool = self.pool.get('ir.model.data')
         form_view_id = model_pool.get_object_reference(
             cr, uid, 'industria40_base', 'view_industria_job_opcua_form',
-        )[1]
+            )[1]
         tree_view_id = False
         ctx = context.copy()
         ctx.update({
@@ -332,25 +351,39 @@ class MrpProductionOvenSelected(orm.Model):
             }
 
     _columns = {
-        'send': fields.boolean('Da spedire'),
-        'parent_code': fields.char('Codice padre', size=5, required=True),
-        'color_code': fields.char('Codice colore', size=5, required=True),
         'total': fields.integer('Totali'),
+        # todo used?
         'partial': fields.integer(
             'Parziali', help='Pezzi parziali da mandare in lavorazione'),
-        'from_date': fields.date('Dalla data'),
-        'to_date': fields.date('Alla data'),
-        'mrp_id': fields.many2one(
-            'mrp.production', 'Produzione', ondelete='set null'),
-        'line_id': fields.many2one(
-            'sale.order.line', 'Riga OC', ondelete='set null'),
+
         'job_id': fields.many2one(
             'industria.job', 'Job', ondelete='set null'),
+        'line_id': fields.many2one(
+            'sale.order.line', 'Riga OC', ondelete='set null'),
+        'bom_id': fields.many2one(
+            'mrp.bom', 'DB Padre', ondelete='set null'),  # , required=True
+
+        'send': fields.boolean('Da spedire'),
+        'color_code': fields.char('Codice colore', size=5, required=True),
+        # 'parent_code': fields.char('Codice padre', size=5),
+        'parent_code': fields.related(
+            'bom_id', 'code', string='Codice', size=5,
+            type='char', readonly=True),
+
+        # ---------------------------------------------------------------------
+        # todo remove:
+        # ---------------------------------------------------------------------
+        'from_date': fields.date('Dalla data MRP'),
+        'to_date': fields.date('Alla data MRP'),
         'product_id': fields.many2one(
             'product.product', 'Prodotto', ondelete='set null'),
+        'mrp_id': fields.many2one(
+            'mrp.production', 'Produzione', ondelete='set null'),
+        # ---------------------------------------------------------------------
     }
 
 
+# todo no more used:
 class MrpProductionOvenInherit(orm.Model):
     """ Model name: MrpProductionOven
     """
@@ -448,54 +481,68 @@ class IndustriaJob(orm.Model):
         """
         job_product_pool = self.pool.get('industria.job.product')
         product_pool = self.pool.get('product.product')
+        job_id = ids[0]  # loop procedure?
 
-        job_id = ids[0]
-
-        # Clean previous items:
+        # ---------------------------------------------------------------------
+        # A. Clean previous items:
+        # ---------------------------------------------------------------------
         self.write(cr, uid, [job_id], {
             'product_ids': [(6, 0, [])],
-        }, context=context)
+            }, context=context)
 
-        job = \
-            self.browse(cr, uid, job_id, context=context)
-        product_detail = {}
+        # ---------------------------------------------------------------------
+        # B. Preload Parent BOM with Q.
+        # ---------------------------------------------------------------------
+        bom_detail = {}
+        job = self.browse(cr, uid, job_id, context=context)
         color = job.color
+
         robot_id = job.source_id.id
         for preline in job.oven_pre_job_ids:
-            product = preline.product_id
+            bom = preline.bom_id
             total = preline.total   # todo use partial?
 
-            if product in product_detail:
-                product_detail[product] += total
+            if bom in bom_detail:
+                bom_detail[bom] += total
             else:
-                product_detail[product] = total
+                bom_detail[bom] = total
 
+        # ---------------------------------------------------------------------
+        # C. Oven semiproduct (from parent bom):
+        # ---------------------------------------------------------------------
         compact_product = {}
         # todo manage compact mode on job?
-        for product in product_detail:
-            total = product_detail[product]
+        for bom in bom_detail:
+            total = bom_detail[bom]
             # Search component to oven:
-            default_code = product.default_code or ''
-            has_color = default_code[6:8].strip()
-            if not has_color:
-                _logger.error('Product %s no need oven' % default_code)
-                continue
-            for bom in product.dynamic_bom_line_ids:
+            # default_code = product.default_code or ''
+            # has_color = default_code[6:8].strip()
+            # if not has_color:
+            #    _logger.error('Product %s no need oven' % default_code)
+            #     continue
+
+            # Directly use paremt bom but color is in Job reference!
+            # So no need product BOM
+            for bom_line in bom:  # product.dynamic_bom_line_ids:
                 # if bom.category_id.need_oven:
-                if bom.has_oven:  # dynamic bom module!
-                    component_total = total * bom.product_qty
-                    raw_component = bom.product_id
+                if bom_line.has_oven:  # dynamic bom module!
+                    component_total = total * bom_line.product_qty
+                    raw_component = bom_line.product_id
                     if raw_component not in compact_product:
                         compact_product[raw_component] = 0
                     compact_product[raw_component] += component_total
 
+        # ---------------------------------------------------------------------
+        # D. Generate product job:
+        # ---------------------------------------------------------------------
         for raw_component in compact_product:
             component_total = compact_product[raw_component]
 
+            # Generate or get new semiproduct for colored frame:
             color_component_id = product_pool.get_oven_component_colored(
                 cr, uid, raw_component, color, robot_id, context=context)
             # todo component colored 1-1 relation (if more than one need loop)
-            # ex. with color powder
+            # ex. with colored powder
 
             # Generate line for every component:
             job_product_pool.create(cr, uid, {
