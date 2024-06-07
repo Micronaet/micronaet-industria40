@@ -508,7 +508,7 @@ class IndustriaJob(orm.Model):
                 bom_detail[bom] = total
 
         # ---------------------------------------------------------------------
-        # C. Oven semiproduct (from parent bom):
+        # C. Oven semi-product (from parent bom):
         # ---------------------------------------------------------------------
         compact_product = {}
         # todo manage compact mode on job?
@@ -523,7 +523,7 @@ class IndustriaJob(orm.Model):
 
             # Directly use paremt bom but color is in Job reference!
             # So no need product BOM
-            for bom_line in bom:  # product.dynamic_bom_line_ids:
+            for bom_line in bom.bom_line_ids:  # product.dynamic_bom_line_ids:
                 # if bom.category_id.need_oven:
                 if bom_line.has_oven:  # dynamic bom module!
                     component_total = total * bom_line.product_qty
