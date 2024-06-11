@@ -77,6 +77,13 @@
                 />
             <menuitem
                 parent="menu_industria_robot4"
+                id="menu_industria_import_oven_report_xlsx_wizard"
+                action="order_bom_explode_report.action_industria_import_oven_report_xlsx"
+                sequence="60"
+                groups="industria40_base.group_industria_manager"
+                />
+            <menuitem
+                parent="menu_industria_robot4"
                 id="menu_industria_job_search_wizard"
                 action="industria40_base.action_view_industria_job_barcode_search_wizard"
                 sequence="90"

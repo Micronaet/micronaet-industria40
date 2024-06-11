@@ -521,7 +521,7 @@ class IndustriaJob(orm.Model):
             #    _logger.error('Product %s no need oven' % default_code)
             #     continue
 
-            # Directly use paremt bom but color is in Job reference!
+            # Directly use parent bom but color is in Job reference!
             # So no need product BOM
             for bom_line in bom.bom_line_ids:  # product.dynamic_bom_line_ids:
                 # if bom.category_id.need_oven:
