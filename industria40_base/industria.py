@@ -2406,6 +2406,13 @@ class IndustriaJob(orm.Model):
             'state': 'ERROR',
         }, context=context)
 
+    def force_opcua_job_closed(self, cr, uid, ids, context=None):
+        """ Force job as completed
+        """
+        self.write(cr, uid, ids, {
+            'state': 'COMPLETED',
+        }, context=context)
+
     def button_print_job_report(self, cr, uid, ids, context=None):
         """ Redirect to report passing parameters
         """
