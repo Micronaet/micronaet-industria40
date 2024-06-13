@@ -257,7 +257,7 @@ class MrpProductionOvenSelected(orm.Model):
         if context is None:
             context = {}
         force_color = context.get('force_color')
-        force_data = context.get('force_data')
+        force_header = context.get('force_header')
 
         domain = [('job_id', '=', False)]  # pending not linked
         if force_color:
@@ -285,8 +285,8 @@ class MrpProductionOvenSelected(orm.Model):
                     # 'state': 'draft',
                 }
                 # Update with forced:
-                if force_data:
-                    job_data.update(force_data)
+                if force_header:
+                    job_data.update(force_header)
                 jobs_created[color] = job_pool.create(
                     cr, uid, job_data, context=context)
 
