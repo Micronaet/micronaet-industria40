@@ -257,7 +257,7 @@ class MrpProductionOvenSelected(orm.Model):
         if context is None:
             context = {}
         force_color = context.get('force_color')
-        force_data = context.get('force_header')
+        force_data = context.get('force_data')
 
         domain = [('job_id', '=', False)]  # pending not linked
         if force_color:
