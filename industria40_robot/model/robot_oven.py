@@ -600,6 +600,20 @@ class IndustriaJob(orm.Model):
     }
 
 
+class MrpBom(orm.Model):
+    """ Model name: BOM
+    """
+    _inherit = 'mrp.bom'
+
+    _columns = {
+        # todo no more used:
+        'oven_excluded': fields.boolean(
+            'No forno',
+        help='I prodotti con questa distinta padre non necessitano di '
+             'operazione in forno'),
+    }
+
+
 class MrpBomStructureCategory(orm.Model):
     """ Model name: BOM Category
     """

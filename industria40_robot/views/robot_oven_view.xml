@@ -311,6 +311,18 @@
             <field name="domain">[('industria_oven_state', '=', 'done')]</field>
         </record>
 
+        <!--mrp.bom-->
+        <record model="ir.ui.view" id="view_mrp_bom_oven_form">
+            <field name="name">mrp.bom.oven.tree</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="no_oven"/>
+                </field>
+            </field>
+        </record>
+
         <!--mrp.bom.structure.category-->
         <record model="ir.ui.view" id="view_mrp_bom_structure_category_oven_tree">
             <field name="name">mrp.bom.structure.category.oven.tree</field>
