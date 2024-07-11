@@ -2939,7 +2939,7 @@ class IndustriaJobInherit(orm.Model):
             ('source_id', '=', source_id),
         ], order='created_at', context=context)
 
-        previous_id = job_ids[0]pd
+        previous_id = job_ids[0]
         for job_id in job_ids:
             self.write(cr, uid, [job_id], {
                 'previous_id': previous_id,
