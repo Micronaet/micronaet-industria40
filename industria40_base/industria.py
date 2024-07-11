@@ -2939,7 +2939,7 @@ class IndustriaJobInherit(orm.Model):
             ('source_id', '=', source_id),
         ], order='created_at', context=context)
 
-        previous_id = job_ids[0]
+        previous_id = job_ids[0]pd
         for job_id in job_ids:
             self.write(cr, uid, [job_id], {
                 'previous_id': previous_id,
@@ -2962,7 +2962,7 @@ class IndustriaJobInherit(orm.Model):
                 datetime.strptime(from_date, DEFAULT_SERVER_DATETIME_FORMAT)
             return delta.seconds / 60.0  # return minutes
 
-        block_job = 2  # 2 Job will be maked once
+        block_job = 2  # 2 Job will be made once
         not_consider_value = 60  # sec.
         consider_change_total = True
 
