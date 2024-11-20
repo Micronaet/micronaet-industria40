@@ -241,7 +241,7 @@ class MrpProductionOvenSelected(orm.Model):
         program_ids = program_pool.search(cr, uid, [
             ('source_id.code', '=', 'FORN01'),
             ('code', '=', 'FORNBASE'),
-        ], context=context)
+            ], context=context)
         if not program_ids:
             raise osv.except_osv(
                 _('Errore programma forno'),
@@ -257,8 +257,8 @@ class MrpProductionOvenSelected(orm.Model):
         if context is None:
             context = {}
         force_color = context.get('force_color')
-        force_header = context.get('force_header')
-
+        force_header = context.get('force_header')  # Forced in Oven new proc.
+        pdb.set_trace()
         domain = [('job_id', '=', False)]  # pending not linked
         if force_color:
             domain.append(('color_code', '=', force_color))
