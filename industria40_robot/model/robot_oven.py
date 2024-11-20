@@ -258,7 +258,6 @@ class MrpProductionOvenSelected(orm.Model):
             context = {}
         force_color = context.get('force_color')
         force_header = context.get('force_header')  # Forced in Oven new proc.
-        pdb.set_trace()
         domain = [('job_id', '=', False)]  # pending not linked
         if force_color:
             domain.append(('color_code', '=', force_color))
