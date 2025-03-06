@@ -2451,7 +2451,7 @@ class IndustriaJob(orm.Model):
         if context is None:
             context = {}
 
-        pdb.set_trace()
+        # pdb.set_trace()
         database_pool = self.pool.get('industria.database')
         production_pool = self.pool.get('industria.production')
         source_pool = self.pool.get('industria.robot')
