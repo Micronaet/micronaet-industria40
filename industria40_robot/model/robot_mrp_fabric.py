@@ -264,6 +264,7 @@ class IndustriaMrp(orm.Model):
             database = robot.database_id
             part = line.part_id  # winner rule or changed rule
             fabric_id = line.material_id.id
+            product = line.product_id
             product_id = line.product_id.id
             step = line.step or 1
             # total semi-product in one program / lanciato:
@@ -284,9 +285,9 @@ class IndustriaMrp(orm.Model):
                 (product_id, block),
                 ]
 
-            # -----------------------------------------------------------------
+            # ----------------------------------------------------------------------------------------------------------
             # Extra part:
-            # -----------------------------------------------------------------
+            # ----------------------------------------------------------------------------------------------------------
             # Read original fabric in DB (could be changed):
             bom_material = line.bom_material_id or line.material_id
             extra_parts = [p for p in part.fabric_id.part_ids if p != part]
@@ -310,18 +311,16 @@ class IndustriaMrp(orm.Model):
                 if len(extra_bom_ids) > 1:
                     raise osv.except_osv(
                         _(u'Errore DB'),
-                        _(u'Trovate più distinte per semilavorato '
+                        _(u'Trovate più distinte Prodotto: %s per semilavorato '
                           u'con maschera: %s e tessuto %s!' % (
+                              product.default_code,
                               extra_mask,
                               bom_material.default_code,
                               )))
 
-                extra_bom = bom_pool.browse(
-                    cr, uid, extra_bom_ids, context=context)[0]
+                extra_bom = bom_pool.browse(cr, uid, extra_bom_ids, context=context)[0]
                 extra_product_id = extra_bom.bom_id.product_id.id
-                load_product.append(
-                    (extra_product_id, extra_part.total * step),
-                )
+                load_product.append((extra_product_id, extra_part.total * step), )
 
             # -----------------------------------------------------------------
             # Initial check:
