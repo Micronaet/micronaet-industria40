@@ -294,8 +294,8 @@ class IndustriaMrp(orm.Model):
             for extra_part in extra_parts:   # Multi semiproduct program
                 extra_mask = extra_part.mask
                 extra_bom_ids = bom_pool.search(cr, uid, [
-                    ('product_id', '=', bom_material.id),  # Same fabric
-                    ('bom_id.product_id.default_code', '=ilike', extra_mask)
+                    ('product_id', '=', bom_material.id),  # Same fabric (componente item search)
+                    ('bom_id.product_id.default_code', '=ilike', extra_mask)  # DB parent with product mask
                     # relative_type half,
                     # todo usare prodotti per ricerca? halfwork_id
                 ], context=context)
@@ -313,8 +313,12 @@ class IndustriaMrp(orm.Model):
                         import pdb; pdb.set_trace()
                     raise osv.except_osv(
                         _(u'Errore DB'),
-                        _(u'Trovate più distinte Prodotto: %s per semilavorato '
-                          u'con maschera: %s e tessuto %s!' % (
+                        _(u'Nel programma di taglio ci sono altri componenti con maschera %s, cercando di capire '
+                          u'il semilavorato che verrebbe generato ho trovato %s possibili elementi quindi non '
+                          u'è possibile sapere quale caricare in automatico, non è quindi possibile gestire '
+                          u'il prodotto %s in automatico (maschera %s e tessuto %s)!' % (
+                              extra_mask,
+                              len(extra_bom_ids),
                               product.default_code,
                               extra_mask,
                               bom_material.default_code,
