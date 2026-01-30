@@ -309,19 +309,20 @@ class IndustriaMrp(orm.Model):
                               bom_material.default_code,
                               )))
                 if len(extra_bom_ids) > 1:
-                    if uid == 1:
-                        import pdb; pdb.set_trace()
+                    found_bom_lines = bom_pool.browse(cr, uid, extra_bom_ids, context=context)
+                    db_found = [l.bom_id.product_id.default_code or '' for l in found_bom_lines]
+                    db_found_text = ', '.join(db_found)
                     raise osv.except_osv(
                         _(u'Errore DB'),
                         _(u'Nel programma di taglio ci sono altri componenti con maschera %s, cercando di capire '
                           u'il semilavorato che verrebbe generato ho trovato %s possibili elementi quindi non '
                           u'è possibile sapere quale caricare in automatico, non è quindi possibile gestire '
-                          u'il prodotto %s in automatico (maschera %s e tessuto %s)!' % (
+                          u'il prodotto %s in automatico (tessuto %s)!\n Distinte: %s' % (
                               extra_mask,
                               len(extra_bom_ids),
                               product.default_code,
-                              extra_mask,
                               bom_material.default_code,
+                              db_found_text,
                               )))
 
                 extra_bom = bom_pool.browse(cr, uid, extra_bom_ids, context=context)[0]
