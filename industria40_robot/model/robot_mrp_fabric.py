@@ -309,6 +309,8 @@ class IndustriaMrp(orm.Model):
                               bom_material.default_code,
                               )))
                 if len(extra_bom_ids) > 1:
+                    if uid == 1:
+                        import pdb; pdb.set_trace()
                     raise osv.except_osv(
                         _(u'Errore DB'),
                         _(u'Trovate più distinte Prodotto: %s per semilavorato '
